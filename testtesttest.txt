@@ -1,8 +1,0 @@
-Vincent
-Laura
-Arne
-<<<<<<< HEAD
-Test branch
-=======
-Matthias
->>>>>>> 39201b00dc226ee613a1b78f7eb68a2d30dc4fe8
