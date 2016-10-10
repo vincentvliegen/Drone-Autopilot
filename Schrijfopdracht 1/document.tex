@@ -11,6 +11,12 @@
 
 \documentclass{peno-opdracht1}
 \usepackage{comment}
+\usepackage{pdfpages}
+\usepackage{titlesec}
+\usepackage{textcomp}
+\usepackage{scrextend}
+\titleformat{\section}
+{\normalfont\fontsize{12}{15}\bfseries}{\thesection}{1em}{}
 
 \team{Zilver} % teamkleur
 
@@ -18,46 +24,36 @@
 
 \maketitle
 
-Ons team bestaat uit Bram Vandendriessche, Matthias Van der Heyden, Jef Versyck, Vincent Vliegen Arne Vlietinck en Laura Vranken. Bram werd aangeduid als CEO en Arne zal de taak van CAO op zich nemen. Beide proberen de vergaderingen en verslaggeving ordentelijk te laten verlopen, daarnaast houden ze ook rekening met de milestones. \\
-Om op een effici\"ente manier het geheel te kunnen realiseren, wordt het team in twee verdeeld. De ene groep (Bram, jef en Arne) buigt zich over de simulator. Het andere team  (Matthias, Vincent en Laura) zorgt voor de autopilot. Steeds is er ook een iemand per groep die verantwoordelijk is voor de connectie tussen de twee programma's. Dit laat toe dat er een vlotte communicatie is tussen beide groepen.
-Een gedetailleerdere taakverdeling kan teruggevonden worden in de bijlage.
+\noindent
+	Ons team bestaat uit Bram Vandendriessche, Matthias Van der Heyden, Jef Versyck, Vincent Vliegen, Arne Vlietinck en Laura Vranken. Bram werd aangeduid als CEO en Arne zal de taak van CAO op zich nemen. \\
+	Om op een effici\"ente manier het geheel te kunnen realiseren, wordt het team in twee verdeeld. De ene groep (Bram, jef en Arne) buigt zich over het virtual testbed. Het andere team  (Matthias, Vincent en Laura) zorgt voor de drone autopilot.\\
+	Een gedetailleerde planning kan teruggevonden worden in appendix \ref{App:Planning}.
 
+\section{API keuze}
+Als API voor het generen van 3D-beelden zijn er drie kandidaten: Blender, JMonkeyEngine en OpenGL.\\
+Blender heeft als voordeel dat voorwerpen gemakkelijk gegeneerd kunnen worden door de gebruiksvriendelijke interface. Daarnaast moet er voor Blender kennis zijn van Python, aan deze voorwaarde is niet door iedereen voldaan. Ook wordt er hierdoor een extra moeilijkheid gecre\"eerd, namelijk de \mbox{communicatie} tussen JAVA en Python. Vooral door deze laatste eigenschap zal er geen gebruik gemaakt worden van Blender. \\
+JMonkeyEngine is gebruiksvriendelijker dan OpenGL, maar door gebrek aan uitgebreide communities wordt er niet voor geopteerd.\\
+Onze keuze gaat uit naar OpenGL ondanks alles gecodeerd moet worden. Toch kan dit deels omzeild worden door figuren te importeren vanuit Blender. Deze optie zal dan ook gebruikt worden. 
 
-\begin{comment}
-	Na de eerste volledige sessie wordt max. 2 pagina's verwacht. Beschrijf op een zeer hoog
-	niveau wat je gaat realiseren, hoe je ontwerp er verwacht wordt uit te zien, een ruwe schets
-	van de planning en geef de verantwoordelijkheden die daar aan gekoppeld zijn weer. Al
-	het belangrijke van jullie eerste brainstormsessie zou hierin vermeld moeten zijn. De tekst
-	wordt geacht op een bladzijde te passen, en bijhorend wordt er een schets/tabel/figuur
-	verwacht die duiding geeft bij een bepaald aspect uit deze tekst.
-	
-	\emph{Deadline:11/10/2016 voor 24u. Insturen per mail naar begeleider(s)}
-	\newline
-	\newline
-	
-	Brainstorming: 
-	\begin{enumerate}
-	
-	\item Voorstellen drone: balk om de botsingen te dekken. Massamiddelpunt centrum. Hoogte drone defini\"eren (fysische eigenschappen verder uitwerken). 
-	\item Simulator: grondopp, display wit, rode bol, zwaartekracht dus hierdoor kennis vn de grondopp.
-	\newline
-	\item Dieptezicht
-	\item Gekregen Javacode analyseren
-	\item Punt van de twee camera's vastleggen. Hieruit volgen dan de berekenen.
-	\item RPY-hoeken 
-	\item Hoe pixels omzetten nr beeld? Veel van te vinden online.
-	\item Eigenschappen van de drone? (vrij te kiezen?)
-	\item Hoe afgaan op de pixels van de bol? 
-	
-	\end{enumerate}
-\end{comment}
-	
+\section{Autopilot}
+De drone autopilot moet zijn positie tegenover het doel kunnen bepalen aan de hand van twee gekregen camerabeelden. Eerst wordt de diepte bepaald op basis van de brandpuntsafstand, de afstand tussen de zichtbare rode bol op het frame en het middelpunt van het frame (in pixels) en de afstand tussen de camera\textquotesingle s (in meter).\footnote{Deze formule en de grafische weergave kan teruggevonden worden op: (NASA tech briefs : A Guide to Stereovision and 3D Imaging, http://www.techbriefs.com/component/content/article/14925, geraadpleegd op: 5/10/2016.)\label{refnote}}\\
+Om te vliegen, ori\"enteren we eerst de drone naar het doel. Hiervoor moet er opeenvolgend de bewegingen pitch, roll en yaw onder een bepaalde hoek uitgevoerd worden. Deze hoeken kunnen worden opgevraagd uit de interface. Vervolgens wordt naar het doel toegevlogen via een combinatie van thrust en pitch.
+Deze berekeningen worden na iedere draai of na een bepaalde vliegafstand telkens opnieuw uitgevoerd.
+Als pixel waarop de berekeningen gebaseerd worden, kiezen we de pixel die het zwaartepunt van de gedetecteerde vorm weerspiegelt. Dit zwaartepunt bepalen we door de coördinaten van alle rode pixels op te slaan en hieruit de gemiddelde x- en y-co\"ordinaat te berekenen.
 
+\section{GUI}
+De GUI zal gezamenlijk gemaakt worden, zodanig de vereisten van beide subgroepen verwerkt kunnen worden. \\
 
+\newpage
+\appendix
+\section{Gantt chart} \label{App:Planning}
 
+\begin{figure}[h!]
+	\begin{center}
+		\includegraphics[angle=-90, scale = 0.7]{Planning.pdf}
+	\end{center}
+\end{figure}
 
-
-
-
+\newpage
 
 \end{document}
