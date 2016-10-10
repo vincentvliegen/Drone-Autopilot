@@ -14,6 +14,8 @@
 \usepackage{pdfpages}
 \usepackage{titlesec}
 \usepackage{textcomp}
+\usepackage{sidecap}
+\usepackage{caption}
 \usepackage{scrextend}
 \titleformat{\section}
 {\normalfont\fontsize{12}{15}\bfseries}{\thesection}{1em}{}
@@ -36,7 +38,7 @@ JMonkeyEngine is gebruiksvriendelijker dan OpenGL, maar door gebrek aan uitgebre
 Onze keuze gaat uit naar OpenGL ondanks alles gecodeerd moet worden. Toch kan dit deels omzeild worden door figuren te importeren vanuit Blender. Deze optie zal dan ook gebruikt worden. 
 
 \section{Autopilot}
-De drone autopilot moet zijn positie tegenover het doel kunnen bepalen aan de hand van twee gekregen camerabeelden. Eerst wordt de diepte bepaald op basis van de brandpuntsafstand, de afstand tussen de zichtbare rode bol op het frame en het middelpunt van het frame (in pixels) en de afstand tussen de camera\textquotesingle s (in meter).\footnote{Deze formule en de grafische weergave kan teruggevonden worden op: (NASA tech briefs : A Guide to Stereovision and 3D Imaging, http://www.techbriefs.com/component/content/article/14925, geraadpleegd op: 5/10/2016.)\label{refnote}}\\
+De drone autopilot moet zijn positie tegenover het doel kunnen bepalen aan de hand van twee gekregen camerabeelden. Eerst wordt de diepte bepaald op basis van de brandpuntsafstand, de afstand tussen de zichtbare rode bol op het frame en het middelpunt van het frame (in pixels) en de afstand tussen de camera\textquotesingle s (in meter).\footnote{Deze formule en de grafische weergave kan teruggevonden worden op: (NASA tech briefs : A Guide to Stereovision and 3D Imaging, http://www.techbriefs.com/component/content/article/14925, geraadpleegd op: 5/10/2016.)\label{refnote}} Zie appendix \ref{App:Afstand}. \\
 Om te vliegen, ori\"enteren we eerst de drone naar het doel. Hiervoor moet er opeenvolgend de bewegingen pitch, roll en yaw onder een bepaalde hoek uitgevoerd worden. Deze hoeken kunnen worden opgevraagd uit de interface. Vervolgens wordt naar het doel toegevlogen via een combinatie van thrust en pitch.
 Deze berekeningen worden na iedere draai of na een bepaalde vliegafstand telkens opnieuw uitgevoerd.
 Als pixel waarop de berekeningen gebaseerd worden, kiezen we de pixel die het zwaartepunt van de gedetecteerde vorm weerspiegelt. Dit zwaartepunt bepalen we door de coördinaten van alle rode pixels op te slaan en hieruit de gemiddelde x- en y-co\"ordinaat te berekenen.
@@ -50,10 +52,21 @@ De GUI zal gezamenlijk gemaakt worden, zodanig de vereisten van beide subgroepen
 
 \begin{figure}[h!]
 	\begin{center}
-		\includegraphics[angle=-90, scale = 0.7]{Planning.pdf}
+		\includegraphics[scale=0.55]{Planning.pdf}
 	\end{center}
 \end{figure}
 
-\newpage
+\section{Diepte-berekening} \label{App:Afstand}
 
-\end{document}
+\begin{figure}[h!]
+	\begin{center}
+		
+		\includegraphics[scale=0.35]{Afstanden.png}
+		\caption*{\(z = \frac{c \cdot f}{x_1 - x_2}\)}
+	\end{center}
+\end{figure}
+
+
+
+
+3\end{document}
