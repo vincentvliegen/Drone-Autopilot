@@ -28,14 +28,14 @@
 
 \noindent
 	Ons team bestaat uit Bram Vandendriessche, Matthias Van der Heyden, Jef Versyck, Vincent Vliegen, Arne Vlietinck en Laura Vranken. Bram werd aangeduid als CEO en Arne zal de taak van CAO op zich nemen. \\
-	Om op een effici\"ente manier het geheel te kunnen realiseren, wordt het team in twee verdeeld. De ene groep (Bram, jef en Arne) buigt zich over het virtual testbed. Het andere team  (Matthias, Vincent en Laura) zorgt voor de drone autopilot.\\
+	Om op een effici\"ente manier het geheel te kunnen realiseren, wordt het team in twee verdeeld. De ene groep (Bram, Jef en Arne) buigt zich over het virtual testbed. Het andere team  (Matthias, Vincent en Laura) zorgt voor de drone autopilot.\\
 	Een gedetailleerde planning kan teruggevonden worden in appendix \ref{App:Planning}.
 
 \section{API keuze}
 Als API voor het generen van 3D-beelden zijn er drie kandidaten: Blender, JMonkeyEngine en OpenGL.\\
-Blender heeft als voordeel dat voorwerpen gemakkelijk gegeneerd kunnen worden door de gebruiksvriendelijke interface. Daarnaast moet er voor Blender kennis zijn van Python, aan deze voorwaarde is niet door iedereen voldaan. Ook wordt er hierdoor een extra moeilijkheid gecre\"eerd, namelijk de \mbox{communicatie} tussen JAVA en Python. Vooral door deze laatste eigenschap zal er geen gebruik gemaakt worden van Blender. \\
+Blender heeft als voordeel dat voorwerpen gemakkelijk gegeneerd kunnen worden door de gebruiksvriendelijke interface. Daarnaast moet er voor Blender kennis zijn van Python, aan deze voorwaarde voldoet niet iedereen. Ook wordt er hierdoor een extra moeilijkheid gecre\"eerd, namelijk de \mbox{communicatie} tussen JAVA en Python. Vooral door deze laatste eigenschap zal er geen gebruik gemaakt worden van Blender. \\
 JMonkeyEngine is gebruiksvriendelijker dan OpenGL, maar door gebrek aan uitgebreide communities wordt er niet voor geopteerd.\\
-Onze keuze gaat uit naar OpenGL ondanks alles gecodeerd moet worden. Toch kan dit deels omzeild worden door figuren te importeren vanuit Blender. Deze optie zal dan ook gebruikt worden. 
+Onze keuze gaat uit naar OpenGL ondanks dat alles gecodeerd moet worden. Toch kan dit deels omzeild worden door figuren te importeren vanuit Blender. Deze optie zal dan ook gebruikt worden. 
 
 \section{Autopilot}
 De drone autopilot moet zijn positie tegenover het doel kunnen bepalen aan de hand van twee gekregen camerabeelden. Eerst wordt de diepte bepaald op basis van de brandpuntsafstand, de afstand tussen de zichtbare rode bol op het frame en het middelpunt van het frame (in pixels) en de afstand tussen de camera\textquotesingle s (in meter).\footnote{Deze formule en de grafische weergave kan teruggevonden worden op: (NASA tech briefs : A Guide to Stereovision and 3D Imaging, http://www.techbriefs.com/component/content/article/14925, geraadpleegd op: 5/10/2016.)\label{refnote}} Zie appendix \ref{App:Afstand}. \\
