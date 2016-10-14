@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Move element &apos;p_en_o_cw_2016&apos; to &apos;PenO Drone Simulation/src&apos;&#x0D;&#x0A;- Original project: &apos;PenO Drone Simulation&apos;&#x0D;&#x0A;- Destination element: &apos;PenO Drone Simulation/src&apos;&#x0D;&#x0A;- Original element: &apos;p_en_o_cw_2016&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move folder" destination="/src" element1="p_en_o_cw_2016" files="0" flags="589830" folders="1" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1475508450917" units="0" version="1.0"/>
-</session>
