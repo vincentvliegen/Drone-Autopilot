@@ -1,5 +1,5 @@
 package DroneAutopilot;
 
-public class RedOrb {
+public class MoveToRedOrb {
 
 }
