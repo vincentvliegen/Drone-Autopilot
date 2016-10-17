@@ -1,5 +1,6 @@
 package DroneAutopilot;
 
+import p_en_o_cw_2016.wireprotocol.TestbedStub;
 
 public class Drone implements p_en_o_cw_2016.Drone{
 
@@ -84,7 +85,6 @@ public class Drone implements p_en_o_cw_2016.Drone{
 	@Override
 	public void setPitchRate(float value) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

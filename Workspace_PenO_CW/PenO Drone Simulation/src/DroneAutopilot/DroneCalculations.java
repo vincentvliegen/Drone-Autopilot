@@ -8,9 +8,9 @@ public class DroneCalculations {
 	
 	public DroneCalculations(Drone drone){
 		this.setDrone(drone);
-		this.cameraSeparation = this.getDrone().getCameraSeparation();
-		this.horizontalAngleOfLeftView = this.getDrone().getLeftCamera().getHorizontalAngleOfView();
-		this.leftCameraWidth = this.getDrone().getLeftCamera().getWidth();
+		this.cameraSeparation = drone.getCameraSeparation();
+		this.horizontalAngleOfLeftView = drone.getLeftCamera().getHorizontalAngleOfView();
+		this.leftCameraWidth = drone.getLeftCamera().getWidth();
 	}
 	
 	private void setDrone(Drone drone){
@@ -26,6 +26,24 @@ public class DroneCalculations {
 	private float horizontalAngleOfLeftView;
 	private float leftCameraWidth;
 	
+	//TODO zwaartepunt kunnen opvragen
+	public float getX1(){
+		//xafstand linker tussen zwaartepunt en middelpunt
+		return 0;
+	}
+	
+	//TODO zwaartepunt kunnen opvragen
+	public float getX2(){
+		//xafstand rechter tussen zwaartepunt en middelpunt
+		return 0;
+	}
+	
+	//TODO zwaartepunt kunnen opvragen
+	public float getY1(){
+		//yafstand zwaartepunt en middelpunt
+		return 0;
+	}
+	
 	public float getfocalDistance(){
 		return (float) ((this.leftCameraWidth/2) / Math.tan(this.horizontalAngleOfLeftView/2));
 	}
@@ -33,23 +51,7 @@ public class DroneCalculations {
 	public float getDepth(){
 		return (this.cameraSeparation * this.getfocalDistance())/(this.getX1() - this.getX2());
 	}
-
-	//TODO zwaartepunt kunnen opvragen
-	public float getX1(){
-		//xafstand linker tussen zwaartepunt en middelpunt
-	}
-	
-	//TODO zwaartepunt kunnen opvragen
-	public float getX2(){
-		//xafstand rechter tussen zwaartepunt en middelpunt
-	}
-	
-	//TODO zwaartepunt kunnen opvragen
-	public float getY1(){
-		//yafstand zwaartepunt en middelpunt
-	}
-	
-	
+		
 	public float horizontalAngleDeviation(){
 		float x = (this.getDepth() * this.getX1()) / this.getfocalDistance();
 		float tanAlfa = (x - this.cameraSeparation/2) / this.getDepth();
@@ -60,7 +62,8 @@ public class DroneCalculations {
 		return (float) Math.atan(this.getY1() / this.getfocalDistance());
 	}
 
-
+	
+	
 	
 
 
