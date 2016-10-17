@@ -2,9 +2,21 @@ package DroneAutopilot;
 
 import p_en_o_cw_2016.*;
 
+
 public class DroneCalculations {
 
-}
+	public void depthcalculation(){
+		int camerafstand = TestbedStub.getCameraSeparation();
+		
+	}
+
+
+
+
+
+
+
+
 
 //TODO deftige documentatie, Engels
 //TODO enum red pixel/ andere manier van aanduiden, nu als int
