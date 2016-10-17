@@ -17,10 +17,9 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import javax.swing.JFrame;
 
 /**
- * A minimal JOGL demo.
+ * A drone simulation.
  * 
- * @author <a href="mailto:kain@land-of-kain.de">Kai Ruhl</a>
- * @since 26 Feb 2009
+ * @author Team Zilver
  */
 public class FlyingSpace extends GLCanvas implements GLEventListener {
 
@@ -37,11 +36,12 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 	private FPSAnimator animator;
 
 	/**
-	 * A new mini starter.
-	 * 
-	 * @param capabilities The GL capabilities.
-	 * @param width The window width.
-	 * @param height The window height.
+	 * @param 	capabilities 
+	 * 			The GL capabilities.
+	 * @param 	width 
+	 * 		  	The window width.
+	 * @param 	height 
+	 * 		  	The window height.
 	 */
 	public FlyingSpace(GLCapabilities capabilities, int width, int height) {
 		addGLEventListener(this);
@@ -88,12 +88,6 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		animator.start();
 	}
 
-	/**
-	 * The only method that you should implement by yourself.
-	 * 
-	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
-	 */
-
 	private static Camera camera = new Camera();
 
 	public void display(GLAutoDrawable drawable) {
@@ -109,27 +103,29 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		// Set camera.
 		setCamera(gl, glu, 200);
 
-		// translate
+		// Camera update for translate and rotate.
 		camera.update();
 		gl.glTranslated(camera.getX(), camera.getY(), camera.getZ());
 		gl.glRotated(camera.getAngle(), camera.getArray()[0], camera.getArray()[1], camera.getArray()[2]);
 
-		//light
+		// Light.
 
 		gl.glEnable( GL2.GL_LIGHTING );  
 		gl.glEnable( GL2.GL_LIGHT0 );  
 		gl.glEnable( GL2.GL_NORMALIZE );  
-		//		//		
+		
 		float[] light = {1f, 0, 0f, 0f};
 		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, light, 0);
 
 		float[] ambientLight = { 1f, 0f, 0f,0f };  
 		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambientLight, 0);  
 
-		//		// multicolor diffuse 
+		// multicolor diffuse 
 		float[] diffuseLight = { 1f,0f,0f,0f };  
 		gl.glLightfv( GL2.GL_LIGHT0, GL2.GL_DIFFUSE, diffuseLight, 0 );
 
+		
+		// Surface
 		gl.glColor3f(0.5f, 1f, 0.5f);
 		gl.glBegin(GL2.GL_POLYGON);
 		gl.glVertex3f(-50, 0, -50);
@@ -138,6 +134,7 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		gl.glVertex3f(-50, 0, 50);
 		gl.glEnd();
 
+		// Sphere
 		gl.glColor3f(1f, 0f, 0f);
 		gl.glTranslatef(0, 20, 0);
 		GLUT glut = new GLUT();
@@ -145,11 +142,6 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		final int slices = 16;
 		final int stacks = 16;
 		glut.glutSolidSphere(radius, stacks, slices); 
-
-
-
-
-
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -193,12 +185,9 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		canvas.addKeyListener(camera);
 	}
 
-
-
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
 }
