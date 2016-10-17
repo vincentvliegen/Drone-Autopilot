@@ -75,7 +75,7 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		gl.glShadeModel(GL2.GL_SMOOTH);
 
 		// Define "clear" color.
-		gl.glClearColor(0f, 0f, 0f, 0f);
+		gl.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
 
 		// We want a nice perspective.
 		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
@@ -93,6 +93,9 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 	 * 
 	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
 	 */
+	
+	private Camera camera = new Camera();
+	
 	public void display(GLAutoDrawable drawable) {
 		if (!animator.isAnimating()) {
 			return;
@@ -102,26 +105,31 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		// Clear screen.
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
+		
 		// Set camera.
 		setCamera(gl, glu, 200);
 		
+		// translate
+				gl.glTranslated(camera.x, camera.y, camera.z);
+				camera.update();
+		
 		//light
-//
-//		gl.glEnable( GL2.GL_LIGHTING );  
-//		gl.glEnable( GL2.GL_LIGHT0 );  
-//		gl.glEnable( GL2.GL_NORMALIZE );  
-//		//		
-//		float[] light = {1f, 0, 0f, 0f};
-//		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, light, 0);
-//
-//		float[] ambientLight = { 1f, 0.2f, 0.2f,1f };  
-//		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambientLight, 0);  
-//
-//		// multicolor diffuse 
-//		float[] diffuseLight = { 1f,2f,1f,0f };  
-//		gl.glLightfv( GL2.GL_LIGHT0, GL2.GL_DIFFUSE, diffuseLight, 0 );
 
-		gl.glColor3f(0f, 0.5f, 1f);
+		gl.glEnable( GL2.GL_LIGHTING );  
+		gl.glEnable( GL2.GL_LIGHT0 );  
+		gl.glEnable( GL2.GL_NORMALIZE );  
+//		//		
+		float[] light = {1f, 0, 0f, 0f};
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, light, 0);
+
+		float[] ambientLight = { 1f, 0f, 0f,0f };  
+		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambientLight, 0);  
+
+//		// multicolor diffuse 
+		float[] diffuseLight = { 1f,0f,0f,0f };  
+		gl.glLightfv( GL2.GL_LIGHT0, GL2.GL_DIFFUSE, diffuseLight, 0 );
+
+		gl.glColor3f(0.5f, 1f, 0.5f);
 		gl.glBegin(GL2.GL_POLYGON);
 		gl.glVertex3f(-50, 0, -50);
 		gl.glVertex3f(50, 0, -50);
@@ -129,7 +137,7 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		gl.glVertex3f(-50, 0, 50);
 		gl.glEnd();
 
-		gl.glColor3f(0.3f, 0.5f, 1f);
+		gl.glColor3f(1f, 0f, 0f);
 		gl.glTranslatef(0, 20, 0);
 		GLUT glut = new GLUT();
 		final float radius = 6.378f;
