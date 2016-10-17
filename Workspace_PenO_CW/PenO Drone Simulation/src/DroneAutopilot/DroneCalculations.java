@@ -60,6 +60,7 @@ public class DroneCalculations {
 		return (float) Math.atan(this.getY1() / this.getfocalDistance());
 	}
 
+
 	
 
 
