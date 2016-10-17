@@ -5,11 +5,19 @@ import java.awt.event.KeyListener;
 
 public class Camera implements KeyListener{
 	
-	public double x=0,y=0,z=0;
-	public boolean left, right, up, down;
-	
+	public double x=0,y=0,z=0, angle;
+	public boolean left, right, up, down, rotateUp, rotateDown, rotateRight, rotateLeft;
+	public int[] array={0,0,0};
 	public Camera(){}
 
+	public double getAngle() {
+		return angle;
+	}
+	
+	public int[] getArray(){
+		return this.array;
+	}
+	
 	public double getX() {
 		return x;
 	}
@@ -52,6 +60,14 @@ public class Camera implements KeyListener{
 			up = true;
 		if((key.getKeyCode()== KeyEvent.VK_DOWN))
 			down = true;	
+		if((key.getKeyCode()== KeyEvent.VK_E))
+			rotateUp = true;
+		if((key.getKeyCode()== KeyEvent.VK_D))
+			rotateDown = true;
+		if((key.getKeyCode()== KeyEvent.VK_F))
+			rotateRight = true;
+		if((key.getKeyCode()== KeyEvent.VK_S))
+			rotateLeft = true;
 	}
 
 
@@ -65,6 +81,14 @@ public class Camera implements KeyListener{
 			up = false;
 		if((key.getKeyCode()== KeyEvent.VK_DOWN))
 			down = false;	
+		if((key.getKeyCode()== KeyEvent.VK_E))
+			rotateUp = false;
+		if((key.getKeyCode()== KeyEvent.VK_D))
+			rotateDown = false;
+		if((key.getKeyCode()== KeyEvent.VK_F))
+			rotateRight = false;
+		if((key.getKeyCode()== KeyEvent.VK_S))
+			rotateLeft = false;
 	}
 	
 	public void update(){
@@ -75,11 +99,37 @@ public class Camera implements KeyListener{
 			x += 0.2;
 		}
 		if(up){
-			y -= 0.2;
+			z -= 0.2;
 		}
 		if(down){
-			y += 0.2;
+			z += 0.2;
 		}
+		if(rotateUp){
+			 angle += 5;
+			 array[0]=1;
+			 array[1]=0;
+			 array[2]=0;
+		}
+		if(rotateDown){
+			angle -= 5;
+			array[0]=1;
+			 array[1]=0;
+			 array[2]=0;
+			
+		}
+		if(rotateRight){
+			angle += 5;
+			array[0]=0;
+			 array[1]=1;
+			 array[2]=0;
+		}
+		if(rotateLeft){
+			angle -= 5;
+			array[0]=0;
+			 array[1]=1;
+			 array[2]=0;
+		}
+		
 	}
 
 }
