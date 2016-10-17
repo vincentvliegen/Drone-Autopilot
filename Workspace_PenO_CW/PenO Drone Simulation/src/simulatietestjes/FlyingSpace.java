@@ -93,9 +93,9 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 	 * 
 	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
 	 */
-	
-	private Camera camera = new Camera();
-	
+
+	private static Camera camera = new Camera();
+
 	public void display(GLAutoDrawable drawable) {
 		if (!animator.isAnimating()) {
 			return;
@@ -105,27 +105,27 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		// Clear screen.
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-		
+
 		// Set camera.
 		setCamera(gl, glu, 200);
-		
+
 		// translate
-				gl.glTranslated(camera.x, camera.y, camera.z);
-				camera.update();
-		
+		camera.update();
+		gl.glTranslated(camera.getX(), camera.getY(), camera.getZ());
+
 		//light
 
 		gl.glEnable( GL2.GL_LIGHTING );  
 		gl.glEnable( GL2.GL_LIGHT0 );  
 		gl.glEnable( GL2.GL_NORMALIZE );  
-//		//		
+		//		//		
 		float[] light = {1f, 0, 0f, 0f};
 		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, light, 0);
 
 		float[] ambientLight = { 1f, 0f, 0f,0f };  
 		gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambientLight, 0);  
 
-//		// multicolor diffuse 
+		//		// multicolor diffuse 
 		float[] diffuseLight = { 1f,0f,0f,0f };  
 		gl.glLightfv( GL2.GL_LIGHT0, GL2.GL_DIFFUSE, diffuseLight, 0 );
 
@@ -189,8 +189,9 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		canvas.requestFocus();
+		canvas.addKeyListener(camera);
 	}
-	
+
 
 
 	@Override
