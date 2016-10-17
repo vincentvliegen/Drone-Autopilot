@@ -1,0 +1,45 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf510
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 Een aantal studenten vroegen naar het verschil tussen "abstract" en "inleiding".\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 Zie de slides van Prof. De Schutter (slide 8, getiteld "samenvatting", gaat over het abstract; slide 11 gaat over de inleiding).  Wat bijkomende omschrijving:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+- Een abstract is een korte samenvatting van de tekst.  Wie het abstract leest, weet in heel algemene termen waar de tekst over gaat (maar kent de details niet).  Het abstract is inhoudelijk "afgerond": het vat het hele rapport samen, van inleiding tot conclusies.\
+- De inleiding leidt de tekst in: ze schetst de context van het werk, de doelstellingen, etc.  In het algemeen staat in de inleiding alles wat de lezer moet weten om de rest van de tekst te kunnen lezen.  De inleiding is niet "afgerond" zoals het abstract; integendeel, de inleiding laat de lezer normaal gezien met vragen zitten, die dan in de rest van de tekst beantwoord worden.  De inleiding is ook gedetailleerder dan het abstract (maar gewoonlijk minder gedetailleerd dan de secties die daarop volgen).  \
+\
+Hieronder volgt ter illustratie een abstract van een wetenschappelijk artikel van 15 bladzijden, en de inleiding van datzelfde artikel.\
+\
+\
+
+\b \ul Abstract:\
+
+\b0 \ulnone \
+We consider the following problem: Given a set of data and one or more examples of clusters, find a clustering of the whole data set that is consistent with the given clusters. This is essentially a semi-supervised clustering problem, but it differs from previously studied semi-supervised clustering settings in significant ways. Earlier work has shown that none of the existing methods for semi-supervised clustering handle this problem well. We identify two reasons for this, which are related to the default metric learning methods not working well in this situation, and to overfitting behavior. We investigate the latter in more detail and propose a new method that explicitly guards against overfitting. Experimental results confirm that the new method generalizes much better. Several other problems identified here remain open.\
+\
+\
+
+\b \ul Inleiding:\ulnone \
+
+\i\b0 (Schetst de context van dit werk, en de doelstellingen, in veel meer detail dan het abstract.  Geeft ook enige informatie over waar de rest van de tekst over gaat.)\
+
+\i0 \
+The task of clustering data is ubiquitous in knowledge discovery. Partitional (or non-hierarchical) clustering can be defined as the following task: given a dataset D, partition D into subsets (\'93clusters\'94) such that instances within the same cluster tend to be similar, and instances in different clusters dissimilar. The notion of \'93similarity\'94 is crucial here: depending on how this is defined, different solutions will be found. This is true especially for high-dimensional spaces, where different subspaces may reveal different clusterings [1].\
+\
+It is not always easy for a user to define a good similarity measure. However, users may be able to give examples of instances that in their opinion should, or should not, belong to the same cluster. The clustering system may use this information to understand better the notion of similarity that the user has in mind, and as a consequence produce a better clustering. This type of clustering setting is called semi-supervised clustering, or constraint-based clustering, as the user gives partial information about the desired clustering in the form of constraints that the clustering must fulfill.\
+\
+Most existing methods for semi-supervised clustering allow the user to provide a number of so-called must-link and cannot-link constraints, indicating for pairs of instances whether they should (not) be in the same cluster. Vens et al. [11] recently introduced a slightly different setting, called ''semi-supervised clustering with example clusters''. The task can be formulated as follows: given a set of data and one or more examples of clusters in the data, find a clustering of the entire data set that is consistent with these example clusters. While this task could in principle be formulated for hierarchical as well as partitional clustering, we focus here on partitional clustering, as do Vens et al.  \
+\
+This type of supervision is often quite natural. Take, for instance, entity resolution in a database of authors: the task is to cluster occurrences of author names on papers such that occurrences are in the same cluster if they refer to the same actual person (this task is not trivial because different persons may have the same name, and the same person may be referred to in different ways, e.g., \'93John Smith\'94, \'93J.L. Smith\'94).  If one person indicates all the papers she authored, that set of papers is an example cluster. Knowing one, or a few, such clusters may help the system determine what kinds of clusters are good, so it can better cluster the other instances. Similarly, when clustering images of faces, one may want to cluster according to identity, poses, emotions, etc. Providing a few example clusters may be easy, and may help the system optimize its similarity measure.\
+\
+Strictly speaking, the task of clustering from example clusters is a special case of semi-supervised clustering using must-link and cannot-link constraints. Indeed, an example cluster can be translated to a set of such constraints. There are disadvantages to such a translation, however: it can generate a large number of pairwise constraints, and these will be distributed very unevenly over the data set. This is a rather extreme setting for standard semi-supervised clustering methods, and it is not obvious that existing methods can handle it well. In fact, Vens et al. show experimentally that they do not, and also show that a method that explicitly addresses the problem can do better. They do not provide much insight into why this is, though.\
+\
+In this paper, we analyze the problem of semi-supervised clustering with example clusters in more detail. We provide insight into why existing methods for semi- supervised clustering do not handle this type of problem very well. We identify two reasons. First, most of these methods learn a Mahalanobis distance metric that is more consistent with the given constraints; an alternative view on this is that they implicitly transform the data in such a way that data points that should end up in the same cluster are drawn closer together (and data points that should not, are not). We illustrate visually that these methods may not have the desired effect when the pairwise constraints are concentrated in one cluster. Second, the learned metric has a tendency to overfit the example clusters, especially when learning from few and/or small example clusters, and when learning in high-dimensional spaces. This overfitting was mentioned by Vens et al., but not studied in detail, and no solution was proposed. We here propose an improvement to Vens et al.\'92s method that explicitly takes the overfitting into account and guards against it. We show that the improved method yields considerably better results.\
+\
+The remainder of this paper is structured as follows. We first briefly survey the work on semi-supervised clustering (Section 2), including the recent work by Vens et al. [11], on which we build. We next identify two problems that these methods suffer from, and investigate empirically to what extent they do (Section 3). These observations lead to an improved version of Vens et al.\'92s method, which we describe and empirically evaluate in Section 4. Section 5 presents our conclusions.\
+}
