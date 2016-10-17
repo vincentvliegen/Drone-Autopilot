@@ -25,23 +25,40 @@ public Drone getDrone(){
 
 private Drone drone;
 
+//TODO hoe worden pixels gegeven?
+private int white;
 
+//TODO
+public int[] indexToCoordinates(int index){
+	return null;
+}
 
+//TODO
+public int coordinatesToIndex(int[] coordinates){
+	return 0;
+}
 
-
-//TODO deftige documentatie, Engels
-//TODO enum red pixel/ andere manier van aanduiden, nu als int
 //TODO
 //algoritme uitwaartse spiraal met beginpositie
-//zoekt een rode pixel in de buurt van de verwachtte positie
-	public int getNearestPosRedPix(int expectedPos, Camera camera){
-		Camera camera = camera; 
-		int width =  getWidth();
-		int currentPos = expectedPos;
+//zoekt een pixel in de buurt van de verwachtte positie
+	public int[] getPosColoredOrb(int[] expectedPos, Camera camera, int colorOrbToLookFor){
+		Camera currentCamera = camera;
+		int[] currentPos = expectedPos;
+		int[] image = currentCamera.takeImage();
+		int width =  currentCamera.getWidth();
 		int columnCounter = 1;
 		int rowCounter = 1;
 		int height = image.length/width;
-		
-
+		int orbColor = colorOrbToLookFor;
+		int currentColor;
+		for(int i = 0; image.length > i; i++){
+			currentColor = image[coordinatesToIndex(currentPos)];
+			if(currentColor == colorOrbToLookFor){
+				
+			}
+		}
+		return null;
 	}
+	
+	
 }
