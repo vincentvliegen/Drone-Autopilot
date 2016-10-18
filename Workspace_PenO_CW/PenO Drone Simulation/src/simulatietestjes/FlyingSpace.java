@@ -138,14 +138,23 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		gl.glVertex3f(-50, 0, 50);
 		gl.glEnd();
 
-		gl.glColor3f(1f, 0f, 0f);
-		gl.glTranslatef(0, 20, 0);
+		
+		double[] translate = {0,20,0};
+		float[] color = {1f,0f,0f};
+		Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, color, translate);
+		sphere1.drawSphere();
+
+		
+	/*	gl.glColor3f(1f, 0f, 0f);
+		gl.glTranslated(0, 20, 0);
 		GLUT glut = new GLUT();
 		final float radius = 6.378f;
 		final int slices = 16;
 		final int stacks = 16;
-		glut.glutSolidSphere(radius, stacks, slices); 
-
+		glut.glutSolidSphere(radius, stacks, slices);
+		
+		*/ 
+	
 
 
 
