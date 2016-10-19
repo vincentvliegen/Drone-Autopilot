@@ -5,17 +5,22 @@ import java.awt.event.KeyListener;
 
 public class Camera implements KeyListener{
 	
-	public double x=0,y=0,z=0, angle;
-	public boolean left, right, up, down, rotateUp, rotateDown, rotateRight, rotateLeft;
-	public int[] array={0,0,0};
+	public double x=0,y=0,z=0;
+	public boolean left, right, up, down, front, back, rotateUp, rotateDown, rotateRight, rotateLeft, rotateZ1, rotateZ2;
+	// public int[] array={0,0,0};
+	private float rotateX, rotateY, rotateZ;
 	public Camera(){}
-
-	public double getAngle() {
-		return angle;
+	
+	public float getRotateX(){
+		return rotateX;
 	}
 	
-	public int[] getArray(){
-		return this.array;
+	public float getRotateY(){
+		return rotateY;
+	}
+	
+	public float getRotateZ(){
+		return rotateZ;
 	}
 	
 	public double getX() {
@@ -52,70 +57,96 @@ public class Camera implements KeyListener{
 	public void keyPressed(KeyEvent key) {
 		if((key.getKeyCode()== KeyEvent.VK_LEFT))
 			left = true;
-		if((key.getKeyCode()== KeyEvent.VK_RIGHT))
+		else if((key.getKeyCode()== KeyEvent.VK_RIGHT))
 			right = true;
-		if((key.getKeyCode()== KeyEvent.VK_UP))
+		else if((key.getKeyCode()== KeyEvent.VK_UP))
+			front = true;
+		else if((key.getKeyCode()== KeyEvent.VK_DOWN))
+			back = true;	
+		else if((key.getKeyCode()== KeyEvent.VK_P))
 			up = true;
-		if((key.getKeyCode()== KeyEvent.VK_DOWN))
+		else if((key.getKeyCode()== KeyEvent.VK_M))
 			down = true;	
-		if((key.getKeyCode()== KeyEvent.VK_E))
+		else if((key.getKeyCode()== KeyEvent.VK_E))
 			rotateUp = true;
-		if((key.getKeyCode()== KeyEvent.VK_D))
+		else if((key.getKeyCode()== KeyEvent.VK_D))
 			rotateDown = true;
-		if((key.getKeyCode()== KeyEvent.VK_F))
+		else if((key.getKeyCode()== KeyEvent.VK_F))
 			rotateRight = true;
-		if((key.getKeyCode()== KeyEvent.VK_S))
+		else if((key.getKeyCode()== KeyEvent.VK_S))
 			rotateLeft = true;
+		else if((key.getKeyCode()== KeyEvent.VK_A))
+			rotateZ1 = true;
+		else if((key.getKeyCode()== KeyEvent.VK_Z))
+			rotateZ2 = true;
+		else if (key.getKeyCode()== KeyEvent.VK_SPACE)
+			rotateX = rotateY = rotateZ = 0;
 	}
 
 	@Override
 	public void keyReleased(KeyEvent key) {
 		if((key.getKeyCode()== KeyEvent.VK_LEFT))
 			left = false;
-		if((key.getKeyCode()== KeyEvent.VK_RIGHT))
+		else if((key.getKeyCode()== KeyEvent.VK_RIGHT))
 			right = false;
-		if((key.getKeyCode()== KeyEvent.VK_UP))
+		else if((key.getKeyCode()== KeyEvent.VK_UP))
+			front = false;
+		else if((key.getKeyCode()== KeyEvent.VK_DOWN))
+			back = false;	
+		else if((key.getKeyCode()== KeyEvent.VK_P))
 			up = false;
-		if((key.getKeyCode()== KeyEvent.VK_DOWN))
+		else if((key.getKeyCode()== KeyEvent.VK_M))
 			down = false;	
-		if((key.getKeyCode()== KeyEvent.VK_E))
+		else if((key.getKeyCode()== KeyEvent.VK_E))
 			rotateUp = false;
-		if((key.getKeyCode()== KeyEvent.VK_D))
+		else if((key.getKeyCode()== KeyEvent.VK_D))
 			rotateDown = false;
-		if((key.getKeyCode()== KeyEvent.VK_F))
+		else if((key.getKeyCode()== KeyEvent.VK_F))
 			rotateRight = false;
-		if((key.getKeyCode()== KeyEvent.VK_S))
+		else if((key.getKeyCode()== KeyEvent.VK_A))
+			rotateZ1 = false;
+		else if((key.getKeyCode()== KeyEvent.VK_Z))
+			rotateZ2 = false;
+		else if((key.getKeyCode()== KeyEvent.VK_S))
 			rotateLeft = false;
 	}
 	
 	public void update(){
 		if(right){
-			x -= 0.2;
+			x -= 1;
 		}
-		if(left){
-			x += 0.2;
+		else if(left){
+			x += 1;
 		}
-		if(up){
-			z -= 0.2;
+		else if(up){
+			y -= 1;
 		}
-		if(down){
-			z += 0.2;
+		else if(down){
+			y += 1;
 		}
-		if(rotateUp){
-			 angle += 5;
-			 array[0]=1;
+		else if(front){
+			z -= 1;
 		}
-		if(rotateDown){
-			angle -= 5;
-			array[0]=1;
+		else if(back){
+			z += 1;
 		}
-		if(rotateRight){
-			angle += 5;
-			 array[1]=1;
+		else if(rotateUp){
+			 rotateX -=10;
 		}
-		if(rotateLeft){
-			angle -= 5;
-			 array[1]=1;
+		else if(rotateDown){
+			rotateX +=10;
+		}
+		else if(rotateRight){
+			rotateY += 10;
+		}
+		else if(rotateLeft){
+			rotateY -= 10;
+		}
+		else if(rotateZ1){
+			rotateZ += 10;
+		}
+		else if(rotateZ2){
+			rotateZ -= 10;
 		}
 		
 	}

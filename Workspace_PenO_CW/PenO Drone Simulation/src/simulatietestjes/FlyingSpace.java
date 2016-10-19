@@ -112,7 +112,9 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		// translate
 		camera.update();
 		gl.glTranslated(camera.getX(), camera.getY(), camera.getZ());
-		gl.glRotated(camera.getAngle(), camera.getArray()[0], camera.getArray()[1], camera.getArray()[2]);
+		gl.glRotated(camera.getRotateX(), 1, 0, 0);
+		gl.glRotated(camera.getRotateY(), 0, 1, 0);
+		gl.glRotated(camera.getRotateZ(), 0, 0, 1);
 
 		//light
 
