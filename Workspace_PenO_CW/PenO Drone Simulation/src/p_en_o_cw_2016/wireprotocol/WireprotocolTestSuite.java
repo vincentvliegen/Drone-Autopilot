@@ -65,7 +65,8 @@ class WireProtocolTestSuite {
                         }
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
+                    System.exit(1);
                 }
                 success = true;
             }

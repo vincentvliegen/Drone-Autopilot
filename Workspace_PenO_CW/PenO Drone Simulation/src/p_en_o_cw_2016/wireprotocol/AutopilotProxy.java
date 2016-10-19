@@ -39,6 +39,7 @@ public class AutopilotProxy {
                             os.writeFloat(drone.getPitch());
                             os.writeFloat(drone.getRoll());
                             os.writeFloat(drone.getCurrentTime());
+                            os.flush();
 
                             drone.setPitchRate(is.readFloat());
                             drone.setRollRate(is.readFloat());
