@@ -130,18 +130,26 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		float[] diffuseLight = { 1f,0f,0f,0f };  
 		gl.glLightfv( GL2.GL_LIGHT0, GL2.GL_DIFFUSE, diffuseLight, 0 );
 
-		gl.glColor3f(0.5f, 1f, 0.5f);
+		float[] colorSurface = {0.5f, 1f, 0.5f};
+		float[] p1 = {-50, 0, -50};
+		float[] p2 = {50, 0, -50};
+		float[] p3 = {50, 0, 50};
+		float[] p4 = {-50, 0, 50};
+		Surface surface1 = new Surface(gl, p1, p2, p3, p4, colorSurface);
+		surface1.drawSurface();
+		
+	/*	gl.glColor3f(0.5f, 1f, 0.5f);
 		gl.glBegin(GL2.GL_POLYGON);
 		gl.glVertex3f(-50, 0, -50);
 		gl.glVertex3f(50, 0, -50);
 		gl.glVertex3f(50, 0, 50);
 		gl.glVertex3f(-50, 0, 50);
-		gl.glEnd();
+		gl.glEnd();*/
 
 		
 		double[] translate = {0,20,0};
-		float[] color = {1f,0f,0f};
-		Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, color, translate);
+		float[] colorSphere = {1f,0f,0f};
+		Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere, translate);
 		sphere1.drawSphere();
 
 		
