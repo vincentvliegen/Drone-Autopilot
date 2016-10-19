@@ -2,6 +2,8 @@ package simulatietestjes;
 
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -14,7 +16,12 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
+import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * A minimal JOGL demo.
@@ -202,8 +209,17 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 	public final static void main(String[] args) {
 		GLCapabilities capabilities = createGLCapabilities();
 		FlyingSpace canvas = new FlyingSpace(capabilities, 800, 500);
+		
+		//JDesktopPane desktopPane = new JDesktopPane();
+		//JInternalFrame gui = new SimulationGUI();
+		//gui.setSize(100, 50);
+		//gui.setResizable(true);
+		//gui.setVisible(true);
+		//desktopPane.add(gui);
+		
 		JFrame frame = new JFrame("Mini JOGL Demo (breed)");
 		frame.getContentPane().add(canvas, BorderLayout.CENTER);
+		//frame.add(gui);
 		frame.setSize(800, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
