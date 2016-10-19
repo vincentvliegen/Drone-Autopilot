@@ -46,9 +46,7 @@ public class Camera implements KeyListener{
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
-
 
 	@Override
 	public void keyPressed(KeyEvent key) {
@@ -69,7 +67,6 @@ public class Camera implements KeyListener{
 		if((key.getKeyCode()== KeyEvent.VK_S))
 			rotateLeft = true;
 	}
-
 
 	@Override
 	public void keyReleased(KeyEvent key) {
@@ -107,27 +104,18 @@ public class Camera implements KeyListener{
 		if(rotateUp){
 			 angle += 5;
 			 array[0]=1;
-			 array[1]=0;
-			 array[2]=0;
 		}
 		if(rotateDown){
 			angle -= 5;
 			array[0]=1;
-			 array[1]=0;
-			 array[2]=0;
-			
 		}
 		if(rotateRight){
 			angle += 5;
-			array[0]=0;
 			 array[1]=1;
-			 array[2]=0;
 		}
 		if(rotateLeft){
 			angle -= 5;
-			array[0]=0;
 			 array[1]=1;
-			 array[2]=0;
 		}
 		
 	}
