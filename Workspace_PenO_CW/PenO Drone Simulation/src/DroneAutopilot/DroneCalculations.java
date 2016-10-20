@@ -1,5 +1,7 @@
 package DroneAutopilot;
 
+import implementedInterfaces.Camera;
+import implementedInterfaces.Drone;
 import p_en_o_cw_2016.*;
 import p_en_o_cw_2016.wireprotocol.TestbedStub;
 
