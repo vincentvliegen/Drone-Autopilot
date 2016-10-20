@@ -1,8 +1,8 @@
 package DroneAutopilot;
 
-public class MoveToRedOrb {
+public class MoveToTarget {
 
-	public MoveToRedOrb(){
+	public MoveToTarget(){
 		
 	}
 	
