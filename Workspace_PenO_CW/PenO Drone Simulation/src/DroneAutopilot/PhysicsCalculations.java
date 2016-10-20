@@ -1,59 +1,48 @@
 package DroneAutopilot;
 
-import implementedInterfaces.Camera;
 import implementedInterfaces.Drone;
-import p_en_o_cw_2016.*;
-import p_en_o_cw_2016.wireprotocol.TestbedStub;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PhysicsCalculations {
-	
-	public PhysicsCalculations(){
-		this.cameraSeparation = this.getDrone().getCameraSeparation();
-		this.horizontalAngleOfLeftView = this.getDrone().getLeftCamera().getHorizontalAngleOfView();
-		this.leftCameraWidth = this.getDrone().getLeftCamera().getWidth();
-	}
-	
-
-	private float cameraSeparation;
-	private float horizontalAngleOfLeftView;
-	private int leftCameraWidth;
-	
-	//TODO zwaartepunt kunnen opvragen
-	public int getX1(){
+		
+	public int getX1(Drone drone, int[] pointOfGravity){
 		//xafstand linker tussen zwaartepunt en middelpunt
-		return 0;
+		int distance = pointOfGravity[0] - drone.getLeftCamera().getWidth()/2;
+		return distance;
 	}
 	
-	//TODO zwaartepunt kunnen opvragen
-	public int getX2(){
+	public int getX2(Drone drone, int[] pointOfGravity){
 		//xafstand rechter tussen zwaartepunt en middelpunt
-		return 0;
+		int distance = pointOfGravity[0] - drone.getRightCamera().getWidth()/2;
+		return distance;
 	}
 	
-	//TODO zwaartepunt kunnen opvragen
-	public int getY1(){
+	public int getY(Drone drone, int[] pointOfGravity){
 		//yafstand zwaartepunt en middelpunt
-		return 0;
+		int distance = pointOfGravity[1] - this.getCameraHeight(drone)/2;
+		return distance;
 	}
 	
-	public float getfocalDistance(){
-		return (float) ((this.leftCameraWidth/2) / Math.tan(this.horizontalAngleOfLeftView/2));
+	public int getCameraHeight(Drone drone){
+		int height =  (int) (Math.tan(drone.getLeftCamera().getVerticalAngleOfView())*this.getfocalDistance(drone)*2);
+		return height;
 	}
 	
-	public float getDepth(){
-		return (this.cameraSeparation * this.getfocalDistance())/(this.getX1() - this.getX2());
+	public float getfocalDistance(Drone drone){
+		return (float) ((drone.getLeftCamera().getWidth()/2) / Math.tan(drone.getLeftCamera().getHorizontalAngleOfView()/2));
+	}
+	
+	public float getDepth(Drone drone, int[] pointOfGravity){
+		return (drone.getCameraSeparation() * this.getfocalDistance(drone))/(this.getX1(drone, pointOfGravity) - this.getX2(drone, pointOfGravity));
 	}
 		
-	public float horizontalAngleDeviation(){
-		float x = (this.getDepth() * this.getX1()) / this.getfocalDistance();
-		float tanAlfa = (x - this.cameraSeparation/2) / this.getDepth();
+	public float horizontalAngleDeviation(Drone drone, int[] pointOfGravity){
+		float x = (this.getDepth(drone, pointOfGravity) * this.getX1(drone, pointOfGravity)) / this.getfocalDistance(drone);
+		float tanAlfa = (x - drone.getCameraSeparation()/2) / this.getDepth(drone, pointOfGravity);
 		return (float) Math.atan(tanAlfa);
 	}
 	
-	public float verticalAngleDeviation(){
-		return (float) Math.atan(this.getY1() / this.getfocalDistance());
+	public float verticalAngleDeviation(Drone drone, int[] pointOfGravity){
+		return (float) Math.atan(this.getY(drone, pointOfGravity) / this.getfocalDistance(drone));
 	}
 	
 }
