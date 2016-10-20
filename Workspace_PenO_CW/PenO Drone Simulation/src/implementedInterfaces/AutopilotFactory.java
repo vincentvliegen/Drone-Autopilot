@@ -1,4 +1,4 @@
-package DroneAutopilot;
+package implementedInterfaces;
 
 import p_en_o_cw_2016.Autopilot;
 import p_en_o_cw_2016.Drone;

@@ -210,12 +210,7 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		GLCapabilities capabilities = createGLCapabilities();
 		FlyingSpace canvas = new FlyingSpace(capabilities, 800, 500);
 		
-		//JDesktopPane desktopPane = new JDesktopPane();
-		//JInternalFrame gui = new SimulationGUI();
-		//gui.setSize(100, 50);
-		//gui.setResizable(true);
-		//gui.setVisible(true);
-		//desktopPane.add(gui);
+		
 		
 		JFrame frame = new JFrame("Mini JOGL Demo (breed)");
 		frame.getContentPane().add(canvas, BorderLayout.CENTER);
@@ -223,6 +218,9 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		frame.setSize(800, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+		//JDesktopPane desktopPane = new JDesktopPane();
+		SimulationGUI gui = new SimulationGUI();
+		//desktopPane.add(gui);
 		canvas.requestFocus();
 		canvas.addKeyListener(camera);
 	}

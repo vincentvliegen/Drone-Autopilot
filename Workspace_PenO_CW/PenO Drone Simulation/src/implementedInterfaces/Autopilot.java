@@ -1,4 +1,4 @@
-package DroneAutopilot;
+package implementedInterfaces;
 
 public class Autopilot implements p_en_o_cw_2016.Autopilot{
 
@@ -11,4 +11,14 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 		
 	}
 
+	public void setDrone(Drone drone){
+		this.drone = drone;
+	}
+	
+	public Drone getDrone(){
+		return this.drone;
+	}
+	
+	private Drone drone;
+	
 }
