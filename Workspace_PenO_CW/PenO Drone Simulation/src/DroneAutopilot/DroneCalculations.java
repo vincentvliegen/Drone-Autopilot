@@ -8,14 +8,13 @@ import p_en_o_cw_2016.wireprotocol.TestbedStub;
 
 public class DroneCalculations {
 	
-	public DroneCalculations(Drone drone){
-		this.setDrone(drone);
-		this.cameraSeparation = drone.getCameraSeparation();
-		this.horizontalAngleOfLeftView = drone.getLeftCamera().getHorizontalAngleOfView();
-		this.leftCameraWidth = drone.getLeftCamera().getWidth();
+	public DroneCalculations(){
+		this.cameraSeparation = this.getDrone().getCameraSeparation();
+		this.horizontalAngleOfLeftView = this.getDrone().getLeftCamera().getHorizontalAngleOfView();
+		this.leftCameraWidth = this.getDrone().getLeftCamera().getWidth();
 	}
 	
-	private void setDrone(Drone drone){
+	public void setDrone(Drone drone){
 		this.drone = drone;
 	}
 	
@@ -26,22 +25,22 @@ public class DroneCalculations {
 	private Drone drone;
 	private float cameraSeparation;
 	private float horizontalAngleOfLeftView;
-	private float leftCameraWidth;
+	private int leftCameraWidth;
 	
 	//TODO zwaartepunt kunnen opvragen
-	public float getX1(){
+	public int getX1(){
 		//xafstand linker tussen zwaartepunt en middelpunt
 		return 0;
 	}
 	
 	//TODO zwaartepunt kunnen opvragen
-	public float getX2(){
+	public int getX2(){
 		//xafstand rechter tussen zwaartepunt en middelpunt
 		return 0;
 	}
 	
 	//TODO zwaartepunt kunnen opvragen
-	public float getY1(){
+	public int getY1(){
 		//yafstand zwaartepunt en middelpunt
 		return 0;
 	}
