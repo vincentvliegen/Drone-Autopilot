@@ -2,13 +2,16 @@ package DroneAutopilot;
 
 import java.util.ArrayList;
 
+import implementedClasses.Drone;
+
+
 public class MoveToTarget {
 
 	public MoveToTarget(){
 		
 	}
 	
-	public void checkcasespixelsfound(ArrayList leftcamera, ArrayList rightcamera){
+	public void checkcasespixelsfound( Drone drone, ArrayList leftcamera, ArrayList rightcamera){
 		if (leftcamera.isEmpty() && rightcamera.isEmpty())
 			noTargetFound();
 		else if (!leftcamera.isEmpty() && rightcamera.isEmpty())
@@ -16,23 +19,30 @@ public class MoveToTarget {
 		else if (leftcamera.isEmpty() && !rightcamera.isEmpty())
 			rightCameraFoundTarget();
 		else if (!leftcamera.isEmpty() && !rightcamera.isEmpty())
-			targetVisible();
+			targetVisible(drone);
 	}
 	
+	private float slowyaw; //TODO bepalen in verhouding tot max
+	
 	public void noTargetFound(){
-		
+		this.setYawRate(this.slowyaw);
 	}
 	
 	public void leftCameraFoundTarget(){
-		
+		this.setYawRate(-this.slowyaw);
 	}
 	
 	public void rightCameraFoundTarget(){
-		
+		this.setYawRate(this.slowyaw);
 	}
 	
-	public void targetVisible(){
-		
+	//TODO checken wanneer aangekomen (yaw) en die terug op nul zetten -> boolean
+	public void targetVisible(Drone drone){
+		this.setYawRate(0);
+		this.setRollRate(0);
+		int[] pointOfGravity = ; //functie zwaartepunt
+		float angle = PhysicsCalculations.horizontalAngleDeviation(drone, pointOfGravity);
+		this.setYawRate(drone.getMaxYawRate());
 	}
 	
 	public void setPitchRate(float value){

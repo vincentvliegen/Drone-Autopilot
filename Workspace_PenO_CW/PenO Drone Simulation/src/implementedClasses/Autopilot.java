@@ -1,4 +1,4 @@
-package implementedInterfaces;
+package implementedClasses;
 
 public class Autopilot implements p_en_o_cw_2016.Autopilot{
 

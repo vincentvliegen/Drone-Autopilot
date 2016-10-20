@@ -1,6 +1,6 @@
 package DroneAutopilot;
 
-import implementedInterfaces.Drone;
+import implementedClasses.Drone;
 
 public class PhysicsCalculations {
 		
