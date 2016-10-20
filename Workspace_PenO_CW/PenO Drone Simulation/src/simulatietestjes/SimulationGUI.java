@@ -2,12 +2,13 @@ package simulatietestjes;
 
 import java.awt.EventQueue;
 
-import javax.swing.JInternalFrame;
-import javax.swing.JTextField;
+import javax.swing.JFrame;
+import javax.swing.JButton;
 import java.awt.BorderLayout;
 
-public class SimulationGUI extends JInternalFrame {
-	private JTextField txtHallo;
+public class SimulationGUI {
+
+	private JFrame frame;
 
 	/**
 	 * Launch the application.
@@ -16,8 +17,8 @@ public class SimulationGUI extends JInternalFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SimulationGUI frame = new SimulationGUI();
-					frame.setVisible(true);
+					SimulationGUI window = new SimulationGUI();
+					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -26,16 +27,24 @@ public class SimulationGUI extends JInternalFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Create the application.
 	 */
 	public SimulationGUI() {
-		setBounds(100, 100, 450, 300);
-		
-		txtHallo = new JTextField();
-		txtHallo.setText("Hallo!");
-		getContentPane().add(txtHallo, BorderLayout.CENTER);
-		txtHallo.setColumns(10);
+		initialize();
+	}
 
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {	
+		frame = new JFrame();
+		frame.setSize(100, 50);
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		
+		JButton btnHey = new JButton("Hey ");
+		frame.getContentPane().add(btnHey, BorderLayout.CENTER);
 	}
 
 }
