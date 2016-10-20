@@ -22,18 +22,18 @@ public class MoveToTarget {
 			targetVisible(drone);
 	}
 	
-	private float slowyaw; //TODO bepalen in verhouding tot max
+	private float slowYaw; //TODO bepalen in verhouding tot max
 	
 	public void noTargetFound(){
-		this.setYawRate(this.slowyaw);
+		this.setYawRate(this.slowYaw);
 	}
 	
 	public void leftCameraFoundTarget(){
-		this.setYawRate(-this.slowyaw);
+		this.setYawRate(-this.slowYaw);
 	}
 	
 	public void rightCameraFoundTarget(){
-		this.setYawRate(this.slowyaw);
+		this.setYawRate(this.slowYaw);
 	}
 	
 	//TODO checken wanneer aangekomen (yaw) en die terug op nul zetten -> boolean
