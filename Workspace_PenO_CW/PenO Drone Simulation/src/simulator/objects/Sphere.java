@@ -31,8 +31,7 @@ public class Sphere {
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glTranslated(translate[0], translate[1], translate[2]);
 		GLUT glut = new GLUT();
-		glut.glutSolidSphere(radius, slices, stacks);
-		
+		glut.glutSolidSphere(radius, slices, stacks);	
 	}
 	
 	public void translateSphere(double[] translate){

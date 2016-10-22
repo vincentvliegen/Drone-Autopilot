@@ -11,6 +11,7 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
 import simulator.objects.Camera;
+import simulator.objects.Drone;
 import simulator.objects.Sphere;
 
 public class World11 extends GLCanvas implements GLEventListener {
@@ -108,12 +109,22 @@ public class World11 extends GLCanvas implements GLEventListener {
 		gl.glRotated(camera.getRotateY(), 0, 1, 0);
 		gl.glRotated(camera.getRotateZ(), 0, 0, 1);
 
+		// Input Drone.
+				double[] translateDrone = {0,25,0};
+				float[] colorDrone = {1f,0f,0f};
+				Drone drone1 = new Drone(gl, 3.378f, 6.378f, 50, 50, colorDrone, translateDrone);
+				drone1.drawDrone();
+				
 		// Input Sphere.
-		double[] translate = {0,20,0};
+		double[] translateSphere = {0,20,0};
 		float[] colorSphere = {1f,0f,0f};
-		Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere, translate);
+		Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere, translateSphere);
 		sphere1.drawSphere();
+		
+		
 	}
+	
+		
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		final GL2 gl = drawable.getGL().getGL2();
