@@ -1,50 +1,28 @@
 package simulator.GUI;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JButton;
-import java.awt.BorderLayout;
+import javax.swing.JTextField;
+import java.awt.GridLayout;
 
-public class GUI {
-
-	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI window = new GUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+public class GUI extends JPanel {
+	private static final long serialVersionUID = 1L;
+	private JTextField txtSecondTest;
 
 	/**
-	 * Create the application.
+	 * Create the panel.
 	 */
 	public GUI() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {	
-		frame = new JFrame();
-		frame.setSize(100, 50);
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
+		setLayout(new GridLayout(2, 2, 0, 0));
 		
-		JButton btnHey = new JButton("Hey ");
-		frame.getContentPane().add(btnHey, BorderLayout.CENTER);
+		JButton btnTest = new JButton("Test");
+		add(btnTest);
+		
+		txtSecondTest = new JTextField();
+		txtSecondTest.setText("second test");
+		add(txtSecondTest);
+		txtSecondTest.setColumns(10);
+
 	}
 
 }
