@@ -22,7 +22,7 @@ public class SimulatorMain {
 		frame.getContentPane().add(canvas, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(gui, BorderLayout.EAST);
-		frame.setSize(800, 500);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		canvas.requestFocus();
 		canvas.addKeyListener(World11.camera);
 		frame.setVisible(true);
