@@ -16,7 +16,7 @@ public class SimulatorMain {
 		GLCapabilities capabilities = World11.createGLCapabilities();
 		
 		World11 canvas = new World11(capabilities, 800, 500);
-		JFrame frame = new JFrame("Mini JOGL Demo (breed)");
+		JFrame frame = new JFrame("Drone Simulator");
 		GUI gui = new GUI();
 		
 		frame.getContentPane().add(canvas, BorderLayout.CENTER);
