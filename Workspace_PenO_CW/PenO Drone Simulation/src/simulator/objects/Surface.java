@@ -1,4 +1,4 @@
-package simulatietestjes;
+package simulator.objects;
 
 import com.jogamp.opengl.GL2;
 

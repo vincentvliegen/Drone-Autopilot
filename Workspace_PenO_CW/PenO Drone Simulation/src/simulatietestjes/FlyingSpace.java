@@ -16,6 +16,9 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
+import simulator.objects.Camera;
+import simulator.objects.Sphere;
+
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -82,7 +85,7 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		gl.glShadeModel(GL2.GL_SMOOTH);
 
 		// Define "clear" color.
-		gl.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+		gl.glClearColor(1f, 1f, 1f, 0.5f);
 
 		// We want a nice perspective.
 		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
@@ -123,7 +126,7 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		gl.glRotated(camera.getRotateY(), 0, 1, 0);
 		gl.glRotated(camera.getRotateZ(), 0, 0, 1);
 
-		//light
+	/*	//light
 
 		gl.glEnable( GL2.GL_LIGHTING );  
 		gl.glEnable( GL2.GL_LIGHT0 );  
@@ -146,7 +149,7 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		float[] p3 = {50, 0, 50};
 		float[] p4 = {-50, 0, 50};
 		Surface surface1 = new Surface(gl, p1, p2, p3, p4, colorSurface);
-		surface1.drawSurface();
+		surface1.drawSurface();*/
 		
 	/*	gl.glColor3f(0.5f, 1f, 0.5f);
 		gl.glBegin(GL2.GL_POLYGON);
@@ -170,11 +173,6 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		glut.glutSolidSphere(radius, stacks, slices);
 		
 		*/ 
-	
-
-
-
-
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -201,17 +199,16 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		gl.glLoadIdentity();
 	}
 
+	
+	
 	/**
 	 * Starts the JOGL mini demo.
 	 * 
 	 * @param args Command line args.
 	 */
-	public final static void main(String[] args) {
+	/*public final static void main(String[] args) {
 		GLCapabilities capabilities = createGLCapabilities();
 		FlyingSpace canvas = new FlyingSpace(capabilities, 800, 500);
-		
-		
-		
 		JFrame frame = new JFrame("Mini JOGL Demo (breed)");
 		frame.getContentPane().add(canvas, BorderLayout.CENTER);
 		//frame.add(gui);
@@ -223,7 +220,7 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 		//desktopPane.add(gui);
 		canvas.requestFocus();
 		canvas.addKeyListener(camera);
-	}
+	}*/
 
 
 

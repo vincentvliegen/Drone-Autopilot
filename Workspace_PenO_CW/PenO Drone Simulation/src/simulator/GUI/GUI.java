@@ -1,4 +1,4 @@
-package simulatietestjes;
+package simulator.GUI;
 
 import java.awt.EventQueue;
 
@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
 
-public class SimulationGUI {
+public class GUI {
 
 	private JFrame frame;
 
@@ -17,7 +17,7 @@ public class SimulationGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SimulationGUI window = new SimulationGUI();
+					GUI window = new GUI();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -29,7 +29,7 @@ public class SimulationGUI {
 	/**
 	 * Create the application.
 	 */
-	public SimulationGUI() {
+	public GUI() {
 		initialize();
 	}
 
