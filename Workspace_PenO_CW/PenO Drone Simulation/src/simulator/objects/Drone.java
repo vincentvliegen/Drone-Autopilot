@@ -15,6 +15,10 @@ public class Drone {
 	static double[] standardTranslate = {0,0,0};
 	
 	public Drone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate){
+		this.innerRadius = innerRadius;
+		this.outerRadius = outerRadius;
+		this.nsides = nsides;
+		this.rings = rings;
 		this.gl = gl;
 		this.color = color;
 		this.translate = translate;
