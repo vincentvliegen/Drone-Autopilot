@@ -22,6 +22,8 @@ public class SimulatorMain {
 		frame.getContentPane().add(canvas, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(gui, BorderLayout.EAST);
+		//Second option:
+		//frame.getContentPane().add(gui, BorderLayout.PAGE_END);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		canvas.requestFocus();
 		canvas.addKeyListener(World11.camera);
