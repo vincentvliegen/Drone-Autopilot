@@ -3,6 +3,7 @@ package simulator.objects;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.gl2.GLUT;
 
+import simulator.camera.DroneCamera;
 import simulator.physics.Physics;
 
 public class Drone {
@@ -33,6 +34,11 @@ public class Drone {
 		this.setThrust(10f*9.81f);
 		this.pitch = 45f;
 	}
+	
+	DroneCamera leftCamera = new DroneCamera(this);
+	DroneCamera rightCamera = new DroneCamera(this);
+	
+	
 	
 	public Drone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color){
 		this(gl, innerRadius, outerRadius, nsides, rings, color, standardTranslate);
@@ -74,4 +80,8 @@ public class Drone {
 	public void setThrust(float value) {
 		this.thrust = value;
 	}
+	
+	
+	
+	
 }

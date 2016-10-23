@@ -4,18 +4,14 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
-import com.jogamp.opengl.GLCapabilities;
-
-
 import simulator.GUI.GUI;
 import simulator.world.World11;
 
 public class SimulatorMain {
 	
 	public final static void main(String[] args) {
-		GLCapabilities capabilities = World11.createGLCapabilities();
 		
-		World11 canvas = new World11(capabilities, 800, 500);
+		World11 canvas = new World11();
 		JFrame frame = new JFrame("Drone Simulator");
 		GUI gui = new GUI();
 		
@@ -26,7 +22,7 @@ public class SimulatorMain {
 		//frame.getContentPane().add(gui, BorderLayout.PAGE_END);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		canvas.requestFocus();
-		canvas.addKeyListener(World11.camera);
+		canvas.addKeyListener(World11.movement);
 		frame.setVisible(true);
 		
 	}

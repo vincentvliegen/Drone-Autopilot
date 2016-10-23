@@ -1,15 +1,15 @@
-package simulator.objects;
+package simulator.movement;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class Camera implements KeyListener{
+public class KeyboardMovement implements KeyListener{
 	
 	public double x=0,y=0,z=0;
 	public boolean left, right, up, down, front, back, rotateUp, rotateDown, rotateRight, rotateLeft, rotateZ1, rotateZ2;
 	// public int[] array={0,0,0};
 	private float rotateX, rotateY, rotateZ;
-	public Camera(){}
+	public KeyboardMovement(){}
 	
 	public float getRotateX(){
 		return rotateX;
@@ -115,37 +115,37 @@ public class Camera implements KeyListener{
 		if(right){
 			x -= 1;
 		}
-		else if(left){
+		if(left){
 			x += 1;
 		}
-		else if(up){
+		if(up){
 			y -= 1;
 		}
-		else if(down){
+		if(down){
 			y += 1;
 		}
-		else if(front){
+		if(front){
 			z -= 1;
 		}
-		else if(back){
+		if(back){
 			z += 1;
 		}
-		else if(rotateUp){
+		if(rotateUp){
 			 rotateX -=10;
 		}
-		else if(rotateDown){
+		if(rotateDown){
 			rotateX +=10;
 		}
-		else if(rotateRight){
+		if(rotateRight){
 			rotateY += 10;
 		}
-		else if(rotateLeft){
+		if(rotateLeft){
 			rotateY -= 10;
 		}
-		else if(rotateZ1){
+		if(rotateZ1){
 			rotateZ += 10;
 		}
-		else if(rotateZ2){
+		if(rotateZ2){
 			rotateZ -= 10;
 		}
 		

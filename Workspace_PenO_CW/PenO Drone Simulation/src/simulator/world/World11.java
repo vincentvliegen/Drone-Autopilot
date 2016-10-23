@@ -4,43 +4,26 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.FPSAnimator;
-
-import simulator.objects.Camera;
+import simulator.movement.KeyboardMovement;
 import simulator.objects.Drone;
 import simulator.objects.Sphere;
 
-public class World11 extends GLCanvas implements GLEventListener {
+public class World11 extends World {
 
 	/** Serial version UID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The GL unit (helper class). */
-	private GLU glu;
 
-	/** The frames per second setting. */
-	private int fps = 60;
-
-	/** The OpenGL animator. */
-	private FPSAnimator animator;
 
 	private boolean setup;
 	private Drone drone1;
 
 	/**
-	 * @param capabilities
-	 *            The GL capabilities.
-	 * @param width
-	 *            The window width.
-	 * @param height
-	 *            The window height.
 	 */
-	public World11(GLCapabilities capabilities, int width, int height) {
-		addGLEventListener(this);
+	public World11() {
+		super();
 	}
 
 	/**
@@ -55,34 +38,6 @@ public class World11 extends GLCanvas implements GLEventListener {
 		return capabilities;
 	}
 
-	/**
-	 * Sets up the screen.
-	 * 
-	 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
-	 */
-	public void init(GLAutoDrawable drawable) {
-		final GL2 gl = drawable.getGL().getGL2();
-		drawable.setGL(gl);
-		// Enable z- (depth) buffer for hidden surface removal.
-		gl.glEnable(GL.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL.GL_LEQUAL);
-
-		// Enable smooth shading.
-		gl.glShadeModel(GL2.GL_SMOOTH);
-
-		// Define "clear" color.
-		gl.glClearColor(1f, 1f, 1f, 0.5f);
-
-		// We want a nice perspective.
-		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
-
-		// Create GLU.
-		glu = new GLU();
-
-		// Start animator.
-		animator = new FPSAnimator(this, fps);
-		animator.start();
-	}
 
 	/**
 	 * The only method that you should implement by yourself.
@@ -90,10 +45,10 @@ public class World11 extends GLCanvas implements GLEventListener {
 	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
 	 */
 
-	public static Camera camera = new Camera();
+	public static KeyboardMovement movement = new KeyboardMovement();
 
 	public void display(GLAutoDrawable drawable) {
-		if (!animator.isAnimating()) {
+		if (!super.getAnimator().isAnimating()) {
 			return;
 		}
 		final GL2 gl = drawable.getGL().getGL2();
@@ -102,14 +57,14 @@ public class World11 extends GLCanvas implements GLEventListener {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
 		// Set camera.
-		setCamera(gl, glu, 200);
+		setCamera(gl, super.getGlu(), 200);
 
 		// translate camera.
-		camera.update();
-		gl.glTranslated(camera.getX(), camera.getY(), camera.getZ());
-		gl.glRotated(camera.getRotateX(), 1, 0, 0);
-		gl.glRotated(camera.getRotateY(), 0, 1, 0);
-		gl.glRotated(camera.getRotateZ(), 0, 0, 1);
+		movement.update();
+		gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
+		gl.glRotated(movement.getRotateX(), 1, 0, 0);
+		gl.glRotated(movement.getRotateY(), 0, 1, 0);
+		gl.glRotated(movement.getRotateZ(), 0, 0, 1);
 		
 		// Input Sphere.
 		double[] translateSphere = { 0, 20, 0 };
@@ -132,14 +87,6 @@ public class World11 extends GLCanvas implements GLEventListener {
 
 	}
 
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		final GL2 gl = drawable.getGL().getGL2();
-		gl.glViewport(0, 0, width, height);
-	}
-
-	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
-		throw new UnsupportedOperationException("Changing display is not supported.");
-	}
 
 	private void setCamera(GL2 gl, GLU glu, float distance) {
 		// Change to projection matrix.
@@ -156,9 +103,5 @@ public class World11 extends GLCanvas implements GLEventListener {
 		gl.glLoadIdentity();
 	}
 
-	@Override
-	public void dispose(GLAutoDrawable arg0) {
-		// TODO Auto-generated method stub
 
-	}
 }

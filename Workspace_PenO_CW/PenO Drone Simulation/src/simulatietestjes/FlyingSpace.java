@@ -10,7 +10,7 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
-import simulator.objects.Camera;
+import simulator.movement.KeyboardMovement;
 import simulator.objects.Sphere;
 
 /**
@@ -91,7 +91,7 @@ public class FlyingSpace extends GLCanvas implements GLEventListener {
 	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
 	 */
 
-	private static Camera camera = new Camera();
+	private static KeyboardMovement camera = new KeyboardMovement();
 
 	public void display(GLAutoDrawable drawable) {
 		if (!animator.isAnimating()) {
