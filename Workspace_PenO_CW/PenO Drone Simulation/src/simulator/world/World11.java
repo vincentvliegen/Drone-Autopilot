@@ -28,13 +28,16 @@ public class World11 extends GLCanvas implements GLEventListener {
 	/** The OpenGL animator. */
 	private FPSAnimator animator;
 
-	/** 
-	 * @param 	capabilities 
-	 * 			The GL capabilities.
-	 * @param 	width 
-	 * 			The window width.
-	 * @param 	height 
-	 * 			The window height.
+	private boolean setup;
+	private Drone drone1;
+
+	/**
+	 * @param capabilities
+	 *            The GL capabilities.
+	 * @param width
+	 *            The window width.
+	 * @param height
+	 *            The window height.
 	 */
 	public World11(GLCapabilities capabilities, int width, int height) {
 		addGLEventListener(this);
@@ -44,7 +47,7 @@ public class World11 extends GLCanvas implements GLEventListener {
 	 * @return Some standard GL capabilities (with alpha).
 	 */
 	public static GLCapabilities createGLCapabilities() {
-		GLCapabilities capabilities = new GLCapabilities(GLProfile.get( GLProfile.GL2 ));
+		GLCapabilities capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL2));
 		capabilities.setRedBits(8);
 		capabilities.setBlueBits(8);
 		capabilities.setGreenBits(8);
@@ -60,7 +63,7 @@ public class World11 extends GLCanvas implements GLEventListener {
 	public void init(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(gl);
-		// Enable z- (depth) buffer for hidden surface removal. 
+		// Enable z- (depth) buffer for hidden surface removal.
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL.GL_LEQUAL);
 
@@ -107,19 +110,27 @@ public class World11 extends GLCanvas implements GLEventListener {
 		gl.glRotated(camera.getRotateX(), 1, 0, 0);
 		gl.glRotated(camera.getRotateY(), 0, 1, 0);
 		gl.glRotated(camera.getRotateZ(), 0, 0, 1);
-
-		// Input Drone.
-		double[] translateDrone = {0,25,0};
-		float[] colorDrone = {1f,0f,0f};
-		Drone drone1 = new Drone(gl, 3.378f, 6.378f, 40, 40, colorDrone, translateDrone);
-		drone1.drawDrone();
-				
+		
 		// Input Sphere.
-		double[] translateSphere = {0,20,0};
-		float[] colorSphere = {1f,0f,0f};
+		double[] translateSphere = { 0, 20, 0 };
+		float[] colorSphere = { 1f, 0f, 0f };
 		Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere, translateSphere);
 		sphere1.drawSphere();
-	}	
+		
+		// Input Drone.
+		if (!setup) {
+			double[] translateDrone = { 0, 25, 0 };
+			float[] colorDrone = { 0f, 0f, 1f };
+			Drone drone1 = new Drone(gl, 3.378f, 6.378f, 40, 40, colorDrone, translateDrone);
+			this.drone1 = drone1;
+			drone1.drawDrone();
+			setup = true;
+		} else {
+			drone1.getPhysics().calculateMovement();
+			drone1.drawDrone();
+		}
+
+	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		final GL2 gl = drawable.getGL().getGL2();
@@ -148,6 +159,6 @@ public class World11 extends GLCanvas implements GLEventListener {
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

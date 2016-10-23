@@ -3,8 +3,10 @@ package simulator.objects;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.gl2.GLUT;
 
+import simulator.physics.Physics;
+
 public class Drone {
-	
+	// Implement rates for turning and maxTurnRate
 	GL2 gl;
 	float innerRadius;
 	float outerRadius;
@@ -13,6 +15,11 @@ public class Drone {
 	float[] color = new float[3];
 	double[] translate = new double[3];
 	static double[] standardTranslate = {0,0,0};
+	Physics physics;
+	float pitch = 0;
+	float roll = 0;
+	float thrust = 0;
+	
 	
 	public Drone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate){
 		this.innerRadius = innerRadius;
@@ -22,6 +29,9 @@ public class Drone {
 		this.gl = gl;
 		this.color = color;
 		this.translate = translate;
+		this.physics = new Physics(this, 10f);
+		this.setThrust(10f*9.81f);
+		this.pitch = 45f;
 	}
 	
 	public Drone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color){
@@ -37,5 +47,31 @@ public class Drone {
 	
 	public void translateDrone(double[] translate){
 		gl.glTranslated(translate[0], translate[1], translate[2]);
+	}
+	
+	public void translateDrone(float[] newTranslate){
+		translate[0] += newTranslate[0];
+		translate[1] += newTranslate[1];
+		translate[2] += newTranslate[2];
+	}
+	
+	public Physics getPhysics() {
+		return this.physics;
+	}
+	
+	public float getPitch() {
+		return this.pitch;
+	}
+	
+	public float getRoll() {
+		return this.roll;
+	}
+	
+	public float getThrust() {
+		return this.thrust;
+	}
+	
+	public void setThrust(float value) {
+		this.thrust = value;
 	}
 }
