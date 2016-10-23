@@ -2,70 +2,63 @@ package DroneAutopilot;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import implementedInterfaces.Camera;
+import implementedClasses.Camera;
 
 public class ImageCalculations {
 	
-	//TODO hoe worden pixels gegeven? store als int
-	private int white;
-	
-	public int[] indexToCoordinates(int index){
-		int x = (int) (index / leftCameraWidth);
-		int y = (int) (index % leftCameraWidth);
+	//[i] -> (x,y)
+	public int[] indexToCoordinates(int index, Camera camera){
+		int width = camera.getWidth();
+		int x = (int) (index / width);
+		int y = (int) (index % width);
 		int[] coord = {x,y};
 	    return coord;
 	}
 	
-	public int coordinatesToIndex(int[] coordinates){
-		int index = (int) (coordinates[0]+coordinates[1]*leftCameraWidth);
+	//(x,y) -> [i]
+	public int coordinatesToIndex(int[] coordinates, Camera camera){
+		int index = (int) (coordinates[0]+coordinates[1]*camera.getWidth());
 	    return index;
 	}
 
-
-	//TODO
 	//zwaartepunt van groepje pixels bepalen
-	public int[] getCenterOfGravity (int[][] listOfPixelCoordinates){
-		return null;
-		
+	// COG = center of gravity
+	public int[] getCOG (int[][] listOfPixelCoordinates){
+		int sumX = 0;
+		int sumY = 0;
+		int[] cOG = {0,0};
+		for(int i = 0; i < listOfPixelCoordinates.length; i++){
+			sumX += listOfPixelCoordinates[i][0];
+			sumY += listOfPixelCoordinates[i][1];
+		}
+		cOG[0] = sumX/listOfPixelCoordinates.length;
+		cOG[1] = sumY/listOfPixelCoordinates.length;
+		return cOG;
 	}
 	
-	//TODO 
-	//algoritme dat heel de afbeelding afgaat en alle zwaartepunten/alle pixels van alle kleuren stockeert
-	//dit werkt niet voor kleurenovergangen
-	private void getAllPosColPixels(Camera camera){
-		
-	}
-	
-	//alle pixels of zwtp?
-	private List<int[]> allColoredPixelsLeft = new ArrayList<int[]>();
-	private List<int[]> allColoredPixelsRight = new ArrayList<int[]>();
-	
-	
-	//TODO
-	//algoritme uitwaartse spiraal met beginpositie
-	//zoekt alle pixels af tot de gekleurde bol helemaal omvat wordt
-	//zoekt in de buurt van de verwachtte positie
-    public int[] getPosColoredOrb(int[] expectedPos, Camera camera, int colorOrbToLookFor){
-        Camera currentCamera = camera;
-        int[] currentPos = expectedPos;
-        int[] image = currentCamera.takeImage();
-        int width =  currentCamera.getWidth();
-		int columnCounter = 1;
-		int rowCounter = 1;
-		int height = image.length/width;
-        int orbColor = colorOrbToLookFor;
-        int currentColor;
-        List<int[]> colorList = new ArrayList<int[]>();
+	//uitgewerkt voor rood in volgende functie
+	public int[][] getPixelsOfColor(Camera camera, int givenColor){
+        int[] image = camera.takeImage();
+        List<int[]> coloredPositions = new ArrayList<int[]>();
         for(int i = 0; image.length > i; i++){
-            currentColor = image[coordinatesToIndex(currentPos)];
-            if(currentColor == colorOrbToLookFor){//werkt niet voor kleurenovergangen
-                colorList
+            if(image[i] == givenColor){
+            	coloredPositions.add(indexToCoordinates(i, camera));
             }
         }
-        return null;		
+        return coloredPositions.toArray(new int[coloredPositions.size()][]);		
 	}
-
 	
+	//TODO waarde van red invullen
+	private final static int red = 0;
 	
+	//pixels of red color
+	public int[][]getRedPixels(Camera camera){
+		return getPixelsOfColor(camera, ImageCalculations.red);
+	}
+	
+	//check if image = red
+	public boolean checkIfAllRed(Camera camera){
+		int[][] listRedPixels = getRedPixels(camera);
+		return listRedPixels.length == camera.takeImage().length;
+	}
 }
