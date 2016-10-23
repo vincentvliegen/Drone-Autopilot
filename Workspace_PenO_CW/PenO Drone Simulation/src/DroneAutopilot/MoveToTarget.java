@@ -12,7 +12,7 @@ public class MoveToTarget {
 		this.physicsCalculations = new PhysicsCalculations();
 	}
 	
-	public void checkcasespixelsfound( Drone drone, ArrayList leftcamera, ArrayList rightcamera){
+	public void checkcasespixelsfound(Drone drone, ArrayList leftcamera, ArrayList rightcamera){
 		if (leftcamera.isEmpty() && rightcamera.isEmpty())
 			noTargetFound();
 		else if (!leftcamera.isEmpty() && rightcamera.isEmpty())
@@ -39,20 +39,24 @@ public class MoveToTarget {
 	
 	//TODO checken wanneer aangekomen (yaw) en die terug op nul zetten -> boolean
 	public void targetVisible(Drone drone){
-		this.setYawRate(0);
 		this.setRollRate(0);
-		float angle = 0;//uitwerking catch: op max wanneer geen rode pixels, anders wordt die hieronder aangepast
+		int[] centerOfGravity = {0,0};
 		try{
-			int[] centerOfGravity = getImageCalculations().getCOG(getImageCalculations().getRedPixels(drone.getLeftCamera())); //enkel linkercamera herhaal voor rechter
-			angle = getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity);
+			centerOfGravity = getImageCalculations().getCOG(getImageCalculations().getRedPixels(drone.getLeftCamera())); //enkel linkercamera herhaal voor rechter
 		} catch (EmptyPositionListException exception){
 			// geen rode pixels
-			angle = maxHorAngleDev;
 		}
-		this.setYawRate(drone.getMaxYawRate());
+		if (this.physicsCalculations.horizontalAngleDeviation(drone, centerOfGravity) >= -10 ||	//TODO bepalen betere waarde
+				this.physicsCalculations.horizontalAngleDeviation(drone, centerOfGravity) <= 10)
+			this.setYawRate(0);
+		else
+			this.setYawRate(drone.getMaxYawRate());
+	}	
+	
+	public void correctRoll(Drone drone){
+		if(drone.getRoll() >= 10 || drone.getRoll()<= -10) //TODO waarde bepalen of splitsen voor weinig bijsturen en veel bijsturen
+			this.setRollRate(drone.getMaxRollRate());
 	}
-	
-	
 	
 	public final ImageCalculations getImageCalculations(){
 		return this.imageCalculations;
