@@ -37,24 +37,27 @@ public class MoveToTarget {
 		this.setYawRate(this.slowYaw);
 	}
 	
-	//TODO checken wanneer aangekomen (yaw) en die terug op nul zetten -> boolean
 	public void targetVisible(Drone drone){
 		this.setRollRate(0);
 		int[] centerOfGravity = {0,0};
 		try{
-			centerOfGravity = getImageCalculations().getCOG(getImageCalculations().getRedPixels(drone.getLeftCamera())); //enkel linkercamera herhaal voor rechter
+			//TODO nieuwe imagecalc aanmaken -> opnieuw over foto loopen.. beter arraylist meegeven.
+			centerOfGravity = this.getImageCalculations().getCOG(getImageCalculations().getRedPixels(drone.getLeftCamera())); //enkel linkercamera herhaal voor rechter
 		} catch (EmptyPositionListException exception){
 			// geen rode pixels
 		}
-		if (this.physicsCalculations.horizontalAngleDeviation(drone, centerOfGravity) >= -10 ||	//TODO bepalen betere waarde
-				this.physicsCalculations.horizontalAngleDeviation(drone, centerOfGravity) <= 10)
+		if (this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) >= this.underBoundary ||	
+				this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) <= this.upperBoundary)
 			this.setYawRate(0);
 		else
 			this.setYawRate(drone.getMaxYawRate());
 	}	
 	
+	private final float underBoundary = -10; //TODO bepalen betere waarde
+	private final float upperBoundary = 10;
+	
 	public void correctRoll(Drone drone){
-		if(drone.getRoll() >= 10 || drone.getRoll()<= -10) //TODO waarde bepalen of splitsen voor weinig bijsturen en veel bijsturen
+		if(drone.getRoll() >= this.upperBoundary || drone.getRoll()<= this.underBoundary) //TODO mss splitsen voor weinig bijsturen en veel bijsturen
 			this.setRollRate(drone.getMaxRollRate());
 	}
 	
