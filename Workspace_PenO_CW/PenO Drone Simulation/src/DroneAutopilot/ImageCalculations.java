@@ -2,6 +2,8 @@ package DroneAutopilot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import exceptions.EmptyPositionListException;
 import implementedClasses.Camera;
 
 public class ImageCalculations {
@@ -22,11 +24,15 @@ public class ImageCalculations {
 	}
 
 	//zwaartepunt van groepje pixels bepalen
+	//als er geen rode pixels zijn, exception
 	// COG = center of gravity
-	public int[] getCOG (int[][] listOfPixelCoordinates){
+	public int[] getCOG (int[][] listOfPixelCoordinates) throws EmptyPositionListException{
 		int sumX = 0;
 		int sumY = 0;
 		int[] cOG = {0,0};
+		if(listOfPixelCoordinates.length == 0){
+			throw new EmptyPositionListException(listOfPixelCoordinates);
+		}
 		for(int i = 0; i < listOfPixelCoordinates.length; i++){
 			sumX += listOfPixelCoordinates[i][0];
 			sumY += listOfPixelCoordinates[i][1];
