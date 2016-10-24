@@ -15,15 +15,15 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
     updated to a new state. Simulated time is frozen for the duration of this call. */
 	@Override
 	public void timeHasPassed() {
-		// TODO Auto-generated method stub
-		int[][] leftCameraList = this.getImageCalculations().getRedPixels(this.getLeftCamera());
-		int[][] rightCameraList = this.getImageCalculations().getRedPixels(this.getRightCamera());
-		if (this.getImageCalculations().checkIfAllRed(this.getLeftCamera()) 
-				&& this.getImageCalculations().checkIfAllRed(this.getRightCamera())){
+		int[][] leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
+		int[][] rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
+		if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
+				&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
 			//hover
 		}
+		this.getMoveToTarget().correctRoll(this.getDrone());
 		this.getMoveToTarget().checkcasespixelsfound(this.getDrone(),leftCameraList, rightCameraList); //nadenken over int[][] en Arraylist
-		//nog verder aanvullen vooruitvliegen kan ook bij vorige
+		//TODO nog verder aanvullen vooruitvliegen kan ook bij vorige
 	}
 
 	public void setDrone(Drone drone){
@@ -33,24 +33,6 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 		return this.drone;
 	}
 	private Drone drone;
-	
-	
-	public void setLeftCamera(Camera leftCamera){
-		this.leftCamera = leftCamera;
-	}
-	public Camera getLeftCamera(){
-		return this.leftCamera;
-	}
-	private Camera leftCamera;
-	
-	
-	public void setRightCamera(Camera rightCamera){
-		this.rightCamera = rightCamera;
-	}
-	public Camera getRightCamera(){
-		return this.rightCamera;
-	}
-	private Camera rightCamera;
 
 	
 	public final ImageCalculations getImageCalculations(){

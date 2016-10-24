@@ -12,7 +12,7 @@ public class MoveToTarget {
 		this.physicsCalculations = new PhysicsCalculations();
 	}
 	
-	public void checkcasespixelsfound(Drone drone, ArrayList leftcamera, ArrayList rightcamera){
+	public void checkcasespixelsfound(Drone drone, ArrayList<int[]> leftcamera, ArrayList<int[]> rightcamera){
 		if (leftcamera.isEmpty() && rightcamera.isEmpty())
 			noTargetFound();
 		else if (!leftcamera.isEmpty() && rightcamera.isEmpty())
@@ -20,7 +20,7 @@ public class MoveToTarget {
 		else if (leftcamera.isEmpty() && !rightcamera.isEmpty())
 			rightCameraFoundTarget();
 		else if (!leftcamera.isEmpty() && !rightcamera.isEmpty())
-			targetVisible(drone);
+			targetVisible(drone, leftcamera);
 	}
 	
 	private float slowYaw; //TODO bepalen in verhouding tot max
@@ -37,19 +37,20 @@ public class MoveToTarget {
 		this.setYawRate(this.slowYaw);
 	}
 	
-	public void targetVisible(Drone drone){
+	public void targetVisible(Drone drone, ArrayList<int[]> leftCamera){
 		this.setRollRate(0);
 		int[] centerOfGravity = {0,0};
 		try{
-			//TODO nieuwe imagecalc aanmaken -> opnieuw over foto loopen.. beter arraylist meegeven.
-			centerOfGravity = this.getImageCalculations().getCOG(getImageCalculations().getRedPixels(drone.getLeftCamera())); //enkel linkercamera herhaal voor rechter
+			centerOfGravity = this.getImageCalculations().getCOG(leftCamera); //enkel linkercamera herhaal voor rechter
 		} catch (EmptyPositionListException exception){
 			// geen rode pixels
 		}
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) >= this.underBoundary ||	
 				this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) <= this.upperBoundary)
 			this.setYawRate(0);
-		else
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) >= this.underBoundary)
+			this.setYawRate(-drone.getMaxYawRate());
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) <= this.upperBoundary)
 			this.setYawRate(drone.getMaxYawRate());
 	}	
 	
