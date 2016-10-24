@@ -26,45 +26,45 @@ public class ImageCalculations {
 	//zwaartepunt van groepje pixels bepalen
 	//als er geen rode pixels zijn, exception
 	// COG = center of gravity
-	public int[] getCOG (int[][] listOfPixelCoordinates) throws EmptyPositionListException{
+	public int[] getCOG (ArrayList<int[]> listOfPixelCoordinates) throws EmptyPositionListException{
 		int sumX = 0;
 		int sumY = 0;
 		int[] cOG = {0,0};
-		if(listOfPixelCoordinates.length == 0){
+		if(listOfPixelCoordinates.size() == 0){
 			throw new EmptyPositionListException(listOfPixelCoordinates);
 		}
-		for(int i = 0; i < listOfPixelCoordinates.length; i++){
-			sumX += listOfPixelCoordinates[i][0];
-			sumY += listOfPixelCoordinates[i][1];
+		for(int i = 0; i < listOfPixelCoordinates.size(); i++){
+			sumX += listOfPixelCoordinates.get(i)[0];
+			sumY += listOfPixelCoordinates.get(i)[1];
 		}
-		cOG[0] = sumX/listOfPixelCoordinates.length;
-		cOG[1] = sumY/listOfPixelCoordinates.length;
+		cOG[0] = sumX/listOfPixelCoordinates.size();
+		cOG[1] = sumY/listOfPixelCoordinates.size();
 		return cOG;
 	}
 	
 	//uitgewerkt voor rood in volgende functie
-	public int[][] getPixelsOfColor(Camera camera, int givenColor){
+	public ArrayList<int[]> getPixelsOfColor(Camera camera, int givenColor){
         int[] image = camera.takeImage();
-        List<int[]> coloredPositions = new ArrayList<int[]>();
+        ArrayList<int[]> coloredPositions = new ArrayList<int[]>();
         for(int i = 0; image.length > i; i++){
             if(image[i] == givenColor){
             	coloredPositions.add(indexToCoordinates(i, camera));
             }
         }
-        return coloredPositions.toArray(new int[coloredPositions.size()][]);		
+        return coloredPositions;	
 	}
 	
 	//TODO waarde van red invullen
 	private final static int red = 0;
 	
 	//pixels of red color
-	public int[][]getRedPixels(Camera camera){
+	public ArrayList<int[]> getRedPixels(Camera camera){
 		return getPixelsOfColor(camera, ImageCalculations.red);
 	}
 	
 	//check if image = red
 	public boolean checkIfAllRed(Camera camera){
-		int[][] listRedPixels = getRedPixels(camera);
-		return listRedPixels.length == camera.takeImage().length;
+		ArrayList<int[]> listRedPixels = getRedPixels(camera);
+		return listRedPixels.size() == camera.takeImage().length;
 	}
 }

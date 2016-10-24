@@ -1,17 +1,19 @@
 package exceptions;
 
+import java.util.ArrayList;
+
 public class EmptyPositionListException extends Exception {
 	
-	public EmptyPositionListException(int[][] list){
+	public EmptyPositionListException(ArrayList<int[]> list){
 		this.list = list;
 	}
 
-	public int[][] getList(){
+	public ArrayList<int[]> getList(){
 		return this.list;
 	}
 	
 
-	private final int[][] list;
+	private final ArrayList<int[]> list;
 	
 	/**
 	 * 
