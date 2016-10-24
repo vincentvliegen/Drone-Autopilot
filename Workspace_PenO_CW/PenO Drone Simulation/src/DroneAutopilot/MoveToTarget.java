@@ -10,8 +10,13 @@ public class MoveToTarget {
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations();
 	}
+<<<<<<< HEAD
 
 	public void checkcasespixelsfound(Drone drone, ArrayList leftcamera, ArrayList rightcamera) {
+=======
+	
+	public void checkcasespixelsfound(Drone drone, ArrayList<int[]> leftcamera, ArrayList<int[]> rightcamera){
+>>>>>>> a1bc0af6dad383bef2c8197f72d981287a0774c3
 		if (leftcamera.isEmpty() && rightcamera.isEmpty())
 			noTargetFound();
 		else if (!leftcamera.isEmpty() && rightcamera.isEmpty())
@@ -19,7 +24,7 @@ public class MoveToTarget {
 		else if (leftcamera.isEmpty() && !rightcamera.isEmpty())
 			rightCameraFoundTarget();
 		else if (!leftcamera.isEmpty() && !rightcamera.isEmpty())
-			targetVisible(drone);
+			targetVisible(drone, leftcamera);
 	}
 
 	private float slowYaw; // TODO bepalen in verhouding tot max
@@ -35,6 +40,7 @@ public class MoveToTarget {
 	public void rightCameraFoundTarget() {
 		this.setYawRate(this.slowYaw);
 	}
+<<<<<<< HEAD
 
 	public void targetVisible(Drone drone) {
 		this.setRollRate(0);
@@ -45,12 +51,23 @@ public class MoveToTarget {
 			centerOfGravity = this.getImageCalculations()
 					.getCOG(getImageCalculations().getRedPixels(drone.getLeftCamera())); // enkel linkercamera herhaal voor rechter
 		} catch (EmptyPositionListException exception) {
+=======
+	
+	public void targetVisible(Drone drone, ArrayList<int[]> leftCamera){
+		this.setRollRate(0);
+		int[] centerOfGravity = {0,0};
+		try{
+			centerOfGravity = this.getImageCalculations().getCOG(leftCamera); //enkel linkercamera herhaal voor rechter
+		} catch (EmptyPositionListException exception){
+>>>>>>> a1bc0af6dad383bef2c8197f72d981287a0774c3
 			// geen rode pixels
 		}
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) >= this.underBoundary
 				|| this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) <= this.upperBoundary)
 			this.setYawRate(0);
-		else
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) >= this.underBoundary)
+			this.setYawRate(-drone.getMaxYawRate());
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(drone, centerOfGravity) <= this.upperBoundary)
 			this.setYawRate(drone.getMaxYawRate());
 	}
 

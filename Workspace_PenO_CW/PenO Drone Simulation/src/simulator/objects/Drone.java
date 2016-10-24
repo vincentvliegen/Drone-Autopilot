@@ -35,6 +35,8 @@ public class Drone {
 		this.pitch = 45f;
 	}
 	
+	//TODO afstand tussen camera's
+	//TODO afmetingen (voor collision detection)
 	DroneCamera leftCamera = new DroneCamera(this);
 	DroneCamera rightCamera = new DroneCamera(this);
 	

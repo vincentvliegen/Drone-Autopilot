@@ -10,6 +10,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 import simulator.camera.GeneralCamera;
 import simulator.objects.Drone;
+import simulator.objects.Sphere;
 
 @SuppressWarnings("serial")
 public abstract class World extends GLCanvas implements GLEventListener {
@@ -24,8 +25,16 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	 * 
 	 */
 	
+	//TODO
+		//physics?
+		//movement?
+		
+	
+	//TODO sets van maken? --> niet voor camera's want dan verlies je ordening!
+	//Linked list?
 	private GeneralCamera[] generalCameras = {};
 	private Drone[] drones = {};
+	private Sphere[] spheres = {};
 	
 	public GeneralCamera[] getGeneralCameras() {
 		return generalCameras;
@@ -35,12 +44,18 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return drones;
 	}
 	
+	public Sphere[] getSpheres() {
+		return spheres;
+	}
+	
 	private GLU glu;
 	
 	public GLU getGlu() {
 		return glu;
 	}
 
+	
+	//TODO meegeven in constructor?
 	/** The frames per second setting. */
 	private int fps = 60;
 
