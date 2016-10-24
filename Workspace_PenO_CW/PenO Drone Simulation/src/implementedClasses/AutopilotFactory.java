@@ -1,6 +1,6 @@
 package implementedClasses;
 
-import p_en_o_cw_2016.Autopilot;
+import implementedClasses.Autopilot;
 import p_en_o_cw_2016.Drone;
 
 public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
@@ -14,8 +14,15 @@ public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
     objects should occur only in the AWT/Swing GUI thread. */
 	@Override
 	public Autopilot create(Drone drone) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Autopilot autopilot = new Autopilot();
+		drone.setThrust(-drone.getGravity());
+		drone.setPitchRate(0);
+		drone.setYawRate(0);
+		drone.setRollRate(0);
+		
+//		autopilot.timeHasPassed();
+		return autopilot;
 	}
 
 }
