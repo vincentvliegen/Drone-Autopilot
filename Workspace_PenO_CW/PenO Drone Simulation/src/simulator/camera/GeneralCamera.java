@@ -4,6 +4,10 @@ import simulator.objects.SimulationDrone;
 
 public class GeneralCamera {
 	
+	private SimulationDrone drone;
+	private float eyeX=0, eyeY=0, eyeZ =0;
+	private float lookAtX=0, lookAtY=0, lookAtZ=0;
+	
 	public GeneralCamera(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ){
 		this.setEyeX(eyeX);
 		this.setEyeY(eyeY);
@@ -21,13 +25,6 @@ public class GeneralCamera {
 	public void setEyeX(float eyeX) {
 		this.eyeX = eyeX;
 	}
-
-	private SimulationDrone drone;
-
-	
-	
-	private float eyeX=0, eyeY=0, eyeZ =0;
-	private float lookAtX=0, lookAtY=0, lookAtZ=0;
 	
 	
 	public SimulationDrone getDrone() {

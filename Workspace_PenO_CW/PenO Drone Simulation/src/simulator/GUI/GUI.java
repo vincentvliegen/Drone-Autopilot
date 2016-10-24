@@ -1,6 +1,11 @@
 package simulator.GUI;
 
 import javax.swing.JPanel;
+
+import simulator.camera.GeneralCamera;
+import simulator.world.World;
+import simulator.world.World11;
+
 import javax.swing.JButton;
 
 import java.awt.GridBagConstraints;
@@ -32,7 +37,31 @@ public class GUI extends JPanel {
 		p.insets = new Insets(0, 0, 5, 5);
 		
 		
-		// First button
+		// #buttons
+		
+		World world11 = new World11();
+		GeneralCamera[] cameras = world11.getGeneralCameras();
+		int NumberOfCameras = cameras.length;
+		JButton[] buttons = {};
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(0, 0, 5, 5);
+		
+		for(int i=1; i<NumberOfCameras+1; i++){
+			buttons[i] = new JButton("Camera " + i);
+			buttons[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					//Code for action
+				}
+			});
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.weightx = 0.5;
+			c.gridx = 0;
+			c.gridy = 0;
+			add(buttons[i], c);
+		}
+
+		
+		/*// First button
 		JButton camera1 = new JButton("Camera 1");
 		camera1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -71,7 +100,7 @@ public class GUI extends JPanel {
 				c3.gridx = 2;
 				c3.gridy = 0;
 				add(camera3, c3);
-		
+		*/
 		
 		// Speed
 		JLabel speed = new JLabel();

@@ -68,7 +68,11 @@ public class MoveToTarget {
 	}
 
 	public void hover() {
-		if (this.getDrone().getPitch() >= this.pitchUpper || this.getDrone().getPitch() <= this.pitchUnder) {
+		if (this.getDrone().getPitch() >= this.pitchUpper) {
+			this.setPitchRate(Math.min(-this.getDrone().getMaxPitchRate(), -this.getDrone().getPitch()));
+		}
+		
+		else if (this.getDrone().getPitch() <= this.pitchUnder) {
 			this.setPitchRate(Math.min(this.getDrone().getMaxPitchRate(), -this.getDrone().getPitch()));
 		}
 
