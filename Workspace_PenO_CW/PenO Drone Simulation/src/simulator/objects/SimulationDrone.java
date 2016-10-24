@@ -12,7 +12,6 @@ import simulator.physics.Physics;
 import simulator.world.World;
 
 public class SimulationDrone implements Drone {
-	// Implement rates for turning and maxTurnRate
 	GL2 gl;
 	float innerRadius;
 	float outerRadius;
@@ -27,6 +26,7 @@ public class SimulationDrone implements Drone {
 	float thrust = 0;
 	World world;
 	private Movement movement;
+	private static float weight = 10f;
 	
 	
 	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate, World world){
@@ -43,7 +43,6 @@ public class SimulationDrone implements Drone {
 		this.movement = new Movement(this);
 	}
 	
-	//TODO afstand tussen camera's
 	//TODO afmetingen (voor collision detection)
 	DroneCamera leftCamera = new DroneCamera(this);
 	DroneCamera rightCamera = new DroneCamera(this);
@@ -87,8 +86,7 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public float getCameraSeparation() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 0.5f;
 	}
 
 	@Override
@@ -105,50 +103,43 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public float getWeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return SimulationDrone.weight;
 	}
 
 	@Override
 	public float getGravity() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 9.81f;
 	}
 
 	@Override
 	public float getDrag() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 0.1f;
 	}
 
 	@Override
 	public float getMaxThrust() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 3f*SimulationDrone.weight*getGravity();
 	}
 
 	@Override
 	public float getMaxPitchRate() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 5f;
 	}
 
 	@Override
 	public float getMaxRollRate() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 5f;
 	}
 
 	@Override
 	public float getMaxYawRate() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 5f;
 	}
 
 	@Override
 	public float getCurrentTime() {
-		// TODO Auto-generated method stub
-		return 0;
+		//DELTAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		return 0f;
 	}
 
 	@Override

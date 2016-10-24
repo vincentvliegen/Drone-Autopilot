@@ -1,10 +1,7 @@
 package simulator.camera;
 
-import simulator.objects.SimulationDrone;
-
 public class GeneralCamera {
 	
-	private SimulationDrone drone;
 	private float eyeX=0, eyeY=0, eyeZ =0;
 	private float lookAtX=0, lookAtY=0, lookAtZ=0;
 	
@@ -27,13 +24,6 @@ public class GeneralCamera {
 	}
 	
 	
-	public SimulationDrone getDrone() {
-		return drone;
-	}
-
-	public void setDrone(SimulationDrone drone) {
-		this.drone = drone;
-	}
 
 	public float getEyeY() {
 		return eyeY;

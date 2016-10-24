@@ -21,6 +21,7 @@ public class World11 extends World {
 
 	public World11() {
 		super();
+		super.addGeneralCamera(new GeneralCamera(0, 20, 200, 0, 0, 0));
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class World11 extends World {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
 		// Set camera.
-		super.addGeneralCamera(new GeneralCamera(0, 20, 200, 0, 0, 0));
+		setCamera(gl, super.getGlu());
 		
 		// translate camera.
 		movement.update();
@@ -98,6 +99,7 @@ public class World11 extends World {
 		// Perspective.
 		float widthHeightRatio = (float) getWidth() / (float) getHeight();
 		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
+		glu.gluLookAt(0, 20, 200, 0, 0, 0, 0, 1, 0);
 
 		// Change back to model view matrix.
 		gl.glMatrixMode(GL2.GL_MODELVIEW);

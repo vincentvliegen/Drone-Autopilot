@@ -33,16 +33,16 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	//TODO sets van maken? --> niet voor camera's want dan verlies je ordening!
 	//Linked list?
-	private GeneralCamera[] generalCameras = {};
+	private List<GeneralCamera> generalCameras = new ArrayList<>();
 	private SimulationDrone[] drones = {};
 	private List<Sphere> spheres = new ArrayList<>();
 	
-	public GeneralCamera[] getGeneralCameras() {
+	public List<GeneralCamera> getGeneralCameras() {
 		return generalCameras;
 	}
 	
-	public void addGeneralCamera(GeneralCamera c1){
-		generalCameras[generalCameras.length] = c1;		
+	public void addGeneralCamera(GeneralCamera camera){
+		generalCameras.add(camera);		
 	}
 	
 	public SimulationDrone[] getDrones() {
