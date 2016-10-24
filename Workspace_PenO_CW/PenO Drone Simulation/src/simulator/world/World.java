@@ -1,5 +1,6 @@
 package simulator.world;
 
+import java.util.*;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -34,7 +35,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	//Linked list?
 	private GeneralCamera[] generalCameras = {};
 	private SimulationDrone[] drones = {};
-	private Sphere[] spheres = {};
+	private List<Sphere> spheres = new ArrayList<>();
 	
 	public GeneralCamera[] getGeneralCameras() {
 		return generalCameras;
@@ -44,7 +45,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return drones;
 	}
 	
-	public Sphere[] getSpheres() {
+	public List<Sphere> getSpheres() {
 		return spheres;
 	}
 	

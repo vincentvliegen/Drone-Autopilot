@@ -38,4 +38,14 @@ public class Sphere {
 		gl.glTranslated(translate[0], translate[1], translate[2]);
 	}
 	
+	public void translateSphere(float[] newTranslate){
+		translate[0] -= newTranslate[0];
+		translate[1] -= newTranslate[1];
+		translate[2] -= newTranslate[2];
+	}
+	
+	public double[] getTranslate() {
+		return this.translate;
+	}
+	
 }

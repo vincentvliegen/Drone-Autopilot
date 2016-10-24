@@ -15,8 +15,8 @@ public class World11 extends World {
 	private static final long serialVersionUID = 1L;
 	private boolean setup;
 	private SimulationDrone drone1;
+	private Sphere sphere1;
 
-	
 	public World11() {
 		super();
 	}
@@ -25,14 +25,15 @@ public class World11 extends World {
 	 * @return Some standard GL capabilities (with alpha).
 	 */
 	public static GLCapabilities createGLCapabilities() {
-		GLCapabilities capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL2));
+		GLCapabilities capabilities = new GLCapabilities(
+				GLProfile.get(GLProfile.GL2));
 		capabilities.setRedBits(8);
 		capabilities.setBlueBits(8);
 		capabilities.setGreenBits(8);
 		capabilities.setAlphaBits(8);
 		return capabilities;
 	}
-	
+
 	public static KeyboardMovement movement = new KeyboardMovement();
 
 	public void display(GLAutoDrawable drawable) {
@@ -53,25 +54,36 @@ public class World11 extends World {
 		gl.glRotated(movement.getRotateX(), 1, 0, 0);
 		gl.glRotated(movement.getRotateY(), 0, 1, 0);
 		gl.glRotated(movement.getRotateZ(), 0, 0, 1);
-		
-		// Input Sphere.
-		double[] translateSphere = { 0, 20, 0 };
-		float[] colorSphere = { 1f, 0f, 0f };
-		Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere, translateSphere);
-		sphere1.drawSphere();
-		
+
 		// Input Drone.
 		if (!setup) {
 			double[] translateDrone = { 0, 25, 0 };
 			float[] colorDrone = { 0f, 0f, 1f };
-			SimulationDrone drone1 = new SimulationDrone(gl, 2.378f, 4.378f, 64, 64, colorDrone, translateDrone);
+			SimulationDrone drone1 = new SimulationDrone(gl, 2.378f, 4.378f,
+					64, 64, colorDrone, translateDrone, this);
 			this.drone1 = drone1;
 			drone1.drawDrone();
-			setup = true;
+			
 		} else {
-			drone1.getPhysics().calculateMovement();
+			drone1.getMovement().calculateMovement();
 			drone1.drawDrone();
 		}
+
+		// Input Sphere.
+		if (!setup) {
+			double[] translateSphere = { 0, 20, 0 };
+			float[] colorSphere = { 1f, 0f, 0f };
+			Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere,
+					translateSphere);
+			sphere1.drawSphere();
+			this.sphere1 = sphere1;
+			super.getSpheres().add(sphere1);
+		} else {
+			sphere1.drawSphere();
+		}
+		
+		setup = true;
+		
 	}
 
 	private void setCamera(GL2 gl, GLU glu, float distance) {
