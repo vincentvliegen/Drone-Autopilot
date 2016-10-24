@@ -20,7 +20,7 @@ public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
 		drone.setPitchRate(0);
 		drone.setYawRate(0);
 		drone.setRollRate(0);
-		
+		//TODO timehaspassed nodig?
 //		autopilot.timeHasPassed();
 		return autopilot;
 	}
