@@ -23,7 +23,7 @@ public class Movement {
 	//Implement delta
 	private void translateObjects(float[] acceleration) {
 		World currentWorld = drone.getWorld();
-		SimulationDrone[] drones = currentWorld.getDrones();
+		List<SimulationDrone> drones = currentWorld.getDrones();
 		List<Sphere> spheres = currentWorld.getSpheres();
 		List<GeneralCamera> cameras = currentWorld.getGeneralCameras();
 	
