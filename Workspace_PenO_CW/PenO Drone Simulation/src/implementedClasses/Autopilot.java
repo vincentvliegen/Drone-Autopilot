@@ -22,7 +22,7 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 		ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
 		if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
 				&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
-			//hover
+			this.getMoveToTarget().hover();
 		}
 		this.getMoveToTarget().correctRoll();
 		this.getMoveToTarget().checkcasespixelsfound(leftCameraList, rightCameraList);
