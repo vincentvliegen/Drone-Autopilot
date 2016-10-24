@@ -1,5 +1,7 @@
 package implementedClasses;
 
+import java.util.ArrayList;
+
 import DroneAutopilot.ImageCalculations;
 import DroneAutopilot.MoveToTarget;
 
@@ -8,6 +10,7 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 	public Autopilot(){
 		this.imageCalculations = new ImageCalculations();
 		this.moveToTarget = new MoveToTarget();
+		this.moveToTarget.setDrone(this.getDrone());
 	}
 
 	/** Called by the testbed in the AWT/Swing GUI thread at a high (but possibly variable)
@@ -15,14 +18,14 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
     updated to a new state. Simulated time is frozen for the duration of this call. */
 	@Override
 	public void timeHasPassed() {
-		int[][] leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
-		int[][] rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
+		ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
+		ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
 		if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
 				&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
 			//hover
 		}
-		this.getMoveToTarget().correctRoll(this.getDrone());
-		this.getMoveToTarget().checkcasespixelsfound(this.getDrone(),leftCameraList, rightCameraList); //nadenken over int[][] en Arraylist
+		this.getMoveToTarget().correctRoll();
+		this.getMoveToTarget().checkcasespixelsfound(leftCameraList, rightCameraList);
 		//TODO nog verder aanvullen vooruitvliegen kan ook bij vorige
 	}
 
