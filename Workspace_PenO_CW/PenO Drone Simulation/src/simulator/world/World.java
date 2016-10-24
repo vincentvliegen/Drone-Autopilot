@@ -40,6 +40,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return generalCameras;
 	}
 	
+	public void addGeneralCamera(GeneralCamera c1){
+		generalCameras[generalCameras.length] = c1;		
+	}
+	
 	public SimulationDrone[] getDrones() {
 		return drones;
 	}
