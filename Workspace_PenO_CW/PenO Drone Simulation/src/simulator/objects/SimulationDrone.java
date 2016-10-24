@@ -44,9 +44,9 @@ public class SimulationDrone implements Drone {
 	}
 	
 	//TODO afmetingen (voor collision detection)
-	DroneCamera leftCamera = new DroneCamera(this);
-	DroneCamera rightCamera = new DroneCamera(this);
-	
+//	DroneCamera leftCamera = new DroneCamera(this);
+//	DroneCamera rightCamera = new DroneCamera(this);
+//	
 	
 	
 	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color, World world){

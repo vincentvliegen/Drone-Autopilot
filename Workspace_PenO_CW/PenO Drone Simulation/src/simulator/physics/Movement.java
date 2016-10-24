@@ -25,7 +25,7 @@ public class Movement {
 		World currentWorld = drone.getWorld();
 		SimulationDrone[] drones = currentWorld.getDrones();
 		List<Sphere> spheres = currentWorld.getSpheres();
-		GeneralCamera[] cameras = currentWorld.getGeneralCameras();
+		List<GeneralCamera> cameras = currentWorld.getGeneralCameras();
 	
 		for (SimulationDrone currentDrone : drones) {
 			// Implementation postponed
