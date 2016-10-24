@@ -16,12 +16,14 @@ import javax.swing.JLabel;
 import java.awt.Insets;
 
 public class GUI extends JPanel {
+	
 	private static final long serialVersionUID = 1L;
-
+	private World world;
+	
 	/**
 	 * Create the panel.
 	 */
-	public GUI() {
+	public GUI(World world) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0};
 		setLayout(gridBagLayout);
@@ -35,18 +37,15 @@ public class GUI extends JPanel {
 		s.insets = new Insets(0, 0, 5, 5);
 		GridBagConstraints p = new GridBagConstraints();
 		p.insets = new Insets(0, 0, 5, 5);
+		this.world = world;
 		
 		
 		// #buttons
-		
-		World world11 = new World11();
-		GeneralCamera[] cameras = world11.getGeneralCameras();
-		int NumberOfCameras = cameras.length;
 		JButton[] buttons = {};
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(0, 0, 5, 5);
 		
-		for(int i=1; i<NumberOfCameras+1; i++){
+		for(int i=0; i< world.getGeneralCameras().size(); i++){
 			buttons[i] = new JButton("Camera " + i);
 			buttons[i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
