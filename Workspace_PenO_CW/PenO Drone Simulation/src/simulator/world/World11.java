@@ -12,16 +12,11 @@ import simulator.objects.Sphere;
 
 public class World11 extends World {
 
-	/** Serial version UID. */
 	private static final long serialVersionUID = 1L;
-
-
-
 	private boolean setup;
 	private Drone drone1;
 
-	/**
-	 */
+	
 	public World11() {
 		super();
 	}
@@ -37,14 +32,7 @@ public class World11 extends World {
 		capabilities.setAlphaBits(8);
 		return capabilities;
 	}
-
-
-	/**
-	 * The only method that you should implement by yourself.
-	 * 
-	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
-	 */
-
+	
 	public static KeyboardMovement movement = new KeyboardMovement();
 
 	public void display(GLAutoDrawable drawable) {
@@ -76,7 +64,7 @@ public class World11 extends World {
 		if (!setup) {
 			double[] translateDrone = { 0, 25, 0 };
 			float[] colorDrone = { 0f, 0f, 1f };
-			Drone drone1 = new Drone(gl, 3.378f, 6.378f, 40, 40, colorDrone, translateDrone);
+			Drone drone1 = new Drone(gl, 2.378f, 4.378f, 64, 64, colorDrone, translateDrone);
 			this.drone1 = drone1;
 			drone1.drawDrone();
 			setup = true;
@@ -84,9 +72,7 @@ public class World11 extends World {
 			drone1.getPhysics().calculateMovement();
 			drone1.drawDrone();
 		}
-
 	}
-
 
 	private void setCamera(GL2 gl, GLU glu, float distance) {
 		// Change to projection matrix.
@@ -102,6 +88,4 @@ public class World11 extends World {
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
-
-
 }
