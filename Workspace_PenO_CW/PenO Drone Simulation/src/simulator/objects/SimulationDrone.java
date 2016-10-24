@@ -27,6 +27,9 @@ public class SimulationDrone implements Drone {
 	World world;
 	private Movement movement;
 	private static float weight = 10f;
+	private float pitchRate = 0;
+	private float rollRate = 0;
+	private float yawRate = 0;
 	
 	
 	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate, World world){
@@ -138,26 +141,25 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public float getCurrentTime() {
-		//DELTAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-		return 0f;
+		return world.delta;
 	}
 
 	@Override
 	public void setPitchRate(float value) {
-		// TODO Auto-generated method stub
-		
+		// TODO Check if not greater than max!
+		this.pitchRate = value;
 	}
 
 	@Override
 	public void setRollRate(float value) {
-		// TODO Auto-generated method stub
-		
+		// TODO Check if not greater than max!
+		this.rollRate = value;
 	}
 
 	@Override
 	public void setYawRate(float value) {
-		// TODO Auto-generated method stub
-		
+		// TODO Check if not greater than max!
+		this.yawRate = value;
 	}
 	
 	
@@ -168,5 +170,9 @@ public class SimulationDrone implements Drone {
 	public Movement getMovement() {
 		return this.movement;
 	}
+	
+	//TODO Implement movement according to delta -> Check every 0.1s! 
+	//	   Else unlimited small movements? => Might still work, but annoying for Autopilot => Force interval
+	//	   
 	
 }

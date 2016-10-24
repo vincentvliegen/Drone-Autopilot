@@ -35,7 +35,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private List<GeneralCamera> generalCameras = new ArrayList<>();
 	private List<SimulationDrone> drones = new ArrayList<>();
 	private List<Sphere> spheres = new ArrayList<>();
-	protected float delta = 0;
+	public float delta = 0;
 	public float startTime;
 	
 	public List<GeneralCamera> getGeneralCameras() {
