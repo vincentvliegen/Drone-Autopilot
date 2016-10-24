@@ -13,6 +13,8 @@ public class GeneralCamera {
 		this.setLookAtZ(lookAtZ);
 	}
 	
+	//TODO voeg translatie/rotatie toe van de vaste camera's!!
+	
 	public float getEyeX() {
 		return eyeX;
 	}
