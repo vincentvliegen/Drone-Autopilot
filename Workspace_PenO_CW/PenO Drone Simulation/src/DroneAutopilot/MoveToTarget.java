@@ -23,7 +23,7 @@ public class MoveToTarget {
 			targetVisible(leftcamera, rightcamera);
 	}
 
-	private final float slowYaw = 0; // TODO bepalen in verhouding tot max
+	private final float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
 
 	public void noTargetFound() {
 		this.setYawRate(this.slowYaw);
@@ -48,7 +48,6 @@ public class MoveToTarget {
 		} catch (EmptyPositionListException exception){
 			exception.printStackTrace();
 		}
-		//TODO rightcamera voor diepte!!!!
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= this.underBoundary
 				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= this.upperBoundary) {
 			this.setYawRate(0);
