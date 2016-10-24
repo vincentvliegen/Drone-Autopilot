@@ -60,9 +60,10 @@ public class MoveToTarget {
 	private final float underBoundary = -10; // TODO bepalen betere waarde
 	private final float upperBoundary = 10;
 
-	//TODO splitsen
 	public void correctRoll() {
-		if (this.getDrone().getRoll() >= this.upperBoundary || this.getDrone().getRoll() <= this.underBoundary)
+		if (this.getDrone().getRoll() >= this.upperBoundary)
+			this.setRollRate(-this.getDrone().getMaxRollRate());
+		else if (this.getDrone().getRoll() <= this.underBoundary)
 			this.setRollRate(this.getDrone().getMaxRollRate());
 	}
 
