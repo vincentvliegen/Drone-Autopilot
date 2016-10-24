@@ -1,6 +1,7 @@
 package simulator.world;
 
 import java.util.*;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -8,6 +9,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 import simulator.camera.GeneralCamera;
 import simulator.objects.SimulationDrone;
@@ -30,12 +32,11 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		//physics?
 		//movement?
 		
-	
-	//TODO sets van maken? --> niet voor camera's want dan verlies je ordening!
-	//Linked list?
 	private List<GeneralCamera> generalCameras = new ArrayList<>();
-	private SimulationDrone[] drones = {};
+	private List<SimulationDrone> drones = new ArrayList<>();
 	private List<Sphere> spheres = new ArrayList<>();
+	protected float delta = 0;
+	public float startTime;
 	
 	public List<GeneralCamera> getGeneralCameras() {
 		return generalCameras;
@@ -45,7 +46,15 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		generalCameras.add(camera);		
 	}
 	
-	public SimulationDrone[] getDrones() {
+	public void addSimulationDrone(SimulationDrone drone){
+		drones.add(drone);		
+	}
+	
+	public void addSpheres(Sphere sphere){
+		spheres.add(sphere);		
+	}
+	
+	public List<SimulationDrone> getDrones() {
 		return drones;
 	}
 	
@@ -58,6 +67,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public GLU getGlu() {
 		return glu;
 	}
+	
 
 	
 	//TODO meegeven in constructor?
@@ -81,6 +91,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	@Override
 	public void dispose(GLAutoDrawable drawable){
 	}
+	
+	public float timeHasPassed() {
+		return delta;
+	}
 
 	/**
 	 * Sets up the screen.
@@ -88,8 +102,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
 	 */
 	public void init(GLAutoDrawable drawable) {
+		this.startTime = (float) (System.nanoTime()*Math.pow(10, -9));
 		final GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(gl);
+		
 		// Enable z- (depth) buffer for hidden surface removal.
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL.GL_LEQUAL);

@@ -6,6 +6,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 import simulator.camera.GeneralCamera;
 import simulator.movement.KeyboardMovement;
@@ -84,8 +85,8 @@ public class World11 extends World {
 		} else {
 			sphere1.drawSphere();
 		}
-		
 		setup = true;
+		super.delta = (float) (super.startTime - System.nanoTime()*Math.pow(10, -9));
 		
 	}
 	
