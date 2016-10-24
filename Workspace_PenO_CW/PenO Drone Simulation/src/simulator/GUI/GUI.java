@@ -48,7 +48,6 @@ public class GUI extends JPanel {
 		c.insets = new Insets(0, 0, 5, 5);
 		
 		for(int i=0; i< world.getGeneralCameras().size(); i++){
-			System.out.println(world.getGeneralCameras().size());
 			buttons.add(new JButton("Camera " + (i+1)));
 			buttons.get(i).addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -114,13 +113,15 @@ public class GUI extends JPanel {
 	    add(speed, s);
 	    
 	    
-	    // Position
+	   /* // Position
 	    JLabel position = new JLabel();
-	    position.setText("Position: ");
+	    System.out.println(world.getDrones().size());
+	    float[] acceleration = world.getDrones().get(0).getPhysics().getAcceleration();
+	    position.setText("Position (x,y,z): (" + acceleration[0] + ", " + acceleration[1] + ", " + acceleration[2] + ")" );
 	    p.ipady = 100;      //make this component tall
 	    p.weightx = 0.0;
 	    p.gridx = 0;
 	    p.gridy = 2;
-	    add(position, p);
+	    add(position, p);*/
 	}
 }
