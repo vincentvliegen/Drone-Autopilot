@@ -50,8 +50,10 @@ public class MoveToTarget {
 		}
 		//TODO rightcamera voor diepte!!!!
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= this.underBoundary
-				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= this.upperBoundary)
+				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= this.upperBoundary) {
 			this.setYawRate(0);
+			this.flyTowardsTarget(cogLeft);
+			}
 		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) >= this.underBoundary)
 			this.setYawRate(-this.getDrone().getMaxYawRate());
 		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) <= this.upperBoundary)
@@ -66,6 +68,16 @@ public class MoveToTarget {
 			this.setRollRate(-this.getDrone().getMaxRollRate());
 		else if (this.getDrone().getRoll() <= this.underBoundary)
 			this.setRollRate(this.getDrone().getMaxRollRate());
+	}
+	
+	public void flyTowardsTarget(int[] cog) {
+		if (Math.abs(this.getDrone().getPitch() - this.getPhysicsCalculations().getVisiblePitch()) >= this.pitchUpper) {
+			this.setPitchRate(this.getDrone().getMaxPitchRate());
+		}
+		else { this.setPitchRate(0);
+		this.setThrust(this.getPhysicsCalculations().getThrust(cog));			
+		}
+	
 	}
 
 	public void hover() {
