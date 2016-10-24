@@ -39,24 +39,14 @@ public class Physics {
 		}
 		forces.remove(thrustForce);
 		
-		System.out.println(xAcceleration);
-		System.out.println(yAcceleration);
-		System.out.println(zAcceleration);
-		
-		xAcceleration /= (1000*weight);
-		yAcceleration /= (1000*weight);
-		zAcceleration /= (1000*weight);
+		xAcceleration /= (100*weight);
+		yAcceleration /= (100*weight);
+		zAcceleration /= (100*weight);
 		
 		acceleration[0] = xAcceleration;
 		acceleration[1] = yAcceleration;
 		acceleration[2] = zAcceleration;
 		return acceleration;
-	}
-	
-	// Uses acceleration as velocity, completely wrong, should have time based value
-	public void calculateMovement() {
-		float[] acceleration = getAcceleration();
-		drone.translateDrone(acceleration);
 	}
 	
 	public Force calculateThrustForce() {

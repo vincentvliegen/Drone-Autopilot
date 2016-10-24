@@ -54,8 +54,12 @@ public class ImageCalculations {
         return coloredPositions;	
 	}
 	
-	//TODO waarde van red invullen
-	private final static int red = 0;
+	// kleur in int
+	private final static int red = 255;
+	//private final static int white = 16777215;
+	//private final static int black = 0;
+	//private final static int green = 65280;
+	//private final static int blue = 16711680;
 	
 	//pixels of red color
 	public ArrayList<int[]> getRedPixels(Camera camera){
@@ -67,4 +71,23 @@ public class ImageCalculations {
 		ArrayList<int[]> listRedPixels = getRedPixels(camera);
 		return listRedPixels.size() == camera.takeImage().length;
 	}
+	
+	//kleurenconversies voor debug
+	
+	//conversie int color naar leesbaar (R,G,B) formaat
+	public int[] colorIntToRGB(int color){
+		int [] RGB = {0,0,0};
+		/*R*/RGB[0] = color % 256;
+		/*G*/RGB[1] = color / 256;
+		/*B*/RGB[2] = color / 256*256;
+		return RGB;
+	}
+	
+	//conversie (R,G,B) naar int  =   dec(BGR)
+	public int colorRGBToInt(int[] RGB){
+		int color = 0;
+		color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
+		return color;
+	}
+	
 }
