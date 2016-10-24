@@ -9,6 +9,7 @@ public class MoveToTarget {
 	public MoveToTarget() {
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations();
+		this.physicsCalculations.setDrone(this.getDrone());
 	}
 	
 	public void checkcasespixelsfound(ArrayList<int[]> leftcamera, ArrayList<int[]> rightcamera){
@@ -48,12 +49,12 @@ public class MoveToTarget {
 			exception.printStackTrace();
 		}
 		//TODO rightcamera voor diepte!!!!
-		if (this.getPhysicsCalculations().horizontalAngleDeviation(this.getDrone(),cogLeft,cogRight) >= this.underBoundary
-				|| this.getPhysicsCalculations().horizontalAngleDeviation(this.getDrone(),cogLeft,cogRight) <= this.upperBoundary)
+		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= this.underBoundary
+				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= this.upperBoundary)
 			this.setYawRate(0);
-		else if (this.getPhysicsCalculations().horizontalAngleDeviation(this.getDrone(), cogLeft, cogRight) >= this.underBoundary)
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) >= this.underBoundary)
 			this.setYawRate(-this.getDrone().getMaxYawRate());
-		else if (this.getPhysicsCalculations().horizontalAngleDeviation(this.getDrone(), cogLeft, cogRight) <= this.upperBoundary)
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) <= this.upperBoundary)
 			this.setYawRate(this.getDrone().getMaxYawRate());
 	}
 
