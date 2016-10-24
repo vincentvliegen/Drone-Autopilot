@@ -23,6 +23,8 @@ public class World11 extends World {
 	public World11() {
 		super();
 		super.addGeneralCamera(new GeneralCamera(0, 20, 200, 0, 0, 0));
+		super.addSimulationDrone(drone1);
+		super.addSpheres(sphere1);
 	}
 
 	/**
@@ -67,7 +69,6 @@ public class World11 extends World {
 					64, 64, colorDrone, translateDrone, this);
 			this.drone1 = drone1;
 			drone1.drawDrone();
-			
 		} else {
 			drone1.getMovement().calculateMovement();
 			drone1.drawDrone();
@@ -81,13 +82,12 @@ public class World11 extends World {
 					translateSphere);
 			sphere1.drawSphere();
 			this.sphere1 = sphere1;
-			super.getSpheres().add(sphere1);
 		} else {
 			sphere1.drawSphere();
 		}
 		setup = true;
-		super.delta = (float) (super.startTime - System.nanoTime()*Math.pow(10, -9));
-		
+		super.delta = (float) (System.nanoTime()*Math.pow(10, -9) - super.startTime);
+		System.out.println(delta);
 	}
 	
 	// Update position camera's
