@@ -1,10 +1,10 @@
 package simulator.camera;
 
-import simulator.objects.Drone;
+import simulator.objects.SimulationDrone;
 
 public class DroneCamera {
 	
-	public DroneCamera(Drone drone){
+	public DroneCamera(SimulationDrone drone){
 		this.drone = drone;
 	}
 	
@@ -15,7 +15,7 @@ public class DroneCamera {
 		this.eyeX = eyeX;
 	}
 
-	private Drone drone;
+	private SimulationDrone drone;
 
 	
 	
@@ -23,11 +23,11 @@ public class DroneCamera {
 	private float lookAtX=0, lookAtY=0, lookAtZ=0;
 	
 	
-	public Drone getDrone() {
+	public SimulationDrone getDrone() {
 		return drone;
 	}
 
-	public void setDrone(Drone drone) {
+	public void setDrone(SimulationDrone drone) {
 		this.drone = drone;
 	}
 

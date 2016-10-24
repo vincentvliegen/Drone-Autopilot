@@ -2,18 +2,18 @@ package simulator.physics;
 
 import java.util.*;
 
-import simulator.objects.Drone;
+import simulator.objects.SimulationDrone;
 
 public class Physics {
 	private List<Force> forces = new ArrayList<>();
 	private float weight;
-	private Drone drone;
+	private SimulationDrone drone;
 
-	public Physics(Drone drone, float weight) {
+	public Physics(SimulationDrone simulationDrone, float weight) {
 		Force gravity = new Force(0, -9.81f * weight, 0);
 		forces.add(gravity);
 		this.weight = weight;
-		this.drone = drone;
+		this.drone = simulationDrone;
 	}
 
 	public void addForce(Force newForce) {

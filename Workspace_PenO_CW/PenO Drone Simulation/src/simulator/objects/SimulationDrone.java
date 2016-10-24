@@ -6,7 +6,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import simulator.camera.DroneCamera;
 import simulator.physics.Physics;
 
-public class Drone {
+public class SimulationDrone {
 	// Implement rates for turning and maxTurnRate
 	GL2 gl;
 	float innerRadius;
@@ -22,7 +22,7 @@ public class Drone {
 	float thrust = 0;
 	
 	
-	public Drone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate){
+	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate){
 		this.innerRadius = innerRadius;
 		this.outerRadius = outerRadius;
 		this.nsides = nsides;
@@ -42,7 +42,7 @@ public class Drone {
 	
 	
 	
-	public Drone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color){
+	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color){
 		this(gl, innerRadius, outerRadius, nsides, rings, color, standardTranslate);
 	}
 

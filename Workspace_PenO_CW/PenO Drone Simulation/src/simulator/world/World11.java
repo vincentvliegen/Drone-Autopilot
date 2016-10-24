@@ -7,14 +7,14 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.glu.GLU;
 import simulator.movement.KeyboardMovement;
-import simulator.objects.Drone;
+import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
 
 public class World11 extends World {
 
 	private static final long serialVersionUID = 1L;
 	private boolean setup;
-	private Drone drone1;
+	private SimulationDrone drone1;
 
 	
 	public World11() {
@@ -64,7 +64,7 @@ public class World11 extends World {
 		if (!setup) {
 			double[] translateDrone = { 0, 25, 0 };
 			float[] colorDrone = { 0f, 0f, 1f };
-			Drone drone1 = new Drone(gl, 2.378f, 4.378f, 64, 64, colorDrone, translateDrone);
+			SimulationDrone drone1 = new SimulationDrone(gl, 2.378f, 4.378f, 64, 64, colorDrone, translateDrone);
 			this.drone1 = drone1;
 			drone1.drawDrone();
 			setup = true;
