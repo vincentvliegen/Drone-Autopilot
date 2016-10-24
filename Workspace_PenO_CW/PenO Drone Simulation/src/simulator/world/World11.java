@@ -23,8 +23,6 @@ public class World11 extends World {
 	public World11() {
 		super();
 		super.addGeneralCamera(new GeneralCamera(0, 20, 200, 0, 0, 0));
-		super.addSimulationDrone(drone1);
-		super.addSpheres(sphere1);
 	}
 
 	/**
@@ -68,6 +66,7 @@ public class World11 extends World {
 			SimulationDrone drone1 = new SimulationDrone(gl, 2.378f, 4.378f,
 					64, 64, colorDrone, translateDrone, this);
 			this.drone1 = drone1;
+			super.addSimulationDrone(drone1);
 			drone1.drawDrone();
 		} else {
 			drone1.getMovement().calculateMovement();
@@ -82,6 +81,7 @@ public class World11 extends World {
 					translateSphere);
 			sphere1.drawSphere();
 			this.sphere1 = sphere1;
+			super.addSpheres(sphere1);
 		} else {
 			sphere1.drawSphere();
 		}
