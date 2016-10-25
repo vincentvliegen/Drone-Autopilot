@@ -10,7 +10,6 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 	public Autopilot(){
 		this.imageCalculations = new ImageCalculations();
 		this.moveToTarget = new MoveToTarget();
-		this.moveToTarget.setDrone(this.getDrone());
 	}
 
 	/** Called by the testbed in the AWT/Swing GUI thread at a high (but possibly variable)

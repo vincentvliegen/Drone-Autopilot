@@ -9,7 +9,6 @@ public class MoveToTarget {
 	public MoveToTarget() {
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations();
-		this.physicsCalculations.setDrone(this.getDrone());
 	}
 	
 	public void checkcasespixelsfound(ArrayList<int[]> leftcamera, ArrayList<int[]> rightcamera){
@@ -63,7 +62,9 @@ public class MoveToTarget {
 	private final float upperBoundary = 10;
 
 	public void correctRoll() {
-		if (this.getDrone().getRoll() >= this.upperBoundary)
+		if (this.getDrone().getRoll() <= this.upperBoundary && this.getDrone().getRoll() >= this.underBoundary)
+			this.setRollRate(0);
+		else if (this.getDrone().getRoll() >= this.upperBoundary)
 			this.setRollRate(-this.getDrone().getMaxRollRate());
 		else if (this.getDrone().getRoll() <= this.underBoundary)
 			this.setRollRate(this.getDrone().getMaxRollRate());
@@ -73,8 +74,11 @@ public class MoveToTarget {
 		if (Math.abs(this.getDrone().getPitch() - this.getPhysicsCalculations().getVisiblePitch()) >= this.pitchUpper) {
 			this.setPitchRate(this.getDrone().getMaxPitchRate());
 		}
-		else { this.setPitchRate(0);
-		this.setThrust(this.getPhysicsCalculations().getThrust(cog));			
+		else { 
+			this.setPitchRate(0);
+			this.setRollRate(0);
+			this.setYawRate(0);
+			this.setThrust(this.getPhysicsCalculations().getThrust(cog));			
 		}
 	
 	}
