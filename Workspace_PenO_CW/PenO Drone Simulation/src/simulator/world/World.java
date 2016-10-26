@@ -57,7 +57,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		drones.add(drone);		
 	}
 	
-	public void addSpheres(Sphere sphere){
+	public void addSphere(Sphere sphere){
 		spheres.add(sphere);		
 	}
 
