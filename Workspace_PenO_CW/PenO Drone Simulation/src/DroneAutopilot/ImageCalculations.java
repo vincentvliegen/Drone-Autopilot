@@ -55,11 +55,11 @@ public class ImageCalculations {
 	}
 	
 	// kleur in int
-	private final static int red = 255;
-	//private final static int white = 16777215;
-	//private final static int black = 0;
-	//private final static int green = 65280;
-	//private final static int blue = 16711680;
+	public final static int red = 255;
+	public final static int white = 16777215;
+	public final static int black = 0;
+	public final static int green = 65280;
+	public final static int blue = 16711680;
 	
 	//pixels of red color
 	public ArrayList<int[]> getRedPixels(Camera camera){
