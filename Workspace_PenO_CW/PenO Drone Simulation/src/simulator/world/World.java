@@ -20,12 +20,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	/*
 	 * Superklasse voor alle werelden die we nog moeten maken
-	 * 
-	 * Bevat lijst van alle objecten die er bestaan (op dit moment enkel Sphere en Drone)
-	 * Linken met de physics?
-	 * 
-	 * 
-	 * 
 	 */
 	
 	//TODO
@@ -37,21 +31,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private List<Sphere> spheres = new ArrayList<>();
 	public float delta = 0;
 	public float startTime;
+	private GLU glu;
 	
 	public List<GeneralCamera> getGeneralCameras() {
 		return generalCameras;
-	}
-	
-	public void addGeneralCamera(GeneralCamera camera){
-		generalCameras.add(camera);		
-	}
-	
-	public void addSimulationDrone(SimulationDrone drone){
-		drones.add(drone);		
-	}
-	
-	public void addSpheres(Sphere sphere){
-		spheres.add(sphere);		
 	}
 	
 	public List<SimulationDrone> getDrones() {
@@ -62,12 +45,21 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return spheres;
 	}
 	
-	private GLU glu;
-	
 	public GLU getGlu() {
 		return glu;
 	}
 	
+	public void addGeneralCamera(GeneralCamera camera){
+		generalCameras.add(camera);		
+	}
+	
+	public void addSimulationDrone(SimulationDrone drone){
+		drones.add(drone);		
+	}
+	
+	public void addSphere(Sphere sphere){
+		spheres.add(sphere);		
+	}
 
 	
 	//TODO meegeven in constructor?

@@ -1,13 +1,8 @@
 package simulator.GUI;
 
 import javax.swing.JPanel;
-
-import simulator.camera.GeneralCamera;
 import simulator.world.World;
-import simulator.world.World11;
-
 import javax.swing.JButton;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
@@ -29,6 +24,7 @@ public class GUI extends JPanel {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0};
 		setLayout(gridBagLayout);
+		
 		GridBagConstraints c1 = new GridBagConstraints();
 		c1.insets = new Insets(0, 0, 5, 5);
 		GridBagConstraints c2 = new GridBagConstraints();
@@ -105,23 +101,29 @@ public class GUI extends JPanel {
 		
 		// Speed
 		JLabel speed = new JLabel();
-		speed.setText("Speed: ");
-	    //s.ipady = 40;      //make this component tall
-	    s.weightx = 0.0;
-	    s.gridx = 0;
-	    s.gridy = 1;
-	    add(speed, s);
-	    
-	    
-	   /* // Position
+		if(world.getDrones().size()>0){
+			
+			//insert calculation of speed.
+			
+			speed.setText("Speed: ");
+			//s.ipady = 40;      //make this component tall
+			s.weightx = 0.0;
+			s.gridx = 0;
+			s.gridy = 1;
+			add(speed, s);
+		}
+
+
+	    // Position
 	    JLabel position = new JLabel();
-	    System.out.println(world.getDrones().size());
-	    float[] acceleration = world.getDrones().get(0).getPhysics().getAcceleration();
-	    position.setText("Position (x,y,z): (" + acceleration[0] + ", " + acceleration[1] + ", " + acceleration[2] + ")" );
-	    p.ipady = 100;      //make this component tall
-	    p.weightx = 0.0;
-	    p.gridx = 0;
-	    p.gridy = 2;
-	    add(position, p);*/
+	    if(world.getDrones().size()>0){
+	    	float[] acceleration = world.getDrones().get(0).getPhysics().getAcceleration();
+	    	position.setText("Position (x,y,z): (" + acceleration[0] + ", " + acceleration[1] + ", " + acceleration[2] + ")" );
+	    	p.ipady = 100;      //make this component tall
+	    	p.weightx = 0.0;
+	    	p.gridx = 0;
+	    	p.gridy = 2;
+	    	add(position, p);
+	    }
 	}
 }
