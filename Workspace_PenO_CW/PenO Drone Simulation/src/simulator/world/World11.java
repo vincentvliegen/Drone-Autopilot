@@ -22,9 +22,8 @@ public class World11 extends World {
 	public World11() {
 		super();
 		super.addGeneralCamera(new GeneralCamera(0, 20, 200, 0, 0, 0));
-		
-		
-		
+		super.addGeneralCamera(new GeneralCamera(0, 20, 300, 0, 0, 0));
+		super.addGeneralCamera(new GeneralCamera(0, 20, 400, 0, 0, 0));
 	}
 
 	/**
@@ -89,7 +88,7 @@ public class World11 extends World {
 		}
 		setup = true;
 		super.delta = (float) (System.nanoTime()*Math.pow(10, -9) - super.startTime);
-		System.out.println(delta);
+		//System.out.println(delta);
 	}
 	
 	// Update position camera's
