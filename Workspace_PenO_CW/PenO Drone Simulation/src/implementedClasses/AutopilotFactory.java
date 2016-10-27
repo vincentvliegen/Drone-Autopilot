@@ -20,10 +20,10 @@ public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
 		autopilot.setDrone(droneReal);
 		autopilot.getMoveToTarget().setDrone(droneReal);
 		autopilot.getMoveToTarget().getPhysicsCalculations().setDrone(droneReal);
-		drone.setThrust(-drone.getGravity());
-		drone.setPitchRate(0);
-		drone.setYawRate(0);
-		drone.setRollRate(0);
+		droneReal.setThrust(-droneReal.getGravity());
+		droneReal.setPitchRate(0);
+		droneReal.setYawRate(0);
+		droneReal.setRollRate(0);
 		//TODO timehaspassed nodig?
 //		autopilot.timeHasPassed();
 		return autopilot;
