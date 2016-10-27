@@ -31,6 +31,8 @@ public class GUI {
 	 * Create the application.
 	 */
 	public GUI() {
+		this.progressBar = new JProgressBar();
+		this.maxValue = 0;
 		initialize();
 	}
 
@@ -41,12 +43,24 @@ public class GUI {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JProgressBar progressBar = new JProgressBar();
-		frame.getContentPane().add(progressBar, BorderLayout.SOUTH);
-		
+
+		frame.getContentPane().add(this.progressBar, BorderLayout.SOUTH);
+		this.progressBar.setMaximum(100);
+
 		JLabel progress = new JLabel("progress");
 		frame.getContentPane().add(progress, BorderLayout.CENTER);
+
 	}
 
+	public void update(int distance) {
+		if (distance > this.maxValue) {
+			this.maxValue = distance;
+			progressBar.setMaximum(distance);
+		} else {
+			this.progressBar.setValue(this.maxValue - distance);
+		}
+	}
+
+	private final JProgressBar progressBar;
+	private int maxValue;
 }

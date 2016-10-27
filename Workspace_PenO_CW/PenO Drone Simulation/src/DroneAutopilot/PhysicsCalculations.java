@@ -1,5 +1,6 @@
 package DroneAutopilot;
 
+import DroneAutopilot.GUI.GUI;
 import implementedClasses.Drone;
 
 public class PhysicsCalculations {
@@ -32,7 +33,9 @@ public class PhysicsCalculations {
 	}
 	
 	public float getDepth(int[] centerOfGravityL, int[]centerOfGravityR){
-		return (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
+		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
+		GUI.update((int)depth);
+		return depth;
 	}
 		
 	public float horizontalAngleDeviation(int[] centerOfGravityL, int[] centerofGravityR){
