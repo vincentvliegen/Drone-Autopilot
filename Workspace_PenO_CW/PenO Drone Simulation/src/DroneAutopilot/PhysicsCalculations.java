@@ -34,7 +34,7 @@ public class PhysicsCalculations {
 	
 	public float getDepth(int[] centerOfGravityL, int[]centerOfGravityR){
 		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
-		GUI.update((int)depth);
+		this.getGUI().update((int)depth);
 		return depth;
 	}
 		
@@ -63,4 +63,13 @@ public class PhysicsCalculations {
 		return this.drone;
 	}
 	private Drone drone;
+	
+	
+	public void setGUI(GUI gui){
+		this.gui = gui;
+	}
+	public GUI getGUI(){
+		return this.gui;
+	}
+	private GUI gui;
 }

@@ -1,5 +1,6 @@
 package implementedClasses;
 
+import DroneAutopilot.GUI.GUI;
 import implementedClasses.Autopilot;
 import p_en_o_cw_2016.Drone;
 
@@ -13,10 +14,11 @@ public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
     The Drone and Camera objects are not thread-safe; calls of methods of these
     objects should occur only in the AWT/Swing GUI thread. */
 	@Override
-	public Autopilot create(Drone drone) {
-		
+	public Autopilot create(Drone drone) {		
 		Autopilot autopilot = new Autopilot();
 		implementedClasses.Drone droneReal = (implementedClasses.Drone) drone;
+		GUI gui = new GUI();
+		autopilot.getMoveToTarget().getPhysicsCalculations().setGUI(gui);
 		autopilot.setDrone(droneReal);
 		autopilot.getMoveToTarget().setDrone(droneReal);
 		autopilot.getMoveToTarget().getPhysicsCalculations().setDrone(droneReal);
