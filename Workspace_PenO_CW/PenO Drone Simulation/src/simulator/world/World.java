@@ -34,6 +34,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private float currentTime = 0;
 	private float startTime;
 	private float lastTime;
+	public GeneralCamera currentCamera;
 	
 	private GLU glu;
 	
@@ -66,6 +67,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return spheres;
 	}
 	
+	public GeneralCamera getCurrentCamera(){
+		return currentCamera;
+	}
+	
 	public GLU getGlu() {
 		return glu;
 	}
@@ -86,6 +91,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		spheres.add(sphere);		
 	}
 	
+
 	public void setLastTime(float value) {
 		this.lastTime = value;
 	}
@@ -96,6 +102,17 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	public int getFps() {
 		return animator.getFPS();
+	}
+
+	public void setCurrentCamera(GeneralCamera camera){
+		this.currentCamera = camera;
+	}
+
+	
+	private GLAutoDrawable drawable;
+	
+	public GLAutoDrawable getDrawable() {
+		return drawable;
 	}
 	
 	//TODO meegeven in constructor?
@@ -157,8 +174,5 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
 	}
-	
-
-	
 	
 }

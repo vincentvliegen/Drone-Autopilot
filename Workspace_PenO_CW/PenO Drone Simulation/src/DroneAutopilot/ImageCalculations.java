@@ -1,10 +1,9 @@
 package DroneAutopilot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import exceptions.EmptyPositionListException;
-import implementedClasses.Camera;
+import p_en_o_cw_2016.Camera;
 
 public class ImageCalculations {
 	

@@ -1,9 +1,6 @@
-package implementedClasses;
+package DroneAutopilot;
 
 import java.util.ArrayList;
-
-import DroneAutopilot.ImageCalculations;
-import DroneAutopilot.MoveToTarget;
 
 public class Autopilot implements p_en_o_cw_2016.Autopilot{
 	
@@ -28,13 +25,13 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 		//TODO nog verder aanvullen vooruitvliegen kan ook bij vorige
 	}
 
-	public void setDrone(Drone drone){
+	public void setDrone(p_en_o_cw_2016.Drone drone){
 		this.drone = drone;
 	}
-	public Drone getDrone(){
+	public p_en_o_cw_2016.Drone getDrone(){
 		return this.drone;
 	}
-	private Drone drone;
+	private p_en_o_cw_2016.Drone drone;
 
 	
 	public final ImageCalculations getImageCalculations(){
