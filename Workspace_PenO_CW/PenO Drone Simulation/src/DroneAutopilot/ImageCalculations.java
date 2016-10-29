@@ -77,8 +77,8 @@ public class ImageCalculations {
 	public int[] colorIntToRGB(int color){
 		int [] RGB = {0,0,0};
 		/*R*/RGB[0] = color % 256;
-		/*G*/RGB[1] = color / 256;
-		/*B*/RGB[2] = color / 256*256;
+		/*G*/RGB[1] = (color / 256) % 256;
+		/*B*/RGB[2] = color / (256*256);
 		return RGB;
 	}
 	
