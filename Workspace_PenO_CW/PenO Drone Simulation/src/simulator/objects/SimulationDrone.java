@@ -30,6 +30,8 @@ public class SimulationDrone implements Drone {
 	private float pitchRate = 0;
 	private float rollRate = 0;
 	private float yawRate = 0;
+	public DroneCamera leftCamera;
+	public DroneCamera rightCamera;
 	
 	
 	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate, World world){
@@ -44,12 +46,10 @@ public class SimulationDrone implements Drone {
 		//this.setThrust(10f*9.81f);
 		this.world = world;
 		this.movement = new Movement(this);
+		generateDroneCameras();
 	}
 	
 	//TODO afmetingen (voor collision detection)
-//	DroneCamera leftCamera = new DroneCamera(this);
-//	DroneCamera rightCamera = new DroneCamera(this);
-//	
 	
 	
 	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color, World world){
@@ -94,14 +94,14 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public Camera getLeftCamera() {
-		// TODO Auto-generated method stub
-		return null;
+		//Klopt dit? 
+		return (Camera) leftCamera;
 	}
 
 	@Override
 	public Camera getRightCamera() {
-		// TODO Auto-generated method stub
-		return null;
+		//Klopt dit? 
+		return (Camera) rightCamera;
 	}
 
 	@Override
@@ -146,22 +146,37 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public void setPitchRate(float value) {
-		// TODO Check if not greater than max!
-		this.pitchRate = value;
+		if(value > getMaxPitchRate())
+			this.pitchRate = getMaxPitchRate();
+		else 
+			this.pitchRate = value;	
 	}
 
 	@Override
 	public void setRollRate(float value) {
-		// TODO Check if not greater than max!
-		this.rollRate = value;
+		if(value > getMaxRollRate())
+			this.rollRate = getMaxRollRate();
+		else 
+			this.rollRate = value;	
 	}
 
 	@Override
 	public void setYawRate(float value) {
-		// TODO Check if not greater than max!
-		this.yawRate = value;
+		if(value > getMaxYawRate())
+			this.yawRate = getMaxYawRate();
+		else 
+			this.yawRate = value;	
 	}
 	
+	public float getDronedepth() {
+		// This will change when the drone changes into an other shape. 
+		return outerRadius;
+	}
+
+	public float getDroneWidth() {
+		// This will change when the drone changes into an other shape. 
+		return outerRadius;
+	}
 	
 	public World getWorld() {
 		return this.world;
@@ -171,8 +186,30 @@ public class SimulationDrone implements Drone {
 		return this.movement;
 	}
 	
+	private void generateDroneCameras() {
+		
+		//TODO
+		//lookat moet recht vooruit zijn
+		//dus X moet zelfde zijn, Y ook, Z iets verder
+
+		float commonY = 0;
+		
+		//left
+		float leftX = -getDroneWidth()/2;
+		float leftZ = getDronedepth()/2;
+		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ + 1, this);
+			
+		//right
+		float rightX = getDroneWidth()/2;
+		float rightZ = getDronedepth()/2;
+		rightCamera = new DroneCamera(rightX, commonY, leftZ, rightX, commonY, rightZ + 1, this);
+		
+		//add to list in world
+		getWorld().addDroneCamera(leftCamera);
+		getWorld().addDroneCamera(rightCamera);
+	}
+	
 	//TODO Implement movement according to delta -> Check every 0.1s! 
 	//	   Else unlimited small movements? => Might still work, but annoying for Autopilot => Force interval
-	//	   
 	
 }
