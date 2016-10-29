@@ -11,6 +11,7 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
+import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
@@ -27,6 +28,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		//movement?
 		
 	private List<GeneralCamera> generalCameras = new ArrayList<>();
+	private List<DroneCamera> droneCameras = new ArrayList<>();
 	private List<SimulationDrone> drones = new ArrayList<>();
 	private List<Sphere> spheres = new ArrayList<>();
 	public float delta = 0;
@@ -35,6 +37,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	public List<GeneralCamera> getGeneralCameras() {
 		return generalCameras;
+	}
+	
+	public List<DroneCamera> getDroneCameras() {
+		return droneCameras;
 	}
 	
 	public List<SimulationDrone> getDrones() {
@@ -51,6 +57,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	public void addGeneralCamera(GeneralCamera camera){
 		generalCameras.add(camera);		
+	}
+	
+	public void addDroneCamera(DroneCamera camera){
+		droneCameras.add(camera);		
 	}
 	
 	public void addSimulationDrone(SimulationDrone drone){
