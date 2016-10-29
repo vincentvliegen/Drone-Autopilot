@@ -81,6 +81,12 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	}
 
 	
+	private GLAutoDrawable drawable;
+	
+	public GLAutoDrawable getDrawable() {
+		return drawable;
+	}
+	
 	//TODO meegeven in constructor?
 	/** The frames per second setting. */
 	private int fps = 60;
