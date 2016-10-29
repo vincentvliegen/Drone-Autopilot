@@ -67,6 +67,10 @@ public class SimulationDrone implements Drone {
 		gl.glTranslated(translate[0], translate[1], translate[2]);
 	}
 	
+	public double[] getTranslate(){
+		return this.translate;
+	}
+	
 	public Physics getPhysics() {
 		return this.physics;
 	}
@@ -141,7 +145,7 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public float getCurrentTime() {
-		return world.delta;
+		return world.getCurrentTime();
 	}
 
 	@Override

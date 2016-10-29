@@ -39,9 +39,9 @@ public class Physics {
 		}
 		forces.remove(thrustForce);
 		
-		xAcceleration /= (100*weight);
-		yAcceleration /= (100*weight);
-		zAcceleration /= (100*weight);
+		xAcceleration /= (weight);
+		yAcceleration /= (weight);
+		zAcceleration /= (weight);
 		
 		acceleration[0] = xAcceleration;
 		acceleration[1] = yAcceleration;

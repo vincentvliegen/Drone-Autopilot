@@ -8,38 +8,29 @@ import simulator.world.World;
 
 public class Movement {
 	private SimulationDrone drone;
+	private float[] velocity = {0,0,0};
 
 	public Movement(SimulationDrone drone) {
 		this.drone = drone;
 	}
 
-	// Uses acceleration as velocity, completely wrong, should have time based
-	// value
-	public void calculateMovement() {
+	public void calculateMovement(float timePassed) {
+		if (timePassed < 0.016666) {
+			return;
+		}
 		float[] acceleration = drone.getPhysics().getAcceleration();
-		translateObjects(acceleration);
-	}
-
-	//Implement delta
-	private void translateObjects(float[] acceleration) {
-		World currentWorld = drone.getWorld();
-		List<SimulationDrone> drones = currentWorld.getDrones();
-		List<Sphere> spheres = currentWorld.getSpheres();
-		List<GeneralCamera> cameras = currentWorld.getGeneralCameras();
-	
-		for (SimulationDrone currentDrone : drones) {
-			// Implementation postponed
-		}
+		acceleration[0] *= timePassed;
+		acceleration[1] *= timePassed;
+		acceleration[2] *= timePassed;
+		velocity[0] += acceleration[0];
+		velocity[1] += acceleration[1];
+		velocity[2] += acceleration[2];
 		
-		for (Sphere currentSphere : spheres) {
-			currentSphere.translateSphere(acceleration);
-		}
-		
-		for (GeneralCamera currentCamera : cameras) {
-			//currentCamera.translateCamera(acceleration);
-		}
-			
-		
+		double[] currentPos = drone.getTranslate();
+		currentPos[0] += velocity[0] * timePassed;
+		currentPos[1] += velocity[1] * timePassed;
+		currentPos[2] += velocity[2] * timePassed;
+		drone.translateDrone(currentPos);
 	}
 
 	

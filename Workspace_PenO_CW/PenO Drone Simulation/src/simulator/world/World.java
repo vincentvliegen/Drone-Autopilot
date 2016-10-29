@@ -31,12 +31,27 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private List<DroneCamera> droneCameras = new ArrayList<>();
 	private List<SimulationDrone> drones = new ArrayList<>();
 	private List<Sphere> spheres = new ArrayList<>();
-	public float delta = 0;
-	public float startTime;
+	private float currentTime = 0;
+	private float startTime;
+	private float lastTime;
+	
 	private GLU glu;
 	
 	public List<GeneralCamera> getGeneralCameras() {
 		return generalCameras;
+	}
+	
+	public float getCurrentTime() {
+		currentTime = (float) (System.nanoTime()*Math.pow(10, -9) - this.startTime);
+		return currentTime; 
+	}
+	
+	public float checkTimePassed() {
+		return getCurrentTime() - lastTime;
+	}
+	
+	public float getLastTime() {
+		return this.lastTime;
 	}
 	
 	public List<DroneCamera> getDroneCameras() {
@@ -70,7 +85,18 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public void addSphere(Sphere sphere){
 		spheres.add(sphere);		
 	}
-
+	
+	public void setLastTime(float value) {
+		this.lastTime = value;
+	}
+	
+	public float getStartTime() {
+		return this.startTime;
+	}
+	
+	public int getFps() {
+		return animator.getFPS();
+	}
 	
 	//TODO meegeven in constructor?
 	/** The frames per second setting. */
@@ -93,10 +119,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	@Override
 	public void dispose(GLAutoDrawable drawable){
 	}
-	
-	public float timeHasPassed() {
-		return delta;
-	}
 
 	/**
 	 * Sets up the screen.
@@ -105,6 +127,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	 */
 	public void init(GLAutoDrawable drawable) {
 		this.startTime = (float) (System.nanoTime()*Math.pow(10, -9));
+		this.lastTime = 0;
 		final GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(gl);
 		
@@ -125,7 +148,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		glu = new GLU();
 
 		// Start animator.
-		animator = new FPSAnimator(this, fps);
+		animator = new FPSAnimator(this, fps, true);
 		animator.start();
 	}
 
