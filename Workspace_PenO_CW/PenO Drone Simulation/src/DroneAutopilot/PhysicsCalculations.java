@@ -1,7 +1,7 @@
 package DroneAutopilot;
 
 import DroneAutopilot.GUI.GUI;
-import implementedClasses.Drone;
+import p_en_o_cw_2016.Drone;
 
 public class PhysicsCalculations {
 		
@@ -48,6 +48,7 @@ public class PhysicsCalculations {
 		return (float) Math.atan(this.getY(pointOfGravity) / this.getfocalDistance());
 	}
 	
+	//moet die niet gedeeld door 2 zijn?
 	public float getVisiblePitch(){
 		return (float) (this.getDrone().getLeftCamera().getVerticalAngleOfView()*.8);		
 	}

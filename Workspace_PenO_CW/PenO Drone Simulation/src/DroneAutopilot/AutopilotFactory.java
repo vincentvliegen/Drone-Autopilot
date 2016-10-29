@@ -1,7 +1,6 @@
-package implementedClasses;
+package DroneAutopilot;
 
 import DroneAutopilot.GUI.GUI;
-import implementedClasses.Autopilot;
 import p_en_o_cw_2016.Drone;
 
 public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
@@ -16,16 +15,15 @@ public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
 	@Override
 	public Autopilot create(Drone drone) {		
 		Autopilot autopilot = new Autopilot();
-		implementedClasses.Drone droneReal = (implementedClasses.Drone) drone;
 		GUI gui = new GUI();
 		autopilot.getMoveToTarget().getPhysicsCalculations().setGUI(gui);
-		autopilot.setDrone(droneReal);
-		autopilot.getMoveToTarget().setDrone(droneReal);
-		autopilot.getMoveToTarget().getPhysicsCalculations().setDrone(droneReal);
-		droneReal.setThrust(-droneReal.getGravity());
-		droneReal.setPitchRate(0);
-		droneReal.setYawRate(0);
-		droneReal.setRollRate(0);
+		autopilot.setDrone(drone);
+		autopilot.getMoveToTarget().setDrone(drone);
+		autopilot.getMoveToTarget().getPhysicsCalculations().setDrone(drone);
+		drone.setThrust(-drone.getGravity());
+		drone.setPitchRate(0);
+		drone.setYawRate(0);
+		drone.setRollRate(0);
 		//TODO timehaspassed nodig?
 //		autopilot.timeHasPassed();
 		return autopilot;
