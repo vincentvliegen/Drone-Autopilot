@@ -1,6 +1,7 @@
 package simulator.GUI;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import simulator.world.World;
 
@@ -40,58 +41,69 @@ public class GUI extends JPanel {
 		constraintsButton.insets = new Insets(0, 0, 5, 5);
 
 		for(int i=0; i< world.getGeneralCameras().size(); i++){
-			System.out.println(world.getGeneralCameras().size());
+			//System.out.println(world.getGeneralCameras().size());
 			buttons.add(new JButton("Camera " + (i+1)));
 			buttons.get(i).addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					String nameButton = e.getActionCommand();
 					if(nameButton.equalsIgnoreCase("Camera 1")){
-						System.out.println("Camera 1");
+						//System.out.println("Camera 1");
 						world.setCurrentCamera(world.getGeneralCameras().get(0));
 					}
 					else if(nameButton.equalsIgnoreCase("Camera 2")){
-						System.out.println("Camera 2");
+						//System.out.println("Camera 2");
 						world.setCurrentCamera(world.getGeneralCameras().get(1));
 					}
 					else if(nameButton.equalsIgnoreCase("Camera 3")){
-						System.out.println("Camera 3");
+						//System.out.println("Camera 3");
 						world.setCurrentCamera(world.getGeneralCameras().get(2));
 					}
 				}
 			});
 			add(buttons.get(i), constraintsButton);
 		}
-		
+
 
 
 		// Speed
 		JLabel speed = new JLabel();
-		if(world.getDrones().size()>0){
-			
-					//insert calculation of speed.
+		Timer timerSpeed = new Timer(1000, new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent ev) {
+				if(world.getDrones().size() > 0){
 					speed.setText("Speed: ");
-					
-			//s.ipady = 40;      //make this component tall
-			s.weightx = 0.0;
-			s.gridx = 0;
-			s.gridy = 1;
-			add(speed, s);
-		}
-
+					//System.out.println("Speed");
+					s.ipady = 50;      //make this component tall
+					s.weightx = 0.0;
+					s.gridx = 0;
+					s.gridy = 1;
+					s.gridwidth = 3;
+					add(speed, s);
+				}
+			}
+		});
+		timerSpeed.start(); 
 
 		// Position
 		JLabel position = new JLabel();
-		if(world.getDrones().size()>0){
-			
+		Timer timerPosition = new Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(world.getDrones().size()>0){
 					float[] acceleration = world.getDrones().get(0).getPhysics().getAcceleration();
+					//System.out.println("Position");
 					position.setText("Position (x,y,z): (" + acceleration[0] + ", " + acceleration[1] + ", " + acceleration[2] + ")" );
-				
-			p.ipady = 100;      //make this component tall
-			p.weightx = 0.0;
-			p.gridx = 0;
-			p.gridy = 2;
-			add(position, p);
-		}
+					p.ipady = 50;      //make this component tall
+					p.weightx = 0.0;
+					p.gridx = 0;
+					p.gridy = 2;
+					p.gridwidth = 3;
+					add(position, p);
+				}
+			}
+		});
+		timerPosition.start(); 
+
 	}
 }
