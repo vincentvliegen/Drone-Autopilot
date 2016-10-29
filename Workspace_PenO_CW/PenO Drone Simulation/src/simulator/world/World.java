@@ -144,8 +144,4 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glViewport(0, 0, width, height);
 	}
 	
-	public void setCamera(GL2 gl, GLU glu) {
-	}
-	
-	
 }
