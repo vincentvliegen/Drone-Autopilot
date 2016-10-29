@@ -101,7 +101,7 @@ public class World11 extends World {
 		// Perspective.
 		float widthHeightRatio = (float) getWidth() / (float) getHeight();
 		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
-		glu.gluLookAt(currentCamera.getEyeX(), currentCamera.getEyeY(), currentCamera.getEyeZ(), currentCamera.getLookAtX(), currentCamera.getLookAtY(), currentCamera.getLookAtZ(), 0, -1, 0);
+		glu.gluLookAt(currentCamera.getEyeX(), currentCamera.getEyeY(), currentCamera.getEyeZ(), currentCamera.getLookAtX(), currentCamera.getLookAtY(), currentCamera.getLookAtZ(), 0, 1, 0);
 
 		// Change back to model view matrix.
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
