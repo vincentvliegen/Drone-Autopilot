@@ -31,6 +31,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private List<DroneCamera> droneCameras = new ArrayList<>();
 	private List<SimulationDrone> drones = new ArrayList<>();
 	private List<Sphere> spheres = new ArrayList<>();
+	public GeneralCamera currentCamera;
 	public float delta = 0;
 	public float startTime;
 	private GLU glu;
@@ -51,6 +52,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return spheres;
 	}
 	
+	public GeneralCamera getCurrentCamera(){
+		return currentCamera;
+	}
+	
 	public GLU getGlu() {
 		return glu;
 	}
@@ -69,6 +74,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	public void addSphere(Sphere sphere){
 		spheres.add(sphere);		
+	}
+	
+	public void setCurrentCamera(GeneralCamera camera){
+		this.currentCamera = camera;
 	}
 
 	
@@ -135,7 +144,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glViewport(0, 0, width, height);
 	}
 	
-
+	public void setCamera(GL2 gl, GLU glu) {
+	}
 	
 	
 }

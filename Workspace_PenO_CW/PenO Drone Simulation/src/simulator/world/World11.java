@@ -22,8 +22,9 @@ public class World11 extends World {
 	public World11() {
 		super();
 		super.addGeneralCamera(new GeneralCamera(0, 20, 200, 0, 0, 0));
-		super.addGeneralCamera(new GeneralCamera(0, 20, 300, 0, 0, 0));
-		super.addGeneralCamera(new GeneralCamera(0, 20, 400, 0, 0, 0));
+		super.addGeneralCamera(new GeneralCamera(0, 20, 50, 0, 0, 0));
+		super.addGeneralCamera(new GeneralCamera(0, 20, 1000, 0, 0, 0));
+		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
 	/**
@@ -62,7 +63,7 @@ public class World11 extends World {
 
 		// Input Drone.
 		if (!setup) {
-			double[] translateDrone = { 0, 25, 0 };
+			double[] translateDrone = { 0, 20, 0 };
 			float[] colorDrone = { 0f, 0f, 1f };
 			SimulationDrone drone1 = new SimulationDrone(gl, 2.378f, 4.378f,
 					64, 64, colorDrone, translateDrone, this);
@@ -76,7 +77,7 @@ public class World11 extends World {
 
 		// Input Sphere.
 		if (!setup) {
-			double[] translateSphere = { 0, 20, 0 };
+			double[] translateSphere = { 0, -20, 0 };
 			float[] colorSphere = { 1f, 0f, 0f };
 			Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere,
 					translateSphere);
@@ -92,7 +93,6 @@ public class World11 extends World {
 	}
 	
 	// Update position camera's
-	
 	public void setCamera(GL2 gl, GLU glu) {
 		// Change to projection matrix.
 		gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -101,7 +101,7 @@ public class World11 extends World {
 		// Perspective.
 		float widthHeightRatio = (float) getWidth() / (float) getHeight();
 		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
-		glu.gluLookAt(0, 20, 200, 0, 0, 0, 0, 1, 0);
+		glu.gluLookAt(currentCamera.getEyeX(), currentCamera.getEyeY(), currentCamera.getEyeZ(), currentCamera.getLookAtX(), currentCamera.getLookAtY(), currentCamera.getLookAtZ(), 0, -1, 0);
 
 		// Change back to model view matrix.
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
