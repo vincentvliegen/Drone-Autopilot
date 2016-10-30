@@ -32,6 +32,7 @@ public class PhysicsCalculations {
 		return (float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2));
 	}
 	
+	//GUI moet in andere functie geset worden, niet in deze getter. Maak functie die GUI updated in movetotarget class, hier irrelevant.
 	public float getDepth(int[] centerOfGravityL, int[]centerOfGravityR){
 		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
 		this.getGUI().update((int)depth);
@@ -49,6 +50,7 @@ public class PhysicsCalculations {
 	}
 	
 	//moet die niet gedeeld door 2 zijn?
+	//waarom 0.8? maak hiervan static var eventueel
 	public float getVisiblePitch(){
 		return (float) (this.getDrone().getLeftCamera().getVerticalAngleOfView()*.8);		
 	}

@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ImageCalculationTest /*extends ImageCalculations*/{
+public class ImageCalculationsTest{
 
 	@Before
 	public void setUp() {
@@ -90,7 +90,7 @@ public class ImageCalculationTest /*extends ImageCalculations*/{
 	}
     
 	//@Test
-    public void GetPixelsTest(){
+    public void GetRedPixelsInImageTest(){
     	//TODO manier om afbeelding naar keuze te gebruiken ipv camera/camera afbeeldingen naar keuze te laten geven
     }
 
