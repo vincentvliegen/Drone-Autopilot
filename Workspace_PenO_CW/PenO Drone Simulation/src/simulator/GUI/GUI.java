@@ -107,7 +107,7 @@ public class GUI extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				if(world.getDrones().size()>0){
 					double[] currentPosition = world.getDrones().get(0).getMovement().getCurrentPosition();
-					System.out.println(currentPosition);
+					//System.out.println(currentPosition);
 					position.setText("Position (x,y,z): (" + currentPosition[0] + ", " + currentPosition[1] + ", " + currentPosition[2] + ")" );
 					p.ipady = 50;      //make this component tall
 					p.weightx = 0.0;
