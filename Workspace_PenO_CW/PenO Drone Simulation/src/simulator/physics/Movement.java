@@ -9,6 +9,16 @@ import simulator.world.World;
 public class Movement {
 	private SimulationDrone drone;
 	private float[] velocity = {0,0,0};
+	public double[] currentPosition;
+	
+
+	public double[] getCurrentPosition() {
+		return currentPosition;
+	}
+
+	public void setCurrentPosition(double[] currentPosition) {
+		this.currentPosition = currentPosition;
+	}
 
 	public Movement(SimulationDrone drone) {
 		this.drone = drone;
@@ -30,6 +40,7 @@ public class Movement {
 		currentPos[0] += velocity[0] * timePassed;
 		currentPos[1] += velocity[1] * timePassed;
 		currentPos[2] += velocity[2] * timePassed;
+		setCurrentPosition(currentPos);
 		drone.translateDrone(currentPos);
 	}
 

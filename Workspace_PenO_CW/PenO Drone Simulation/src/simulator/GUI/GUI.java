@@ -1,6 +1,7 @@
 package simulator.GUI;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import simulator.world.World;
@@ -18,8 +19,12 @@ import java.awt.Insets;
 public class GUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private World world;
+	private static World world;
 	private final GridBagConstraints constraintsButton;
+	private JLabel position = new JLabel();
+	private JLabel speed = new JLabel();
+	private List<JButton> buttons = new ArrayList<>();
+	
 
 	/**
 	 * Create the panel.
@@ -36,7 +41,7 @@ public class GUI extends JPanel {
 
 
 		// #buttons
-		List<JButton> buttons = new ArrayList<>();
+		
 		constraintsButton = new GridBagConstraints();
 		constraintsButton.insets = new Insets(0, 0, 5, 5);
 
@@ -67,12 +72,21 @@ public class GUI extends JPanel {
 
 
 		// Speed
-		JLabel speed = new JLabel();
 		Timer timerSpeed = new Timer(1000, new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ev) {
 				if(world.getDrones().size() > 0){
-					speed.setText("Speed: ");
+					
+					//Speed: a*t)
+					float currentSpeed;
+					float[] acceleration = world.getDrones().get(0).getPhysics().getAcceleration();
+					float time = world.getCurrentTime(); //Insert the time of the drone 
+					//System.out.println(world.getCurrentTime());
+					acceleration[0] *= time;
+					acceleration[1] *= time;
+					acceleration[2] *= time;
+					currentSpeed = (float) Math.sqrt(acceleration[0]*acceleration[0]+acceleration[1]*acceleration[1]+acceleration[2]*acceleration[2]);
+					speed.setText("Speed: " + currentSpeed);
 					//System.out.println("Speed");
 					s.ipady = 50;      //make this component tall
 					s.weightx = 0.0;
@@ -80,30 +94,32 @@ public class GUI extends JPanel {
 					s.gridy = 1;
 					s.gridwidth = 3;
 					add(speed, s);
+					speed.revalidate();
+					speed.repaint();
 				}
 			}
 		});
 		timerSpeed.start(); 
 
 		// Position
-		JLabel position = new JLabel();
 		Timer timerPosition = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(world.getDrones().size()>0){
-					float[] acceleration = world.getDrones().get(0).getPhysics().getAcceleration();
-					//System.out.println("Position");
-					position.setText("Position (x,y,z): (" + acceleration[0] + ", " + acceleration[1] + ", " + acceleration[2] + ")" );
+					double[] currentPosition = world.getDrones().get(0).getMovement().getCurrentPosition();
+					System.out.println(currentPosition);
+					position.setText("Position (x,y,z): (" + currentPosition[0] + ", " + currentPosition[1] + ", " + currentPosition[2] + ")" );
 					p.ipady = 50;      //make this component tall
 					p.weightx = 0.0;
 					p.gridx = 0;
 					p.gridy = 2;
 					p.gridwidth = 3;
 					add(position, p);
+					position.revalidate();
+					position.repaint();
 				}
 			}
 		});
 		timerPosition.start(); 
-
-	}
+    }
 }
