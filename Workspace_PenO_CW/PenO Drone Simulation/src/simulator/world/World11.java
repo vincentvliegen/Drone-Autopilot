@@ -44,7 +44,7 @@ public class World11 extends World {
 	public void display(GLAutoDrawable drawable) {
 		float tempVal = super.checkTimePassed();
 		try {
-			drone1.getMovement().calculateMovement(tempVal);
+			drone1.timeHasPassed(tempVal);;
 			super.setLastTime(super.getCurrentTime());
 		} catch (Exception e) {
 			

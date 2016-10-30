@@ -3,6 +3,9 @@ package simulator.objects;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -21,9 +24,10 @@ public class SimulationDrone implements Drone {
 	double[] translate = new double[3];
 	static double[] standardTranslate = {0,0,0};
 	Physics physics;
-	float pitch = 0;
-	float roll = 0;
-	float thrust = 0;
+	private float pitch = 0;
+	private float roll = 0;
+	private float thrust = 0;
+	private float yaw = 0;
 	World world;
 	private Movement movement;
 	private static float weight = 10f;
@@ -32,6 +36,7 @@ public class SimulationDrone implements Drone {
 	private float yawRate = 0;
 	public DroneCamera leftCamera;
 	public DroneCamera rightCamera;
+	List<Double> rTrans = new ArrayList<>();
 	
 	
 	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate, World world){
@@ -47,8 +52,15 @@ public class SimulationDrone implements Drone {
 		this.world = world;
 		this.movement = new Movement(this);
 		generateDroneCameras();
+		createRTrans() ;
 	}
 	
+	private void createRTrans() {
+		rTrans.add(Math.cos(pitch)*Math.cos(yaw) + Math.sin(pitch)*Math.sin(roll)*Math.sin(yaw));
+		rTrans.add(Math.cos(roll)*Math.sin(pitch));
+		rTrans.add(Math.cos(pitch)*Math.sin(yaw) - Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll));
+	}
+
 	//TODO afmetingen (voor collision detection)
 	
 	
@@ -75,12 +87,16 @@ public class SimulationDrone implements Drone {
 		return this.physics;
 	}
 	
+	// TODO: Calculate current angles?
+	// TODO: Check
 	public float getPitch() {
-		return this.pitch;
+		return (float) (this.pitch * Math.cos(yaw) + this.roll * Math.sin(yaw));
 	}
 	
+	// TODO: Calculate current angles?
+	// TODO: Check
 	public float getRoll() {
-		return this.roll;
+		return (float) (this.roll * Math.cos(yaw) - this.pitch * Math.sin(yaw));
 	}
 	
 	public float getThrust() {
@@ -213,7 +229,18 @@ public class SimulationDrone implements Drone {
 		getWorld().addDroneCamera(rightCamera);
 	}
 	
-	//TODO Implement movement according to delta -> Check every 0.1s! 
-	//	   Else unlimited small movements? => Might still work, but annoying for Autopilot => Force interval
+	public void timeHasPassed(float timePassed) {
+		this.getMovement().calculateMovement(timePassed);
+		this.yaw += this.yawRate * timePassed;
+		
+		double rollPass = this.rollRate * timePassed;
+		//TODO: Max roll values
+		//TODO: Fix
+		this.roll += rollPass * rTrans.get(0);
+		
+		double pitchPass = this.pitchRate * timePassed;
+		//TODO: Fix (SEE MUPAD FILE)
+		
+	}
 	
 }

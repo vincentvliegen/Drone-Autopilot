@@ -165,6 +165,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		glu = new GLU();
 
 		// Start animator.
+		drawable.getGL().setSwapInterval(1);
 		animator = new FPSAnimator(this, fps, true);
 		animator.start();
 	}
