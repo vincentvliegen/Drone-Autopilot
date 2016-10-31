@@ -58,11 +58,11 @@ public class GUI extends JPanel {
 					}
 					else if(nameButton.equalsIgnoreCase("Camera 2")){
 						//System.out.println("Camera 2");
-						world.setCurrentCamera(world.getGeneralCameras().get(1));
+						world.setCurrentCamera(world.getDroneCameras().get(0));
 					}
 					else if(nameButton.equalsIgnoreCase("Camera 3")){
 						//System.out.println("Camera 3");
-						world.setCurrentCamera(world.getGeneralCameras().get(2));
+						world.setCurrentCamera(world.getDroneCameras().get(1));
 					}
 				}
 			});

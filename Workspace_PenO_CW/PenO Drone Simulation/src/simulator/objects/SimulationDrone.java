@@ -99,6 +99,10 @@ public class SimulationDrone implements Drone {
 		return (float) (this.roll * Math.cos(yaw) - this.pitch * Math.sin(yaw));
 	}
 	
+	public float getYaw() {
+		return this.yaw;
+	}
+	
 	public float getThrust() {
 		return this.thrust;
 	}
@@ -112,16 +116,16 @@ public class SimulationDrone implements Drone {
 		return 0.5f;
 	}
 
-	@Override
-	public Camera getLeftCamera() {
+	
+	public DroneCamera getLeftCamera() {
 		//Klopt dit? 
-		return (Camera) leftCamera;
+		return leftCamera;
 	}
 
-	@Override
-	public Camera getRightCamera() {
+	
+	public DroneCamera getRightCamera() {
 		//Klopt dit? 
-		return (Camera) rightCamera;
+		return rightCamera;
 	}
 
 	@Override
@@ -217,12 +221,12 @@ public class SimulationDrone implements Drone {
 		//left
 		float leftX = -getDroneWidth()/2;
 		float leftZ = getDronedepth()/2;
-		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ + 1, this);
+		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ + 50, 0, 1, 0, this);
 			
 		//right
 		float rightX = getDroneWidth()/2;
 		float rightZ = getDronedepth()/2;
-		rightCamera = new DroneCamera(rightX, commonY, leftZ, rightX, commonY, rightZ + 1, this);
+		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ + 50, 0, 1, 0, this);
 		
 		//add to list in world
 		getWorld().addDroneCamera(leftCamera);
