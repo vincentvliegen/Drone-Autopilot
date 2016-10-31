@@ -10,8 +10,8 @@ public class ImageCalculations {
 	//[i] -> (x,y)
 	public int[] indexToCoordinates(int index, Camera camera){
 		int width = camera.getWidth();
-		int x = (int) (index / width);
-		int y = (int) (index % width);
+		int x = (int) (index % width);
+		int y = (int) (index / width);
 		int[] coord = {x,y};
 	    return coord;
 	}

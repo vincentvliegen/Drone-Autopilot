@@ -2,6 +2,8 @@ package DroneAutopilot.Tests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+
 import DroneAutopilot.ImageCalculations;
 import exceptions.EmptyPositionListException;
 import p_en_o_cw_2016.Camera;
@@ -16,8 +18,6 @@ public class ImageCalculationsTest{
 	public void setUp() {
 		calc = new ImageCalculations();
 		
-		emptyList = new ArrayList<int[]>(); 
-		pixelsPos1 = new ArrayList<int[]>(Arrays.asList(new int[][] {{0,0},{0,1},{0,2},{1,0},{1,1},{1,2},{2,0},{2,1},{2,2}}));
 	    pixelsPos2 = new ArrayList<int[]>(Arrays.asList(new int[][] {{73,75},{74,74},{74,75},{74,76},{75,75}}));
 	        
 	    image10x10Empty = new int[] {ImageCalculations.white,ImageCalculations.white,ImageCalculations.white,ImageCalculations.white,ImageCalculations.white,ImageCalculations.white,ImageCalculations.white,ImageCalculations.white,ImageCalculations.white,ImageCalculations.white,
@@ -75,24 +75,43 @@ public class ImageCalculationsTest{
 	   camera4 = createCameraForTesting(image9x9Square3InTopMiddle, 45, 45, 9);
 	   camera5 = createCameraForTesting(image9x9Square4InBottomRightCorner, 45, 45, 9);	  
 	   
-	   pixellist1 = new ArrayList<int[]>(Arrays.asList(new int[][] {}));
-	   pixellist2 = new ArrayList<int[]>(Arrays.asList(new int[][] {{0,0},{0,1},{0,2},{1,0},{1,1},{1,2},{2,0},{2,1},{2,2}}));
-	   pixellist3 = new ArrayList<int[]>(Arrays.asList(new int[][] {{3,3},{3,4},{3,5},{3,6},{4,3},{4,4},{4,5},{4,6},{5,3},{5,4},{5,5},{5,6},{6,3},{6,4},{6,5},{6,6}}));
-	   pixellist4 = new ArrayList<int[]>(Arrays.asList(new int[][] {{0,3},{0,4},{0,5},{1,3},{1,4},{1,5},{2,3},{2,41},{2,5}}));
-	   pixellist5 = new ArrayList<int[]>(Arrays.asList(new int[][] {{5,5},{5,6},{5,7},{5,8},{6,5},{6,6},{6,7},{6,8},{7,5},{7,6},{7,7},{7,8},{8,5},{8,6},{8,7},{8,8}}));
+	   pixellist1 = new ArrayList<int[]>(Arrays.asList(new int[0][0]));
+	   pixellist2 = new ArrayList<int[]>(Arrays.asList(new int[][] {{0,0},{1,0},{2,0},{0,1},{1,1},{2,1},{0,2},{1,2},{2,2}}));
+	   pixellist3 = new ArrayList<int[]>(Arrays.asList(new int[][] {{3,3},{4,3},{5,3},{6,3},{3,4},{4,4},{5,4},{6,4},{3,5},{4,5},{5,5},{6,5},{3,6},{4,6},{5,6},{6,6}}));
+	   pixellist4 = new ArrayList<int[]>(Arrays.asList(new int[][] {{3,0},{4,0},{5,0},{3,1},{4,1},{5,1},{3,2},{4,2},{5,2}}));
+	   pixellist5 = new ArrayList<int[]>(Arrays.asList(new int[][] {{5,5},{6,5},{7,5},{8,5},{5,6},{6,6},{7,6},{8,6},{5,7},{6,7},{7,7},{8,7},{5,8},{6,8},{7,8},{8,8}}));
 
 	    
 	}
 		
 	@Test
+    public void GetRedPixelsInImageTest(){
+		assertArrayEquals(calc.getPixelsOfColor(camera1, ImageCalculations.red).toArray(new int[0][0]),pixellist1.toArray(new int[0][0]));
+		assertArrayEquals(calc.getPixelsOfColor(camera2, ImageCalculations.red).toArray(new int[0][0]),pixellist2.toArray(new int[0][0]));
+		assertArrayEquals(calc.getPixelsOfColor(camera3, ImageCalculations.red).toArray(new int[0][0]),pixellist3.toArray(new int[0][0]));
+		assertArrayEquals(calc.getPixelsOfColor(camera4, ImageCalculations.red).toArray(new int[0][0]),pixellist4.toArray(new int[0][0]));
+		assertArrayEquals(calc.getPixelsOfColor(camera5, ImageCalculations.red).toArray(new int[0][0]),pixellist5.toArray(new int[0][0]));
+	}
+	
+	@Test
     public void cOGTest() {
     	try {
-			assertArrayEquals(calc.getCOG(pixelsPos1),new int[] {1,1});
+			assertArrayEquals(calc.getCOG(pixellist2),new int[] {1,1});
 		} catch (EmptyPositionListException e) {
 			e.printStackTrace();
-		}    
+		}
     	try {
-			assertArrayEquals(calc.getCOG(pixelsPos2),new int[] {74,75});
+			assertArrayEquals(calc.getCOG(pixellist3),new int[] {4,4});
+		} catch (EmptyPositionListException e) {
+			e.printStackTrace();
+		}
+    	try {
+			assertArrayEquals(calc.getCOG(pixellist4),new int[] {4,1});
+		} catch (EmptyPositionListException e) {
+			e.printStackTrace();
+		}
+    	try {
+			assertArrayEquals(calc.getCOG(pixellist5),new int[] {6,6});
 		} catch (EmptyPositionListException e) {
 			e.printStackTrace();
 		}
@@ -100,17 +119,10 @@ public class ImageCalculationsTest{
 	
 	@Test(expected = EmptyPositionListException.class)
 	public void cOGOfEmptyList() throws EmptyPositionListException {
-		calc.getCOG(emptyList);
+		calc.getCOG(pixellist1);
 	}
     
-	@Test
-    public void GetRedPixelsInImageTest(){
-		assertEquals(calc.getPixelsOfColor(camera1, ImageCalculations.red),pixellist1);
-		assertEquals(calc.getPixelsOfColor(camera2, ImageCalculations.red),pixellist2);
-		assertEquals(calc.getPixelsOfColor(camera3, ImageCalculations.red),pixellist3);
-		assertEquals(calc.getPixelsOfColor(camera4, ImageCalculations.red),pixellist4);
-		assertEquals(calc.getPixelsOfColor(camera5, ImageCalculations.red),pixellist5);
-	}
+	
 	
 	
 	
@@ -143,8 +155,6 @@ public class ImageCalculationsTest{
  
     private ImageCalculations calc;
 
-    private ArrayList<int[]> emptyList;
-    private ArrayList<int[]> pixelsPos1;
     private ArrayList<int[]> pixelsPos2;
     
     
