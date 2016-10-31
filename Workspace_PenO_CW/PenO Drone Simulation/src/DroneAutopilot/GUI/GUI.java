@@ -1,11 +1,15 @@
 package DroneAutopilot.GUI;
 
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
-import java.awt.BorderLayout;
+import java.awt.Dimension;
+
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class GUI {
 
@@ -41,14 +45,22 @@ public class GUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setTitle("AUTOPILOT GUI");
+		frame.setAlwaysOnTop(true);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT,30,90));
+		JLabel progress = new JLabel("Progress: ");
+		progress.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		progress.setPreferredSize(new Dimension(80, 30));
+		panel.add(progress);
 
-		frame.getContentPane().add(this.progressBar, BorderLayout.SOUTH);
+		this.progressBar.setPreferredSize(new Dimension(250, 30));
 		this.progressBar.setMaximum(100);
-
-		JLabel progress = new JLabel("progress");
-		frame.getContentPane().add(progress, BorderLayout.CENTER);
+		panel.add(this.progressBar);
+		
+		frame.getContentPane().add(panel);
 
 	}
 
