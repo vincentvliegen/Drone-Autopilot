@@ -1,0 +1,180 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                                                                     %%%
+%%%   LaTeX template voor het verslag van P&O: Computerwetenschappen.   %%%
+%%%                                                                     %%%
+%%%   Opties:                                                           %%%
+%%%     tt      Tussentijdsverslag                                      %%%
+%%%     eind    Eindverslag                                             %%%
+%%%                                                                     %%%
+%%%   3 oktober 2016                                   %%%
+%%%   Versie 1.4                                                        %%%
+%%%                                                                     %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[tt]{penoverslag}
+
+%%% PACKAGES %%%
+
+
+
+\begin{document}
+
+% == TITELPAGINA == %
+\team{Zilver}
+\year{2016-2017}
+\members{Bram Vandendriessche (Co\"ordinator)\\
+         Arne Vlietinck (Secretaris)\\
+         Matthias Van der Heyden \\
+         Jef Versyck\\
+         Vincent Vliegen\\
+         Laura Vranken}
+\maketitlepage
+
+
+% == SAMENVATTING == %
+\begin{abstract}
+{\em Vat kort samen waar dit verslag over gaat, en wat er in de tekst beschreven staat.}\\
+
+\end{abstract}
+
+
+% == INHOUDSOPGAVE == %
+\tableofcontents\newpage
+
+\em Enkele algemene richtlijnen : 
+\begin{itemize}
+\item Maak in het hele verslag gebruik van genummerde referenties, zoals hier ge\"\i llustreerd \cite{website:wikibooks-biblio}.  
+\item Geef op het niveau van secties en/of subsecties aan wie de auteurs van dat deel zijn.  Een auteur is iemand die de tekst inhoudelijk en vormelijk mee bepaald heeft.    Als de secretaris of iemand anders de tekst vormelijk gewijzigd heeft, bv. om hem meer in lijn met de rest van het verslag te brengen, maar inhoudelijk niets toegevoegd heeft, is die persoon geen auteur maar een redacteur.  Je kan na de auteursnamen eventueel ``redactie: naam'' schrijven om aan te geven dat er substanti\"ele redactie gebeurd is (meer dan pakweg een paar tikfouten verbeteren).  Wanneer alle teamleden samen verantwoordelijk zijn voor een stuk (bv. samenvatting, conclusies) kan je de namen eventueel weglaten.
+\item We verwachten dat alle groepsleden een substanti\"ele bijdrage leveren aan het  verslag, en dat dit ook zichtbaar is in de tekst!
+\end{itemize}
+
+\rm 
+
+% == INLEIDING == %
+\section{Inleiding}
+
+
+{\em Auteur: Laura Vranken}\\
+
+\emph{[In de inleiding schets je de context, probleemstelling en doelstellingen van het project.  Je kunt ook kort aangeven wat er wel en niet in het verslag staat (bij een tussentijds verslag).]}
+Drones zijn de laatste jaren enorm in populariteit aan het winnen en blijven hierdoor ook positief evolueren in ontwerp en functies. Zo worden ze tegenwoordig namelijk gebruikt zowel met het oog op nuttige toepassingen als ook voor ontspanning. De bekendste toepassingen zijn het leger dat informatie kan winnen over vijandelijk gebied zonder levens van piloten te riskeren en Amazon die zijn bestellingen laat leveren. De toekomst brengt echter veel meer voordelen. Enkele voorbeelden zijn veiligheidsinspectie van windturbines of elektriciteitslijnen, luchtsteun bij search and rescue operaties, bewaking, luchtfotografie... Om deze toepassingen te kunnen verwezelijken, is natuurlijk ook een goede aansturing van belang. De drone kan ofwel aangestuurd worden via een persoon op de grond met een controller ofwel autonoom.(bron: https://www.microdrones.com/en/applications/)\\
+
+Wanneer een drone autonoom functioneert, is de aansturing door de Autopilot van levensbelang. Hij moet namelijk bestand zijn tegen alle weersomstandigheden, zoals wind, regen, sneeuw, ijs en hittegolven. Ook de drone rechtstreeks naar zijn doel leiden, hoort tot zijn taken en bovendien ook veilig laten landen. In geval van meerdere doelen, moet de Autopilot ook de optimale weg kiezen om zijn taak zo snel mogelijk uit te voeren. Aangezien een autonome drone zijn informatie haalt uit de beelden die hij produceert, is de kwaliteit van de camera's ook zeer belangrijk. Indien geen goed beeld verkregen wordt, is de relatieve positiebepaling ook veel moeilijker en minder precies te bepalen en hebben andere toepassingen ook hun nut verloren. Bovendien moet de Autopilot ook rekening houden met het verschil in intensiteit van kleuren op de beelden door bijvoorbeeld invloed van schaduw, felle zon, regendruppels op de camera...\\
+
+In dit verslag gaan we verder in op hoe de autonome aansturing van een drone (en meer bepaald een quadcopter) gebeurt. We gaan uit van een drone waarop twee camera's vast bevestigd zijn op een zekere afstand van elkaar. Beiden zijn ze voorwaarts gericht. Op basis van deze beelden moeten afstand en positie van het doel ingeschat worden en nieuwe bewegingsopdrachten voor de drone gegenereerd worden. Aangezien er geen drones ter beschikking waren, wordt een Virtual Testbed simulator ontworpen. Dit is een softwaresysteem dat een fysieke opstelling met een drone en camera's simuleert. (bron: opgave peno) De simulator gebruikt de bewegingsopdrachten van de Autopilot om deze om te zetten naar verplaatsingen van de drone in de simulator en stuurt de beelden van zijn nieuwe positie weer door naar de Autopilot. \\
+
+De Autopilot en Virtual Testbed moeten zo ontworpen worden dat de drone in staat is om zijn doel, een rode bol, te lokaliseren en er naar toe te vliegen. Dit eventueel onder lichte invloed van wind in willekeurige richtingen. Bovendien moet ook voor beiden een GUI ontworpen worden die ter beschikking staat van de gebruiker. De GUI toont de vooruitgaan en laat de gebruiker toe allerlei informatie op te vragen. \\
+
+De tekst is als volgt opgebouwd. Eerst wordt het ontwerp van de Autopilot en Virtual Testbed verder uitgediept. Vervolgens wordt er ingegaan op de gebruikte algoritmen (sectie 3) en wordt de opbouw van onze software verduidelijkt (sectie 4). Ook wijden we uit over de toepassingen van de GUI in sectie 5. Tenslotte sluiten we af met de uitgevoerde testen (sectie 6) en het besluit. \\
+
+
+% == Beschrijving materiaal en bouw zeppelin == %
+\section{Ontwerp}
+
+[{\em Beschrijf het ontwerp van je softwaresysteem.  Schetsen of diagrammen kunnen hierbij nuttig zijn.  Bespreek je keuzes: vermeld alternatieven en motiveer je beslissingen.}]
+
+
+\subsection{Virtual Testbed}
+
+{\em Naam auteur}\\
+
+
+\subsection{Drone Autopilot}
+
+{\em Auteur: Laura Vranken; redactie: naam redacteur}\\
+De Drone Autopilot zorgt voor de besturing van de drone. Het bepaalt zijn positie relatief ten opzichte van zijn doel aan de hand van twee beelden. Deze beelden zijn gemaakt door twee camera's die op de drone gemonteerd staan op een zekere afstand van elkaar. Bovendien kunnen ze opgevraagd worden vanuit de Virtual Testbed. Vervolgens zorgt de Autopilot ervoor dat de drone juist ge\"ori\"enteerd naar het doel staat en er naar toe vliegt. Wanneer de drone zijn doel,  een rode bol, bereikt, moet hij daarin blijven zweven. Tenslotte moet de Autopilot ook rekening houden met een mogelijke invloed van wind die de drone van zijn koers doet afwijken.\\
+
+Ten eerste moeten dus de beelden die de Autopilot van de Virtual Testbed binnen krijgt, geanalyseerd worden. Dit gebeurt door iteratief de integer waarden van elke pixel te vergelijken met de waarde van de kleur rood. Alle rode pixels worden bijgehouden door hun positie ten opzichte van het beeld, uitgedrukt in rij en kolom, op te slagen. We baseren onze komende berekeningen op het midden van de bol. Dat midden kan bepaald worden door het zwaartepunt van de rode pixels te berekenen via het gemiddelde van de opgeslagen co\"ordinaten.\\
+
+Indien de Autopilot geen rode pixels detecteert, zal de drone 360 graden ronddraaien of met andere woorden een yaw beweging uitvoeren, totdat in beide beelden rode pixels verschijnen. In het geval dat de Autopilot slechts rode pixels in een van de twee beelden opmerkt, zal het zichzelf door middel van een yaw beweging in de juiste richting bijsturen. Wanneer uiteindelijk in beide schermen rode pixels gevonden zijn, zal de Autopilot stoppen met draaien en zijn positie tegenover het doel berekenen.\\
+
+Om zijn positie tegenover het doel te berekenen, bepalen we eerste de diepte. Dit kan met behulp van de formule van stereo vision (zie bron) uitgewerkt worden (en zie weergave in bijlage). Vervolgens bepalen we de hoek waaronder de drone een yaw beweging moet uitvoeren om recht naar het doel gericht te zijn. Deze formule kon afgeleid worden uit de goniometrie en wordt weergegeven in bijlage.. Om tenslotte naar het doel te kunnen vliegen, moet een evenwicht gevonden worden tussen pitch en thrust. De pitch hoek wordt gekozen zodat het zwaartepunt van het doel nog juist in beeld blijft. Die hoek is gelijk aan de helft van de verticale hoek die het beeld overspant min de verticale hoek waaronder de bol zich tegenover de drone bevindt (zie bijlage). Wanneer de pitch hoek vastligt, kan de hoeveelheid thrust berekend worden zodat de drone in rechte lijn naar het doel kan vliegen. (uitwerking formule)\\
+
+Tenslotte moet dit proces herhaaldelijk worden uitgevoerd ten gevolge van de invloed van wind. De wind kan de drone namelijk uit koers brengen. Hierdoor zal de drone telkens zijn positie moeten herbepalen en zich opnieuw moeten herori\"enteren. Ook kan de wind ervoor zorgen dat de drone een roll uitvoert. Deze moet eerst gecompenseerd worden, vooraleer we verder onze berekeningen kunnen uitvoeren.\\
+
+De drone bereikt zijn doel wanneer de Autopilot niks anders dan rode pixels opvangt. De drone zal dan de opdracht krijgen om zijn pitch te compenseren en vervolgens enkel via thrust de zwaartekracht tegen te werken. \\
+
+Het effectief laten vliegen van de drone gebeurt in de Virtual Testbed waar de motoren worden aangestuurd. De Autopilot zendt enkel de verhouding in graden per seconden door waaronder pitch, yaw en roll moeten worden uitgevoerd en thrust in Newton. Het is slechts door herhaaldelijk te controleren hoe ver nog gedraaid moet worden, dat kan besloten worden wanneer de beweging volledig uitgevoerd is en wanneer gestopt mag worden.\\
+
+Tegen de volgende deadline is het de bedoeling om de beeldverwerking via OpenCV uit te voeren. Deze bibliotheek kan op een betere en gemakkelijkere manier vormen en kleuren herkennen. Dit speelt in ons voordeel wanneer er meerdere doelen met verschillende vormen en kleuren in beeld zijn. Hierdoor vermijden we het iteratief zoeken en het moeten opslaan van pixels. Aangezien OpenCV op een bepaalde range in RGB waarden kan zoeken, kan ook het probleem van lichtinval en schaduw opgelost worden.
+Ook wordt er gezocht naar een betere manier om de roll hoek in de berekeningen te trekken. Zo winnen we tijd aangezien die niet altijd eerst moet gecompenseerd worden voordat de berekeningen kunnen worden uitgevoerd.  
+
+
+
+
+% == ALGORITMES == %
+\section{Algoritmes}
+
+[{\em Beschrijf de algoritmes die je gebruikt.  Voor goed bekende of reeds bestaand algoritmes volstaat een verwijzing naar waar het algoritme beschreven staat.  Voor zelfgemaakte algoritmes is een duidelijke hoog-niveau beschrijving (bv. pseudocode) nodig.  Motiveer de keuze van algoritmes: welk probleem lost het algoritme op, waarom heb je dit algoritme gekozen en niet een ander?}]\\
+
+\noindent {\em Naam auteurs; redactie: naam redacteur}\\
+
+
+
+% == SOFTWARE == %
+\section{Software}
+
+\noindent {\em Naam auteurs}\\
+
+{\em Beschrijf het ontwerp van de software: klassediagrammen etc.}
+
+
+
+% == GUI == %
+\section{GUI}
+
+\noindent {\em Naam auteurs}\\
+
+{\em Beschrijf het ontwerp van de GUI in termen van lay-out, gebruik, interactie, \ldots}
+
+
+% == Testen == %
+\section{Testen}
+
+[{\em Beschrijf de tests die je uitgevoerd hebt om de correcte werking en de nauwkeurigheid van je software te bepalen.  Geef de resultaten op compacte en heldere manier weer, bv. met tabellen of grafieken.  Denk na over de beste manier om de resultaten weer te geven.  Ze moeten je conclusies ondersteunen.  Formuleer de conclusies.}]\\
+
+\noindent {\em Naam auteurs; redactie: naam redacteur}\\
+
+
+
+
+% == ... == %
+\section{\ldots}
+
+
+% == BESLUIT == %
+\section{Besluit}
+
+
+% == REFERENTIES == %
+\bibliographystyle{siam}
+\bibliography{references.bib}
+
+
+% == APPENDICES == %
+\newpage\makeappendix
+
+De volgende informatie wordt na de finale demonstratie apart ingediend.
+
+\section{Beschrijving van het proces}
+\begin{itemize}
+\item Welke moeilijkheden heb je ondervonden tijdens de uitwerking?
+\item Welke lessen heb je getrokken uit de manier waarop je het project hebt aangepakt?
+\item Hoe verliep het werken in team? Op welke manier werd de teamco\"ordinatie en planning aangepakt?
+\end{itemize}
+
+
+\section{Beschrijving van de werkverdeling}
+\begin{itemize}
+\item Geef voor elk van de groepsleden aan aan welke delen ze hebben meegewerkt en welke andere taken ze op zich hebben genomen.
+\item Rapporteer in tabelvorm hoeveel uur elk groepslid elke week aan het project gewerkt heeft, zowel tijdens als buiten de begeleide sessies. Geef ook totalen per groepslid voor het volledige semester.
+\end{itemize}
+
+
+\section{Kritische analyse}
+\begin{itemize}
+\item Maak een analyse van de sterke en zwakke punten van het project. Welke punten zijn vatbaar voor verbetering. Wat zou je, met je huidige kennis, anders aangepakt hebben?
+\end{itemize}
+
+
+\end{document}
