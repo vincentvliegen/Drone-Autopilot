@@ -150,7 +150,7 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public float getGravity() {
-		return 9.81f;
+		return -9.81f;
 	}
 
 	@Override
