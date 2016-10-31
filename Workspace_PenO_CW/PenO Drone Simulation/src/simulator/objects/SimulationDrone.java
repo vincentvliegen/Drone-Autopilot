@@ -6,6 +6,9 @@ import p_en_o_cw_2016.Drone;
 import java.util.ArrayList;
 import java.util.List;
 
+import DroneAutopilot.Autopilot;
+import DroneAutopilot.AutopilotFactory;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -37,6 +40,7 @@ public class SimulationDrone implements Drone {
 	public DroneCamera leftCamera;
 	public DroneCamera rightCamera;
 	List<Double> rTrans = new ArrayList<>();
+	private Autopilot autopilot;
 	
 	
 	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate, World world){
@@ -52,6 +56,8 @@ public class SimulationDrone implements Drone {
 		this.world = world;
 		this.movement = new Movement(this);
 		generateDroneCameras();
+		AutopilotFactory ap = new AutopilotFactory();
+		this.autopilot = ap.create(this);
 	}
 	
 	private void createRTrans() {
@@ -255,5 +261,11 @@ public class SimulationDrone implements Drone {
 		this.roll += pitchPass*rTrans.get(2);
 		this.yaw += pitchPass*rTrans.get(5);
 		this.pitch += pitchPass*rTrans.get(8);
+		this.autopilot.timeHasPassed();
+		try {
+			wait();
+		} catch (InterruptedException e) {
+
+		}
 	}
 }

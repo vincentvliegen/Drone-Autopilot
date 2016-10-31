@@ -26,6 +26,7 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 			this.getMoveToTarget().correctRoll();
 		}
 		//TODO nog verder aanvullen vooruitvliegen kan ook bij vorige
+		notify();
 	}
 
 	public void setDrone(p_en_o_cw_2016.Drone drone){
