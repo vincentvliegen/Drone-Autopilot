@@ -1,6 +1,5 @@
 package simulator.objects;
 
-import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class SimulationDrone implements Drone {
 		this.color = color;
 		this.translate = translate;
 		this.physics = new Physics(this, 10f);
-		//this.setThrust(10f*9.81f);
+		this.setThrust(10f*9.81f);
 		this.world = world;
 		this.movement = new Movement(this);
 		generateDroneCameras();
@@ -81,10 +80,14 @@ public class SimulationDrone implements Drone {
 	}
 
 	public void drawDrone(){
+		
+		GLUT glut = new GLUT();
+		gl.glPushMatrix();
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glTranslated(translate[0], translate[1], translate[2]);
-		GLUT glut = new GLUT();
+		System.out.println("drone" + translate[0] + "  " + translate[1] + "  " + translate[2]);
 		glut.glutSolidTorus(innerRadius, outerRadius, nsides, rings);
+		gl.glPopMatrix();
 	}
 	
 	public void translateDrone(double[] translate){
@@ -233,12 +236,12 @@ public class SimulationDrone implements Drone {
 		//left
 		float leftX = -getDroneWidth()/2;
 		float leftZ = getDronedepth()/2;
-		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ + 50, 0, 1, 0, this);
-			
+		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ+100, 0, 1, 0, this);	
+		
 		//right
 		float rightX = getDroneWidth()/2;
 		float rightZ = getDronedepth()/2;
-		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ + 50, 0, 1, 0, this);
+		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ+100, 0, 1, 0, this);
 		
 		//add to list in world
 		getWorld().addDroneCamera(leftCamera);
