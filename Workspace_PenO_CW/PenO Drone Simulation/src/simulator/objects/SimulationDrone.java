@@ -6,6 +6,9 @@ import p_en_o_cw_2016.Drone;
 import java.util.ArrayList;
 import java.util.List;
 
+import DroneAutopilot.Autopilot;
+import DroneAutopilot.AutopilotFactory;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -37,6 +40,7 @@ public class SimulationDrone implements Drone {
 	public DroneCamera leftCamera;
 	public DroneCamera rightCamera;
 	List<Double> rTrans = new ArrayList<>();
+	private Autopilot autopilot;
 	
 	
 	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate, World world){
@@ -48,17 +52,25 @@ public class SimulationDrone implements Drone {
 		this.color = color;
 		this.translate = translate;
 		this.physics = new Physics(this, 10f);
-		//this.setThrust(10f*9.81f);
+		this.setThrust(10f*9.81f);
 		this.world = world;
 		this.movement = new Movement(this);
 		generateDroneCameras();
-		createRTrans() ;
+		AutopilotFactory ap = new AutopilotFactory();
+		this.autopilot = ap.create(this);
 	}
 	
 	private void createRTrans() {
-		rTrans.add(Math.cos(pitch)*Math.cos(yaw) + Math.sin(pitch)*Math.sin(roll)*Math.sin(yaw));
-		rTrans.add(Math.cos(roll)*Math.sin(pitch));
-		rTrans.add(Math.cos(pitch)*Math.sin(yaw) - Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll));
+		rTrans.clear();
+		rTrans.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw)) + Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rTrans.add(Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch)));
+		rTrans.add(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)) - Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
+		rTrans.add(Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)) - Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
+		rTrans.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
+		rTrans.add(Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)) + Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll)));
+		rTrans.add(Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rTrans.add(-Math.sin(Math.toRadians(roll)));
+		rTrans.add(Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw)));
 	}
 
 	//TODO afmetingen (voor collision detection)
@@ -69,10 +81,14 @@ public class SimulationDrone implements Drone {
 	}
 
 	public void drawDrone(){
+		
+		GLUT glut = new GLUT();
+		gl.glPushMatrix();
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glTranslated(translate[0], translate[1], translate[2]);
-		GLUT glut = new GLUT();
+		System.out.println("drone" + translate[0] + "  " + translate[1] + "  " + translate[2]);
 		glut.glutSolidTorus(innerRadius, outerRadius, nsides, rings);
+		gl.glPopMatrix();
 	}
 	
 	public void translateDrone(double[] translate){
@@ -90,13 +106,13 @@ public class SimulationDrone implements Drone {
 	// TODO: Calculate current angles?
 	// TODO: Check
 	public float getPitch() {
-		return (float) (this.pitch * Math.cos(yaw) + this.roll * Math.sin(yaw));
+		return (float) (this.pitch * Math.cos(Math.toRadians(yaw)) + this.roll * Math.sin(Math.toRadians(yaw)));
 	}
 	
 	// TODO: Calculate current angles?
 	// TODO: Check
 	public float getRoll() {
-		return (float) (this.roll * Math.cos(yaw) - this.pitch * Math.sin(yaw));
+		return (float) (this.roll * Math.cos(Math.toRadians(yaw)) - this.pitch * Math.sin(Math.toRadians(yaw)));
 	}
 	
 	public float getYaw() {
@@ -116,15 +132,13 @@ public class SimulationDrone implements Drone {
 		return 0.5f;
 	}
 
-	
-	public DroneCamera getLeftCamera() {
-		//Klopt dit? 
+	@Override
+	public Camera getLeftCamera() {
 		return leftCamera;
 	}
 
-	
-	public DroneCamera getRightCamera() {
-		//Klopt dit? 
+	@Override
+	public Camera getRightCamera() {
 		return rightCamera;
 	}
 
@@ -135,7 +149,7 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public float getGravity() {
-		return 9.81f;
+		return -9.81f;
 	}
 
 	@Override
@@ -221,12 +235,12 @@ public class SimulationDrone implements Drone {
 		//left
 		float leftX = -getDroneWidth()/2;
 		float leftZ = getDronedepth()/2;
-		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ + 50, 0, 1, 0, this);
-			
+		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ+100, 0, 1, 0, this);	
+		
 		//right
 		float rightX = getDroneWidth()/2;
 		float rightZ = getDronedepth()/2;
-		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ + 50, 0, 1, 0, this);
+		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ+100, 0, 1, 0, this);
 		
 		//add to list in world
 		getWorld().addDroneCamera(leftCamera);
@@ -238,13 +252,22 @@ public class SimulationDrone implements Drone {
 		this.yaw += this.yawRate * timePassed;
 		
 		double rollPass = this.rollRate * timePassed;
-		//TODO: Max roll values
-		//TODO: Fix
-		this.roll += rollPass * rTrans.get(0);
+		createRTrans();
+		this.roll += rollPass*rTrans.get(0);
+		this.yaw  += rollPass*rTrans.get(3);
+		this.pitch += rollPass*rTrans.get(6);
+		
 		
 		double pitchPass = this.pitchRate * timePassed;
-		//TODO: Fix (SEE MUPAD FILE)
-		
+		createRTrans();
+		this.roll += pitchPass*rTrans.get(2);
+		this.yaw += pitchPass*rTrans.get(5);
+		this.pitch += pitchPass*rTrans.get(8);
+		this.autopilot.timeHasPassed();
+		try {
+			wait();
+		} catch (InterruptedException e) {
+
+		}
 	}
-	
 }

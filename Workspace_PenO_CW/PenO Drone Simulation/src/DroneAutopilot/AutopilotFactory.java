@@ -20,7 +20,7 @@ public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
 		autopilot.setDrone(drone);
 		autopilot.getMoveToTarget().setDrone(drone);
 		autopilot.getMoveToTarget().getPhysicsCalculations().setDrone(drone);
-		drone.setThrust(-drone.getGravity());
+		drone.setThrust(-drone.getGravity()*drone.getWeight());
 		drone.setPitchRate(0);
 		drone.setYawRate(0);
 		drone.setRollRate(0);

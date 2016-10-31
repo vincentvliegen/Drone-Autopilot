@@ -15,12 +15,6 @@ public class ImageCalculations {
 		int[] coord = {x,y};
 	    return coord;
 	}
-	
-	//(x,y) -> [i]
-	public int coordinatesToIndex(int[] coordinates, Camera camera){
-		int index = (int) (coordinates[0]+coordinates[1]*camera.getWidth());
-	    return index;
-	}
 
 	//zwaartepunt van groepje pixels bepalen
 	//als er geen rode pixels zijn, exception
@@ -71,24 +65,6 @@ public class ImageCalculations {
 		return listRedPixels.size() == camera.takeImage().length;
 	}
 	
-	//kleurenconversies voor debug
-	
-	//conversie int color naar leesbaar (R,G,B) formaat
-	public int[] colorIntToRGB(int color){
-		int [] RGB = {0,0,0};
-		/*R*/RGB[0] = color % 256;
-		/*G*/RGB[1] = (color / 256) % 256;
-		/*B*/RGB[2] = color / (256*256);
-		return RGB;
-	}
-	
-	//conversie (R,G,B) naar int  =   dec(BGR)
-	public int colorRGBToInt(int[] RGB){
-		int color = 0;
-		color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
-		return color;
-	}
-	
 	
 	//berekening centrum cirkel
 	
@@ -129,7 +105,7 @@ public class ImageCalculations {
 		int[] previousPos = new int[] {0,y1};
 		boolean addedPrevPos = false;
 		int cameraWidth = camera.getWidth();
-		int cameraHeight = (int) (camera.getWidth()*(Math.sin(camera.getVerticalAngleOfView()))/(Math.sin(camera.getHorizontalAngleOfView())));
+		int cameraHeight = (int) (camera.getWidth()*(Math.sin(Math.toRadians(camera.getVerticalAngleOfView()))/(Math.sin(Math.toRadians(camera.getHorizontalAngleOfView())))));
 		for(int i = 0; i < listOfPixelCoordinates.size();i++){//bepaal alle punten op de rand van de groep
 			currentPos = listOfPixelCoordinates.get(i);
 			
@@ -169,5 +145,32 @@ public class ImageCalculations {
 		return result;
 	}
 	
+	
+	
+	
+	// debug
+	
+		//(x,y) -> [i]
+		public int coordinatesToIndex(int[] coordinates, Camera camera){
+			int index = (int) (coordinates[0]+coordinates[1]*camera.getWidth());
+		    return index;
+		}
+	
+		//conversie int color naar leesbaar (R,G,B) formaat
+		public int[] colorIntToRGB(int color){
+			int [] RGB = {0,0,0};
+			/*R*/RGB[0] = color % 256;
+			/*G*/RGB[1] = (color / 256) % 256;
+			/*B*/RGB[2] = color / (256*256);
+			return RGB;
+		}
+		
+		//conversie (R,G,B) naar int  =   dec(BGR)
+		public int colorRGBToInt(int[] RGB){
+			int color = 0;
+			color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
+			return color;
+		}
+		
 	
 }
