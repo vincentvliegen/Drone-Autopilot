@@ -21,7 +21,7 @@ public class PhysicsCalculations {
 	 * The amount of pixels in height of the camera view.
 	 */
 	public int getCameraHeight(){
-		int height =  (int) (Math.tan(this.getDrone().getLeftCamera().getVerticalAngleOfView())*this.getfocalDistance()*2);
+		int height =  (int) (Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()))*this.getfocalDistance()*2);
 		return height;
 	}
 	
@@ -31,7 +31,7 @@ public class PhysicsCalculations {
 	}
 	
 	public float getfocalDistance(){
-		return (float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2));
+		return (float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2)));
 	}
 	
 	public float getDepth(int[] centerOfGravityL, int[]centerOfGravityR){
@@ -58,14 +58,16 @@ public class PhysicsCalculations {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
 		if (beta > 0){
-			thrust = (float) ((this.getDrone().getGravity() * Math.cos(2*beta-this.getVisiblePitch())) / Math.cos(beta));
+			thrust = (float) ((this.getDrone().getGravity() * Math.cos(Math.toRadians(2*beta-this.getVisiblePitch())) / Math.cos(Math.toRadians(beta))));
 		}
 		else{
 			beta = Math.abs(beta);
-			thrust = (float) ((this.getDrone().getGravity() * Math.cos(2*beta+this.getVisiblePitch())) / Math.cos(beta));
+			thrust = (float) ((this.getDrone().getGravity() * Math.cos(Math.toRadians(2*beta+this.getVisiblePitch())) / Math.cos(Math.toRadians(beta))));
 		}
 		return thrust;
 	}
+	
+	
 	
 	
 	public void setDrone(Drone drone){
