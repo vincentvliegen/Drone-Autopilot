@@ -54,9 +54,9 @@ public class Physics {
 		float roll = drone.getRoll();
 		float thrust = drone.getThrust();
 		
-		float forceX = (float) (thrust * (-Math.sin(pitch)) * Math.cos(roll));
-		float forceY = (float) (thrust * Math.cos(pitch) * Math.cos(roll));
-		float forceZ = (float) (thrust * Math.sin(roll));
+		float forceX = (float) (thrust * (-Math.sin(Math.toRadians(pitch))) * Math.cos(Math.toRadians(roll)));
+		float forceY = (float) (thrust * Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll)));
+		float forceZ = (float) (thrust * Math.sin(Math.toRadians(roll)));
 		
 		Force thrustForce = new Force(forceX, forceY, forceZ); 
 		return thrustForce;

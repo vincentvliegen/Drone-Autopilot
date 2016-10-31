@@ -62,15 +62,15 @@ public class SimulationDrone implements Drone {
 	
 	private void createRTrans() {
 		rTrans.clear();
-		rTrans.add(Math.cos(pitch)*Math.cos(yaw) + Math.sin(pitch)*Math.sin(roll)*Math.sin(yaw));
-		rTrans.add(Math.cos(roll)*Math.sin(pitch));
-		rTrans.add(Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll) - Math.cos(pitch)*Math.sin(yaw));
-		rTrans.add(Math.cos(pitch)*Math.sin(roll)*Math.sin(yaw) - Math.cos(yaw)*Math.sin(pitch));
-		rTrans.add(Math.cos(pitch)*Math.cos(roll));
-		rTrans.add(Math.sin(pitch)*Math.sin(yaw) + Math.cos(pitch)*Math.cos(yaw)*Math.sin(roll));
-		rTrans.add(Math.cos(roll)*Math.sin(yaw));
-		rTrans.add(-Math.sin(roll));
-		rTrans.add(Math.cos(roll)*Math.cos(yaw));
+		rTrans.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw)) + Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rTrans.add(Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch)));
+		rTrans.add(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)) - Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
+		rTrans.add(Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)) - Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
+		rTrans.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
+		rTrans.add(Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)) + Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll)));
+		rTrans.add(Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rTrans.add(-Math.sin(Math.toRadians(roll)));
+		rTrans.add(Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw)));
 	}
 
 	//TODO afmetingen (voor collision detection)
@@ -106,13 +106,13 @@ public class SimulationDrone implements Drone {
 	// TODO: Calculate current angles?
 	// TODO: Check
 	public float getPitch() {
-		return (float) (this.pitch * Math.cos(yaw) + this.roll * Math.sin(yaw));
+		return (float) (this.pitch * Math.cos(Math.toRadians(yaw)) + this.roll * Math.sin(Math.toRadians(yaw)));
 	}
 	
 	// TODO: Calculate current angles?
 	// TODO: Check
 	public float getRoll() {
-		return (float) (this.roll * Math.cos(yaw) - this.pitch * Math.sin(yaw));
+		return (float) (this.roll * Math.cos(Math.toRadians(yaw)) - this.pitch * Math.sin(Math.toRadians(yaw)));
 	}
 	
 	public float getYaw() {
