@@ -53,30 +53,68 @@ public class World11 extends World {
 		if (!super.getAnimator().isAnimating()) {
 			return;
 		}
-		final GL2 gl = drawable.getGL().getGL2();
+		GL2 gl = getGL().getGL2();
 
-		// Clear screen.
+		//voor scherm
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		setCamera(gl, getGlu());
+		draw();
 
-		// Set camera.
-		setCamera(gl, super.getGlu());
+
+		/*
+		 * TODO
+		 * Moet slimmer aangepakt worden, wat als er nu meerdere drones zijn? Dan moeten er voor elke drone
+		 * (manueel) 2 buffers aangemaakt worden (een voor linker en een voor rechter camera);
+		 * dus vermijden..! 
+		 * --> idee: ipv telkens een nieuwe int[] te maken, gewoon een grotere te gebruiken en de offset aan te passen?
+		 */
+
+		//voor takeimage linkerCamera
+		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferLeft()[0]);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		getDrones().get(0).getLeftDroneCamera().setCamera(gl, getGlu());
+		draw();
+		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+
+
+		//voor takeimage rechterCamera
+		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferRight()[0]);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
+		draw();
+		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+
+
+
+
+	}	
+
+
+	private void draw() {
+
+
+
+
+
+		GL2 gl = getGL().getGL2();
+
+
 
 		// translate camera.
 		if(this.getCurrentCamera() instanceof DroneCamera){
-		gl.glRotated(drone1.getRoll(), 0, 0, 1);
-		gl.glRotated(drone1.getPitch(), 1, 0, 0);
-		gl.glRotated(drone1.getYaw(), 0, 1, 0);
-		gl.glTranslated(-drone1.getTranslate()[0], -drone1.getTranslate()[1], -drone1.getTranslate()[2]);
+			gl.glRotated(drone1.getRoll(), 0, 0, 1);
+			gl.glRotated(drone1.getPitch(), 1, 0, 0);
+			gl.glRotated(drone1.getYaw(), 0, 1, 0);
+			gl.glTranslated(-drone1.getTranslate()[0], -drone1.getTranslate()[1], -drone1.getTranslate()[2]);
 		}
 		else{
-		movement.update();
-		gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
-		gl.glRotated(movement.getRotateX(), 1, 0, 0);
-		gl.glRotated(movement.getRotateY(), 0, 1, 0);
-		gl.glRotated(movement.getRotateZ(), 0, 0, 1);
+			movement.update();
+			gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
+			gl.glRotated(movement.getRotateX(), 1, 0, 0);
+			gl.glRotated(movement.getRotateY(), 0, 1, 0);
+			gl.glRotated(movement.getRotateZ(), 0, 0, 1);
 		}
 
-		
 		// Input Sphere.
 		if (!setup) {
 			double[] translateSphere = { 0, 0, 100 };
@@ -101,8 +139,9 @@ public class World11 extends World {
 		}
 
 		setup = true;
-		// System.out.println(delta);
+
 	}
+
 
 	// Update position camera's
 	public void setCamera(GL2 gl, GLU glu) {
@@ -114,8 +153,8 @@ public class World11 extends World {
 		float widthHeightRatio = (float) getWidth() / (float) getHeight();
 		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
 		glu.gluLookAt(currentCamera.getEyeX(), currentCamera.getEyeY(), currentCamera.getEyeZ(), 
-			currentCamera.getLookAtX(), currentCamera.getLookAtY(), currentCamera.getLookAtZ(), 
-			currentCamera.getUpX(), currentCamera.getUpY(), currentCamera.getUpZ());
+				currentCamera.getLookAtX(), currentCamera.getLookAtY(), currentCamera.getLookAtZ(), 
+				currentCamera.getUpX(), currentCamera.getUpY(), currentCamera.getUpZ());
 		// Change back to model view matrix.
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();

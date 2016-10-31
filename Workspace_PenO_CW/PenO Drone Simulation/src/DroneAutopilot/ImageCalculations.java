@@ -15,12 +15,6 @@ public class ImageCalculations {
 		int[] coord = {x,y};
 	    return coord;
 	}
-	
-	//(x,y) -> [i]
-	public int coordinatesToIndex(int[] coordinates, Camera camera){
-		int index = (int) (coordinates[0]+coordinates[1]*camera.getWidth());
-	    return index;
-	}
 
 	//zwaartepunt van groepje pixels bepalen
 	//als er geen rode pixels zijn, exception
@@ -111,7 +105,7 @@ public class ImageCalculations {
 		int[] previousPos = new int[] {0,y1};
 		boolean addedPrevPos = false;
 		int cameraWidth = camera.getWidth();
-		int cameraHeight = (int) (camera.getWidth()*(Math.sin(camera.getVerticalAngleOfView()))/(Math.sin(camera.getHorizontalAngleOfView())));
+		int cameraHeight = (int) (camera.getWidth()*(Math.sin(Math.toRadians(camera.getVerticalAngleOfView()))/(Math.sin(Math.toRadians(camera.getHorizontalAngleOfView())))));
 		for(int i = 0; i < listOfPixelCoordinates.size();i++){//bepaal alle punten op de rand van de groep
 			currentPos = listOfPixelCoordinates.get(i);
 			
@@ -154,7 +148,13 @@ public class ImageCalculations {
 	
 	
 	
-	//kleurenconversies voor debug
+	// debug
+	
+		//(x,y) -> [i]
+		public int coordinatesToIndex(int[] coordinates, Camera camera){
+			int index = (int) (coordinates[0]+coordinates[1]*camera.getWidth());
+		    return index;
+		}
 	
 		//conversie int color naar leesbaar (R,G,B) formaat
 		public int[] colorIntToRGB(int color){
