@@ -89,4 +89,85 @@ public class ImageCalculations {
 		return color;
 	}
 	
+	
+	//berekening centrum cirkel
+	
+	//center of circle GIVEN 3 points on circumference
+	public int[] centerOfCircle(ArrayList<int[]> listOfPixelCoordinates, Camera camera) throws IllegalArgumentException{
+		ArrayList<int[]> threePoints = new ArrayList<int[]>();
+		try{
+			threePoints.addAll(pointsOnCircumference(listOfPixelCoordinates, camera));
+		}
+		catch (IllegalArgumentException e){
+			throw new IllegalArgumentException();
+		}
+		int x = 0;
+		int y = 0;
+		int x1 = threePoints.get(0)[0];
+		int y1 = threePoints.get(0)[1];
+		int x2 = threePoints.get(1)[0];
+		int y2 = threePoints.get(1)[1];
+		int x3 = threePoints.get(2)[0];
+		int y3 = threePoints.get(2)[1];
+		//stelsel in x en y, met ay+b=0 TODO meer uitleg
+		float a = 2*(y1-y3)+2*(y1-y2)/(x1-x2)*(x1-x3);
+		float b = y3^2+x3^2 - y1^2-x1^2 + (y2^2+x2^2 - y1^2-x1^2)/(2*(x1-x2));
+		y = (int) (-a/b);
+		x = (2*(y1-y2)*y + y2^2+x2^2 - y1^2-x1^2)/(2*(x2-x1));
+		return new int[] {x,y};
+	}
+	
+	//calculate 3 most representative points on circumference (3 furthest neighbours)
+	//ONLY if at least 3 points on circumference
+	public ArrayList<int[]> pointsOnCircumference (ArrayList<int[]> listOfPixelCoordinates, Camera camera) throws IllegalArgumentException{
+		ArrayList<int[]> AllEdges = new ArrayList<int[]>();
+		ArrayList<int[]> AllCPoints = new ArrayList<int[]>();
+		ArrayList<int[]> result = new ArrayList<int[]>();
+		int y1 = listOfPixelCoordinates.get(0)[1];
+		int y2 = listOfPixelCoordinates.get(-1)[1];
+		int[] currentPos = new int[] {0,y1};
+		int[] previousPos = new int[] {0,y1};
+		boolean addedPrevPos = false;
+		int cameraWidth = camera.getWidth();
+		int cameraHeight = (int) (camera.getWidth()*(Math.sin(camera.getVerticalAngleOfView()))/(Math.sin(camera.getHorizontalAngleOfView())));
+		for(int i = 0; i < listOfPixelCoordinates.size();i++){//bepaal alle punten op de rand van de groep
+			currentPos = listOfPixelCoordinates.get(i);
+			
+			if (currentPos[1] == previousPos[1] + 1){//de eerste en laatste waarde per rij worden toegevoegd
+				AllEdges.add(currentPos);
+				if(!addedPrevPos){
+					AllEdges.add(previousPos);//vermijdt dubbele toevoeging laatste element eerste rij
+				}
+				addedPrevPos = true;
+			}else if(currentPos[1] == y1 || currentPos[1] == y2){//bovenste en onderste rij worden toegevoegd
+				AllEdges.add(currentPos);
+				addedPrevPos = true;
+			}else {
+				addedPrevPos = false;
+			}
+			previousPos = currentPos;
+		}
+		for(int j = 0; j<AllEdges.size();j++){// bepaal alle punten op de cirkel uit de randgroep
+			if(j == 0){
+				if(AllEdges.get(j) != new int[] {0,0}){ // eerste punt in linkerbovenhoek
+					AllCPoints.add(AllEdges.get(j));
+				}
+			}else if(j == AllEdges.size()-1){
+				if(AllEdges.get(j) != new int[] {cameraWidth-1,cameraHeight-1}){// laatste punt in rechteronderhoek
+					AllCPoints.add(AllEdges.get(j));
+				}
+			}else if(AllEdges.get(j)[1] < cameraHeight-1 && AllEdges.get(j)[1] > 0 && AllEdges.get(j)[1] < cameraWidth-1 && AllEdges.get(j)[0] > 0 ){// niet tegen de randen
+				AllCPoints.add(AllEdges.get(j));
+			}
+		}
+		if(AllCPoints.size() < 3){
+			throw new IllegalArgumentException();
+		}
+		result.add(AllCPoints.get(0));
+		result.add(AllCPoints.get(AllCPoints.size()/2));//middelste punt ligt verst van eerste en laatste punt
+		result.add(AllCPoints.get(-1));
+		return result;
+	}
+	
+	
 }

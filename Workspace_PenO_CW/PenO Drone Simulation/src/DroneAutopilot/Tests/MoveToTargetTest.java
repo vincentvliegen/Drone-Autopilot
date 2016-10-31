@@ -2,8 +2,6 @@ package DroneAutopilot.Tests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import DroneAutopilot.GUI.GUI;
 import DroneAutopilot.*;
 import simulator.objects.SimulationDrone;
 import static org.junit.Assert.*;
