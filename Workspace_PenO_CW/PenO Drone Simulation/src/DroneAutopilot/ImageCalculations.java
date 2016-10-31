@@ -71,24 +71,6 @@ public class ImageCalculations {
 		return listRedPixels.size() == camera.takeImage().length;
 	}
 	
-	//kleurenconversies voor debug
-	
-	//conversie int color naar leesbaar (R,G,B) formaat
-	public int[] colorIntToRGB(int color){
-		int [] RGB = {0,0,0};
-		/*R*/RGB[0] = color % 256;
-		/*G*/RGB[1] = (color / 256) % 256;
-		/*B*/RGB[2] = color / (256*256);
-		return RGB;
-	}
-	
-	//conversie (R,G,B) naar int  =   dec(BGR)
-	public int colorRGBToInt(int[] RGB){
-		int color = 0;
-		color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
-		return color;
-	}
-	
 	
 	//berekening centrum cirkel
 	
@@ -169,5 +151,26 @@ public class ImageCalculations {
 		return result;
 	}
 	
+	
+	
+	
+	//kleurenconversies voor debug
+	
+		//conversie int color naar leesbaar (R,G,B) formaat
+		public int[] colorIntToRGB(int color){
+			int [] RGB = {0,0,0};
+			/*R*/RGB[0] = color % 256;
+			/*G*/RGB[1] = (color / 256) % 256;
+			/*B*/RGB[2] = color / (256*256);
+			return RGB;
+		}
+		
+		//conversie (R,G,B) naar int  =   dec(BGR)
+		public int colorRGBToInt(int[] RGB){
+			int color = 0;
+			color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
+			return color;
+		}
+		
 	
 }
