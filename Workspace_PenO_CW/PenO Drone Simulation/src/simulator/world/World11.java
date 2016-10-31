@@ -66,6 +66,7 @@ public class World11 extends World {
 		 * Moet slimmer aangepakt worden, wat als er nu meerdere drones zijn? Dan moeten er voor elke drone
 		 * (manueel) 2 buffers aangemaakt worden (een voor linker en een voor rechter camera);
 		 * dus vermijden..! 
+		 * --> idee: ipv telkens een nieuwe int[] te maken, gewoon een grotere te gebruiken en de offset aan te passen?
 		 */
 
 		//voor takeimage linkerCamera
