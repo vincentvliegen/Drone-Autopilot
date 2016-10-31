@@ -20,8 +20,11 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 				&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
 			this.getMoveToTarget().hover();
 		}
-		this.getMoveToTarget().correctRoll();
-		this.getMoveToTarget().checkcasespixelsfound(leftCameraList, rightCameraList);
+		if (this.getMoveToTarget().checkRoll()){
+			this.getMoveToTarget().checkcasespixelsfound(leftCameraList, rightCameraList);
+		}else{
+			this.getMoveToTarget().correctRoll();
+		}
 		//TODO nog verder aanvullen vooruitvliegen kan ook bij vorige
 	}
 

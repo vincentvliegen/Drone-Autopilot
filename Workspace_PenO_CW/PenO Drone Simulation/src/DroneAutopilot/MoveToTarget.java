@@ -47,32 +47,36 @@ public class MoveToTarget{
 		} catch (EmptyPositionListException exception){
 			exception.printStackTrace();
 		}
-		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= this.underBoundary
-				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= this.upperBoundary) {
+		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
+				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= upperBoundary) {
 			this.getDrone().setYawRate(0);
 			this.flyTowardsTarget(cogLeft);
 			}
-		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) >= this.underBoundary)
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) >= underBoundary)
 			this.getDrone().setYawRate(-this.getDrone().getMaxYawRate());
-		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) <= this.upperBoundary)
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) <= upperBoundary)
 			this.getDrone().setYawRate(this.getDrone().getMaxYawRate());
 	}
 
-	private final float underBoundary = -10; // TODO bepalen betere waarde
-	private final float upperBoundary = 10;
+	private static final float underBoundary = -10; // TODO bepalen betere waarde
+	private static final float upperBoundary = 10;
 
 	public void correctRoll() {
-		if (this.getDrone().getRoll() <= this.upperBoundary && this.getDrone().getRoll() >= this.underBoundary)
-			this.getDrone().setRollRate(0);
-		else if (this.getDrone().getRoll() >= this.upperBoundary)
+		if (this.getDrone().getRoll() >= upperBoundary)
 			this.getDrone().setRollRate(-this.getDrone().getMaxRollRate());
-		else if (this.getDrone().getRoll() <= this.underBoundary)
+		else if (this.getDrone().getRoll() <= underBoundary)
 			this.getDrone().setRollRate(this.getDrone().getMaxRollRate());
+	}
+	
+	public boolean checkRoll(){
+		if (this.getDrone().getRoll() <= upperBoundary && this.getDrone().getRoll() >= underBoundary)
+			return true;
+		return false;
 	}
 	
 	public void flyTowardsTarget(int[] cog) {
 		//moet dat niet visiblepitch - verticalehoek zijn?
-		if (Math.abs(this.getDrone().getPitch() - this.getPhysicsCalculations().getVisiblePitch()) >= this.pitchUpper) {
+		if (this.getPhysicsCalculations().getVisiblePitch()-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)) >= pitchUpper) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
 		}
 		else { 
@@ -85,11 +89,11 @@ public class MoveToTarget{
 	}
 
 	public void hover() {
-		if (this.getDrone().getPitch() >= this.pitchUpper) {
+		if (this.getDrone().getPitch() >= pitchUpper) {
 			this.getDrone().setPitchRate(Math.min(-this.getDrone().getMaxPitchRate(), -this.getDrone().getPitch()));
 		}
 		
-		else if (this.getDrone().getPitch() <= this.pitchUnder) {
+		else if (this.getDrone().getPitch() <= pitchUnder) {
 			this.getDrone().setPitchRate(Math.min(this.getDrone().getMaxPitchRate(), -this.getDrone().getPitch()));
 		}
 
@@ -100,8 +104,8 @@ public class MoveToTarget{
 
 	}
 
-	private final float pitchUnder = -3; // TODO betere waarden
-	private final float pitchUpper = 3;
+	private static final float pitchUnder = -3; // TODO betere waarden
+	private static final float pitchUpper = 3;
 
 	public final ImageCalculations getImageCalculations() {
 		return this.imageCalculations;

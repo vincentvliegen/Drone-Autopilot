@@ -49,14 +49,22 @@ public class PhysicsCalculations {
 		return (float) Math.atan(this.getY(pointOfGravity) / this.getfocalDistance());
 	}
 	
-	//moet die niet gedeeld door 2 zijn?
-	//waarom 0.8? maak hiervan static var eventueel
+
 	public float getVisiblePitch(){
-		return (float) (this.getDrone().getLeftCamera().getVerticalAngleOfView()*.8);		
+		return (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*.8);		
 	}
 	
 	public float getThrust(int[] cog) {
-		return (float) (this.getDrone().getGravity()/(Math.cos((this.getVisiblePitch()) - Math.tan(this.verticalAngleDeviation(cog))* Math.sin(this.getVisiblePitch()))));
+		float thrust;
+		float beta = this.verticalAngleDeviation(cog);
+		if (beta > 0){
+			thrust = (float) ((this.getDrone().getGravity() * Math.cos(2*beta-this.getVisiblePitch())) / Math.cos(beta));
+		}
+		else{
+			beta = Math.abs(beta);
+			thrust = (float) ((this.getDrone().getGravity() * Math.cos(2*beta+this.getVisiblePitch())) / Math.cos(beta));
+		}
+		return thrust;
 	}
 	
 	public void setDrone(Drone drone){
