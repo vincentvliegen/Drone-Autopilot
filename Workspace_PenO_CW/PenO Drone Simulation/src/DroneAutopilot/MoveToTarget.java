@@ -75,14 +75,17 @@ public class MoveToTarget{
 	}
 	
 	public void flyTowardsTarget(int[] cog) {
-		if (this.getPhysicsCalculations().getVisiblePitch()-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)) >= pitchUpper) {
+		if (this.getPhysicsCalculations().getVisiblePitch()-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)) >= 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
+		}
+		else if (this.getDrone().getLeftCamera().getVerticalAngleOfView()/2-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)) <= pitchUpper) {
+			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
 		}
 		else { 
 			this.getDrone().setPitchRate(0);
 			this.getDrone().setRollRate(0);
 			this.getDrone().setYawRate(0);
-			this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cog));			
+			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cog),this.getDrone().getMaxThrust()));			
 		}
 	
 	}
