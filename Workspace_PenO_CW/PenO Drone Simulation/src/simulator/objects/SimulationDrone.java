@@ -1,5 +1,6 @@
 package simulator.objects;
 
+import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
 import java.util.ArrayList;
@@ -131,15 +132,13 @@ public class SimulationDrone implements Drone {
 		return 0.5f;
 	}
 
-	
-	public DroneCamera getLeftCamera() {
-		//Klopt dit? 
+	@Override
+	public Camera getLeftCamera() {
 		return leftCamera;
 	}
 
-	
-	public DroneCamera getRightCamera() {
-		//Klopt dit? 
+	@Override
+	public Camera getRightCamera() {
 		return rightCamera;
 	}
 
