@@ -14,6 +14,7 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
     updated to a new state. Simulated time is frozen for the duration of this call. */
 	@Override
 	public void timeHasPassed() {
+		if (this.getMoveToTarget().getPhysicsCalculations().getGUI().redOrbEnabled) {
 		ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
 		ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
 		if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
@@ -26,7 +27,7 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 			this.getMoveToTarget().correctRoll();
 		}
 		//TODO nog verder aanvullen vooruitvliegen kan ook bij vorige
-	}
+	}}
 
 	public void setDrone(p_en_o_cw_2016.Drone drone){
 		this.drone = drone;
