@@ -11,6 +11,24 @@ public class MoveToTarget{
 		this.physicsCalculations = new PhysicsCalculations();
 	}
 	
+	private static final float underBoundary = -10;
+	private static final float upperBoundary = 10;
+	private static final float pitchUnder = -3;
+	private static final float pitchUpper = 3;
+
+	public boolean checkRoll(){
+		if (this.getDrone().getRoll() <= upperBoundary && this.getDrone().getRoll() >= underBoundary)
+			return true;
+		return false;
+	}
+
+	public void correctRoll() {
+		if (this.getDrone().getRoll() >= upperBoundary)
+			this.getDrone().setRollRate(-this.getDrone().getMaxRollRate());
+		else if (this.getDrone().getRoll() <= underBoundary)
+			this.getDrone().setRollRate(this.getDrone().getMaxRollRate());
+	}
+	
 	public void checkcasespixelsfound(ArrayList<int[]> leftcamera, ArrayList<int[]> rightcamera){
 		if (leftcamera.isEmpty() && rightcamera.isEmpty())
 			noTargetFound();
@@ -22,20 +40,20 @@ public class MoveToTarget{
 			targetVisible(leftcamera, rightcamera);
 	}
 
-	private final float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
-
 	public void noTargetFound() {
-		this.getDrone().setYawRate(this.slowYaw);
+		float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
+		this.getDrone().setYawRate(slowYaw);
 	}
 
 	public void leftCameraFoundTarget() {
-		this.getDrone().setYawRate(-this.slowYaw);
+		float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
+		this.getDrone().setYawRate(-slowYaw);
 	}
 
 	public void rightCameraFoundTarget() {
-		this.getDrone().setYawRate(this.slowYaw);
+		float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
+		this.getDrone().setYawRate(slowYaw);
 	}
-
 	
 	public void targetVisible(ArrayList<int[]> leftCamera, ArrayList<int[]> rightCamera){
 		this.getDrone().setRollRate(0);
@@ -58,22 +76,6 @@ public class MoveToTarget{
 			this.getDrone().setYawRate(this.getDrone().getMaxYawRate());
 	}
 
-	private static final float underBoundary = -10; // TODO bepalen betere waarde
-	private static final float upperBoundary = 10;
-
-	public void correctRoll() {
-		if (this.getDrone().getRoll() >= upperBoundary)
-			this.getDrone().setRollRate(-this.getDrone().getMaxRollRate());
-		else if (this.getDrone().getRoll() <= underBoundary)
-			this.getDrone().setRollRate(this.getDrone().getMaxRollRate());
-	}
-	
-	public boolean checkRoll(){
-		if (this.getDrone().getRoll() <= upperBoundary && this.getDrone().getRoll() >= underBoundary)
-			return true;
-		return false;
-	}
-	
 	public void flyTowardsTarget(int[] cog) {
 		if (this.getPhysicsCalculations().getVisiblePitch()-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)) >= 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
@@ -106,8 +108,6 @@ public class MoveToTarget{
 
 	}
 
-	private static final float pitchUnder = -3; // TODO betere waarden
-	private static final float pitchUpper = 3;
 
 	public final ImageCalculations getImageCalculations() {
 		return this.imageCalculations;
