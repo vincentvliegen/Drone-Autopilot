@@ -52,13 +52,19 @@ public class SimulationDrone implements Drone {
 		this.world = world;
 		this.movement = new Movement(this);
 		generateDroneCameras();
-		createRTrans() ;
 	}
 	
 	private void createRTrans() {
+		rTrans.clear();
 		rTrans.add(Math.cos(pitch)*Math.cos(yaw) + Math.sin(pitch)*Math.sin(roll)*Math.sin(yaw));
 		rTrans.add(Math.cos(roll)*Math.sin(pitch));
-		rTrans.add(Math.cos(pitch)*Math.sin(yaw) - Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll));
+		rTrans.add(Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll) - Math.cos(pitch)*Math.sin(yaw));
+		rTrans.add(Math.cos(pitch)*Math.sin(roll)*Math.sin(yaw) - Math.cos(yaw)*Math.sin(pitch));
+		rTrans.add(Math.cos(pitch)*Math.cos(roll));
+		rTrans.add(Math.sin(pitch)*Math.sin(yaw) + Math.cos(pitch)*Math.cos(yaw)*Math.sin(roll));
+		rTrans.add(Math.cos(roll)*Math.sin(yaw));
+		rTrans.add(-Math.sin(roll));
+		rTrans.add(Math.cos(roll)*Math.cos(yaw));
 	}
 
 	//TODO afmetingen (voor collision detection)
@@ -238,13 +244,16 @@ public class SimulationDrone implements Drone {
 		this.yaw += this.yawRate * timePassed;
 		
 		double rollPass = this.rollRate * timePassed;
-		//TODO: Max roll values
-		//TODO: Fix
-		this.roll += rollPass * rTrans.get(0);
+		createRTrans();
+		this.roll += rollPass*rTrans.get(0);
+		this.yaw  += rollPass*rTrans.get(3);
+		this.pitch += rollPass*rTrans.get(6);
+		
 		
 		double pitchPass = this.pitchRate * timePassed;
-		//TODO: Fix (SEE MUPAD FILE)
-		
+		createRTrans();
+		this.roll += pitchPass*rTrans.get(2);
+		this.yaw += pitchPass*rTrans.get(5);
+		this.pitch += pitchPass*rTrans.get(8);
 	}
-	
 }
