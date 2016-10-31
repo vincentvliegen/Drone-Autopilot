@@ -51,8 +51,10 @@ public class PhysicsCalculations {
 	
 
 	public float getVisiblePitch(){
-		return (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*.8);		
+		return (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*visibilityFactor);		
 	}
+	
+	private static final double visibilityFactor = 0.8;
 	
 	public float getThrust(int[] cog) {
 		float thrust;

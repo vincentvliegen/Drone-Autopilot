@@ -75,7 +75,6 @@ public class MoveToTarget{
 	}
 	
 	public void flyTowardsTarget(int[] cog) {
-		//moet dat niet visiblepitch - verticalehoek zijn?
 		if (this.getPhysicsCalculations().getVisiblePitch()-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)) >= pitchUpper) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
 		}
