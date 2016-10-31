@@ -31,7 +31,6 @@ public class Sphere {
 		GLUT glut = new GLUT();
 		gl.glPushMatrix();
 		gl.glColor3f(color[0], color[1], color[2]);
-		System.out.println(translate[0] + "  " + translate[1] + "  " + translate[2]);
 		gl.glTranslated(translate[0], translate[1], translate[2]);
 		glut.glutSolidSphere(radius, slices, stacks);	
 		gl.glPopMatrix();
