@@ -15,12 +15,6 @@ public class ImageCalculations {
 		int[] coord = {x,y};
 	    return coord;
 	}
-	
-	//(x,y) -> [i]
-	public int coordinatesToIndex(int[] coordinates, Camera camera){
-		int index = (int) (coordinates[0]+coordinates[1]*camera.getWidth());
-	    return index;
-	}
 
 	//zwaartepunt van groepje pixels bepalen
 	//als er geen rode pixels zijn, exception
@@ -154,7 +148,13 @@ public class ImageCalculations {
 	
 	
 	
-	//kleurenconversies voor debug
+	// debug
+	
+		//(x,y) -> [i]
+		public int coordinatesToIndex(int[] coordinates, Camera camera){
+			int index = (int) (coordinates[0]+coordinates[1]*camera.getWidth());
+		    return index;
+		}
 	
 		//conversie int color naar leesbaar (R,G,B) formaat
 		public int[] colorIntToRGB(int color){
