@@ -57,7 +57,9 @@ public class GUI {
 		panel.add(progress);
 
 		this.progressBar.setPreferredSize(new Dimension(250, 30));
-		this.progressBar.setMaximum(100);
+		this.progressBar.setStringPainted(true);
+		this.progressBar.setString("0%");
+		
 		panel.add(this.progressBar);
 		
 		frame.getContentPane().add(panel);
@@ -67,10 +69,11 @@ public class GUI {
 	public void update(int distance) {
 		if (distance > this.maxValue) {
 			this.maxValue = distance;
-			progressBar.setMaximum(distance);
+			this.progressBar.setMaximum(distance);
 		} else {
 			this.progressBar.setValue(this.maxValue - distance);
 		}
+		this.progressBar.setString((this.maxValue - distance)/this.maxValue + "%");
 	}
 
 	private final JProgressBar progressBar;
