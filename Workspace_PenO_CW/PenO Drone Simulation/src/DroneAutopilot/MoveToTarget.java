@@ -58,6 +58,7 @@ public class MoveToTarget{
 			this.getDrone().setYawRate(this.getDrone().getMaxYawRate());
 	}
 
+	//static?
 	private final float underBoundary = -10; // TODO bepalen betere waarde
 	private final float upperBoundary = 10;
 
@@ -100,6 +101,7 @@ public class MoveToTarget{
 
 	}
 
+	//static?
 	private final float pitchUnder = -3; // TODO betere waarden
 	private final float pitchUpper = 3;
 
