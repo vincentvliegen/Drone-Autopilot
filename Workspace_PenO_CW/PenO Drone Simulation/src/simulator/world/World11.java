@@ -43,12 +43,12 @@ public class World11 extends World {
 	public static KeyboardMovement movement = new KeyboardMovement();
 
 	public void display(GLAutoDrawable drawable) {
+		super.updateTimePassed();
 		float tempVal = super.checkTimePassed();
 		try {
-			drone1.timeHasPassed(tempVal);;
-			super.setLastTime(super.getCurrentTime());
+			drone1.timeHasPassed(tempVal);
+			super.setLastTime((float) (System.nanoTime()*Math.pow(10, -9)));
 		} catch (Exception e) {
-
 		}
 		if (!super.getAnimator().isAnimating()) {
 			return;
@@ -91,10 +91,6 @@ public class World11 extends World {
 
 
 	private void draw() {
-
-
-
-
 
 		GL2 gl = getGL().getGL2();
 

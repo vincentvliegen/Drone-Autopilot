@@ -275,10 +275,5 @@ public class SimulationDrone implements Drone {
 		this.yaw += pitchPass * rTrans.get(5);
 		this.pitch += pitchPass * rTrans.get(8);
 		this.autopilot.timeHasPassed();
-		try {
-			wait();
-		} catch (InterruptedException e) {
-
-		}
 	}
 }
