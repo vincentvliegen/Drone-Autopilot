@@ -82,7 +82,11 @@ public class SimulationDrone implements Drone {
 	public void drawDrone() {
 		
 		gl.glPushMatrix(); // store current transform, so we can undo the rotation
+		System.out.println(-getTranslate()[0] + "  " + -getTranslate()[1] + "  " + -getTranslate()[2]);
 		gl.glTranslated(-getTranslate()[0], -getTranslate()[1], -getTranslate()[2]);
+		System.out.println("Roll " + getRoll());
+		System.out.println("Pitch " + getPitch());
+		System.out.println("Yaw " + getYaw());
 		gl.glRotated(getRoll(), 1, 0, 0);
 		gl.glRotated(getPitch(), 0, 0, 1);
 		gl.glRotated(getYaw(), 0, 1, 0);
