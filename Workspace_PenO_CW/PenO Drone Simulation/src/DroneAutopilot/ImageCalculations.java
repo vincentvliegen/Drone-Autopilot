@@ -68,6 +68,7 @@ public class ImageCalculations {
 	
 	//berekening centrum cirkel
 	
+	//TODO nauwkeurigere uitwerking, geeft zeer onnauwkeurige waarden bij dicht bij een liggende punten/punten op zelfde hoogte of breedte (zeer kleine bollen/ zeer grote bollen met 1 zijde bijna recht), zo onbruikbaar
 	//center of circle GIVEN 3 points on circumference
 	public int[] centerOfCircle(ArrayList<int[]> listOfPixelCoordinates, Camera camera) throws IllegalArgumentException{
 		ArrayList<int[]> threePoints = new ArrayList<int[]>();
@@ -77,20 +78,20 @@ public class ImageCalculations {
 		catch (IllegalArgumentException e){
 			throw new IllegalArgumentException();
 		}
-		int x = 0;
-		int y = 0;
-		int x1 = threePoints.get(0)[0];
-		int y1 = threePoints.get(0)[1];
-		int x2 = threePoints.get(1)[0];
-		int y2 = threePoints.get(1)[1];
-		int x3 = threePoints.get(2)[0];
-		int y3 = threePoints.get(2)[1];
+		float X = 0;
+		float Y = 0;
+		float x1 = threePoints.get(0)[0];
+		float y1 = threePoints.get(0)[1];
+		float x2 = threePoints.get(1)[0];
+		float y2 = threePoints.get(1)[1];
+		float x3 = threePoints.get(2)[0];
+		float y3 = threePoints.get(2)[1];
 		//stelsel in x en y, met ay+b=0 TODO meer uitleg
 		float a = 2*(y1-y3)+2*(y1-y2)/(x1-x2)*(x1-x3);
-		float b = y3^2+x3^2 - y1^2-x1^2 + (y2^2+x2^2 - y1^2-x1^2)/(2*(x1-x2));
-		y = (int) (-a/b);
-		x = (2*(y1-y2)*y + y2^2+x2^2 - y1^2-x1^2)/(2*(x2-x1));
-		return new int[] {x,y};
+		float b = (float) (Math.pow(y3,2) + Math.pow(x3,2) - Math.pow(y1,2) - Math.pow(x1,2) + (Math.pow(y2,2) + Math.pow(x2,2) - Math.pow(y1,2) - Math.pow(x1,2))/(2*(x1-x2)));
+		Y =  (-b/a);
+		X =  (float) ((2*(y1-y2)*Y + Math.pow(y2,2) + Math.pow(x2,2) - Math.pow(y1,2) - Math.pow(x1,2))/(2*(x2-x1)));
+		return new int[] {(int)X,(int)Y};
 	}
 	
 	//calculate 3 most representative points on circumference (3 furthest neighbours)
@@ -99,8 +100,11 @@ public class ImageCalculations {
 		ArrayList<int[]> AllEdges = new ArrayList<int[]>();
 		ArrayList<int[]> AllCPoints = new ArrayList<int[]>();
 		ArrayList<int[]> result = new ArrayList<int[]>();
+		if(listOfPixelCoordinates.size() == 0){
+			throw new IllegalArgumentException();
+		}
 		int y1 = listOfPixelCoordinates.get(0)[1];
-		int y2 = listOfPixelCoordinates.get(-1)[1];
+		int y2 = listOfPixelCoordinates.get(listOfPixelCoordinates.size()-1)[1];
 		int[] currentPos = new int[] {0,y1};
 		int[] previousPos = new int[] {0,y1};
 		boolean addedPrevPos = false;
@@ -108,12 +112,11 @@ public class ImageCalculations {
 		int cameraHeight = (int) (camera.getWidth()*(Math.sin(Math.toRadians(camera.getVerticalAngleOfView()))/(Math.sin(Math.toRadians(camera.getHorizontalAngleOfView())))));
 		for(int i = 0; i < listOfPixelCoordinates.size();i++){//bepaal alle punten op de rand van de groep
 			currentPos = listOfPixelCoordinates.get(i);
-			
 			if (currentPos[1] == previousPos[1] + 1){//de eerste en laatste waarde per rij worden toegevoegd
-				AllEdges.add(currentPos);
 				if(!addedPrevPos){
 					AllEdges.add(previousPos);//vermijdt dubbele toevoeging laatste element eerste rij
 				}
+				AllEdges.add(currentPos);
 				addedPrevPos = true;
 			}else if(currentPos[1] == y1 || currentPos[1] == y2){//bovenste en onderste rij worden toegevoegd
 				AllEdges.add(currentPos);
@@ -124,15 +127,7 @@ public class ImageCalculations {
 			previousPos = currentPos;
 		}
 		for(int j = 0; j<AllEdges.size();j++){// bepaal alle punten op de cirkel uit de randgroep
-			if(j == 0){
-				if(AllEdges.get(j) != new int[] {0,0}){ // eerste punt in linkerbovenhoek
-					AllCPoints.add(AllEdges.get(j));
-				}
-			}else if(j == AllEdges.size()-1){
-				if(AllEdges.get(j) != new int[] {cameraWidth-1,cameraHeight-1}){// laatste punt in rechteronderhoek
-					AllCPoints.add(AllEdges.get(j));
-				}
-			}else if(AllEdges.get(j)[1] < cameraHeight-1 && AllEdges.get(j)[1] > 0 && AllEdges.get(j)[1] < cameraWidth-1 && AllEdges.get(j)[0] > 0 ){// niet tegen de randen
+			if(AllEdges.get(j)[1] < cameraHeight-1 && AllEdges.get(j)[1] > 0 && AllEdges.get(j)[0] < cameraWidth-1 && AllEdges.get(j)[0] > 0 ){// niet tegen de randen
 				AllCPoints.add(AllEdges.get(j));
 			}
 		}
@@ -141,7 +136,7 @@ public class ImageCalculations {
 		}
 		result.add(AllCPoints.get(0));
 		result.add(AllCPoints.get(AllCPoints.size()/2));//middelste punt ligt verst van eerste en laatste punt
-		result.add(AllCPoints.get(-1));
+		result.add(AllCPoints.get(AllCPoints.size()-1));
 		return result;
 	}
 	
@@ -150,27 +145,27 @@ public class ImageCalculations {
 	
 	// debug
 	
-		//(x,y) -> [i]
-		public int coordinatesToIndex(int[] coordinates, Camera camera){
-			int index = (int) (coordinates[0]+coordinates[1]*camera.getWidth());
-		    return index;
-		}
-	
-		//conversie int color naar leesbaar (R,G,B) formaat
-		public int[] colorIntToRGB(int color){
-			int [] RGB = {0,0,0};
-			/*R*/RGB[0] = color % 256;
-			/*G*/RGB[1] = (color / 256) % 256;
-			/*B*/RGB[2] = color / (256*256);
-			return RGB;
-		}
-		
-		//conversie (R,G,B) naar int  =   dec(BGR)
-		public int colorRGBToInt(int[] RGB){
-			int color = 0;
-			color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
-			return color;
-		}
-		
+//		//(x,y) -> [i]
+//		public int coordinatesToIndex(int[] coordinates, Camera camera){
+//			int index = (int) (coordinates[0]+coordinates[1]*camera.getWidth());
+//		    return index;
+//		}
+//	
+//		//conversie int color naar leesbaar (R,G,B) formaat
+//		public int[] colorIntToRGB(int color){
+//			int [] RGB = {0,0,0};
+//			/*R*/RGB[0] = color % 256;
+//			/*G*/RGB[1] = (color / 256) % 256;
+//			/*B*/RGB[2] = color / (256*256);
+//			return RGB;
+//		}
+//		
+//		//conversie (R,G,B) naar int  =   dec(BGR)
+//		public int colorRGBToInt(int[] RGB){
+//			int color = 0;
+//			color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
+//			return color;
+//		}
+//		
 	
 }
