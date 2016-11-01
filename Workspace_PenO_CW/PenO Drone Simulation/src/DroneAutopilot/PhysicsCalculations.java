@@ -21,7 +21,7 @@ public class PhysicsCalculations {
 		return distance;
 	}
 	
-	/*
+	/**
 	 * The amount of pixels in height of the camera view.
 	 */
 	public int getCameraHeight(){
