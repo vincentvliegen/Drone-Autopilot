@@ -66,12 +66,14 @@ public class PhysicsCalculations {
 		float beta = this.verticalAngleDeviation(cog);
 		if (beta > 0){
 			System.out.println("beta groter dan 0");
-			thrust = (float) ((this.getDrone().getGravity() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
+			thrust = (float) ((-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
+			System.out.println("thrust boven" + thrust);
 		}
 		else{
 			//System.out.println("beta kleiner");
 			beta = Math.abs(beta);
-			thrust = (float) ((this.getDrone().getGravity() * Math.cos(Math.toRadians(beta + this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
+			thrust = (float) ((-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta + this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
+			System.out.println("thrust onder" + thrust);
 		}
 		return thrust;
 	}

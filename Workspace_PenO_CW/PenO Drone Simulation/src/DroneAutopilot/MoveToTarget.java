@@ -83,7 +83,6 @@ public class MoveToTarget{
 
 	public void flyTowardsTarget(int[] cog) {
 		if (this.getPhysicsCalculations().getVisiblePitch()-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)) >= 0) {
-			System.out.println(this.getPhysicsCalculations().getVisiblePitch()-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)));
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
 			//System.out.println("pitch");
 			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cog),this.getDrone().getMaxThrust()));			
