@@ -103,7 +103,7 @@ public class MoveToTarget{
 
 		else {
 			this.getDrone().setPitchRate(0);
-			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), this.getDrone().getGravity() + this.getDrone().getDrag()));
+			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() + this.getDrone().getDrag()));
 		}
 
 	}
