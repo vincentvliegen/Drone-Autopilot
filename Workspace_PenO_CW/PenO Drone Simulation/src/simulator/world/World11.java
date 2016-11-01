@@ -98,10 +98,17 @@ public class World11 extends World {
 
 		// translate camera.
 		if(this.getCurrentCamera() instanceof DroneCamera){
-			gl.glRotated(drone1.getRoll(), 0, 0, 1);
-			gl.glRotated(drone1.getPitch(), 1, 0, 0);
-			gl.glRotated(drone1.getYaw(), 0, 1, 0);
+//			movement.update();
+//			gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
+//			gl.glRotated(movement.getRotateX(), 1, 0, 0);
+//			gl.glRotated(movement.getRotateY(), 0, 1, 0);
+//			gl.glRotated(movement.getRotateZ(), 0, 0, 1);
+			gl.glPushMatrix(); // store current transform, so we can undo the rotation
 			gl.glTranslated(-drone1.getTranslate()[0], -drone1.getTranslate()[1], -drone1.getTranslate()[2]);
+			gl.glRotated(drone1.getRoll(), 1, 0, 0);
+			gl.glRotated(drone1.getPitch(), 0, 0, 1);
+			gl.glRotated(drone1.getYaw(), 0, 1, 0);
+			gl.glPopMatrix();// undo rotation
 		}
 		else{
 			movement.update();

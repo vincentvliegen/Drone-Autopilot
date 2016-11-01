@@ -10,7 +10,6 @@ import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.DroneAutopilotFactory;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.util.gl2.GLUT;
 
 import simulator.camera.DroneCamera;
 import simulator.camera.DroneCameraPlace;
@@ -42,8 +41,7 @@ public class SimulationDrone implements Drone {
 	List<Double> rTrans = new ArrayList<>();
 	private DroneAutopilot autopilot;
 
-	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color,
-			double[] translate, World world) {
+	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, double[] translate, World world) {
 		this.height = height;
 		this.width = width;
 		this.depth = depth;
@@ -83,8 +81,11 @@ public class SimulationDrone implements Drone {
 
 	public void drawDrone() {
 		
-		gl.glPushMatrix();
-		gl.glTranslated(translate[0], translate[1],translate[2]);
+		gl.glPushMatrix(); // store current transform, so we can undo the rotation
+		gl.glTranslated(-getTranslate()[0], -getTranslate()[1], -getTranslate()[2]);
+		gl.glRotated(getRoll(), 1, 0, 0);
+		gl.glRotated(getPitch(), 0, 0, 1);
+		gl.glRotated(getYaw(), 0, 1, 0);
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glBegin(gl.GL_QUADS);
 		
@@ -125,8 +126,9 @@ public class SimulationDrone implements Drone {
 		gl.glVertex3f(getDroneWidth()/2, -getDroneHeight()/2, getDroneDepth()/2);
 		gl.glVertex3f(getDroneWidth()/2, -getDroneHeight()/2, -getDroneDepth()/2);
 		
-		gl.glPopMatrix();
 		gl.glEnd();
+		gl.glPopMatrix();// undo rotation
+		
 	}
 
 	public void translateDrone(double[] translate) {
