@@ -39,14 +39,12 @@ public class DroneCamera extends GeneralCamera implements Camera{
 
 	@Override
 	public float getHorizontalAngleOfView() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 60f;
 	}
 
 	@Override
 	public float getVerticalAngleOfView() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 50f;
 	}
 
 	@Override
