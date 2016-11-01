@@ -1,7 +1,6 @@
 package simulator.GUI;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import simulator.world.World;
@@ -9,7 +8,9 @@ import simulator.world.World;
 import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -20,11 +21,13 @@ public class GUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static World world;
-	private final GridBagConstraints constraintsButton;
+	private final GridBagConstraints constraintsButtonGeneralCameras;
+	private final GridBagConstraints constraintsButtonDroneCamera;
 	private JLabel position = new JLabel();
 	private JLabel speed = new JLabel();
-	private List<JButton> buttons = new ArrayList<>();
-	
+	private List<JButton> buttonsGeneralCameras = new ArrayList<>();
+	private List<JButton> buttonsDroneCameras = new ArrayList<>();
+
 
 	/**
 	 * Create the panel.
@@ -34,49 +37,77 @@ public class GUI extends JPanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0};
 		setLayout(gridBagLayout);
 		GridBagConstraints s = new GridBagConstraints();
-		s.insets = new Insets(0, 0, 5, 5);
+		s.insets = new Insets(1, 1, 1, 1);
 		GridBagConstraints p = new GridBagConstraints();
-		p.insets = new Insets(0, 0, 5, 5);
+		p.insets = new Insets(1, 1, 1, 1);
 		this.world = world;
 
 
-		// #buttons
-		
-		constraintsButton = new GridBagConstraints();
-		constraintsButton.insets = new Insets(0, 0, 5, 5);
+		// #buttonsGeneralCameras
+		JPanel panelButtonsGeneralCameras = new JPanel(new GridLayout(1,3));
+		constraintsButtonGeneralCameras = new GridBagConstraints();
+		constraintsButtonGeneralCameras.insets = new Insets(1, 1, 1, 1);
+		constraintsButtonGeneralCameras.gridy = 0;
 
 		for(int i=0; i< world.getGeneralCameras().size(); i++){
 			//System.out.println(world.getGeneralCameras().size());
-			buttons.add(new JButton("Camera " + (i+1)));
-			buttons.get(i).addActionListener(new ActionListener() {
+			buttonsGeneralCameras.add(new JButton("Camera " + (i+1)));
+			buttonsGeneralCameras.get(i).addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					String nameButton = e.getActionCommand();
 					if(nameButton.equalsIgnoreCase("Camera 1")){
-						//System.out.println("Camera 1");
 						world.setCurrentCamera(world.getGeneralCameras().get(0));
 					}
 					else if(nameButton.equalsIgnoreCase("Camera 2")){
-						//System.out.println("Camera 2");
-						world.setCurrentCamera(world.getDroneCameras().get(0));
+						world.setCurrentCamera(world.getGeneralCameras().get(1));
 					}
 					else if(nameButton.equalsIgnoreCase("Camera 3")){
-						//System.out.println("Camera 3");
-						world.setCurrentCamera(world.getDroneCameras().get(1));
+						world.setCurrentCamera(world.getGeneralCameras().get(2));
 					}
 				}
 			});
-			add(buttons.get(i), constraintsButton);
+			panelButtonsGeneralCameras.add(buttonsGeneralCameras.get(i), constraintsButtonGeneralCameras);
 		}
+		add(panelButtonsGeneralCameras, constraintsButtonGeneralCameras);
 
+		// #buttonsDroneCameras
+		JPanel panelButtonDroneCameras = new JPanel(new GridLayout(1,2));
+		constraintsButtonDroneCamera = new GridBagConstraints();
+		constraintsButtonDroneCamera.insets = new Insets(1, 1, 1, 1);
+		constraintsButtonDroneCamera.gridy = 1;
 
+		
+		buttonsDroneCameras.add(new JButton("Left dronecamera"));
+		buttonsDroneCameras.add(new JButton("Right dronecamera"));
+		buttonsDroneCameras.get(0).addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String nameButton = e.getActionCommand();
+				if(nameButton.equalsIgnoreCase("Left Dronecamera")){
+					world.setCurrentCamera(world.getDroneCameras().get(0));
+				}
+			}
+		});
+		buttonsDroneCameras.get(1).addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String nameButton = e.getActionCommand();
+				if(nameButton.equalsIgnoreCase("Right Dronecamera")){
+					world.setCurrentCamera(world.getDroneCameras().get(1));
+				}
+			}
+		});
+		panelButtonDroneCameras.add(buttonsDroneCameras.get(0));
+		panelButtonDroneCameras.add(buttonsDroneCameras.get(1));
+		add(panelButtonDroneCameras, constraintsButtonDroneCamera);
 
 		// Speed
 		Timer timerSpeed = new Timer(1000, new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ev) {
 				if(world.getDrones().size() > 0){
-					
+
 					//Speed: a*t)
 					float currentSpeed;
 					float[] acceleration = world.getDrones().get(0).getPhysics().getAcceleration();
@@ -86,12 +117,14 @@ public class GUI extends JPanel {
 					acceleration[1] *= time;
 					acceleration[2] *= time;
 					currentSpeed = (float) Math.sqrt(acceleration[0]*acceleration[0]+acceleration[1]*acceleration[1]+acceleration[2]*acceleration[2]);
-					speed.setText("Speed: " + currentSpeed);
+					BigDecimal bigDecimalSpeed = new BigDecimal(currentSpeed);
+					BigDecimal roundOffSpeed = bigDecimalSpeed.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					speed.setText("Speed: " + roundOffSpeed);
 					//System.out.println("Speed");
 					s.ipady = 50;      //make this component tall
-					s.weightx = 0.0;
+					s.weightx = 1;
 					s.gridx = 0;
-					s.gridy = 1;
+					s.gridy = 2;
 					s.gridwidth = 3;
 					add(speed, s);
 					speed.revalidate();
@@ -108,11 +141,17 @@ public class GUI extends JPanel {
 				if(world.getDrones().size()>0){
 					double[] currentPosition = world.getDrones().get(0).getMovement().getCurrentPosition();
 					//System.out.println(currentPosition);
-					position.setText("Position (x,y,z): (" + currentPosition[0] + ", " + currentPosition[1] + ", " + currentPosition[2] + ")" );
+					BigDecimal bigDecimalPos1 = new BigDecimal(currentPosition[0]);
+					BigDecimal roundOffPos1 = bigDecimalPos1.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					BigDecimal bigDecimalPos2 = new BigDecimal(currentPosition[1]);
+					BigDecimal roundOffPos2 = bigDecimalPos2.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					BigDecimal bigDecimalPos3 = new BigDecimal(currentPosition[2]);
+					BigDecimal roundOffPos3 = bigDecimalPos3.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					position.setText("Position (x,y,z): (" + roundOffPos1 + ", " + roundOffPos2 + ", " + roundOffPos3 + ")" );
 					p.ipady = 50;      //make this component tall
-					p.weightx = 0.0;
+					p.weightx = 1;
 					p.gridx = 0;
-					p.gridy = 2;
+					p.gridy = 3;
 					p.gridwidth = 3;
 					add(position, p);
 					position.revalidate();
@@ -121,5 +160,5 @@ public class GUI extends JPanel {
 			}
 		});
 		timerPosition.start(); 
-    }
+	}
 }
