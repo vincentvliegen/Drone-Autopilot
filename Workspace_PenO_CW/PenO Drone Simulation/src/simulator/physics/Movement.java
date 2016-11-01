@@ -25,9 +25,6 @@ public class Movement {
 	}
 
 	public void calculateMovement(float timePassed) {
-		if (timePassed < 0.016666) {
-			return;
-		}
 		float[] acceleration = drone.getPhysics().getAcceleration();
 		acceleration[0] *= timePassed;
 		acceleration[1] *= timePassed;
