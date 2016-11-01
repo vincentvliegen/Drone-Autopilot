@@ -43,8 +43,9 @@ public class MoveToTarget{
 			leftCameraFoundTarget();
 		else if (leftcamera.isEmpty() && !rightcamera.isEmpty())
 			rightCameraFoundTarget();
-		else if (!leftcamera.isEmpty() && !rightcamera.isEmpty())
+		else if (!leftcamera.isEmpty() && !rightcamera.isEmpty()){
 			targetVisible(leftcamera, rightcamera);
+		}
 	}
 
 	public void noTargetFound() {
@@ -82,15 +83,20 @@ public class MoveToTarget{
 
 	public void flyTowardsTarget(int[] cog) {
 		if (this.getPhysicsCalculations().getVisiblePitch()-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)) >= 0) {
+			System.out.println(this.getPhysicsCalculations().getVisiblePitch()-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)));
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
+			//System.out.println("pitch");
+			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cog),this.getDrone().getMaxThrust()));			
 		}
 		else if (this.getDrone().getLeftCamera().getVerticalAngleOfView()/2-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cog)) <= pitchUpper) {
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
+			System.out.println("terugpitch");
 		}
 		else { 
 			this.getDrone().setPitchRate(0);
 			this.getDrone().setRollRate(0);
 			this.getDrone().setYawRate(0);
+			System.out.println("thrust");
 			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cog),this.getDrone().getMaxThrust()));			
 		}
 	
@@ -107,7 +113,7 @@ public class MoveToTarget{
 
 		else {
 			this.getDrone().setPitchRate(0);
-			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), -this.getDrone().getGravity()*this.getDrone().getWeight() + this.getDrone().getDrag()));
+			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), -this.getDrone().getGravity()*this.getDrone().getWeight()));
 		}
 
 	}

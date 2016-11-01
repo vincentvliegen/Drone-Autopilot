@@ -22,8 +22,6 @@ public class DroneAutopilotFactory implements AutopilotFactory{
 		drone.setPitchRate(0);
 		drone.setYawRate(0);
 		drone.setRollRate(0);
-		//TODO timehaspassed nodig?
-//		autopilot.timeHasPassed();
 		return autopilot;
 	}
 

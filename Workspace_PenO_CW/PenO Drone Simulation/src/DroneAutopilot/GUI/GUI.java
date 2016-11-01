@@ -74,8 +74,9 @@ public class GUI {
 				JComboBox menu = (JComboBox) e.getSource();
 
 				Object selected = menu.getSelectedItem();
-				if (selected.toString().equals("Fly to red orb"))
+				if (selected.toString().equals("Fly to red orb")){
 					redOrbEnabled = true;
+				}
 				else if(selected.toString().equals(" "))
 					redOrbEnabled = false;
 			}

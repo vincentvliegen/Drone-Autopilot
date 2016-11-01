@@ -23,11 +23,13 @@ public class DroneAutopilot implements Autopilot{
 			ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
 			if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
 					&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
+				System.out.println("bereikt");
 				this.getMoveToTarget().hover();
 			}else{
 				if (this.getMoveToTarget().checkRoll()){
 					this.getMoveToTarget().checkcasespixelsfound(leftCameraList, rightCameraList);
 				}else{
+					System.out.println("correct roll");
 					this.getMoveToTarget().correctRoll();
 				}
 				}

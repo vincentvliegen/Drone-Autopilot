@@ -35,22 +35,25 @@ public class PhysicsCalculations {
 	}
 	
 	public float getfocalDistance(){
-		return (float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2)));
+		float focal =(float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2)));
+		return focal;
 	}
 	
 	public float getDepth(int[] centerOfGravityL, int[]centerOfGravityR){
 		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
+		depth = Math.abs(depth);
 		this.getGUI().update((int)depth);
 		return depth;
 	}
 		
 	public float horizontalAngleDeviation(int[] centerOfGravityL, int[] centerofGravityR){
-		float x = (this.getDepth(centerOfGravityL, centerofGravityR) * this.getX1(centerOfGravityL)) / this.getfocalDistance();
+		float x = (this.getDepth(centerOfGravityL, centerofGravityR) * Math.abs(this.getX1(centerOfGravityL))) / this.getfocalDistance();
 		float tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerofGravityR);
 		return (float) Math.atan(tanAlfa);
 	}
 	
 	public float verticalAngleDeviation(int[] pointOfGravity){
+		//System.out.println(this.getY(pointOfGravity));
 		return (float) Math.atan(this.getY(pointOfGravity) / this.getfocalDistance());
 	}
 	
@@ -62,11 +65,13 @@ public class PhysicsCalculations {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
 		if (beta > 0){
-			thrust = (float) ((this.getDrone().getGravity() * Math.cos(Math.toRadians(2*beta-this.getVisiblePitch())) / Math.cos(Math.toRadians(beta))));
+			System.out.println("beta groter dan 0");
+			thrust = (float) ((this.getDrone().getGravity() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
 		}
 		else{
+			//System.out.println("beta kleiner");
 			beta = Math.abs(beta);
-			thrust = (float) ((this.getDrone().getGravity() * Math.cos(Math.toRadians(2*beta+this.getVisiblePitch())) / Math.cos(Math.toRadians(beta))));
+			thrust = (float) ((this.getDrone().getGravity() * Math.cos(Math.toRadians(beta + this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
 		}
 		return thrust;
 	}
