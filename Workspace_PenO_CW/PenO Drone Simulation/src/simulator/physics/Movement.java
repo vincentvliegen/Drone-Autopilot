@@ -35,6 +35,9 @@ public class Movement {
 		velocity[0] += acceleration[0];
 		velocity[1] += acceleration[1];
 		velocity[2] += acceleration[2];
+		velocity[0] -= drone.getDrag()*velocity[0];
+		velocity[1] -= drone.getDrag()*velocity[1];
+		velocity[2] -= drone.getDrag()*velocity[2];
 		
 		double[] currentPos = drone.getTranslate();
 		currentPos[0] += velocity[0] * timePassed;
