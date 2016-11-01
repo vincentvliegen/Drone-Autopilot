@@ -2,6 +2,8 @@ package DroneAutopilot;
 
 import java.util.ArrayList;
 
+import p_en_o_cw_2016.Drone;
+
 public class Autopilot implements p_en_o_cw_2016.Autopilot{
 	
 	public Autopilot(){
@@ -15,28 +17,32 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 	@Override
 	public void timeHasPassed() {
 		if (this.getMoveToTarget().getPhysicsCalculations().getGUI().redOrbEnabled) {
-		ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
-		ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
-		if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
-				&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
-			this.getMoveToTarget().hover();
-		}else{
-			if (this.getMoveToTarget().checkRoll()){
-				this.getMoveToTarget().checkcasespixelsfound(leftCameraList, rightCameraList);
+			ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
+			ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
+			if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
+					&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
+				this.getMoveToTarget().hover();
 			}else{
-				this.getMoveToTarget().correctRoll();
+				if (this.getMoveToTarget().checkRoll()){
+					this.getMoveToTarget().checkcasespixelsfound(leftCameraList, rightCameraList);
+				}else{
+					this.getMoveToTarget().correctRoll();
+				}
+				}
+			}else{
+				this.getMoveToTarget().hover();
 			}
-		}}}
+		}
 		//TODO nog verder aanvullen vooruitvliegen kan ook bij vorige
 
 
-	public void setDrone(p_en_o_cw_2016.Drone drone){
+	public void setDrone(Drone drone){
 		this.drone = drone;
 	}
-	public p_en_o_cw_2016.Drone getDrone(){
+	public Drone getDrone(){
 		return this.drone;
 	}
-	private p_en_o_cw_2016.Drone drone;
+	private Drone drone;
 
 	
 	public final ImageCalculations getImageCalculations(){
