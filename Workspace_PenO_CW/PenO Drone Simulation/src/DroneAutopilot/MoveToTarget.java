@@ -8,15 +8,20 @@ public class MoveToTarget{
 
 	public MoveToTarget(Drone drone) {
 		this.setDrone(drone);
+		setSlowYaw();
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations(drone);
 	}
 	
-	private final float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
+	private float slowYaw;
 	private static final float underBoundary = -10;
 	private static final float upperBoundary = 10;
 	private static final float pitchUnder = -3;
 	private static final float pitchUpper = 3;
+	
+	private void setSlowYaw() {
+		 this.slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
+	}
 
 	public boolean checkRoll(){
 		if (this.getDrone().getRoll() <= upperBoundary && this.getDrone().getRoll() >= underBoundary)

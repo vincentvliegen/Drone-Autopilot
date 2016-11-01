@@ -26,7 +26,7 @@ public class SimulationDrone implements Drone {
 	int rings;
 	float[] color = new float[3];
 	double[] translate = new double[3];
-	static double[] standardTranslate = {0,0,0};
+	static double[] standardTranslate = { 0, 0, 0 };
 	Physics physics;
 	private float pitch = 0;
 	private float roll = 0;
@@ -42,9 +42,9 @@ public class SimulationDrone implements Drone {
 	public DroneCamera rightCamera;
 	List<Double> rTrans = new ArrayList<>();
 	private DroneAutopilot autopilot;
-	
-	
-	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings,  float[] color, double[] translate, World world){
+
+	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color,
+			double[] translate, World world) {
 		this.innerRadius = innerRadius;
 		this.outerRadius = outerRadius;
 		this.nsides = nsides;
@@ -53,36 +53,39 @@ public class SimulationDrone implements Drone {
 		this.color = color;
 		this.translate = translate;
 		this.physics = new Physics(this, 10f);
-		this.setThrust(10f*9.81f);
 		this.world = world;
 		this.movement = new Movement(this);
 		generateDroneCameras();
 		DroneAutopilotFactory ap = new DroneAutopilotFactory();
 		this.autopilot = ap.create(this);
 	}
-	
+
 	private void createRTrans() {
 		rTrans.clear();
-		rTrans.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw)) + Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
-		rTrans.add(Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch)));
-		rTrans.add(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)) - Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
-		rTrans.add(Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)) - Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
-		rTrans.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
-		rTrans.add(Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)) + Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll)));
-		rTrans.add(Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rTrans.add(Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw))
+				+ Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw)));
+		rTrans.add(Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(pitch)));
+		rTrans.add(Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll))
+				- Math.cos(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw)));
+		rTrans.add(Math.cos(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw))
+				- Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)));
+		rTrans.add(Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll)));
+		rTrans.add(Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw))
+				+ Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(roll)));
+		rTrans.add(Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw)));
 		rTrans.add(-Math.sin(Math.toRadians(roll)));
-		rTrans.add(Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw)));
+		rTrans.add(Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw)));
 	}
 
-	//TODO afmetingen (voor collision detection)
-	
-	
-	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color, World world){
+	// TODO afmetingen (voor collision detection)
+
+	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color,
+			World world) {
 		this(gl, innerRadius, outerRadius, nsides, rings, color, standardTranslate, world);
 	}
 
-	public void drawDrone(){
-		
+	public void drawDrone() {
+
 		GLUT glut = new GLUT();
 		gl.glPushMatrix();
 		gl.glColor3f(color[0], color[1], color[2]);
@@ -90,53 +93,48 @@ public class SimulationDrone implements Drone {
 		glut.glutSolidTorus(innerRadius, outerRadius, nsides, rings);
 		gl.glPopMatrix();
 	}
-	
-	public void translateDrone(double[] translate){
+
+	public void translateDrone(double[] translate) {
 		gl.glTranslated(translate[0], translate[1], translate[2]);
 	}
-	
-	public double[] getTranslate(){
+
+	public double[] getTranslate() {
 		return this.translate;
 	}
-	
+
 	public Physics getPhysics() {
 		return this.physics;
 	}
-	
-	
-	// !!! Dit zijn niet dezelfde functies als hieronder, returntype hier is DRONECAMERA,
-	// bij het ander is het gewoon CAMERA, maar daarop kunnen niet alle functies worden opgeroepen!
+
 	public DroneCamera getLeftDroneCamera() {
 		return this.leftCamera;
 	}
-	
+
 	public DroneCamera getRightDroneCamera() {
 		return this.rightCamera;
 	}
-	
-	
-	// TODO: Calculate current angles?
-	// TODO: Check
+
 	public float getPitch() {
 		return (float) (this.pitch * Math.cos(Math.toRadians(yaw)) + this.roll * Math.sin(Math.toRadians(yaw)));
 	}
-	
-	// TODO: Calculate current angles?
-	// TODO: Check
+
 	public float getRoll() {
 		return (float) (this.roll * Math.cos(Math.toRadians(yaw)) - this.pitch * Math.sin(Math.toRadians(yaw)));
 	}
-	
+
 	public float getYaw() {
 		return this.yaw;
 	}
-	
+
 	public float getThrust() {
 		return this.thrust;
 	}
-	
+
 	public void setThrust(float value) {
-		this.thrust = value;
+		if (value > getMaxThrust())
+			this.thrust = getMaxThrust();
+		else
+			this.thrust = value;
 	}
 
 	@Override
@@ -171,7 +169,7 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public float getMaxThrust() {
-		return 3f*SimulationDrone.weight*getGravity();
+		return -3f * SimulationDrone.weight * getGravity();
 	}
 
 	@Override
@@ -196,85 +194,86 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public void setPitchRate(float value) {
-		if(value > getMaxPitchRate())
+		if (value > getMaxPitchRate())
 			this.pitchRate = getMaxPitchRate();
-		else 
-			this.pitchRate = value;	
+		else
+			this.pitchRate = value;
 	}
 
 	@Override
 	public void setRollRate(float value) {
-		if(value > getMaxRollRate())
+		if (value > getMaxRollRate())
 			this.rollRate = getMaxRollRate();
-		else 
-			this.rollRate = value;	
+		else
+			this.rollRate = value;
 	}
 
 	@Override
 	public void setYawRate(float value) {
-		if(value > getMaxYawRate())
+		if (value > getMaxYawRate())
 			this.yawRate = getMaxYawRate();
-		else 
-			this.yawRate = value;	
+		else
+			this.yawRate = value;
 	}
-	
+
 	public float getDronedepth() {
-		// This will change when the drone changes into an other shape. 
+		// This will change when the drone changes into an other shape.
 		return outerRadius;
 	}
 
 	public float getDroneWidth() {
-		// This will change when the drone changes into an other shape. 
+		// This will change when the drone changes into an other shape.
 		return outerRadius;
 	}
-	
+
 	public World getWorld() {
 		return this.world;
 	}
-	
+
 	public Movement getMovement() {
 		return this.movement;
 	}
-	
+
 	private void generateDroneCameras() {
-		
-		//TODO
-		//lookat moet recht vooruit zijn
-		//dus X moet zelfde zijn, Y ook, Z iets verder
+
+		// TODO
+		// lookat moet recht vooruit zijn
+		// dus X moet zelfde zijn, Y ook, Z iets verder
 
 		float commonY = 0;
-		
-		//left
-		float leftX = -getDroneWidth()/2;
-		float leftZ = getDronedepth()/2;
-		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ+100, 0, 1, 0, this, DroneCameraPlace.LEFT);	
-		
-		//right
-		float rightX = getDroneWidth()/2;
-		float rightZ = getDronedepth()/2;
-		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ+100, 0, 1, 0, this, DroneCameraPlace.RIGHT);
-		
-		//add to list in world
+
+		// left
+		float leftX = -getDroneWidth() / 2;
+		float leftZ = getDronedepth() / 2;
+		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ + 100, 0, 1, 0, this,
+				DroneCameraPlace.LEFT);
+
+		// right
+		float rightX = getDroneWidth() / 2;
+		float rightZ = getDronedepth() / 2;
+		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ + 100, 0, 1, 0, this,
+				DroneCameraPlace.RIGHT);
+
+		// add to list in world
 		getWorld().addDroneCamera(leftCamera);
 		getWorld().addDroneCamera(rightCamera);
 	}
-	
+
 	public void timeHasPassed(float timePassed) {
 		this.getMovement().calculateMovement(timePassed);
 		this.yaw += this.yawRate * timePassed;
-		
+
 		double rollPass = this.rollRate * timePassed;
 		createRTrans();
-		this.roll += rollPass*rTrans.get(0);
-		this.yaw  += rollPass*rTrans.get(3);
-		this.pitch += rollPass*rTrans.get(6);
-		
-		
+		this.roll += rollPass * rTrans.get(0);
+		this.yaw += rollPass * rTrans.get(3);
+		this.pitch += rollPass * rTrans.get(6);
+
 		double pitchPass = this.pitchRate * timePassed;
 		createRTrans();
-		this.roll += pitchPass*rTrans.get(2);
-		this.yaw += pitchPass*rTrans.get(5);
-		this.pitch += pitchPass*rTrans.get(8);
+		this.roll += pitchPass * rTrans.get(2);
+		this.yaw += pitchPass * rTrans.get(5);
+		this.pitch += pitchPass * rTrans.get(8);
 		this.autopilot.timeHasPassed();
 		try {
 			wait();
