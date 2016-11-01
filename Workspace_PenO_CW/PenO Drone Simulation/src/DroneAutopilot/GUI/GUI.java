@@ -95,6 +95,7 @@ public class GUI {
 
 		panel2.add(panel);
 		frame.getContentPane().add(panel2);
+		frame.setVisible(true);
 
 	}
 
