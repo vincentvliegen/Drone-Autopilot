@@ -20,10 +20,9 @@ import simulator.world.World;
 
 public class SimulationDrone implements Drone {
 	GL2 gl;
-	float innerRadius;
-	float outerRadius;
-	int nsides;
-	int rings;
+	float height;
+	float width;
+	float depth;
 	float[] color = new float[3];
 	double[] translate = new double[3];
 	static double[] standardTranslate = { 0, 0, 0 };
@@ -43,12 +42,11 @@ public class SimulationDrone implements Drone {
 	List<Double> rTrans = new ArrayList<>();
 	private DroneAutopilot autopilot;
 
-	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color,
+	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color,
 			double[] translate, World world) {
-		this.innerRadius = innerRadius;
-		this.outerRadius = outerRadius;
-		this.nsides = nsides;
-		this.rings = rings;
+		this.height = height;
+		this.width = width;
+		this.depth = depth;
 		this.gl = gl;
 		this.color = color;
 		this.translate = translate;
@@ -79,19 +77,56 @@ public class SimulationDrone implements Drone {
 
 	// TODO afmetingen (voor collision detection)
 
-	public SimulationDrone(GL2 gl, float innerRadius, float outerRadius, int nsides, int rings, float[] color,
-			World world) {
-		this(gl, innerRadius, outerRadius, nsides, rings, color, standardTranslate, world);
+	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, World world) {
+		this(gl, height, width, depth, color, standardTranslate, world);
 	}
 
 	public void drawDrone() {
-
-		GLUT glut = new GLUT();
+		
 		gl.glPushMatrix();
+		gl.glTranslated(translate[0], translate[1],translate[2]);
 		gl.glColor3f(color[0], color[1], color[2]);
-		gl.glTranslated(translate[0], translate[1], translate[2]);
-		glut.glutSolidTorus(innerRadius, outerRadius, nsides, rings);
+		gl.glBegin(gl.GL_QUADS);
+		
+		//Top
+		gl.glVertex3f(getDroneWidth()/2, getDroneHeight()/2, -getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2, getDroneHeight()/2, -getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2,  getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(getDroneWidth()/2,  getDroneHeight()/2, getDroneDepth()/2);
+
+		//Bottom
+		gl.glVertex3f(getDroneWidth()/2, -getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2, -getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2, -getDroneHeight()/2, -getDroneDepth()/2);
+		gl.glVertex3f(getDroneWidth()/2, -getDroneHeight()/2, -getDroneDepth()/2);
+
+		//Front
+		gl.glVertex3f(getDroneWidth()/2,  getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2,  getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2, -getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(getDroneWidth()/2, -getDroneHeight()/2, getDroneDepth()/2);
+
+		//back
+		gl.glVertex3f(getDroneWidth()/2,  getDroneHeight()/2, -getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2,  getDroneHeight()/2, -getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2, -getDroneHeight()/2, -getDroneDepth()/2);
+		gl.glVertex3f(getDroneWidth()/2, -getDroneHeight()/2, -getDroneDepth()/2);
+
+		//Left
+		gl.glVertex3f(-getDroneWidth()/2,  getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2,  getDroneHeight()/2, -getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2, -getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(-getDroneWidth()/2, -getDroneHeight()/2, -getDroneDepth()/2);
+		
+		//Right
+		
+		gl.glVertex3f(getDroneWidth()/2,  getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(getDroneWidth()/2,  getDroneHeight()/2, -getDroneDepth()/2);
+		gl.glVertex3f(getDroneWidth()/2, -getDroneHeight()/2, getDroneDepth()/2);
+		gl.glVertex3f(getDroneWidth()/2, -getDroneHeight()/2, -getDroneDepth()/2);
+		
 		gl.glPopMatrix();
+		gl.glEnd();
 	}
 
 	public void translateDrone(double[] translate) {
@@ -216,14 +251,16 @@ public class SimulationDrone implements Drone {
 			this.yawRate = value;
 	}
 
-	public float getDronedepth() {
-		// This will change when the drone changes into an other shape.
-		return outerRadius;
+	public float getDroneDepth() {
+		return depth;
 	}
 
 	public float getDroneWidth() {
-		// This will change when the drone changes into an other shape.
-		return outerRadius;
+		return width;
+	}
+	
+	public float getDroneHeight(){
+		return height;
 	}
 
 	public World getWorld() {
@@ -244,15 +281,13 @@ public class SimulationDrone implements Drone {
 
 		// left
 		float leftX = -getDroneWidth() / 2;
-		float leftZ = getDronedepth() / 2;
-		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ + 100, 0, 1, 0, this,
-				DroneCameraPlace.LEFT);
+		float leftZ = getDroneDepth() / 2;
+		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ + 100, 0, 1, 0, this, DroneCameraPlace.LEFT);
 
 		// right
 		float rightX = getDroneWidth() / 2;
-		float rightZ = getDronedepth() / 2;
-		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ + 100, 0, 1, 0, this,
-				DroneCameraPlace.RIGHT);
+		float rightZ = getDroneDepth() / 2;
+		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ + 100, 0, 1, 0, this, DroneCameraPlace.RIGHT);
 
 		// add to list in world
 		getWorld().addDroneCamera(leftCamera);

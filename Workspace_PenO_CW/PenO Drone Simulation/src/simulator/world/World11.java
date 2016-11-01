@@ -22,9 +22,9 @@ public class World11 extends World {
 
 	public World11() {
 		super();
-		super.addGeneralCamera(new GeneralCamera(0, 0, -200, 0, 0, 0, 0, 1, 0));
-		super.addGeneralCamera(new GeneralCamera(0, 20, 50, 0, 0, 0, 0, 1, 0));
-		super.addGeneralCamera(new GeneralCamera(0, 20, 1000, 0, 0, 0, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(0, 20, -200, 0, 0, 0, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(0, 50, -100, 0, 0, 0, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(0, 100, -200, 0, 0, 0, 0, 1, 0));
 		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
@@ -122,11 +122,11 @@ public class World11 extends World {
 		} else {
 			sphere1.drawSphere();
 		}
-
+		// Input Drone.
 		if (!setup) {
 			double[] translateDrone = { 0, 0, 0 };
 			float[] colorDrone = { 0f, 0f, 1f };
-			SimulationDrone drone1 = new SimulationDrone(gl, 2.378f, 4.378f, 64, 64, colorDrone, translateDrone, this);
+			SimulationDrone drone1 = new SimulationDrone(gl, 3f, 4f, 4f, colorDrone, translateDrone, this);
 			this.drone1 = drone1;
 			addSimulationDrone(drone1);
 			drone1.drawDrone();
