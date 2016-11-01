@@ -1,9 +1,10 @@
 package DroneAutopilot;
 
 import DroneAutopilot.GUI.GUI;
+import p_en_o_cw_2016.AutopilotFactory;
 import p_en_o_cw_2016.Drone;
 
-public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
+public class DroneAutopilotFactory implements AutopilotFactory{
 
 	/** Called by the testbed in the AWT/Swing GUI thread to create and start an Autopilot.
     At this point, the drone exists in the virtual world, with zero pitch and roll. The
@@ -13,13 +14,10 @@ public class AutopilotFactory implements p_en_o_cw_2016.AutopilotFactory{
     The Drone and Camera objects are not thread-safe; calls of methods of these
     objects should occur only in the AWT/Swing GUI thread. */
 	@Override
-	public Autopilot create(Drone drone) {		
-		Autopilot autopilot = new Autopilot();
+	public DroneAutopilot create(Drone drone) {		
+		DroneAutopilot autopilot = new DroneAutopilot(drone);
 		GUI gui = new GUI();
 		autopilot.getMoveToTarget().getPhysicsCalculations().setGUI(gui);
-		autopilot.setDrone(drone);
-		autopilot.getMoveToTarget().setDrone(drone);
-		autopilot.getMoveToTarget().getPhysicsCalculations().setDrone(drone);
 		drone.setThrust(-drone.getGravity()*drone.getWeight());
 		drone.setPitchRate(0);
 		drone.setYawRate(0);

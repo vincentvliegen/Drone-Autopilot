@@ -6,11 +6,13 @@ import p_en_o_cw_2016.Drone;
 
 public class MoveToTarget{
 
-	public MoveToTarget() {
+	public MoveToTarget(Drone drone) {
+		this.setDrone(drone);
 		this.imageCalculations = new ImageCalculations();
-		this.physicsCalculations = new PhysicsCalculations();
+		this.physicsCalculations = new PhysicsCalculations(drone);
 	}
 	
+	private final float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
 	private static final float underBoundary = -10;
 	private static final float upperBoundary = 10;
 	private static final float pitchUnder = -3;
@@ -41,17 +43,14 @@ public class MoveToTarget{
 	}
 
 	public void noTargetFound() {
-		float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
 		this.getDrone().setYawRate(slowYaw);
 	}
 
 	public void leftCameraFoundTarget() {
-		float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
 		this.getDrone().setYawRate(-slowYaw);
 	}
 
 	public void rightCameraFoundTarget() {
-		float slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
 		this.getDrone().setYawRate(slowYaw);
 	}
 	
@@ -103,7 +102,7 @@ public class MoveToTarget{
 
 		else {
 			this.getDrone().setPitchRate(0);
-			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() + this.getDrone().getDrag()));
+			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), -this.getDrone().getGravity()*this.getDrone().getWeight() + this.getDrone().getDrag()));
 		}
 
 	}

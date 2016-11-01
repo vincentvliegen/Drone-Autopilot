@@ -5,6 +5,10 @@ import p_en_o_cw_2016.Drone;
 
 public class PhysicsCalculations {
 	
+	public PhysicsCalculations(Drone drone){
+		this.setDrone(drone);
+	}
+	
 	private static final double visibilityFactor = 0.8;
 
 	public int getX1(int[] centerofGravityL){

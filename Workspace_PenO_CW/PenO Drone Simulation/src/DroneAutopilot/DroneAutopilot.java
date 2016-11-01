@@ -2,13 +2,15 @@ package DroneAutopilot;
 
 import java.util.ArrayList;
 
+import p_en_o_cw_2016.Autopilot;
 import p_en_o_cw_2016.Drone;
 
-public class Autopilot implements p_en_o_cw_2016.Autopilot{
+public class DroneAutopilot implements Autopilot{
 	
-	public Autopilot(){
+	public DroneAutopilot(Drone drone){
+		this.setDrone(drone);
 		this.imageCalculations = new ImageCalculations();
-		this.moveToTarget = new MoveToTarget();
+		this.moveToTarget = new MoveToTarget(drone);
 	}
 
 	/** Called by the testbed in the AWT/Swing GUI thread at a high (but possibly variable)
@@ -33,7 +35,6 @@ public class Autopilot implements p_en_o_cw_2016.Autopilot{
 				this.getMoveToTarget().hover();
 			}
 		}
-		//TODO nog verder aanvullen vooruitvliegen kan ook bij vorige
 
 
 	public void setDrone(Drone drone){
