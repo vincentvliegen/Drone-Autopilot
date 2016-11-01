@@ -22,9 +22,9 @@ public class World11 extends World {
 
 	public World11() {
 		super();
-		super.addGeneralCamera(new GeneralCamera(0, 20, -200, 0, 0, 0, 0, 1, 0));
-		super.addGeneralCamera(new GeneralCamera(0, 50, -100, 0, 0, 0, 0, 1, 0));
-		super.addGeneralCamera(new GeneralCamera(0, 100, -200, 0, 0, 0, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(0, 20, 200, 0, 0, 0, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(0, 50, 100, 0, 0, 0, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(0, 100, 200, 0, 0, 0, 0, 1, 0));
 		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
@@ -98,9 +98,9 @@ public class World11 extends World {
 
 		// translate camera.
 		if(this.getCurrentCamera() instanceof DroneCamera){
-			gl.glTranslated(-drone1.getTranslate()[0], -drone1.getTranslate()[1], -drone1.getTranslate()[2]);
-			gl.glRotated(drone1.getRoll(), 1, 0, 0);
-			gl.glRotated(drone1.getPitch(), 0, 0, 1);
+			gl.glTranslated(drone1.getTranslate()[0], drone1.getTranslate()[1], drone1.getTranslate()[2]);
+			gl.glRotated(drone1.getRoll(), 0, 0, 1);
+			gl.glRotated(drone1.getPitch(), 1, 0, 0);
 			gl.glRotated(drone1.getYaw(), 0, 1, 0);
 		}
 		else{
@@ -113,7 +113,7 @@ public class World11 extends World {
 
 		// Input Sphere.
 		if (!setup) {
-			double[] translateSphere = { 0, 0, 100 };
+			double[] translateSphere = { 0, 0, -100 };
 			float[] colorSphere = { 1f, 0f, 0f };
 			Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere, translateSphere);
 			sphere1.drawSphere();

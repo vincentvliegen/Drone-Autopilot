@@ -43,13 +43,13 @@
       {\Huge\sc P\&O: Computerwetenschappen}\\[0.75cm]%
       {\huge\bf \thetitle}%
       \vfill%
-      \begin{minipage}{0.4\textwidth}%
+      \begin{minipage}{0.3\textwidth}%
         \begin{flushleft}%
           {\Large\em Team:} \\[6pt]%
           {\LARGE\bf \theteam}%
         \end{flushleft}%
       \end{minipage}\hfill%
-      \begin{minipage}{0.4\textwidth}%
+      \begin{minipage}{0.7\textwidth}%
         \begin{flushright}%
           {\Large\sc \themembers\\}%
         \end{flushright}%

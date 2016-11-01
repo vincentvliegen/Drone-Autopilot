@@ -139,7 +139,7 @@ public class GUI extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(world.getDrones().size()>0){
-					double[] currentPosition = world.getDrones().get(0).getMovement().getCurrentPosition();
+					double[] currentPosition = world.getDrones().get(0).getTranslate();
 					//System.out.println(currentPosition);
 					BigDecimal bigDecimalPos1 = new BigDecimal(currentPosition[0]);
 					BigDecimal roundOffPos1 = bigDecimalPos1.setScale(2, BigDecimal.ROUND_HALF_EVEN);
