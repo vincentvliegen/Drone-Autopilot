@@ -25,7 +25,7 @@ public class PhysicsCalculations {
 	 * The amount of pixels in height of the camera view.
 	 */
 	public int getCameraHeight(){
-		int height =  (int) (Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getfocalDistance()*2);
+		int height =  (int) Math.round(Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getfocalDistance()*2);
 		return height;
 	}
 	
@@ -39,6 +39,7 @@ public class PhysicsCalculations {
 		return focal;
 	}
 	
+	//depth is niet de afstand tot de bol, hiervoor moeten de horizontale en verticale hoek bij inbegrepen worden, dus is het niet beter om de gui up te daten in een andere functie?
 	public float getDepth(int[] centerOfGravityL, int[]centerOfGravityR){
 		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
 		depth = Math.abs(depth);
