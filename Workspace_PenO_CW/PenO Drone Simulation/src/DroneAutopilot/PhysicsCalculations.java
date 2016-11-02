@@ -67,13 +67,13 @@ public class PhysicsCalculations {
 		if (beta > 0){
 			System.out.println("beta groter dan 0");
 			thrust = (float) ((-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
-			System.out.println("thrust boven" + thrust);
+			//System.out.println("thrust boven" + thrust);
 		}
 		else{
 			//System.out.println("beta kleiner");
 			beta = Math.abs(beta);
 			thrust = (float) ((-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta + this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
-			System.out.println("thrust onder" + thrust);
+			//System.out.println("thrust onder" + thrust);
 		}
 		return thrust;
 	}

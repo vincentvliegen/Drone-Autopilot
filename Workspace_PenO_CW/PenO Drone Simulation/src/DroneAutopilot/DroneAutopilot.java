@@ -18,6 +18,8 @@ public class DroneAutopilot implements Autopilot{
     updated to a new state. Simulated time is frozen for the duration of this call. */
 	@Override
 	public void timeHasPassed() {
+		System.out.println("pitch" + this.getDrone().getPitch());
+		System.out.println("roll" + this.getDrone().getRoll());
 		if (this.getMoveToTarget().getPhysicsCalculations().getGUI().redOrbEnabled) {
 			ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
 			ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
