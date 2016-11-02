@@ -82,9 +82,13 @@ public class SimulationDrone implements Drone {
 	public void drawDrone() {
 		
 		gl.glPushMatrix(); // store current transform, so we can undo the rotation
-		gl.glTranslated(-getTranslate()[0], -getTranslate()[1], -getTranslate()[2]);
-		gl.glRotated(getRoll(), 1, 0, 0);
-		gl.glRotated(getPitch(), 0, 0, 1);
+		System.out.println(getTranslate()[0] + "  " + getTranslate()[1] + "  " + getTranslate()[2]);
+		translateDrone(translate);
+		System.out.println("Roll " + getRoll());
+		System.out.println("Pitch " + getPitch());
+		System.out.println("Yaw " + getYaw());
+		gl.glRotated(getRoll(), 0, 0, 1);
+		gl.glRotated(getPitch(), 1, 0, 0);
 		gl.glRotated(getYaw(), 0, 1, 0);
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glBegin(gl.GL_QUADS);
@@ -133,6 +137,7 @@ public class SimulationDrone implements Drone {
 
 	public void translateDrone(double[] translate) {
 		gl.glTranslated(translate[0], translate[1], translate[2]);
+		this.translate = translate;
 	}
 
 	public double[] getTranslate() {
@@ -283,13 +288,13 @@ public class SimulationDrone implements Drone {
 
 		// left
 		float leftX = -getDroneWidth() / 2;
-		float leftZ = getDroneDepth() / 2;
-		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ + 100, 0, 1, 0, this, DroneCameraPlace.LEFT);
+		float leftZ = -getDroneDepth() / 2;
+		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ - 100, 0, 1, 0, this, DroneCameraPlace.LEFT);
 
 		// right
 		float rightX = getDroneWidth() / 2;
-		float rightZ = getDroneDepth() / 2;
-		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ + 100, 0, 1, 0, this, DroneCameraPlace.RIGHT);
+		float rightZ = -getDroneDepth() / 2;
+		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ - 100, 0, 1, 0, this, DroneCameraPlace.RIGHT);
 
 		// add to list in world
 		getWorld().addDroneCamera(leftCamera);

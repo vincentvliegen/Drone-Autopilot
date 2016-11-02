@@ -109,8 +109,7 @@ public class ImageCalculations {
 		int[] previousPos = new int[] {0,y1};
 		boolean addedPrevPos = false;
 		int cameraWidth = camera.getWidth();
-		//Hoogte klopt niet denk ikv volgens mij: width*tan(verticalehoek/2)/tan(horizontalehoek/2)
-		int cameraHeight = (int) (camera.getWidth()*(Math.sin(Math.toRadians(camera.getVerticalAngleOfView()))/(Math.sin(Math.toRadians(camera.getHorizontalAngleOfView())))));
+		int cameraHeight = (int) (camera.getWidth()*(Math.tan(Math.toRadians(camera.getVerticalAngleOfView()/2))/(Math.tan(Math.toRadians(camera.getHorizontalAngleOfView()/2)))));
 		for(int i = 0; i < listOfPixelCoordinates.size();i++){//bepaal alle punten op de rand van de groep
 			currentPos = listOfPixelCoordinates.get(i);
 			if (currentPos[1] == previousPos[1] + 1){//de eerste en laatste waarde per rij worden toegevoegd

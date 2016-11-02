@@ -21,11 +21,11 @@ public class PhysicsCalculations {
 		return distance;
 	}
 	
-	/*
+	/**
 	 * The amount of pixels in height of the camera view.
 	 */
 	public int getCameraHeight(){
-		int height =  (int) (Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()))*this.getfocalDistance()*2);
+		int height =  (int) (Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getfocalDistance()*2);
 		return height;
 	}
 	
