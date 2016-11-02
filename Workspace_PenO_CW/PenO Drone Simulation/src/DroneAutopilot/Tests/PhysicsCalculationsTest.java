@@ -49,7 +49,6 @@ public class PhysicsCalculationsTest {
 		assertEquals(-17,calc.getY(cOG3));
     }
 	
-	//TODO nauwkeurighed: geeft 99 ipv 100
 	@Test
 	public void cameraHeightTest(){
 		assertEquals(100,calc.getCameraHeight()/*,1*/);
