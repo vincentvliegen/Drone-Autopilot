@@ -12,15 +12,17 @@ public class PhysicsCalculationsTest {
 
 	@Before
 	public void setUp() {
+		verticalAngleOfView = (float) (2*Math.toDegrees(Math.atan((heightCamera/widthCamera)*Math.tan(Math.toRadians(horizontalAngleOfView/2)))));
 		calc = new PhysicsCalculations(drone);
 		gui = new GUI();
-		drone = createDroneForTesting(0, 0, 0, 0, null, null); //TODO Waardes cameras: width = 150; heigth = 120
+		camera = createCameraForTesting(horizontalAngleOfView, verticalAngleOfView, widthCamera);
+		drone = createDroneForTesting(droneWeight, droneGravity, cameraSeparation, dronePitch, camera, camera);
 		calc.setDrone(drone);
 		calc.setGUI(gui);
 		
 		cOG1 = new int[] {1,1};
-		cOG1 = new int[] {5,80};
-		cOG1 = new int[] {127,33};
+		cOG2 = new int[] {5,80};
+		cOG3 = new int[] {127,33};
 		
 		depthXY1 = new int[] {120,120};
 		depthXY2 = new int[] {45,120};
@@ -42,19 +44,20 @@ public class PhysicsCalculationsTest {
 	
 	@Test
     public void YTest() {
-		assertEquals(calc.getY(cOG1),-74);
-		assertEquals(calc.getY(cOG2),5);
-		assertEquals(calc.getY(cOG3),-42);
+		assertEquals(calc.getY(cOG1),-49);
+		assertEquals(calc.getY(cOG2),30);
+		assertEquals(calc.getY(cOG3),-17);
     }
 	
+	//TODO fix
 	@Test
 	public void cameraHeightTest(){
-		assertEquals(calc.getCameraHeight(),150);
+		assertEquals(calc.getCameraHeight(),100);
 	}
 	
 	@Test
 	public void focalDistanceTest(){
-		assertEquals(calc.getfocalDistance(), 0.0/*TODO waarde berekenen*/,0.0003/*TODO betere delta?*/);
+		assertEquals(calc.getfocalDistance(), 75,0.0003);
 	}
 	
 	@Test
@@ -82,7 +85,10 @@ public class PhysicsCalculationsTest {
 		assertEquals(calc.getThrust(depthXY1),0.0,0.0003);/*TODO idem*/
 	}
 	
-	public Camera createCameraForTesting(int horAngle, int verAngle, int width){
+	
+	
+	
+	public Camera createCameraForTesting(float horAngle, float verAngle, int width){
 		return new Camera(){
 	    				
 	    	@Override
@@ -110,9 +116,9 @@ public class PhysicsCalculationsTest {
 		};
 	}
 
-	public Drone createDroneForTesting(float weight, float gravity,float cameraSeparation, float pitch, Camera leftCamera, Camera rightCamera){
+	public Drone createDroneForTesting(float weight, float gravity, float pitch, float cameraSeparation, Camera leftCamera, Camera rightCamera){
 		return new Drone(){
-
+			
 			@Override
 			public float getCameraSeparation() {
 				return cameraSeparation;
@@ -142,7 +148,6 @@ public class PhysicsCalculationsTest {
 			public float getPitch() {
 				return pitch;
 			}
-	
 			
 			//ongebruikt
 			@Override
@@ -150,61 +155,51 @@ public class PhysicsCalculationsTest {
 				// TODO Auto-generated method stub
 				
 			}
-
 			@Override
 			public void setRollRate(float value) {
 				// TODO Auto-generated method stub
 				
 			}
-
 			@Override
 			public void setYawRate(float value) {
 				// TODO Auto-generated method stub
 				
 			}
-
 			@Override
 			public void setThrust(float value) {
 				// TODO Auto-generated method stub
 				
 			}
-
 			@Override
 			public float getDrag() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
-
 			@Override
 			public float getCurrentTime() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
-
 			@Override
 			public float getMaxThrust() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
-
 			@Override
 			public float getMaxPitchRate() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
-
 			@Override
 			public float getMaxRollRate() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
-
 			@Override
 			public float getMaxYawRate() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
-
 			@Override
 			public float getRoll() {
 				// TODO Auto-generated method stub
@@ -213,15 +208,20 @@ public class PhysicsCalculationsTest {
 
 	    };
 	}
-	
+
 	//Assign cameras en drone met deze waardes
 	private static final int widthCamera = 150;
-	private static final int cameraSeparation = 20;//TODO units?cm? betere waarde eventueel
-	private static final float horizontalAngleOfView = (float) (Math.PI/4); 
-	private static final float verticalAngleOfView = (float) (Math.PI/4); 
-	private static final int droneGravity = 1;//TODO betere waarde?
+	private static final int heightCamera = 100;
+	private static final float horizontalAngleOfView = (float) 90; 
+	private float verticalAngleOfView; 
+
 	
+	private static final float cameraSeparation = 20;
+	private static final float droneGravity = 10;
+	private static final float droneWeight = 1;
+	private static final float dronePitch =(float) 30;
 	
+	private Camera camera;
 	private PhysicsCalculations calc;
 	private Drone drone;
 	private GUI gui;
