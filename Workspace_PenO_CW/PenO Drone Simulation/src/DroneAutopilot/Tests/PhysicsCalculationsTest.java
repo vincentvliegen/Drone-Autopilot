@@ -81,7 +81,7 @@ public class PhysicsCalculationsTest {
 	
 	@Test
 	public void thrustTest(){
-		assertEquals(0.0,calc.getThrust(depthXY1),0.00001);
+		assertEquals(259.8645,calc.getThrust(depthXY1),0.0001);
 	}
 	
 	@Test
@@ -199,14 +199,14 @@ public class PhysicsCalculationsTest {
 	//Assign cameras en drone met deze waardes
 	private static final int widthCamera = 150;
 	private static final int heightCamera = 100;
-	private static final float horizontalAngleOfView = (float) 90; 
+	private static final float horizontalAngleOfView = 90; 
 	private float verticalAngleOfView; 
 
 	
 	private static final float cameraSeparation = 20;
-	private static final float droneGravity = 10;
+	private static final float droneGravity = -10;
 	private static final float droneWeight = 1;
-	private static final float dronePitch =(float) 30;
+	private static final float dronePitch = 15;
 	
 	private Camera camera;
 	private PhysicsCalculations calc;

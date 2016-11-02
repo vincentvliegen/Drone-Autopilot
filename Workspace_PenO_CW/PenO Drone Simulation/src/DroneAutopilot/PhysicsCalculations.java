@@ -64,19 +64,30 @@ public class PhysicsCalculations {
 	}
 	
 	public float getThrust(int[] cog) {
-		float thrust;
-		float beta = this.verticalAngleDeviation(cog);
-		if (beta > 0){
-			System.out.println("beta groter dan 0");
-			thrust = (float) ((-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
-			//System.out.println("thrust boven" + thrust);
-		}
-		else{
-			//System.out.println("beta kleiner of gelijk aan 0");
-			beta = Math.abs(beta);
-			thrust = (float) ((-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta + this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
-			//System.out.println("thrust onder" + thrust);
-		}
+		//ik denk dat de oorsprokelijke code fout is, aangezien ik voor pitch = 0, voor thrust het tegengestelde van de zwaartekracht krijg, terwijl thrust oneindig moet zijn, omdat je niet vooruit kan
+
+//		float thrust;
+//		float beta = this.verticalAngleDeviation(cog);
+//		if (beta >= 0){
+//			//System.out.println("beta groter dan of gelijk aan 0");
+//			thrust = (float) (-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
+//			//System.out.println("thrust boven" + thrust);
+//		}
+//		else{
+//			//System.out.println("beta kleiner dan 0");
+//			beta = Math.abs(beta);
+//			thrust = (float) (-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta + this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
+//			//System.out.println("thrust onder" + thrust);
+//		}
+		
+		//dit is wat ik denk dat het moet zijn
+		
+		float beta = (float) Math.toRadians(this.verticalAngleDeviation(cog));
+		float pitch = (float) Math.toRadians(this.getDrone().getPitch());//opgelet: positieve pitch is naar beneden gericht
+		float delta = beta-pitch;//de hoek tussen het horizontaal vlak en de camera en de bol (= beta als de drone horizontaal zou hangen)
+		float gravity = this.getDrone().getGravity();
+		float weight = this.getDrone().getWeight();
+		float thrust = (float) (weight*gravity/(Math.sin(pitch)*(Math.tan(delta)-Math.tan(pitch))));// zie tekening die ik doorstuur op fb
 		return thrust;
 	}
 	
