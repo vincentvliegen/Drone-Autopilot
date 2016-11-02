@@ -12,7 +12,7 @@ public class PhysicsCalculationsTest {
 
 	@Before
 	public void setUp() {
-		verticalAngleOfView = (float) (2*Math.toDegrees(Math.atan((heightCamera/widthCamera)*Math.tan(Math.toRadians(horizontalAngleOfView/2)))));
+		verticalAngleOfView = (float) (2*Math.toDegrees(Math.atan((((double) heightCamera/ (double) widthCamera)*Math.tan(Math.toRadians(horizontalAngleOfView/2))))));
 		calc = new PhysicsCalculations(drone);
 		gui = new GUI();
 		camera = createCameraForTesting(horizontalAngleOfView, verticalAngleOfView, widthCamera);
@@ -30,59 +30,59 @@ public class PhysicsCalculationsTest {
 	
 	@Test
     public void X1Test() {
-		assertEquals(calc.getX1(cOG1),-74);
-		assertEquals(calc.getX1(cOG2),-70);
-		assertEquals(calc.getX1(cOG3),52);
+		assertEquals(-74,calc.getX1(cOG1));
+		assertEquals(-70,calc.getX1(cOG2));
+		assertEquals(52,calc.getX1(cOG3));
     }
 	
 	@Test
     public void X2Test() {
-		assertEquals(calc.getX2(cOG1),-74);
-		assertEquals(calc.getX2(cOG2),-70);
-		assertEquals(calc.getX2(cOG3),52);
+		assertEquals(-74,calc.getX2(cOG1));
+		assertEquals(-70,calc.getX2(cOG2));
+		assertEquals(52,calc.getX2(cOG3));
     }
 	
 	@Test
     public void YTest() {
-		assertEquals(calc.getY(cOG1),-49);
-		assertEquals(calc.getY(cOG2),30);
-		assertEquals(calc.getY(cOG3),-17);
+		assertEquals(-49,calc.getY(cOG1));
+		assertEquals(30,calc.getY(cOG2));
+		assertEquals(-17,calc.getY(cOG3));
     }
 	
-	//TODO fix
+	//TODO nauwkeurighed: geeft 99 ipv 100
 	@Test
 	public void cameraHeightTest(){
-		assertEquals(calc.getCameraHeight(),100);
+		assertEquals(100,calc.getCameraHeight()/*,1*/);
 	}
 	
 	@Test
 	public void focalDistanceTest(){
-		assertEquals(calc.getfocalDistance(), 75,0.0003);
+		assertEquals(75,calc.getfocalDistance(),0.0003);
 	}
 	
 	@Test
 	public void depthTest(){
-		assertEquals(calc.getDepth(depthXY1, depthXY2),0.0/*TODO bereken depth*/, 0.0003 /*TODO betere delta?*/);
+		assertEquals(0.0/*TODO bereken depth*/,calc.getDepth(depthXY1, depthXY2), 0.0003 /*TODO betere delta?*/);
 	}
 	
 	@Test
 	public void horAngleDevTest(){
-		assertEquals(calc.horizontalAngleDeviation(depthXY1, depthXY2), 0.0,0.0003);/*TODO idem*/
+		assertEquals(0.0,calc.horizontalAngleDeviation(depthXY1, depthXY2),0.0003);/*TODO idem*/
 	}
 	
 	@Test
 	public void verAngleDevTest(){
-		assertEquals(calc.verticalAngleDeviation(depthXY1),0.0,0.0003);/*TODO idem*/
+		assertEquals(0.0,calc.verticalAngleDeviation(depthXY1),0.0003);/*TODO idem*/
 	}
 	
 	@Test
 	public void visPitchTest(){
-		assertEquals(calc.getVisiblePitch(),0.0,0.0003);/*TODO idem*/
+		assertEquals(0.0,calc.getVisiblePitch(),0.0003);/*TODO idem*/
 	}
 	
 	@Test
 	public void ThrustTest(){
-		assertEquals(calc.getThrust(depthXY1),0.0,0.0003);/*TODO idem*/
+		assertEquals(0.0,calc.getThrust(depthXY1),0.0003);/*TODO idem*/
 	}
 	
 	

@@ -25,7 +25,6 @@ public class PhysicsCalculations {
 	 * The amount of pixels in height of the camera view.
 	 */
 	public int getCameraHeight(){
-		float verang = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
 		int height =  (int) (Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getfocalDistance()*2);
 		return height;
 	}
