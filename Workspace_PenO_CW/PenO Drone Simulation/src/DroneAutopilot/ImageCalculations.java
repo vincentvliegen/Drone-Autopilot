@@ -91,7 +91,7 @@ public class ImageCalculations {
 		float b = (float) (Math.pow(y3,2) + Math.pow(x3,2) - Math.pow(y1,2) - Math.pow(x1,2) + (Math.pow(y2,2) + Math.pow(x2,2) - Math.pow(y1,2) - Math.pow(x1,2))/(2*(x1-x2)));
 		Y =  (-b/a);
 		X =  (float) ((2*(y1-y2)*Y + Math.pow(y2,2) + Math.pow(x2,2) - Math.pow(y1,2) - Math.pow(x1,2))/(2*(x2-x1)));
-		return new int[] {(int)X,(int)Y};
+		return new int[] {(int)Math.round(X),(int)Math.round(Y)};
 	}
 	
 	//calculate 3 most representative points on circumference (3 furthest neighbours)

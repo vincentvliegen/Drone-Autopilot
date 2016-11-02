@@ -16,7 +16,7 @@ public class PhysicsCalculationsTest {
 		calc = new PhysicsCalculations(drone);
 		gui = new GUI();
 		camera = createCameraForTesting(horizontalAngleOfView, verticalAngleOfView, widthCamera);
-		drone = createDroneForTesting(droneWeight, droneGravity, cameraSeparation, dronePitch, camera, camera);
+		drone = createDroneForTesting(droneWeight, droneGravity, dronePitch, cameraSeparation, camera, camera);
 		calc.setDrone(drone);
 		calc.setGUI(gui);
 		
@@ -24,8 +24,8 @@ public class PhysicsCalculationsTest {
 		cOG2 = new int[] {5,80};
 		cOG3 = new int[] {127,33};
 		
-		depthXY1 = new int[] {120,120};
-		depthXY2 = new int[] {45,120};
+		depthXY1 = new int[] {120,80};
+		depthXY2 = new int[] {45,80};
 	}
 	
 	@Test
@@ -51,40 +51,47 @@ public class PhysicsCalculationsTest {
 	
 	@Test
 	public void cameraHeightTest(){
-		assertEquals(100,calc.getCameraHeight()/*,1*/);
+		assertEquals(100,calc.getCameraHeight());
 	}
 	
 	@Test
 	public void focalDistanceTest(){
-		assertEquals(75,calc.getfocalDistance(),0.0003);
+		assertEquals(75,calc.getfocalDistance(),0.00001);
 	}
 	
 	@Test
 	public void depthTest(){
-		assertEquals(0.0/*TODO bereken depth*/,calc.getDepth(depthXY1, depthXY2), 0.0003 /*TODO betere delta?*/);
+		assertEquals(20,calc.getDepth(depthXY1, depthXY2), 0.00001);
 	}
 	
 	@Test
 	public void horAngleDevTest(){
-		assertEquals(0.0,calc.horizontalAngleDeviation(depthXY1, depthXY2),0.0003);/*TODO idem*/
+		assertEquals(Math.toDegrees(Math.atan(0.1)),calc.horizontalAngleDeviation(depthXY1, depthXY2),0.00001);
 	}
 	
 	@Test
 	public void verAngleDevTest(){
-		assertEquals(0.0,calc.verticalAngleDeviation(depthXY1),0.0003);/*TODO idem*/
+		assertEquals(Math.toDegrees(Math.atan(0.4)),calc.verticalAngleDeviation(depthXY1),0.00001);
 	}
 	
 	@Test
 	public void visPitchTest(){
-		assertEquals(0.0,calc.getVisiblePitch(),0.0003);/*TODO idem*/
+		assertEquals(verticalAngleOfView/2*PhysicsCalculations.getVisibilityFactor(),calc.getVisiblePitch(),0.00001);
 	}
 	
 	@Test
-	public void ThrustTest(){
-		assertEquals(0.0,calc.getThrust(depthXY1),0.0003);/*TODO idem*/
+	public void thrustTest(){
+		assertEquals(0.0,calc.getThrust(depthXY1),0.00001);
 	}
 	
+	@Test
+	public void distanceTest(){
+		double cosa = Math.cos(Math.atan(0.1));
+		double cosb = Math.cos(Math.atan(0.4));
+		assertEquals(20.0/cosa/cosb,calc.getDistance(depthXY1, depthXY2),0.00001);
+	}
 	
+	//TODO tests aanvullen met extreme voorbeelden
 	
 	
 	public Camera createCameraForTesting(float horAngle, float verAngle, int width){
@@ -150,58 +157,39 @@ public class PhysicsCalculationsTest {
 			
 			//ongebruikt
 			@Override
-			public void setPitchRate(float value) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void setPitchRate(float value) {}
 			@Override
-			public void setRollRate(float value) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void setRollRate(float value) {}
 			@Override
-			public void setYawRate(float value) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void setYawRate(float value) {}
 			@Override
-			public void setThrust(float value) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void setThrust(float value) {}
 			@Override
 			public float getDrag() {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 			@Override
 			public float getCurrentTime() {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 			@Override
 			public float getMaxThrust() {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 			@Override
 			public float getMaxPitchRate() {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 			@Override
 			public float getMaxRollRate() {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 			@Override
 			public float getMaxYawRate() {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 			@Override
 			public float getRoll() {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 

@@ -9,6 +9,9 @@ public class PhysicsCalculations {
 		this.setDrone(drone);
 	}
 	
+	public static final double getVisibilityFactor(){
+		return PhysicsCalculations.visibilityFactor;
+	}
 	private static final double visibilityFactor = 0.8;
 
 	public int getX1(int[] centerofGravityL){
@@ -39,27 +42,25 @@ public class PhysicsCalculations {
 		return focal;
 	}
 	
-	//depth is niet de afstand tot de bol, hiervoor moeten de horizontale en verticale hoek bij inbegrepen worden, dus is het niet beter om de gui up te daten in een andere functie?
 	public float getDepth(int[] centerOfGravityL, int[]centerOfGravityR){
 		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
 		depth = Math.abs(depth);
-		this.getGUI().update((int)depth);
 		return depth;
 	}
 		
-	public float horizontalAngleDeviation(int[] centerOfGravityL, int[] centerofGravityR){
-		float x = (this.getDepth(centerOfGravityL, centerofGravityR) * Math.abs(this.getX1(centerOfGravityL))) / this.getfocalDistance();
-		float tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerofGravityR);
-		return (float) Math.atan(tanAlfa);
+	public float horizontalAngleDeviation(int[] centerOfGravityL, int[] centerOfGravityR){
+		float x = (this.getDepth(centerOfGravityL, centerOfGravityR) * Math.abs(this.getX1(centerOfGravityL))) / this.getfocalDistance();
+		float tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerOfGravityR);
+		return (float) Math.toDegrees(Math.atan(tanAlfa));
 	}
 	
-	public float verticalAngleDeviation(int[] pointOfGravity){
+	public float verticalAngleDeviation(int[] centerOfGravity){
 		//System.out.println(this.getY(pointOfGravity));
-		return (float) Math.atan(this.getY(pointOfGravity) / this.getfocalDistance());
+		return (float) Math.toDegrees(Math.atan(this.getY(centerOfGravity) / this.getfocalDistance()));
 	}
 	
 	public float getVisiblePitch(){
-		return (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*visibilityFactor);		
+		return (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getVisibilityFactor());		
 	}
 	
 	public float getThrust(int[] cog) {
@@ -71,7 +72,7 @@ public class PhysicsCalculations {
 			//System.out.println("thrust boven" + thrust);
 		}
 		else{
-			//System.out.println("beta kleiner");
+			//System.out.println("beta kleiner of gelijk aan 0");
 			beta = Math.abs(beta);
 			thrust = (float) ((-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta + this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta))));
 			//System.out.println("thrust onder" + thrust);
@@ -79,8 +80,12 @@ public class PhysicsCalculations {
 		return thrust;
 	}
 	
-	
-	
+	public float getDistance(int[] centerOfGravityL, int[]centerOfGravityR){
+		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
+		float distance = /* depth/(cos(hor)*cos(ver)) */(float) (depth/(Math.cos(Math.toRadians(horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(verticalAngleDeviation(centerOfGravityL)))));
+		this.getGUI().update((int)distance);//TODO verplaatsen naar MoveToTarget, GUI uit PhysicsCalculations halen
+		return distance;
+	}
 	
 	public void setDrone(Drone drone){
 		this.drone = drone;
