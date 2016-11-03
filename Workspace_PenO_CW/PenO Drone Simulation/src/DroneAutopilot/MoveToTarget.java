@@ -19,6 +19,21 @@ public class MoveToTarget{
 	private static final float pitchUnder = -3;
 	private static final float pitchUpper = 3;
 	
+	public void execute(){
+	ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
+	ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
+	if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
+			&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
+		System.out.println("bereikt");
+		this.hover();
+	}else{
+		if (this.checkRoll()){
+			this.checkcasespixelsfound(leftCameraList, rightCameraList);
+		}else{
+			System.out.println("correct roll");
+			this.correctRoll();
+		}
+		}}
 	private void setSlowYaw() {
 		 this.slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
 	}

@@ -66,29 +66,29 @@ public class PhysicsCalculations {
 	public float getThrust(int[] cog) {//TODO kies welke versie
 //oorspronkelijke code
 
-//		float thrust;
-//		float beta = this.verticalAngleDeviation(cog);
-//		if (beta >= 0){
-//			//System.out.println("beta groter dan of gelijk aan 0");
-//			thrust = (float) (-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
-//			//System.out.println("thrust boven" + thrust);
-//		}
-//		else{
-//			//System.out.println("beta kleiner dan 0");
-//			beta = Math.abs(beta);
-//			thrust = (float) (-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta + this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
-//			//System.out.println("thrust onder" + thrust);
-//		}
-//		return thrust;
+		float thrust;
+		float beta = this.verticalAngleDeviation(cog);
+		if (beta >= 0){
+			//System.out.println("beta groter dan of gelijk aan 0");
+			thrust = (float) (-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
+			//System.out.println("thrust boven" + thrust);
+		}
+		else{
+			//System.out.println("beta kleiner dan 0");
+			beta = Math.abs(beta);
+			thrust = (float) (-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta + this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
+			//System.out.println("thrust onder" + thrust);
+		}
+		return thrust;
 		
 //versie van vincent		
-		float beta = (float) Math.toRadians(this.verticalAngleDeviation(cog));
-		float pitch = (float) Math.toRadians(this.getDrone().getPitch());//opgelet: positieve pitch is naar beneden gericht
-		float delta = beta-pitch;//de hoek tussen het horizontaal vlak en de camera en de bol (= beta als de drone horizontaal zou hangen)
-		float gravity = this.getDrone().getGravity();
-		float weight = this.getDrone().getWeight();
-		float thrust = (float) (weight*gravity/(Math.sin(pitch)*Math.tan(delta)-Math.cos(pitch)));// zie tekening die ik doorstuur op fb
-		return thrust;
+//		float beta = (float) Math.toRadians(this.verticalAngleDeviation(cog));
+//		float pitch = (float) Math.toRadians(this.getDrone().getPitch());//opgelet: positieve pitch is naar beneden gericht
+//		float delta = beta-pitch;//de hoek tussen het horizontaal vlak en de camera en de bol (= beta als de drone horizontaal zou hangen)
+//		float gravity = this.getDrone().getGravity();
+//		float weight = this.getDrone().getWeight();
+//		float thrust = (float) (weight*gravity/(Math.sin(pitch)*Math.tan(delta)-Math.cos(pitch)));// zie tekening die ik doorstuur op fb
+//		return thrust;
 	}
 	
 	public float getDistance(int[] centerOfGravityL, int[]centerOfGravityR){

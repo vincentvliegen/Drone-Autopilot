@@ -9,7 +9,6 @@ public class DroneAutopilot implements Autopilot{
 	
 	public DroneAutopilot(Drone drone){
 		this.setDrone(drone);
-		this.imageCalculations = new ImageCalculations();
 		this.moveToTarget = new MoveToTarget(drone);
 	}
 
@@ -21,20 +20,7 @@ public class DroneAutopilot implements Autopilot{
 		System.out.println("pitch" + this.getDrone().getPitch());
 		System.out.println("roll" + this.getDrone().getRoll());
 		if (this.getMoveToTarget().getPhysicsCalculations().getGUI().redOrbEnabled) {
-			ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
-			ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
-			if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
-					&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
-				System.out.println("bereikt");
-				this.getMoveToTarget().hover();
-			}else{
-				if (this.getMoveToTarget().checkRoll()){
-					this.getMoveToTarget().checkcasespixelsfound(leftCameraList, rightCameraList);
-				}else{
-					System.out.println("correct roll");
-					this.getMoveToTarget().correctRoll();
-				}
-				}
+			this.getMoveToTarget().execute();
 			}else{
 				this.getMoveToTarget().hover();
 			}
@@ -48,12 +34,6 @@ public class DroneAutopilot implements Autopilot{
 		return this.drone;
 	}
 	private Drone drone;
-
-	
-	public final ImageCalculations getImageCalculations(){
-		return this.imageCalculations;
-	}
-	private final ImageCalculations imageCalculations;
 	
 	public final MoveToTarget getMoveToTarget(){
 		return this.moveToTarget;
