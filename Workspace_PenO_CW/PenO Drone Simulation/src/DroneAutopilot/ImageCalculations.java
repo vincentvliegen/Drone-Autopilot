@@ -19,10 +19,10 @@ public class ImageCalculations {
 	//zwaartepunt van groepje pixels bepalen
 	//als er geen rode pixels zijn, exception
 	// COG = center of gravity
-	public int[] getCOG (ArrayList<int[]> listOfPixelCoordinates) throws EmptyPositionListException{
-		int sumX = 0;
-		int sumY = 0;
-		int[] cOG = {0,0};
+	public float[] getCOG (ArrayList<int[]> listOfPixelCoordinates) throws EmptyPositionListException{
+		float sumX = 0;
+		float sumY = 0;
+		float[] cOG = {0,0};
 		if(listOfPixelCoordinates.size() == 0){
 			throw new EmptyPositionListException(listOfPixelCoordinates);
 		}

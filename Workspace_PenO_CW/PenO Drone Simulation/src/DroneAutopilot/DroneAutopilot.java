@@ -19,7 +19,7 @@ public class DroneAutopilot implements Autopilot{
 	public void timeHasPassed() {
 		System.out.println("pitch" + this.getDrone().getPitch());
 		System.out.println("roll" + this.getDrone().getRoll());
-		if (this.getMoveToTarget().getPhysicsCalculations().getGUI().redOrbEnabled) {
+		if (this.getMoveToTarget().getGUI().redOrbEnabled) {
 			this.getMoveToTarget().execute();
 			}else{
 				this.getMoveToTarget().hover();

@@ -1,7 +1,6 @@
 package DroneAutopilot.Tests;
 
 import DroneAutopilot.PhysicsCalculations;
-import DroneAutopilot.GUI.GUI;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 import static org.junit.Assert.*;
@@ -14,11 +13,9 @@ public class PhysicsCalculationsTest {
 	public void setUp() {
 		verticalAngleOfView = (float) (2*Math.toDegrees(Math.atan((((double) heightCamera/ (double) widthCamera)*Math.tan(Math.toRadians(horizontalAngleOfView/2))))));
 		calc = new PhysicsCalculations(drone);
-		gui = new GUI();
 		camera = createCameraForTesting(horizontalAngleOfView, verticalAngleOfView, widthCamera);
 		drone = createDroneForTesting(droneWeight, droneGravity, dronePitch, cameraSeparation, camera, camera);
 		calc.setDrone(drone);
-		calc.setGUI(gui);
 		
 		cOG1 = new int[] {1,1};
 		cOG2 = new int[] {5,80};
@@ -206,12 +203,11 @@ public class PhysicsCalculationsTest {
 	private static final float cameraSeparation = 20;
 	private static final float droneGravity = -10;
 	private static final float droneWeight = 1;
-	private static final float dronePitch = 0;
+	private static final float dronePitch = 15;
 	
 	private Camera camera;
 	private PhysicsCalculations calc;
 	private Drone drone;
-	private GUI gui;
 	
 	private int[] cOG1;
 	private int[] cOG2;
