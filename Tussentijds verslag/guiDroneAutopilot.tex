@@ -1,1 +1,7 @@
-\noindent {\em Auteurs: }\\
+\noindent {\em Auteur: Matthias Van der Heyden}\\
+De GUI van de drone autopilot heeft tot nu toe twee functies: de gebruiker de mogelijk geven een opdracht voor de drone te selecteren en de voortgang van de voltooiing van deze opdracht weergeven.
+Voor de layout van de GUI wordt Java's Abstract Window Toolkit (java.awt) gebruikt.\\
+
+Voor het selecteren van een opdracht is er een drop-down menu voorzien dat gebruikt maakt van JComboBox uit de Swing library van Java. Wanneer de gebruiker een optie aanduidt, verandert de boolean van deze optie naar true. Dat zorgt er voor dat in de timeHasPassed functie de commando's voor deze opdracht uitgevoerd worden. Op dit moment is de enige optie in het menu de opdracht om naar de rode bol te vliegen maar een uitbreiding van mogelijke opdrachten is relatief eenvoudig.\\
+
+Een JProgressBar uit de Swing library van Java geeft in de GUI de voltooiing van de geselecteerde opdracht weer. Bij elke berekening van de afstand tot het doel wordt deze ge\"{u}pdatet. Is de afstand groter dan de laatste grootste afstand tot het doel dan stelt de progress bar deze nieuwe afstand in als het nieuwe maximum en is de voltooiingsgraad weer 0. Is de afstand kleiner dan is de nieuwe voltooiingsgraad gelijk aan 100 procent vermindert met de verhouding van de grootste afstand en de huidige afstand.  
