@@ -38,7 +38,8 @@ public class SimulationDrone implements Drone {
 	private float yawRate = 0;
 	public DroneCamera leftCamera;
 	public DroneCamera rightCamera;
-	List<Double> rTrans = new ArrayList<>();
+	List<Double> rotateMatrix = new ArrayList<>();
+	List<Double> rotateMatrixTrans = new ArrayList<>();
 	private DroneAutopilot autopilot;
 
 	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, double[] translate, World world) {
@@ -55,22 +56,47 @@ public class SimulationDrone implements Drone {
 		DroneAutopilotFactory ap = new DroneAutopilotFactory();
 		this.autopilot = ap.create(this);
 	}
-
-	private void createRTrans() {
-		rTrans.clear();
-		rTrans.add(Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw))
-				+ Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw)));
-		rTrans.add(Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(pitch)));
-		rTrans.add(Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll))
-				- Math.cos(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw)));
-		rTrans.add(Math.cos(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw))
-				- Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)));
-		rTrans.add(Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll)));
-		rTrans.add(Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw))
-				+ Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(roll)));
-		rTrans.add(Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw)));
-		rTrans.add(-Math.sin(Math.toRadians(roll)));
-		rTrans.add(Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw)));
+	
+	public List<Double> getRotateMatrix(){
+		return rotateMatrix;
+	}
+		
+	public void createRotateMatrix(){
+		rotateMatrix.clear();
+		rotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(roll)));
+		rotateMatrix.add(Math.sin(Math.toRadians(roll)));
+		rotateMatrix.add(- Math.sin(Math.toRadians(yaw))*Math.cos(Math.toRadians(roll)));
+		
+		rotateMatrix.add(- Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))*Math.cos(Math.toRadians(pitch))
+				+ Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
+		rotateMatrix.add(Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(pitch)));
+		rotateMatrix.add(Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))*Math.cos(Math.toRadians(pitch))
+				+ Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
+		
+		rotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))
+				+ Math.sin(Math.toRadians(yaw))*Math.cos(Math.toRadians(pitch)));
+		rotateMatrix.add(- Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch)));
+		rotateMatrix.add(- Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))
+				+ Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(pitch)));
+	}
+	
+	private void createRotateTrans() {
+		rotateMatrixTrans.clear();
+		rotateMatrixTrans.add(Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(roll)));
+		rotateMatrixTrans.add(Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)) 
+				- Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll)));
+		rotateMatrixTrans.add(Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))
+				+ Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
+				
+		rotateMatrixTrans.add(Math.sin(Math.toRadians(roll)));
+		rotateMatrixTrans.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
+		rotateMatrixTrans.add(- Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch)));
+				
+		rotateMatrixTrans.add(- Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rotateMatrixTrans.add(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))
+				+ Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rotateMatrixTrans.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))
+				- Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
 	}
 
 	// TODO afmetingen (voor collision detection)
@@ -82,14 +108,9 @@ public class SimulationDrone implements Drone {
 	public void drawDrone() {
 		
 		gl.glPushMatrix(); // store current transform, so we can undo the rotation
-		System.out.println(getTranslate()[0] + "  " + getTranslate()[1] + "  " + getTranslate()[2]);
-		translateDrone(translate);
-		System.out.println("Roll " + getRoll());
-		System.out.println("Pitch " + getPitch());
-		System.out.println("Yaw " + getYaw());
-		gl.glRotated(getRoll(), 0, 0, 1);
-		gl.glRotated(getPitch(), 1, 0, 0);
-		gl.glRotated(getYaw(), 0, 1, 0);
+		//System.out.println(getTranslate()[0] + "  " + getTranslate()[1] + "  " + getTranslate()[2]);
+		translateDrone(getTranslate());
+		rotateDrone(getYaw(), getGlobalRoll(), getGlobalPitch());
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glBegin(gl.GL_QUADS);
 		
@@ -136,8 +157,14 @@ public class SimulationDrone implements Drone {
 	}
 
 	public void translateDrone(double[] translate) {
-		gl.glTranslated(translate[0], translate[1], translate[2]);
+		gl.glTranslated(-translate[0], -translate[1], -translate[2]);
 		this.translate = translate;
+	}
+	
+	public void rotateDrone(float yaw, float roll, float pitch){
+		gl.glRotated(yaw, 0, 1, 0);
+		gl.glRotated(roll, 0, 0, 1);
+		gl.glRotated(pitch, 1, 0, 0);
 	}
 
 	public double[] getTranslate() {
@@ -277,6 +304,14 @@ public class SimulationDrone implements Drone {
 	public Movement getMovement() {
 		return this.movement;
 	}
+	
+	public float getGlobalPitch(){
+		return this.pitch;
+	}
+	
+	public float getGlobalRoll(){
+		return this.roll;
+	}
 
 	private void generateDroneCameras() {
 
@@ -306,16 +341,16 @@ public class SimulationDrone implements Drone {
 		this.yaw += this.yawRate * timePassed;
 
 		double rollPass = this.rollRate * timePassed;
-		createRTrans();
-		this.roll += rollPass * rTrans.get(0);
-		this.yaw += rollPass * rTrans.get(3);
-		this.pitch += rollPass * rTrans.get(6);
+		createRotateTrans();
+		this.roll += rollPass * rotateMatrixTrans.get(2);
+		this.yaw += rollPass * rotateMatrixTrans.get(5);
+		this.pitch += rollPass * rotateMatrixTrans.get(8);
 
 		double pitchPass = this.pitchRate * timePassed;
-		createRTrans();
-		this.roll += pitchPass * rTrans.get(2);
-		this.yaw += pitchPass * rTrans.get(5);
-		this.pitch += pitchPass * rTrans.get(8);
+		createRotateTrans();
+		this.roll += pitchPass * rotateMatrixTrans.get(0);
+		this.yaw += pitchPass * rotateMatrixTrans.get(3);
+		this.pitch += pitchPass * rotateMatrixTrans.get(6);
 		this.autopilot.timeHasPassed();
 	}
 }

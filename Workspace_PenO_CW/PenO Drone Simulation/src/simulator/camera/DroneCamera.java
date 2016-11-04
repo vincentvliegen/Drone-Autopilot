@@ -86,7 +86,6 @@ public class DroneCamera extends GeneralCamera implements Camera{
 		return temp;
 	}
 
-
 	public void setCamera(GL2 gl, GLU glu) {
 		int height = drawable.getSurfaceHeight();
 		// Change to projection matrix.
@@ -96,13 +95,26 @@ public class DroneCamera extends GeneralCamera implements Camera{
 		// Perspective.
 		float widthHeightRatio = (float) getWidth() / (float) height;
 		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
-		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), 0, 1, 0);
+		//System.out.println("X " + getEyeX());
+		//System.out.println("LookAtX " + getLookAtX());
+		
+		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(), getUpZ());
 
 		// Change back to model view matrix.
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
-
-
-
+	
+	public void updateDroneCamera(){
+		drone.createRotateMatrix();
+		setEyeX((float) (getEyeX() * drone.getRotateMatrix().get(0)  + getEyeY() * drone.getRotateMatrix().get(1) + getEyeZ()* drone.getRotateMatrix().get(2)));
+		setEyeY((float) (getEyeX() * drone.getRotateMatrix().get(3)  + getEyeY() * drone.getRotateMatrix().get(4) + getEyeZ()* drone.getRotateMatrix().get(5)));
+		setEyeZ((float) (getEyeX() * drone.getRotateMatrix().get(6)  + getEyeY() * drone.getRotateMatrix().get(7) + getEyeZ()* drone.getRotateMatrix().get(8)));
+		setLookAtX((float) (getLookAtX() * drone.getRotateMatrix().get(0)  + getLookAtY() * drone.getRotateMatrix().get(1) + getLookAtZ()* drone.getRotateMatrix().get(2)));
+		setLookAtY((float) (getLookAtX() * drone.getRotateMatrix().get(3)  + getLookAtY() * drone.getRotateMatrix().get(4) + getLookAtZ()* drone.getRotateMatrix().get(5)));
+		setLookAtZ((float) (getLookAtX() * drone.getRotateMatrix().get(6)  + getLookAtY() * drone.getRotateMatrix().get(7) + getLookAtZ()* drone.getRotateMatrix().get(8)));
+		setUpX((float) (drone.getRotateMatrix().get(1)*1));
+		setUpY((float) (drone.getRotateMatrix().get(4)*1));
+		setUpZ((float) (drone.getRotateMatrix().get(7)*1));
+	}
 }

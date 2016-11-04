@@ -1,3 +1,4 @@
+
 package simulator.world;
 
 import com.jogamp.opengl.GL;
@@ -83,10 +84,6 @@ public class World11 extends World {
 		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
-
-
-
-
 	}	
 
 
@@ -94,14 +91,15 @@ public class World11 extends World {
 
 		GL2 gl = getGL().getGL2();
 
-
-
 		// translate camera.
 		if(this.getCurrentCamera() instanceof DroneCamera){
 			gl.glTranslated(drone1.getTranslate()[0], drone1.getTranslate()[1], drone1.getTranslate()[2]);
-			gl.glRotated(drone1.getRoll(), 0, 0, 1);
-			gl.glRotated(drone1.getPitch(), 1, 0, 0);
+			// Volgorde van belang!
 			gl.glRotated(drone1.getYaw(), 0, 1, 0);
+			gl.glRotated(drone1.getGlobalRoll(), 0, 0, 1);
+			gl.glRotated(drone1.getGlobalPitch(), 1, 0, 0);
+			getDrones().get(0).getLeftDroneCamera().updateDroneCamera();
+			getDrones().get(0).getRightDroneCamera().updateDroneCamera();	
 		}
 		else{
 			movement.update();
