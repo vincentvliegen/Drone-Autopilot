@@ -1,14 +1,15 @@
 \noindent {\em Auteurs: Laura Vranken }\\
-Tijdens het programmeren, is het belangrijk om een duidelijke structuur voor ogen te houden. Dit leidt tot makkelijke leesbaarheid voor buitenstaanders en bewaart overzichtelijkheid bij lange code. Ook werd er geprogrammeerd met het doel om later makkelijker delen te kunnen hergebruiken, mits enkele aanpassingen. Om deze tekst beter te kunnen volgen, staat (in bijlage: Klassendiagram Autopilot) een afbeelding die dit visueler maakt.
+Tijdens het programmeren, is het belangrijk om een duidelijke structuur voor ogen te houden. Dit leidt immers tot goede leesbaarheid voor buitenstaanders en bewaart overzichtelijkheid bij lange code. Ook werd er geprogrammeerd met het doel om later makkelijker delen te kunnen hergebruiken, mits enkele aanpassingen. Om deze tekst beter te kunnen volgen, staat (in bijlage: Klassendiagram Autopilot) een afbeelding die dit visueler maakt.
 \\
 
-Het deel van de Autopilot begint bij het cre\"eren van een Autopilot in de DroneAutopilotFactory class, geimplementeerd met de interface AutopilotFactory. Hierin wordt een Autopilot aangemaakt en worden de beginwaarden voor yaw, roll, pitch en thrust direct ingesteld.
+Het deel van de Autopilot begint bij het cre\"eren van een Autopilot in de DroneAutopilotFactory class, geimplementeerd met de interface AutopilotFactory. Hierin wordt een Autopilot aangemaakt en worden de beginwaarden voor yaw, roll, pitch en thrust direct ingesteld. De GUI wordt hier ook aangemaakt.
 \\
 
-De Autopilot wordt aangemaakt door middel van een nieuw object DroneAutopilot, geimplementeerd met de interface Autopilot, aan te roepen. De DroneAutopilot class bestaat uit één functie, namelijk timeHasPassed die herhaardelijk door de simulator opgeroepen wordt. Vanuit deze methode worden de classes ImageCalculations en MoveToTarget aangeroepen. 
+De Autopilot wordt aangemaakt door middel van een nieuw object DroneAutopilot, geimplementeerd met de interface Autopilot, aan te roepen. De DroneAutopilot class bestaat uit één functie, namelijk timeHasPassed die herhaardelijk door de simulator opgeroepen wordt. Vanuit deze methode wordt de class MoveToTarget aangeroepen met de opdracht naar de rode bol te vliegen.  
 \\
 
-De class ImageCalculations is verantwoordelijk voor alles omtrent de beelden die de Autopilot binnen krijgt, m.a.w. de rode pixels zoeken en het zwaartepunt bepalen. De class MoveToTarget bepaalt anderzijds de bewegingen van de Drone en zorgt ervoor dat de rates doorgegeven worden aan de simulator. MoveToTarget steunt dus zowel op de informatie van ImageCalculations als van PhysicsCalculations om zijn beweging te bepalen. 
+De class MoveToTarget bepaalt de bewegingen en aansturing van de Drone en zorgt ervoor dat de rates doorgegeven worden aan de simulator. MoveToTarget steunt zowel op de informatie van de class ImageCalculations als van PhysicsCalculations om zijn beweging te bepalen. Bovendien wordt hierin ook telkens de GUI ge\"updatet wanneer een nieuwe waarde voor de diepte bepaald is.
 \\
 
-In de class PhysicsCalculations, worden alle fysische berekening van hoeken en afstanden uitgevoerd. Bij het berekenen van de diepte wordt ook telkens de GUI ge\"updatet.
+ImageCalculations is verantwoordelijk voor alles omtrent de beelden die de Autopilot binnen krijgt, m.a.w. de rode pixels zoeken en het zwaartepunt bepalen.
+In de class PhysicsCalculations, worden tenslotte alle fysische berekening van hoeken en afstanden uitgevoerd.

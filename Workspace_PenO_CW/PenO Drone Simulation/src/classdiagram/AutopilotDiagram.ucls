@@ -13,8 +13,8 @@
   </class>  
   <class id="2" language="java" name="DroneAutopilot.DroneAutopilot" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/DroneAutopilot/DroneAutopilot.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="677" y="88"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    <position height="165" width="209" x="571" y="11"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
@@ -22,7 +22,7 @@
   </class>  
   <class id="3" language="java" name="DroneAutopilot.MoveToTarget" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/DroneAutopilot/MoveToTarget.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="667" y="382"/>    
+    <position height="-1" width="-1" x="671" y="426"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
@@ -31,7 +31,7 @@
   </class>  
   <class id="4" language="java" name="DroneAutopilot.ImageCalculations" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/DroneAutopilot/ImageCalculations.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="830" y="737"/>    
+    <position height="-1" width="-1" x="890" y="830"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
@@ -40,7 +40,7 @@
   </class>  
   <class id="5" language="java" name="DroneAutopilot.PhysicsCalculations" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/DroneAutopilot/PhysicsCalculations.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="452" y="818"/>    
+    <position height="-1" width="-1" x="503" y="906"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
@@ -49,7 +49,7 @@
   </class>  
   <interface id="6" language="java" name="p_en_o_cw_2016.Autopilot" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/p_en_o_cw_2016/Autopilot.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="945" y="85"/>    
+    <position height="-1" width="-1" x="945" y="94"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -67,48 +67,52 @@
   </interface>  
   <class id="8" language="java" name="DroneAutopilot.GUI.GUI" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/DroneAutopilot/GUI/GUI.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1003" y="375"/>    
+    <position height="-1" width="-1" x="1007" y="424"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <realization id="9">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="7"/>  
-  </realization>  
-  <realization id="10">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="6"/>  
-  </realization>  
-  <association id="11">    
+  <association id="9">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="12" name="gui"/>      
-      <multiplicity id="13" minimum="0" maximum="1"/>    
+      <attribute id="10" name="physicsCalculations">        
+        <position height="0" width="0" x="299" y="158"/>      
+      </attribute>      
+      <multiplicity id="11" minimum="0" maximum="1">        
+        <position height="0" width="0" x="299" y="158"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="14">    
+  <association id="12">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="15" name="imageCalculations">        
-        <position height="0" width="0" x="-26" y="359"/>      
+      <attribute id="13" name="imageCalculations">        
+        <position height="0" width="0" x="34" y="452"/>      
       </attribute>      
-      <multiplicity id="16" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-26" y="359"/>      
+      <multiplicity id="14" minimum="0" maximum="1">        
+        <position height="0" width="0" x="34" y="452"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <realization id="15">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <realization id="16">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
   <association id="17">    
     <end type="SOURCE" refId="2" navigable="false">      
       <attribute id="18" name="moveToTarget">        
-        <position height="0" width="0" x="453" y="2"/>      
+        <position height="0" width="0" x="457" y="46"/>      
       </attribute>      
       <multiplicity id="19" minimum="0" maximum="1">        
-        <position height="0" width="0" x="453" y="2"/>      
+        <position height="0" width="0" x="457" y="46"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
@@ -116,14 +120,14 @@
   </association>  
   <association id="20">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="21" name="physicsCalculations">        
-        <position height="0" width="0" x="248" y="70"/>      
+      <attribute id="21" name="gui">        
+        <position height="0" width="0" x="4" y="49"/>      
       </attribute>      
       <multiplicity id="22" minimum="0" maximum="1">        
-        <position height="0" width="0" x="248" y="70"/>      
+        <position height="0" width="0" x="4" y="49"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

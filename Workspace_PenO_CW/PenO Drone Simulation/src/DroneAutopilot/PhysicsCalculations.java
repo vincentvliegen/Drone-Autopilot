@@ -8,15 +8,15 @@ public class PhysicsCalculations {
 		this.setDrone(drone);
 	}
 	
-	public static final double getVisibilityFactor(){
+	public static final float getVisibilityFactor(){
 		return PhysicsCalculations.visibilityFactor;
 	}
-	private static final double visibilityFactor = 0.8;
+	private static final float visibilityFactor = 0.8f;
 	
-	public static final double getDecelerationFactor(){
+	public static final float getDecelerationFactor(){
 		return PhysicsCalculations.decelerationFactor;
 	}
-	private static final double decelerationFactor = 0.3;
+	private static final float decelerationFactor = 0.3f;
 	
 	public static float getDecelerationDistance() {
 		return DecelerationDistance;
@@ -73,13 +73,13 @@ public class PhysicsCalculations {
 	}
 	
 	public float getVisiblePitch(float[] centerOfGravityL, float[] centerOfGravityR){
-		if (this.getDepth(centerOfGravityL, centerOfGravityR) <= this.getDecelerationDistance()){
+		if (this.getDepth(centerOfGravityL, centerOfGravityR) <= getDecelerationDistance()){
 			return  (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getDecelerationFactor());
 		}
 		return (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getVisibilityFactor());
 	}
 	
-	public float getThrust(float[] cog) {//TODO kies welke versie
+	public float getThrust(float[] cog) {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
 		//System.out.println("beta groter dan of gelijk aan 0");
