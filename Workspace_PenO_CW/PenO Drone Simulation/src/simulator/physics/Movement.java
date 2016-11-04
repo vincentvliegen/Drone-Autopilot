@@ -19,6 +19,10 @@ public class Movement {
 	public void setCurrentPosition(double[] currentPosition) {
 		this.currentPosition = currentPosition;
 	}
+	
+	public float[] getVelocity(){
+		return velocity;
+	}
 
 	public Movement(SimulationDrone drone) {
 		this.drone = drone;

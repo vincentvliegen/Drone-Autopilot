@@ -110,13 +110,10 @@ public class GUI extends JPanel {
 
 					//Speed: a*t)
 					float currentSpeed;
-					float[] acceleration = world.getDrones().get(0).getPhysics().getAcceleration();
+					float[] velocity = world.getDrones().get(0).getMovement().getVelocity();
 					float time = world.getCurrentTime(); //Insert the time of the drone 
 					//System.out.println(world.getCurrentTime());
-					acceleration[0] *= time;
-					acceleration[1] *= time;
-					acceleration[2] *= time;
-					currentSpeed = (float) Math.sqrt(acceleration[0]*acceleration[0]+acceleration[1]*acceleration[1]+acceleration[2]*acceleration[2]);
+					currentSpeed = (float) Math.sqrt(velocity[0]+velocity[1]+velocity[2]);
 					BigDecimal bigDecimalSpeed = new BigDecimal(currentSpeed);
 					BigDecimal roundOffSpeed = bigDecimalSpeed.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					speed.setText("Speed: " + roundOffSpeed);
@@ -139,7 +136,7 @@ public class GUI extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(world.getDrones().size()>0){
-					double[] currentPosition = world.getDrones().get(0).getTranslate();
+					double[] currentPosition = world.getDrones().get(0).getMovement().getCurrentPosition();
 					//System.out.println(currentPosition);
 					BigDecimal bigDecimalPos1 = new BigDecimal(currentPosition[0]);
 					BigDecimal roundOffPos1 = bigDecimalPos1.setScale(2, BigDecimal.ROUND_HALF_EVEN);
