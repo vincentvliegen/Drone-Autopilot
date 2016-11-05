@@ -41,8 +41,10 @@ public class MoveToTarget{
 	}
 
 	public boolean checkRoll(){
-		if (this.getDrone().getRoll() <= upperBoundary && this.getDrone().getRoll() >= underBoundary)
+		if (this.getDrone().getRoll() <= upperBoundary && this.getDrone().getRoll() >= underBoundary){
+			this.getDrone().setRollRate(0);
 			return true;
+		}
 		return false;
 	}
 
@@ -103,7 +105,7 @@ public class MoveToTarget{
 		if (this.getPhysicsCalculations().getVisiblePitch(cogL,cogR)-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cogL)) >= 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
 			//System.out.println("pitch");
-			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));			
+			//this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));			
 		}
 		else if (this.getDrone().getLeftCamera().getVerticalAngleOfView()/2-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cogL)) <= pitchUpper) {
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
