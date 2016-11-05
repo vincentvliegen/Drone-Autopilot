@@ -98,8 +98,9 @@ public class World11 extends World {
 			gl.glRotated(drone1.getYaw(), 0, 1, 0);
 			gl.glRotated(drone1.getGlobalRoll(), 0, 0, 1);
 			gl.glRotated(drone1.getGlobalPitch(), 1, 0, 0);
-			getDrones().get(0).getLeftDroneCamera().updateDroneCamera();
+			/*getDrones().get(0).getLeftDroneCamera().updateDroneCamera();
 			getDrones().get(0).getRightDroneCamera().updateDroneCamera();	
+			*/
 		}
 		else{
 			movement.update();
