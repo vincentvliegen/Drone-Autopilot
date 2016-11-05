@@ -370,11 +370,6 @@ public class SimulationDrone implements Drone {
 		System.out.println("rollRate " + this.rollRate);
 		*/
 		
-		System.out.println("pitch" + pitch);
-		if (yaw > 0) {
-			System.exit(1);
-		}
-		
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
 		

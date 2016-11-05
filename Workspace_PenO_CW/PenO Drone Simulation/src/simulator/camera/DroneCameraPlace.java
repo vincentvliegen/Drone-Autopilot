@@ -15,4 +15,13 @@ public enum DroneCameraPlace {
 			return 1;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		if (this.equals(LEFT)) {
+			return "Left";
+		} else {
+			return "Right";
+		}
+	}
 }
