@@ -110,12 +110,12 @@
     </display>  
   </class>  
   <association id="13">    
-    <end type="SOURCE" refId="10" navigable="false">      
+    <end type="SOURCE" refId="9" navigable="false">      
       <attribute id="14" name="drone">        
-        <position height="0" width="0" x="547" y="218"/>      
+        <position height="19" width="40" x="1581" y="-641"/>      
       </attribute>      
       <multiplicity id="15" minimum="0" maximum="1">        
-        <position height="0" width="0" x="547" y="218"/>      
+        <position height="17" width="25" x="1587" y="-625"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
@@ -124,215 +124,215 @@
   <association id="16">    
     <end type="SOURCE" refId="7" navigable="false">      
       <attribute id="17" name="rightCamera">        
-        <position height="0" width="0" x="714" y="-100"/>      
+        <position height="19" width="79" x="1005" y="-72"/>      
       </attribute>      
       <multiplicity id="18" minimum="0" maximum="1">        
-        <position height="0" width="0" x="714" y="-100"/>      
+        <position height="17" width="25" x="1049" y="-51"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="19">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="20" name="generalCameras">        
+        <position height="19" width="100" x="409" y="-421"/>      
+      </attribute>      
+      <multiplicity id="21" minimum="0" maximum="2147483647">        
+        <position height="17" width="23" x="443" y="-400"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="22">    
     <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="20" name="world">        
+      <attribute id="23" name="world">        
         <position height="0" width="0" x="-219" y="-954"/>      
       </attribute>      
-      <multiplicity id="21" minimum="0" maximum="1">        
+      <multiplicity id="24" minimum="0" maximum="1">        
         <position height="0" width="0" x="-219" y="-954"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="22">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="23" name="leftCamera">        
-        <position height="0" width="0" x="714" y="-100"/>      
-      </attribute>      
-      <multiplicity id="24" minimum="0" maximum="1">        
-        <position height="0" width="0" x="714" y="-100"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <association id="25">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="26" name="droneCameras">        
-        <position height="0" width="0" x="714" y="-100"/>      
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="26" name="physics">        
+        <position height="0" width="0" x="538" y="293"/>      
       </attribute>      
-      <multiplicity id="27" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="714" y="-100"/>      
+      <multiplicity id="27" minimum="0" maximum="1">        
+        <position height="17" width="25" x="1669" y="-745"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="28">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="29" name="generalCameras">        
-        <position height="0" width="0" x="-60" y="278"/>      
+  <generalization id="28">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="29">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="30" name="drone1">        
+        <position height="19" width="47" x="1153" y="-788"/>      
       </attribute>      
-      <multiplicity id="30" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-60" y="278"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="31">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="32" name="drones">        
-        <position height="0" width="0" x="547" y="218"/>      
-      </attribute>      
-      <multiplicity id="33" minimum="0" maximum="2147483647">        
+      <multiplicity id="31" minimum="0" maximum="1">        
         <position height="0" width="0" x="547" y="218"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="34">    
+  <association id="32">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="33" name="sphere1">        
+        <position height="0" width="0" x="-1589" y="-1095"/>      
+      </attribute>      
+      <multiplicity id="34" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-1589" y="-1095"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="35">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="36" name="drone">        
+        <position height="19" width="40" x="1568" y="-451"/>      
+      </attribute>      
+      <multiplicity id="37" minimum="0" maximum="1">        
+        <position height="17" width="25" x="1578" y="-431"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="39" name="drones">        
+        <position height="0" width="0" x="547" y="218"/>      
+      </attribute>      
+      <multiplicity id="40" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="547" y="218"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="41">    
     <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="35" name="world">        
+      <attribute id="42" name="world">        
         <position height="0" width="0" x="-219" y="-954"/>      
       </attribute>      
-      <multiplicity id="36" minimum="0" maximum="1">        
+      <multiplicity id="43" minimum="0" maximum="1">        
         <position height="0" width="0" x="-219" y="-954"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="12" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="37">    
+  <association id="44">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="45" name="drone">        
+        <position height="19" width="40" x="1177" y="-262"/>      
+      </attribute>      
+      <multiplicity id="46" minimum="0" maximum="1">        
+        <position height="0" width="0" x="547" y="218"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="47">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="38" name="forces">        
+      <attribute id="48" name="forces">        
         <position height="0" width="0" x="578" y="257"/>      
       </attribute>      
-      <multiplicity id="39" minimum="0" maximum="2147483647">        
+      <multiplicity id="49" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="578" y="257"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="8" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="40">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="41" name="physics">        
-        <position height="0" width="0" x="538" y="293"/>      
-      </attribute>      
-      <multiplicity id="42" minimum="0" maximum="1">        
-        <position height="0" width="0" x="538" y="293"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="43">    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="12"/>  
-  </generalization>  
-  <association id="44">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="45" name="sphere1">        
-        <position height="0" width="0" x="-1589" y="-1095"/>      
-      </attribute>      
-      <multiplicity id="46" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-1589" y="-1095"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="47">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="48" name="drone1">        
-        <position height="0" width="0" x="547" y="218"/>      
-      </attribute>      
-      <multiplicity id="49" minimum="0" maximum="1">        
-        <position height="0" width="0" x="547" y="218"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <association id="50">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="51" name="place">        
-        <position height="0" width="0" x="-42" y="-422"/>      
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="51" name="leftCamera">        
+        <position height="19" width="71" x="1137" y="-63"/>      
       </attribute>      
       <multiplicity id="52" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-42" y="-422"/>      
+        <position height="17" width="25" x="1134" y="-43"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="53">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="54" name="place">        
+        <position height="19" width="38" x="697" y="-122"/>      
+      </attribute>      
+      <multiplicity id="55" minimum="0" maximum="1">        
+        <position height="17" width="25" x="730" y="-101"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="53">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="54" name="drone">        
-        <position height="0" width="0" x="547" y="218"/>      
-      </attribute>      
-      <multiplicity id="55" minimum="0" maximum="1">        
-        <position height="0" width="0" x="547" y="218"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="56">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="57" name="movement">        
-        <position height="0" width="0" x="587" y="384"/>      
-      </attribute>      
-      <multiplicity id="58" minimum="0" maximum="1">        
-        <position height="0" width="0" x="587" y="384"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="59">    
+  <generalization id="56">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
+  <association id="57">    
     <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="60" name="currentCamera">        
-        <position height="0" width="0" x="-60" y="278"/>      
+      <attribute id="58" name="currentCamera">        
+        <position height="19" width="93" x="436" y="-338"/>      
       </attribute>      
-      <multiplicity id="61" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-60" y="278"/>      
+      <multiplicity id="59" minimum="0" maximum="1">        
+        <position height="17" width="25" x="456" y="-321"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="62">    
+  <association id="60">    
     <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="63" name="spheres">        
+      <attribute id="61" name="spheres">        
         <position height="0" width="0" x="-1589" y="-1095"/>      
       </attribute>      
-      <multiplicity id="64" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="-1589" y="-1095"/>      
+      <multiplicity id="62" minimum="0" maximum="2147483647">        
+        <position height="17" width="23" x="403" y="-878"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="65">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="66" name="drone">        
-        <position height="0" width="0" x="547" y="218"/>      
+  <association id="63">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="64" name="droneCameras">        
+        <position height="0" width="0" x="714" y="-100"/>      
       </attribute>      
-      <multiplicity id="67" minimum="0" maximum="1">        
-        <position height="0" width="0" x="547" y="218"/>      
+      <multiplicity id="65" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="714" y="-100"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="68">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="3"/>  
-  </generalization>  
+  <association id="66">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="67" name="movement">        
+        <position height="19" width="65" x="1761" y="-453"/>      
+      </attribute>      
+      <multiplicity id="68" minimum="0" maximum="1">        
+        <position height="17" width="25" x="1787" y="-431"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
