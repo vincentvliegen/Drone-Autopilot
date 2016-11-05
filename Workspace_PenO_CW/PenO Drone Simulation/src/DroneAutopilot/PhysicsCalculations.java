@@ -21,7 +21,7 @@ public class PhysicsCalculations {
 	public static float getDecelerationDistance() {
 		return DecelerationDistance;
 	}
-	private static final float DecelerationDistance = 2;
+	private static final float DecelerationDistance = 1f;
 
 	public float getX1(float[] centerofGravityL){
 		float distance = centerofGravityL[0] - this.getDrone().getLeftCamera().getWidth()/2;
@@ -42,7 +42,7 @@ public class PhysicsCalculations {
 	}
 	
 	public float getY(float[] centerofGravity){
-		float distance = centerofGravity[1] - this.getCameraHeight()/2;
+		float distance = this.getCameraHeight()/2 - centerofGravity[1];
 		return distance;
 	}
 	
@@ -58,6 +58,7 @@ public class PhysicsCalculations {
 		depth = Math.abs(depth);
 		} catch(IllegalArgumentException e){
 		}
+		System.out.println("depth" + depth);
 		return depth;
 	}
 		
@@ -68,7 +69,6 @@ public class PhysicsCalculations {
 	}
 	
 	public float verticalAngleDeviation(float[] centerOfGravity){
-		//System.out.println(this.getY(pointOfGravity));
 		return (float) Math.toDegrees(Math.atan(this.getY(centerOfGravity) / this.getfocalDistance()));
 	}
 	
@@ -82,15 +82,13 @@ public class PhysicsCalculations {
 	public float getThrust(float[] cog) {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
-		//System.out.println("beta groter dan of gelijk aan 0");
-		thrust = (float) (-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
-		//System.out.println("thrust boven" + thrust);
+		thrust = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
 		return thrust;
 	}
 	
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
-		float distance = /* depth/(cos(hor)*cos(ver)) */(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
+		float distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
 		return distance;
 	}
 	
