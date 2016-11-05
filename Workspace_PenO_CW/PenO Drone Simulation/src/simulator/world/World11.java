@@ -102,7 +102,7 @@ public class World11 extends World {
 		
 		// Input Sphere.
 		if (!setup) {
-			double[] translateSphere = { 0, 0, -100 };
+			double[] translateSphere = { 0, 0, -20 };
 			float[] colorSphere = { 1f, 0f, 0f };
 			Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere, translateSphere);
 			sphere1.drawSphere();
