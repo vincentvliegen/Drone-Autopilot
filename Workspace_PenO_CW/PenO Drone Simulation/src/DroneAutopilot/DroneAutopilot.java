@@ -24,8 +24,10 @@ public class DroneAutopilot implements Autopilot{
     */
 	@Override
 	public void timeHasPassed() {
+		/*
 		System.out.println("pitch" + this.getDrone().getPitch());
 		System.out.println("roll" + this.getDrone().getRoll());
+		*/
 		if (this.getMoveToTarget().getGUI().redOrbEnabled) {
 			this.getMoveToTarget().execute();
 			}else{

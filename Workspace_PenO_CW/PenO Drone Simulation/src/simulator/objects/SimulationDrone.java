@@ -3,6 +3,7 @@ package simulator.objects;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -338,23 +339,39 @@ public class SimulationDrone implements Drone {
 
 	public void timeHasPassed(float timePassed) {
 		this.getMovement().calculateMovement(timePassed);
+		
 		double yawPass = this.yawRate * timePassed;
 		createInverseRotate();
-		this.pitch += yawPass * inverseRotateMatrix.get(1);
-		this.yaw += yawPass * inverseRotateMatrix.get(4);
-		this.roll += yawPass * inverseRotateMatrix.get(7);
+		this.pitch += yawPass * new BigDecimal(inverseRotateMatrix.get(1)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		this.yaw += yawPass * new BigDecimal(inverseRotateMatrix.get(4)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		this.roll += yawPass * new BigDecimal(inverseRotateMatrix.get(7)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
 
 		double rollPass = this.rollRate * timePassed;
 		createInverseRotate();
-		this.pitch += rollPass * inverseRotateMatrix.get(2);
-		this.yaw += rollPass * inverseRotateMatrix.get(5);
-		this.roll += rollPass * inverseRotateMatrix.get(8);
+		this.pitch += rollPass * new BigDecimal(inverseRotateMatrix.get(2)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		this.yaw += rollPass * new BigDecimal(inverseRotateMatrix.get(5)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		this.roll += rollPass * new BigDecimal(inverseRotateMatrix.get(8)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
 
 		double pitchPass = this.pitchRate * timePassed;
 		createInverseRotate();
-		this.pitch += pitchPass * inverseRotateMatrix.get(0);
-		this.yaw += pitchPass * inverseRotateMatrix.get(3);
-		this.roll += pitchPass * inverseRotateMatrix.get(6);
+		this.pitch += pitchPass * new BigDecimal(inverseRotateMatrix.get(0)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		this.yaw += pitchPass * new BigDecimal(inverseRotateMatrix.get(3)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		this.roll += pitchPass * new BigDecimal(inverseRotateMatrix.get(6)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		
+		
+		
+		System.out.println("global pitch " + this.pitch);
+		System.out.println("global yaw " + this.yaw);
+		System.out.println("global roll " + this.roll);
+		System.out.println("current pitch " + getPitch());
+		System.out.println("current roll " + getRoll());
+		System.out.println("pitchRate " + this.pitchRate);
+		System.out.println("yawRate " + this.yawRate);
+		System.out.println("rollRate " + this.rollRate);
+		
+		getLeftDroneCamera().updateDroneCamera();
+		getRightDroneCamera().updateDroneCamera();
+		
 		this.autopilot.timeHasPassed();
 	}
 }
