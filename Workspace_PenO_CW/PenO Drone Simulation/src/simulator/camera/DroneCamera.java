@@ -1,6 +1,5 @@
 package simulator.camera;
 
-import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 
 import com.jogamp.opengl.GL;
@@ -108,14 +107,14 @@ public class DroneCamera extends GeneralCamera implements Camera{
 	
 	public void updateDroneCamera(){
 		drone.createRotateMatrix();
-		setEyeX(getEyeX() * new BigDecimal(drone.getRotateMatrix().get(0)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue()  + getEyeY() * new BigDecimal(drone.getRotateMatrix().get(1)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue() + getEyeZ()* new BigDecimal(drone.getRotateMatrix().get(2)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue());
-		setEyeY(getEyeX() * new BigDecimal(drone.getRotateMatrix().get(3)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue()  + getEyeY() * new BigDecimal(drone.getRotateMatrix().get(4)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue() + getEyeZ()* new BigDecimal(drone.getRotateMatrix().get(5)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue());
-		setEyeZ(getEyeX() * new BigDecimal(drone.getRotateMatrix().get(6)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue()  + getEyeY() * new BigDecimal(drone.getRotateMatrix().get(7)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue() + getEyeZ()* new BigDecimal(drone.getRotateMatrix().get(8)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue());
-		setLookAtX(getLookAtX() * new BigDecimal(drone.getRotateMatrix().get(0)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue()  + getLookAtY() * new BigDecimal(drone.getRotateMatrix().get(1)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue() + getLookAtZ()* new BigDecimal(drone.getRotateMatrix().get(2)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue());
-		setLookAtY(getLookAtX() * new BigDecimal(drone.getRotateMatrix().get(3)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue()  + getLookAtY() * new BigDecimal(drone.getRotateMatrix().get(4)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue() + getLookAtZ()* new BigDecimal(drone.getRotateMatrix().get(5)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue());
-		setLookAtZ(getLookAtX() * new BigDecimal(drone.getRotateMatrix().get(6)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue()  + getLookAtY() * new BigDecimal(drone.getRotateMatrix().get(7)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue() + getLookAtZ()* new BigDecimal(drone.getRotateMatrix().get(8)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue());
-		setUpX(new BigDecimal(drone.getRotateMatrix().get(1)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue());
-		setUpY(new BigDecimal(drone.getRotateMatrix().get(4)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue());
-		setUpZ(new BigDecimal(drone.getRotateMatrix().get(7)).setScale(2, BigDecimal.ROUND_HALF_DOWN).floatValue());
+		setEyeX((float) (getEyeX() * drone.getRotateMatrix().get(0)  + getEyeY() * drone.getRotateMatrix().get(1) + getEyeZ()* drone.getRotateMatrix().get(2)));
+		setEyeY((float) (getEyeX() * drone.getRotateMatrix().get(3)  + getEyeY() * drone.getRotateMatrix().get(4) + getEyeZ()* drone.getRotateMatrix().get(5)));
+		setEyeZ((float) (getEyeX() * drone.getRotateMatrix().get(6)  + getEyeY() * drone.getRotateMatrix().get(7) + getEyeZ()* drone.getRotateMatrix().get(8)));
+		setLookAtX((float) (getLookAtX() * drone.getRotateMatrix().get(0)  + getLookAtY() * drone.getRotateMatrix().get(1) + getLookAtZ()* drone.getRotateMatrix().get(2)));
+		setLookAtY((float) (getLookAtX() * drone.getRotateMatrix().get(3)  + getLookAtY() * drone.getRotateMatrix().get(4) + getLookAtZ()* drone.getRotateMatrix().get(5)));
+		setLookAtZ((float) (getLookAtX() * drone.getRotateMatrix().get(6)  + getLookAtY() * drone.getRotateMatrix().get(7) + getLookAtZ()* drone.getRotateMatrix().get(8)));
+		setUpX((float) (drone.getRotateMatrix().get(1)*1));
+		setUpY((float) (drone.getRotateMatrix().get(4)*1));
+		setUpZ((float) (drone.getRotateMatrix().get(7)*1));
 	}
 }
