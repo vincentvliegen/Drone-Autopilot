@@ -92,24 +92,14 @@ public class World11 extends World {
 		GL2 gl = getGL().getGL2();
 
 		// translate camera.
-		if(this.getCurrentCamera() instanceof DroneCamera){
-			gl.glTranslated(drone1.getTranslate()[0], drone1.getTranslate()[1], drone1.getTranslate()[2]);
-			// Volgorde van belang!
-			gl.glRotated(drone1.getYaw(), 0, 1, 0);
-			gl.glRotated(drone1.getGlobalRoll(), 0, 0, 1);
-			gl.glRotated(drone1.getGlobalPitch(), 1, 0, 0);
-			getDrones().get(0).getLeftDroneCamera().updateDroneCamera();
-			getDrones().get(0).getRightDroneCamera().updateDroneCamera();	
-			
-		}
-		else{
+		if(!(this.getCurrentCamera() instanceof DroneCamera)){
 			movement.update();
 			gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
 			gl.glRotated(movement.getRotateX(), 1, 0, 0);
 			gl.glRotated(movement.getRotateY(), 0, 1, 0);
 			gl.glRotated(movement.getRotateZ(), 0, 0, 1);
 		}
-
+		
 		// Input Sphere.
 		if (!setup) {
 			double[] translateSphere = { 0, 0, -100 };

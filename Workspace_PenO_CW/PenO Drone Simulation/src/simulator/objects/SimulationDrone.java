@@ -359,7 +359,6 @@ public class SimulationDrone implements Drone {
 		this.roll += pitchPass * new BigDecimal(inverseRotateMatrix.get(6)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		
 		/*
-		
 		System.out.println("global pitch " + this.pitch);
 		System.out.println("global yaw " + this.yaw);
 		System.out.println("global roll " + this.roll);

@@ -50,13 +50,12 @@ public class Physics {
 	}
 	
 	public Force calculateThrustForce() {
-		float pitch = drone.getPitch();
-		float roll = drone.getRoll();
+		drone.createRotateMatrix();
 		float thrust = drone.getThrust();
 		
-		float forceX = (float) (thrust * (-Math.sin(Math.toRadians(pitch))) * Math.cos(Math.toRadians(roll)));
-		float forceY = (float) (thrust * Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll)));
-		float forceZ = (float) (thrust * Math.sin(Math.toRadians(roll)));
+		float forceX = (float) (thrust * drone.getRotateMatrix().get(1)); 
+		float forceY = (float) (thrust * drone.getRotateMatrix().get(4));
+		float forceZ = (float) (thrust * drone.getRotateMatrix().get(7));
 		
 		Force thrustForce = new Force(forceX, forceY, forceZ); 
 		return thrustForce;
