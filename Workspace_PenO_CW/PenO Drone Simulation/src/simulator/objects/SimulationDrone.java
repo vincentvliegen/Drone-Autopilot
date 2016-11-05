@@ -358,7 +358,7 @@ public class SimulationDrone implements Drone {
 		this.yaw += pitchPass * new BigDecimal(inverseRotateMatrix.get(3)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		this.roll += pitchPass * new BigDecimal(inverseRotateMatrix.get(6)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		
-		
+		/*
 		
 		System.out.println("global pitch " + this.pitch);
 		System.out.println("global yaw " + this.yaw);
@@ -368,6 +368,12 @@ public class SimulationDrone implements Drone {
 		System.out.println("pitchRate " + this.pitchRate);
 		System.out.println("yawRate " + this.yawRate);
 		System.out.println("rollRate " + this.rollRate);
+		*/
+		
+		System.out.println("pitch" + pitch);
+		if (yaw > 0) {
+			System.exit(1);
+		}
 		
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
