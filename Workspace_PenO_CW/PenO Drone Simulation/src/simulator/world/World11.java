@@ -102,9 +102,9 @@ public class World11 extends World {
 		
 		// Input Sphere.
 		if (!setup) {
-			double[] translateSphere = { 0, 0, -20 };
+			double[] translateSphere = { 0, 0, 0 };
 			float[] colorSphere = { 1f, 0f, 0f };
-			Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere, translateSphere);
+			Sphere sphere1 = new Sphere(gl, 10f, 64, 64, colorSphere, translateSphere);
 			sphere1.drawSphere();
 			this.sphere1 = sphere1;
 			addSphere(sphere1);
