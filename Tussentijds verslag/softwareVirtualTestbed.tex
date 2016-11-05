@@ -1,1 +1,13 @@
 \noindent {\em Auteurs: }\\
+
+%TODO nog niet definitief dus niet nuttig om al te reviewen :)
+
+Voor de simulator is de klasse World het hart van de structuur. De 3D-opstellingen worden met behulp van OpenGL gevisualiseerd en daarom is World ge\"implementeerd als een subklasse van GLCanvas. World houdt bij welke objecten (drones, spheres, ...) de wereld bevat en initialiseert de openGL-omgeving. Om aan de specifieke opstellingen van elke mijlpaal te kunnen voldoen, implementeren subklasses de display()-methode van OpenGL met hun eigen noden. Zo bestaan er voor de eerste twee mijlpalen World11 en World12. Zij hebben dezelfde visuele voorstelling, maar voor die laatste is gespecificeerd dat een in de tijd willekeurig vari\"erende Force de wind simuleert. 
+
+
+%TODO: physics naar World verplaatsen?
+Elke Drone heeft een eigenschap Physics, waarin de fysische eigenschappen van de wereld rondom de drone worden bepaald.\\
+%werking van physics op drone (netto van totale krachten(?))
+%TODO einde todo
+
+Om de gebruiker van de simulator een globaal beeld te geven van de huidige toestand in de opstelling, wordt gebruik gemaakt van de GeneralCamera-klasse. Een uitbreiding op dit type is de DroneCamera-klasse, die gebruikt wordt voor beelden vanuit het standpunt van de SimulationDrone. Het Drone-type uit de API voor communicatie met de Autopilot wordt hierdoor ge\"implementeerd. De grafische interface (GUI) voorziet selectieknoppen zodat gekozen kan worden tussen beelden van een van de camera\'s (zowel de globale als van de drone(s))
