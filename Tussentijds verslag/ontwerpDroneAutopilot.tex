@@ -13,7 +13,7 @@ Om zijn positie tegenover het doel te berekenen, bepalen we eerste de diepte. Di
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.3\textwidth]{DiepteberekeningDroneEnDoel.png}
-	\caption{Diepteberekening tussen Drone en doel.}
+	\caption{Diepteberekening tussen Drone en doel. In formulevorm: \(z = \frac{c * f}{x_1 - x_2}\).}
 	\label{fig:DiepteberekeningDroneEnDoel}
 \end{figure}
 \\
@@ -21,7 +21,7 @@ Vervolgens bepalen we de hoek waaronder de drone een yaw beweging moet uitvoeren
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{RelatieveHorizontaleHoek.png}
-	\caption{Relatieve horizontale hoek tussen drone en doel.}
+	\caption{Relatieve horizontale hoek tussen drone en doel wordt gegeven door \(\tan(\alpha) = \frac{x-\frac{c}{2}}{z}\), voor de volledige uitwerking zie formule \ref{eq:RelatieveVerticaleHoekBegin} tot \ref{eq:RelatieveVerticaleHoekBeginEind}.}
 	\label{fig:RelatieveHorizontaleHoek}
 \end{figure}
 \\
@@ -29,11 +29,24 @@ Om tenslotte naar het doel te kunnen vliegen, moet een evenwicht gevonden worden
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\textwidth]{RelatieveVerticaleHoek.png}
-	\caption{Relatieve verticale hoek tussen drone en doel.}
+	\caption{Relatieve verticale hoek tussen drone en doel. De relatie wordt gegeven door volgende formule: \(\tan(\beta) = \frac{y_1}{f}\).}
 	\label{fig:RelatieveVerticaleHoek}
 \end{figure}
 \\
-Wanneer de pitch hoek vastligt, kan de hoeveelheid thrust berekend worden zodat de drone in rechte lijn naar het doel kan vliegen. (uitwerking formule)
+Wanneer de pitch hoek vastligt, kan de hoeveelheid thrust berekend worden zodat de drone in rechte lijn naar het doel kan vliegen. Hieronder wordt de afleiding van de formule gegeven.
+\\
+\begin{equation} \label{eq:RelatieveVerticaleHoekBegin}
+\frac{x_2}{f} = \frac{x}{z}
+\end{equation}
+\begin{equation} 
+\tan(\frac{\delta}{2}) = \frac{\frac{b}{2}}{f}
+\end{equation}
+\begin{equation} 
+f = \frac{\frac{b}{2}}{\tan(\frac{\delta}{2})}
+\end{equation}
+\begin{equation} \label{eq:RelatieveVerticaleHoekBeginEind}
+x = z * \frac{x_2}{f}	
+\end{equation}
 \\
 \\
 Tenslotte moet dit proces herhaaldelijk worden uitgevoerd ten gevolge van de invloed van wind. De wind kan de drone namelijk uit koers brengen. Hierdoor zal de drone telkens zijn positie moeten herberekenen en zich opnieuw moeten herori\"enteren. Ook kan de wind ervoor zorgen dat de drone een roll uitvoert. Deze moet eerst gecompenseerd worden, vooraleer we verder onze berekeningen kunnen uitvoeren.
