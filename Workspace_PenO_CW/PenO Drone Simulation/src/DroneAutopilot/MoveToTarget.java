@@ -49,6 +49,9 @@ public class MoveToTarget{
 	}
 
 	public void correctRoll() {
+		this.getDrone().setPitchRate(0);
+		this.getDrone().setYawRate(0);
+		this.getDrone().setThrust(-this.getDrone().getGravity()*this.getDrone().getWeight());
 		if (this.getDrone().getRoll() >= upperBoundary)
 			this.getDrone().setRollRate(-this.getDrone().getMaxRollRate());
 		else if (this.getDrone().getRoll() <= underBoundary)
