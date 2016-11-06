@@ -122,6 +122,9 @@ public class DroneCamera extends GeneralCamera implements Camera {
 			System.out.println("UpX " + getUpX());
 			System.out.println("UpY " + getUpY());
 			System.out.println("UpZ " + getUpZ());
+			System.out.println("StartX " + drone.getRotateMatrix().get(3));
+			System.out.println("StartY " + drone.getRotateMatrix().get(4));
+			System.out.println("StartZ " + drone.getRotateMatrix().get(5));
 		}
 		*/
 		setEyeX((float) (getStartEyeX() * drone.getRotateMatrix().get(0)
