@@ -1,1 +1,68 @@
-\noindent {\em Auteurs: }\\
+\noindent {\em Auteurs: Jef Versyck}\\
+\\
+Eerst een definitie: het relatief assenstelsel is een persoon die meebeweegt met de drone en op de drone staat in het centrum van de drone, zodat de linkercamera zich aan zijn linkerkant bevindt en de rechtercamera aan zijn rechterkant. De persoon kijkt dus in dezelfde richting als de drone en ondergaat dus ook dezelfde beweging. De positieve X-as is het verlengde van de uitgestrekte rechterarm van de persoon, de positieve Y-as is het verlengde van het hoofd van de persoon en de negatieve Z-as is de kijkrichting van de persoon. 
+\\
+De drone kan drie bewegingen uitvoeren: de yaw, de roll en de pitch. Het voert eerst zijn yaw uit, dan zijn roll en ten slotte zijn pitch. De yaw roteert rond de Y-as, de roll roteert rond de Z' as en de pitch roteert rond de X'' as. Merk op dat er een verschil bestaat tussen de roll en pitch die de drone op een gegeven ogenblik heeft en de yaw, roll en pitch die de drone moet uitvoeren om in zijn huidige positie te geraken. 
+\\
+\\
+Door de volgorde van de drie rotaties onstaat er een specifieke transformatiematrix die, vermenigvuldigd met de coördinaten van een punt (bv. het startpunt van de linkse camera), de coördinaten van het punt na de drie rotaties bepaald. De verandering van de yaw/roll/pitch is ook afhankelijk van deze transformatiematrix. De verandering van de pitch is immers afhankelijk van de roll: hoe groter de roll, hoe trager de pitch verandert. De bekomen rotatiematrix:
+\begin{equation*} 
+R = 
+\begin{bmatrix}
+	\cos(Y)*\cos(R) & -\cos(Y)*\sin(R)*\cos(P) + \sin(Y)*\sin(P) & \cos(Y)*\sin(R)*\sin(P)+\sin(Y)*\cos(P) \\
+	\sin(R) & \cos(R)*\cos(P) & -\cos(R)*\sin(P) \\ 
+	-\sin(Y)*\cos(R)& \sin(Y)*\sin(R)*\cos(P)+\cos(Y)*\sin(P)& 
+	-\sin(Y)*\sin(R)*\sin(P)+\cos(Y)*\cos(P)
+\end{bmatrix}
+\end{equation*}
+\\
+Het berekenen van de veranderingen van yaw, roll en pitch steunt op het volgend principe: 
+\begin{equation*}
+R\textsuperscript{-1} * R * x = x
+\end{equation*} 
+met R de transformatiematrix, R\textsuperscript{-1} de inverse van de transformatiematrix en x de algemene beweging. R * x is een relatieve beweging, zoals de verandering van de pitch. Deze relatieve beweging vermenigvuldigd met de inverse geeft de algemene beweging die de drone uitvoert voor die bepaalde verandering.
+\\
+\\
+Elke drone heeft minstens twee krachten die erop uitgeoefend worden: de zwaartekracht en de thrust. De zwaartekracht is gelijk aan de massa maal de graviteitsconstante van de drone en zal altijd volgens de globale Y-as staan: \\
+\begin{equation*} 
+\vec{G} =
+\begin{Bmatrix}
+0 \\
+m * g \\
+0 
+\end{Bmatrix}.
+\end{equation*} 
+\\
+De thrust daarentegen is afhankelijk van de huidige pitch en roll van de drone. Daarom zal deze vermenigvuldigd moeten worden met de transformatiematrix, om de huidige thrust te bekomen. Het resultaat van deze vermenigvuldiging is: 
+\begin{equation*} 
+\vec{T} = 
+\begin{Bmatrix}
+thrust*(\sin(P)*\sin(Y) - \cos(P)*\cos(Y)*\sin(R)\\ 
+thrust*\cos(P)*\cos(R) \\
+thrust*(\cos(Y)*\sin(P) + \cos(P)*\sin(R)*\sin(Y))
+\end{Bmatrix}
+\end{equation*}
+\\
+De windkracht is een kracht die voorafbepaalde grootte en richting heeft. Deze kracht is optioneel in implementatie. \\
+\begin{equation*}
+\vec{W} = 
+\begin{Bmatrix}
+W_x \\
+W_y \\
+W_z 
+\end{Bmatrix}
+\end{equation*}
+\\
+Alle vectorkrachten die inwerken op een bepaalde drone worden vervolgens bij elkaar opgeteld. Deze vector, gedeeld door de massa van de drone, zal gelijk zijn aan de versnelling van de drone, volgens de formule: \\
+\begin{equation*}
+	\sum_{1}^{n} \vec{F_i} = m * \vec{a} 
+\end{equation*}
+\\
+Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. \\
+\begin{equation*}
+v = a*t + v_0
+\end{equation*} 
+\begin{equation*}
+x = a*t/2 + v_0*t + x_0
+\end{equation*}
+
