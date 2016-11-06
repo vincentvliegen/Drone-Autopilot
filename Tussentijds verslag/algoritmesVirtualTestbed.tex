@@ -58,11 +58,14 @@ Alle vectorkrachten die inwerken op een bepaalde drone worden vervolgens bij elk
 	\sum_{1}^{n} \vec{F_i} = m * \vec{a} 
 \end{equation*}
 \\
-Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. \\
+Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Er staat nog een drag op de drone, met een constante d. \\
 \begin{equation*}
 v = a*t + v_0
 \end{equation*} 
 \begin{equation*}
-x = a*t/2 + v_0*t + x_0
+x = a*t^{2}/2 + v_0*t + x_0
+\end{equation*}
+\begin{equation*}
+v = (1-d) * v
 \end{equation*}
 
