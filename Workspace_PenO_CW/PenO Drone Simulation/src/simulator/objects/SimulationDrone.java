@@ -26,7 +26,6 @@ public class SimulationDrone implements Drone {
 	float[] color = new float[3];
 	double[] translate = new double[3];
 	static double[] standardTranslate = { 0, 0, 0 };
-	Physics physics;
 	private float pitch = 0;
 	private float roll = 0;
 	private float thrust = 0;
@@ -50,7 +49,6 @@ public class SimulationDrone implements Drone {
 		this.gl = gl;
 		this.color = color;
 		this.translate = translate;
-		this.physics = new Physics(this, 10f);
 		this.world = world;
 		this.movement = new Movement(this);
 		generateDroneCameras();
@@ -170,10 +168,6 @@ public class SimulationDrone implements Drone {
 
 	public double[] getTranslate() {
 		return this.translate;
-	}
-
-	public Physics getPhysics() {
-		return this.physics;
 	}
 
 	public DroneCamera getLeftDroneCamera() {
@@ -338,7 +332,6 @@ public class SimulationDrone implements Drone {
 	}
 
 	public void timeHasPassed(float timePassed) {
-		this.getMovement().calculateMovement(timePassed);
 		
 		double yawPass = this.yawRate * timePassed;
 		createInverseRotate();

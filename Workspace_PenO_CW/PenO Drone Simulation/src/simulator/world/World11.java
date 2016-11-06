@@ -45,11 +45,11 @@ public class World11 extends World {
 
 	public void display(GLAutoDrawable drawable) {
 		super.updateTimePassed();
-		float tempVal = super.checkTimePassed();
-		try {
-			drone1.timeHasPassed(tempVal);
+		if (setup) {
+			float timePassed = super.checkTimePassed();
+			super.physics.run(timePassed);
+			drone1.timeHasPassed(timePassed);
 			super.setLastTime((float) (System.nanoTime()*Math.pow(10, -9)));
-		} catch (Exception e) {
 		}
 		if (!super.getAnimator().isAnimating()) {
 			return;

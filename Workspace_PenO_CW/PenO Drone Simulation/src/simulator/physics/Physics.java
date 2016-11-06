@@ -3,17 +3,14 @@ package simulator.physics;
 import java.util.*;
 
 import simulator.objects.SimulationDrone;
+import simulator.world.World;
 
 public class Physics {
 	private List<Force> forces = new ArrayList<>();
-	private float weight;
-	private SimulationDrone drone;
+	private World world;
 
-	public Physics(SimulationDrone simulationDrone, float weight) {
-		Force gravity = new Force(0, -9.81f * weight, 0);
-		forces.add(gravity);
-		this.weight = weight;
-		this.drone = simulationDrone;
+	public Physics(World world) {
+		this.world = world;
 	}
 
 	public void addForce(Force newForce) {
@@ -24,24 +21,27 @@ public class Physics {
 		forces.remove(newForce);
 	}
 
-	public float[] getAcceleration() {
+	public float[] getAcceleration(SimulationDrone drone) {
 		float[] acceleration = new float[3];
 		float xAcceleration = 0;
 		float yAcceleration = 0;
 		float zAcceleration = 0;
 		
-		Force thrustForce = calculateThrustForce();
+		Force thrustForce = calculateThrustForce(drone);
+		Force gravity = new Force(0, drone.getGravity() * drone.getWeight(), 0);
 		forces.add(thrustForce);
+		forces.add(gravity);
 		for (Force currentForce: forces) {
 			xAcceleration += currentForce.getXNewton();
 			yAcceleration += currentForce.getYNewton();
 			zAcceleration += currentForce.getZNewton();
 		}
 		forces.remove(thrustForce);
+		forces.remove(gravity);
 		
-		xAcceleration /= (weight);
-		yAcceleration /= (weight);
-		zAcceleration /= (weight);
+		xAcceleration /= drone.getWeight();
+		yAcceleration /= drone.getWeight();
+		zAcceleration /= drone.getWeight();
 		
 		acceleration[0] = xAcceleration;
 		acceleration[1] = yAcceleration;
@@ -49,7 +49,7 @@ public class Physics {
 		return acceleration;
 	}
 	
-	public Force calculateThrustForce() {
+	public Force calculateThrustForce(SimulationDrone drone) {
 		drone.createRotateMatrix();
 		float thrust = drone.getThrust();
 		
@@ -60,4 +60,13 @@ public class Physics {
 		Force thrustForce = new Force(forceX, forceY, forceZ); 
 		return thrustForce;
 	}
+	
+	public void run(float timePassed) {
+		for (SimulationDrone currentDrone: world.getDrones()) {
+			float[] acceleration = getAcceleration(currentDrone);
+			currentDrone.getMovement().calculateMovement(timePassed, acceleration);
+		}
+	}
+	
+	
 }
