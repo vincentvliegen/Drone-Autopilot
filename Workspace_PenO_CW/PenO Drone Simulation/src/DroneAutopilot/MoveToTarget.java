@@ -105,7 +105,6 @@ public class MoveToTarget{
 	}
 
 	public void flyTowardsTarget(float[] cogL, float[] cogR) {
-		System.out.println("visible" + this.getPhysicsCalculations().getVisiblePitch(cogL, cogR));
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
 		if (this.getPhysicsCalculations().getVisiblePitch(cogL,cogR)-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cogL)) >= 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
@@ -148,7 +147,7 @@ public class MoveToTarget{
 	
 	public void updateGUI(float[] centerOfGravityL, float[] centerOfGravityR){
 		float distance = this.getPhysicsCalculations().getDistance(centerOfGravityL, centerOfGravityR);
-		this.getGUI().update((int)distance);//TODO verplaatsen naar MoveToTarget, GUI uit PhysicsCalculations halen
+		this.getGUI().update((int)(distance*100));//TODO verplaatsen naar MoveToTarget, GUI uit PhysicsCalculations halen
 	}
 
 

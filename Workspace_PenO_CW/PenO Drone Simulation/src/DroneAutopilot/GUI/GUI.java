@@ -107,7 +107,11 @@ public class GUI {
 		} else {
 			this.progressBar.setValue(this.maxValue - distance);
 		}
-		this.progressBar.setString((this.maxValue - distance) / this.maxValue + "%");
+		if (this.maxValue > 0){
+			this.progressBar.setString(((this.maxValue - distance) / this.maxValue)*100 + "%");			
+		} else {
+			this.progressBar.setString("100%");
+		}
 	}
 
 	private final JProgressBar progressBar;

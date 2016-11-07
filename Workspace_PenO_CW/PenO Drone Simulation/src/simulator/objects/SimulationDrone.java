@@ -41,6 +41,7 @@ public class SimulationDrone implements Drone {
 	List<Double> rotateMatrix = new ArrayList<>();
 	List<Double> inverseRotateMatrix = new ArrayList<>();
 	private DroneAutopilot autopilot;
+	private float gravityConstant = -9.81f;
 
 	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, double[] translate, World world) {
 		this.height = height;
@@ -62,40 +63,40 @@ public class SimulationDrone implements Drone {
 		
 	public void createRotateMatrix(){
 		rotateMatrix.clear();
-		rotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(roll)));
-		rotateMatrix.add(- Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))*Math.cos(Math.toRadians(-pitch))
+		rotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(-roll)));
+		rotateMatrix.add(- Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-roll))*Math.cos(Math.toRadians(-pitch))
 				+ Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(-pitch)));
-		rotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(-pitch))
+		rotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-roll))*Math.sin(Math.toRadians(-pitch))
 				+ Math.sin(Math.toRadians(yaw))*Math.cos(Math.toRadians(-pitch)));
 		
-		rotateMatrix.add(Math.sin(Math.toRadians(roll)));
-		rotateMatrix.add(Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(-pitch)));
-		rotateMatrix.add(- Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(-pitch)));
+		rotateMatrix.add(Math.sin(Math.toRadians(-roll)));
+		rotateMatrix.add(Math.cos(Math.toRadians(-roll))*Math.cos(Math.toRadians(-pitch)));
+		rotateMatrix.add(- Math.cos(Math.toRadians(-roll))*Math.sin(Math.toRadians(-pitch)));
 		
-		rotateMatrix.add(- Math.sin(Math.toRadians(yaw))*Math.cos(Math.toRadians(roll)));
-		rotateMatrix.add(Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))*Math.cos(Math.toRadians(-pitch))
+		rotateMatrix.add(- Math.sin(Math.toRadians(yaw))*Math.cos(Math.toRadians(-roll)));
+		rotateMatrix.add(Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(-roll))*Math.cos(Math.toRadians(-pitch))
 				+ Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-pitch)));
-		rotateMatrix.add(- Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(-pitch))
+		rotateMatrix.add(- Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(-roll))*Math.sin(Math.toRadians(-pitch))
 				+ Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(-pitch)));
 	}
 	
 	private void createInverseRotate() {
 		inverseRotateMatrix.clear();
-		inverseRotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(roll)));
-		inverseRotateMatrix.add(Math.sin(Math.toRadians(roll)));
-		inverseRotateMatrix.add(- Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		inverseRotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(-roll)));
+		inverseRotateMatrix.add(Math.sin(Math.toRadians(-roll)));
+		inverseRotateMatrix.add(- Math.cos(Math.toRadians(-roll))*Math.sin(Math.toRadians(yaw)));
 				
 		inverseRotateMatrix.add(Math.sin(Math.toRadians(-pitch))*Math.sin(Math.toRadians(yaw)) 
-				- Math.cos(Math.toRadians(-pitch))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll)));
-		inverseRotateMatrix.add(Math.cos(Math.toRadians(-pitch))*Math.cos(Math.toRadians(roll)));
+				- Math.cos(Math.toRadians(-pitch))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-roll)));
+		inverseRotateMatrix.add(Math.cos(Math.toRadians(-pitch))*Math.cos(Math.toRadians(-roll)));
 		inverseRotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-pitch))
-				+ Math.cos(Math.toRadians(-pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+				+ Math.cos(Math.toRadians(-pitch))*Math.sin(Math.toRadians(-roll))*Math.sin(Math.toRadians(yaw)));
 				
 		inverseRotateMatrix.add(Math.cos(Math.toRadians(-pitch))*Math.sin(Math.toRadians(yaw))
-				+ Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-pitch))*Math.sin(Math.toRadians(roll)));
-		inverseRotateMatrix.add(- Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(-pitch)));
+				+ Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-pitch))*Math.sin(Math.toRadians(-roll)));
+		inverseRotateMatrix.add(- Math.cos(Math.toRadians(-roll))*Math.sin(Math.toRadians(-pitch)));
 		inverseRotateMatrix.add(Math.cos(Math.toRadians(-pitch))*Math.cos(Math.toRadians(yaw))
-				- Math.sin(Math.toRadians(-pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+				- Math.sin(Math.toRadians(-pitch))*Math.sin(Math.toRadians(-roll))*Math.sin(Math.toRadians(yaw)));
 	}
 
 	// TODO afmetingen (voor collision detection)
@@ -223,7 +224,7 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public float getGravity() {
-		return -9.81f;
+		return this.gravityConstant;
 	}
 
 	@Override
@@ -306,6 +307,10 @@ public class SimulationDrone implements Drone {
 	
 	public float getGlobalRoll(){
 		return this.roll;
+	}
+	
+	public void setGravity(float value) {
+		this.gravityConstant = value;
 	}
 
 	private void generateDroneCameras() {
