@@ -8,18 +8,6 @@ public class Movement {
 	public double[] currentPosition;
 	
 
-	public double[] getCurrentPosition() {
-		return currentPosition;
-	}
-
-	public void setCurrentPosition(double[] currentPosition) {
-		this.currentPosition = currentPosition;
-	}
-	
-	public float[] getVelocity(){
-		return velocity;
-	}
-
 	public Movement(SimulationDrone drone) {
 		this.drone = drone;
 	}
@@ -36,6 +24,18 @@ public class Movement {
 	
 		setCurrentPosition(currentPos);
 		drone.translateDrone(currentPos);
+	}
+
+	public void setCurrentPosition(double[] currentPosition) {
+		this.currentPosition = currentPosition;
+	}
+
+	public double[] getCurrentPosition() {
+		return currentPosition;
+	}
+
+	public float[] getVelocity(){
+		return velocity;
 	}
 
 	

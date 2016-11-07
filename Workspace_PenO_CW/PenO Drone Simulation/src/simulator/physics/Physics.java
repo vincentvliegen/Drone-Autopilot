@@ -21,6 +21,25 @@ public class Physics {
 		forces.remove(newForce);
 	}
 
+	public Force calculateThrustForce(SimulationDrone drone) {
+		drone.createRotateMatrix();
+		float thrust = drone.getThrust();
+		
+		float forceX = (float) (thrust * drone.getRotateMatrix().get(1)); 
+		float forceY = (float) (thrust * drone.getRotateMatrix().get(4));
+		float forceZ = (float) (thrust * drone.getRotateMatrix().get(7));
+		
+		Force thrustForce = new Force(forceX, forceY, forceZ); 
+		return thrustForce;
+	}
+	
+	public void run(float timePassed) {
+		for (SimulationDrone currentDrone: world.getDrones()) {
+			float[] acceleration = getAcceleration(currentDrone);
+			currentDrone.getMovement().calculateMovement(timePassed, acceleration);
+		}
+	}
+
 	public float[] getAcceleration(SimulationDrone drone) {
 		float[] acceleration = new float[3];
 		float xAcceleration = 0;
@@ -50,25 +69,6 @@ public class Physics {
 		acceleration[1] = yAcceleration;
 		acceleration[2] = zAcceleration;
 		return acceleration;
-	}
-	
-	public Force calculateThrustForce(SimulationDrone drone) {
-		drone.createRotateMatrix();
-		float thrust = drone.getThrust();
-		
-		float forceX = (float) (thrust * drone.getRotateMatrix().get(1)); 
-		float forceY = (float) (thrust * drone.getRotateMatrix().get(4));
-		float forceZ = (float) (thrust * drone.getRotateMatrix().get(7));
-		
-		Force thrustForce = new Force(forceX, forceY, forceZ); 
-		return thrustForce;
-	}
-	
-	public void run(float timePassed) {
-		for (SimulationDrone currentDrone: world.getDrones()) {
-			float[] acceleration = getAcceleration(currentDrone);
-			currentDrone.getMovement().calculateMovement(timePassed, acceleration);
-		}
 	}
 	
 	
