@@ -1,8 +1,9 @@
 \noindent {\em Auteurs: Jef Versyck}\\
 \\
-Het relatief assenstelsel\footnote{Het relatief assenstelsel wordt gedefini\"eerd als een persoon die meebeweegt met de drone.} staat in het centrum van de drone, zodat de linkercamera zich aan zijn linkerkant bevindt en de rechtercamera aan zijn rechterkant. De persoon kijkt in dezelfde richting als de drone en ondergaat dus ook dezelfde beweging. De positieve X-as is het verlengde van de uitgestrekte rechterarm van de persoon, de positieve Y-as is het verlengde van het hoofd van de persoon en de negatieve Z-as is de kijkrichting van de persoon. 
+Het relatief assenstelsel hangt vast aan het centrum van de drone, zodat de linkercamera zich op de negatieve X-as bevindt en de rechtercamera op de positieve. De positieve Y-as staat loodrecht op de drone naar boven en de negatieve Z-as ligt in de diepte van het computerscherm. Het assenstelsel ondergaat identiek dezelfde bewegingen als de drone.
 \\
-De drone kan drie bewegingen uitvoeren: roll, pitch en yaw. Het voert eerst zijn yaw uit, dan zijn roll en ten slotte zijn pitch. De yaw roteert rond de Y-as, de roll rond de Z'-as en de pitch rond de X''-as. Merk op dat er een verschil bestaat tussen de roll en pitch die de drone op een gegeven ogenblik heeft en de yaw, roll en pitch die de drone moet uitvoeren om in zijn huidige positie te geraken. 
+\\
+De drone kan drie bewegingen uitvoeren: roll, pitch en yaw. Het voert eerst zijn yaw uit, dan zijn roll en ten slotte zijn pitch. De yaw roteert rond de Y-as, de roll rond de Z'-as (Z-as van het relatieve assenstelsel na yaw beweging) en de pitch rond de X''-as (X-as van het relatieve assenstelsel na alle vorige bewegingen). Merk op dat er een verschil bestaat tussen de roll en pitch die de drone op een gegeven ogenblik heeft en de yaw, roll en pitch die de drone moet uitvoeren om in zijn huidige positie te geraken. 
 \\
 \\
 Door de volgorde van de drie rotaties onstaat er een specifieke transformatiematrix die, vermenigvuldigd met de coördinaten van een punt (bv. het startpunt van de linkercamera), de coördinaten van het punt na de drie rotaties bepaalt. De verandering van de yaw/roll/pitch is ook afhankelijk van deze transformatiematrix. De verandering van de pitch is immers afhankelijk van de roll: hoe groter de roll, hoe trager de pitch verandert. 
@@ -45,7 +46,7 @@ thrust*(\cos(Y)*\sin(P) + \cos(P)*\sin(R)*\sin(Y))
 \end{Bmatrix}
 \end{equation*}
 \\
-De windkracht is een kracht die voorafbepaalde grootte en richting heeft. Deze kracht is optioneel in de implementatie. \\
+De windkracht is een kracht die een voorafbepaalde grootte en richting heeft. Deze kracht is optioneel in de implementatie. \\
 \begin{equation*}
 \vec{W} = 
 \begin{Bmatrix}
