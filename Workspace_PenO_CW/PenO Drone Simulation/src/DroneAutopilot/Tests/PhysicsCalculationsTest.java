@@ -17,33 +17,34 @@ public class PhysicsCalculationsTest {
 		drone = createDroneForTesting(droneWeight, droneGravity, dronePitch, cameraSeparation, camera, camera);
 		calc.setDrone(drone);
 		
-		cOG1 = new int[] {1,1};
-		cOG2 = new int[] {5,80};
-		cOG3 = new int[] {127,33};
+		cOG1 = new float[] {1,1};
+		cOG2 = new float[] {5,80};
+		cOG3 = new float[] {127,33};
 		
-		depthXY1 = new int[] {120,80};
-		depthXY2 = new int[] {45,80};
+		depthXY1 = new float[] {120,80};
+		depthXY2 = new float[] {45,80};
 	}
 	
 	@Test
     public void X1Test() {
-		assertEquals(-74,calc.getX1(cOG1));
-		assertEquals(-70,calc.getX1(cOG2));
-		assertEquals(52,calc.getX1(cOG3));
+		assertEquals(-74,calc.getX1(cOG1),0.0001);
+		assertEquals(-70,calc.getX1(cOG2),0.0001);
+		assertEquals(52,calc.getX1(cOG3),0.0001);
     }
 	
 	@Test
     public void X2Test() {
-		assertEquals(-74,calc.getX2(cOG1));
-		assertEquals(-70,calc.getX2(cOG2));
-		assertEquals(52,calc.getX2(cOG3));
+		assertEquals(-74,calc.getX2(cOG1),0.0001);
+		assertEquals(-70,calc.getX2(cOG2),0.0001);
+		assertEquals(52,calc.getX2(cOG3),0.0001);
     }
 	
 	@Test
     public void YTest() {
-		assertEquals(-49,calc.getY(cOG1));
-		assertEquals(30,calc.getY(cOG2));
-		assertEquals(-17,calc.getY(cOG3));
+		float y = calc.getY(cOG1);
+		assertEquals(49,y,0.0001);
+		assertEquals(-30,calc.getY(cOG2),0.0001);
+		assertEquals(17,calc.getY(cOG3),0.0001);
     }
 	
 	@Test
@@ -68,17 +69,17 @@ public class PhysicsCalculationsTest {
 	
 	@Test
 	public void verAngleDevTest(){
-		assertEquals(Math.toDegrees(Math.atan(0.4)),calc.verticalAngleDeviation(depthXY1),0.00001);
+		assertEquals(Math.toDegrees(Math.atan(-0.4)),calc.verticalAngleDeviation(depthXY1),0.00001);
 	}
 	
 	@Test
 	public void visPitchTest(){
-		assertEquals(verticalAngleOfView/2*PhysicsCalculations.getVisibilityFactor(),calc.getVisiblePitch(),0.00001);
+		assertEquals(verticalAngleOfView/2*PhysicsCalculations.getVisibilityFactor(),calc.getVisiblePitch(depthXY1,depthXY2),0.00001);
 	}
 	
 	@Test
 	public void thrustTest(){
-		assertEquals(10.694534,calc.getThrust(depthXY1),0.00001);
+		assertEquals(8.623982,calc.getThrust(depthXY1),0.00001);
 	}
 	
 	@Test
@@ -209,12 +210,12 @@ public class PhysicsCalculationsTest {
 	private PhysicsCalculations calc;
 	private Drone drone;
 	
-	private int[] cOG1;
-	private int[] cOG2;
-	private int[] cOG3;
+	private float[] cOG1;
+	private float[] cOG2;
+	private float[] cOG3;
 	
-	private int[] depthXY1;
-	private int[] depthXY2;
+	private float[] depthXY1;
+	private float[] depthXY2;
 	
 
 

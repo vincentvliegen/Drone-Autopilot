@@ -109,27 +109,27 @@ public class ImageCalculationsTest{
 	@Test
     public void cOGTest() {
     	try {
-			assertArrayEquals(new int[] {1,1}, calc.getCOG(pixellist2));
+			assertArrayEquals(new float[] {1,1}, calc.getCOG(pixellist2),(float) 0.0001);
 		} catch (EmptyPositionListException e) {
 			e.printStackTrace();
 		}
     	try {
-			assertArrayEquals(new int[] {4,4}, calc.getCOG(pixellist3));
+			assertArrayEquals(new float[] {(float) 4.5,(float) 4.5}, calc.getCOG(pixellist3),(float) 0.0001);
 		} catch (EmptyPositionListException e) {
 			e.printStackTrace();
 		}
     	try {
-			assertArrayEquals(new int[] {4,1}, calc.getCOG(pixellist4));
+			assertArrayEquals(new float[] {4,1}, calc.getCOG(pixellist4),(float) 0.0001);
 		} catch (EmptyPositionListException e) {
 			e.printStackTrace();
 		}
     	try {
-			assertArrayEquals(new int[] {6,6}, calc.getCOG(pixellist5));
+			assertArrayEquals(new float[] {(float) 6.5,(float) 6.5}, calc.getCOG(pixellist5),(float) 0.0001);
 		} catch (EmptyPositionListException e) {
 			e.printStackTrace();
 		}
     	try {
-			assertArrayEquals(new int[] {2,2}, calc.getCOG(pixellist6));
+			assertArrayEquals(new float[] {2,2}, calc.getCOG(pixellist6),(float) 0.0001);
 		} catch (EmptyPositionListException e) {
 			e.printStackTrace();
 		}

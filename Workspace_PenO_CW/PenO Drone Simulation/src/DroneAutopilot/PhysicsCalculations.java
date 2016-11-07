@@ -42,7 +42,7 @@ public class PhysicsCalculations {
 	}
 	
 	public float getY(float[] centerofGravity){
-		float distance = this.getCameraHeight()/2 - centerofGravity[1];
+		float distance = ((float) this.getCameraHeight())/2 - centerofGravity[1];
 		return distance;
 	}
 	
