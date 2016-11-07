@@ -13,6 +13,7 @@ import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
+import simulator.physics.Physics;
 
 @SuppressWarnings("serial")
 public abstract class World extends GLCanvas implements GLEventListener {
@@ -160,6 +161,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	int[] colorRenderbufferLeft = new int[1];
 	int[] depthRenderbufferLeft = new int[1];
 	int[] textureLeft = new int[1];
+	Physics physics;
 	
 	
 	/**
@@ -171,6 +173,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.drawable = drawable;
 		this.startTime = (float) (System.nanoTime()*Math.pow(10, -9));
 		this.lastTime = startTime;
+		this.physics = new Physics(this);
 		final GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(gl);
 		

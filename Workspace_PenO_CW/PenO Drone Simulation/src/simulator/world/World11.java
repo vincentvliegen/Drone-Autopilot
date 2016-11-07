@@ -1,3 +1,4 @@
+
 package simulator.world;
 
 import com.jogamp.opengl.GL;
@@ -44,11 +45,11 @@ public class World11 extends World {
 
 	public void display(GLAutoDrawable drawable) {
 		super.updateTimePassed();
-		float tempVal = super.checkTimePassed();
-		try {
-			drone1.timeHasPassed(tempVal);
+		if (setup) {
+			float timePassed = super.checkTimePassed();
+			super.physics.run(timePassed);
+			drone1.timeHasPassed(timePassed);
 			super.setLastTime((float) (System.nanoTime()*Math.pow(10, -9)));
-		} catch (Exception e) {
 		}
 		if (!super.getAnimator().isAnimating()) {
 			return;
@@ -83,10 +84,6 @@ public class World11 extends World {
 		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
-
-
-
-
 	}	
 
 
@@ -94,28 +91,20 @@ public class World11 extends World {
 
 		GL2 gl = getGL().getGL2();
 
-
-
 		// translate camera.
-		if(this.getCurrentCamera() instanceof DroneCamera){
-			gl.glTranslated(drone1.getTranslate()[0], drone1.getTranslate()[1], drone1.getTranslate()[2]);
-			gl.glRotated(drone1.getRoll(), 0, 0, 1);
-			gl.glRotated(drone1.getPitch(), 1, 0, 0);
-			gl.glRotated(drone1.getYaw(), 0, 1, 0);
-		}
-		else{
+		if(!(this.getCurrentCamera() instanceof DroneCamera)){
 			movement.update();
 			gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
 			gl.glRotated(movement.getRotateX(), 1, 0, 0);
 			gl.glRotated(movement.getRotateY(), 0, 1, 0);
 			gl.glRotated(movement.getRotateZ(), 0, 0, 1);
 		}
-
+		
 		// Input Sphere.
 		if (!setup) {
-			double[] translateSphere = { 0, 0, -100 };
+			double[] translateSphere = { 0, 0, 0 };
 			float[] colorSphere = { 1f, 0f, 0f };
-			Sphere sphere1 = new Sphere(gl, 6.378f, 64, 64, colorSphere, translateSphere);
+			Sphere sphere1 = new Sphere(gl, 10f, 64, 64, colorSphere, translateSphere);
 			sphere1.drawSphere();
 			this.sphere1 = sphere1;
 			addSphere(sphere1);

@@ -19,27 +19,25 @@ public class Movement {
 	public void setCurrentPosition(double[] currentPosition) {
 		this.currentPosition = currentPosition;
 	}
+	
+	public float[] getVelocity(){
+		return velocity;
+	}
 
 	public Movement(SimulationDrone drone) {
 		this.drone = drone;
 	}
 
-	public void calculateMovement(float timePassed) {
-		float[] acceleration = drone.getPhysics().getAcceleration();
-		acceleration[0] *= timePassed;
-		acceleration[1] *= timePassed;
-		acceleration[2] *= timePassed;
-		velocity[0] += acceleration[0];
-		velocity[1] += acceleration[1];
-		velocity[2] += acceleration[2];
-		velocity[0] -= drone.getDrag()*velocity[0];
-		velocity[1] -= drone.getDrag()*velocity[1];
-		velocity[2] -= drone.getDrag()*velocity[2];
-		
+	public void calculateMovement(float timePassed, float[] acceleration) {
 		double[] currentPos = drone.getTranslate();
-		currentPos[0] += velocity[0] * timePassed;
-		currentPos[1] += velocity[1] * timePassed;
-		currentPos[2] += velocity[2] * timePassed;
+		currentPos[0] += (velocity[0] * timePassed + acceleration[0]* timePassed* timePassed/ 2);
+		currentPos[1] += (velocity[1] * timePassed + acceleration[1]* timePassed* timePassed/ 2);
+		currentPos[2] += (velocity[2] * timePassed + acceleration[2]* timePassed* timePassed/ 2);
+		
+		velocity[0] += (acceleration[0] * timePassed);
+		velocity[1] += (acceleration[1] * timePassed);
+		velocity[2] += (acceleration[2] * timePassed);
+	
 		setCurrentPosition(currentPos);
 		drone.translateDrone(currentPos);
 	}

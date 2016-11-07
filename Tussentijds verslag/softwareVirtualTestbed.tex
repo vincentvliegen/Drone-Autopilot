@@ -1,1 +1,10 @@
-\noindent {\em Auteurs: }\\
+\noindent {\em Auteur: Bram Vandendriessche}\\
+
+%TODO nog niet definitief dus niet nuttig om al te reviewen :)
+
+
+\noindent
+De klasse World kan het hart van de structuur van de simulator genoemd worden. Ze is ge\"implementeerd als een subklasse van GLCanvas en vormt zo de basis voor het visuele gedeelte van de 3D-wereld die opgebouwd wordt met openGL. World houdt bij welke objecten (Camera, Drone, Sphere) er in de wereld bestaan en zal zorgen dat al deze objecten getekend worden door openGL. Om te kunnen voldoen aan de specifieke opstelling voor elke mijlpaal wordt de setting telkens in een subklasse van World vastgelegd door implementatie van de openGL-functie display(). Zo is de 3D-opstelling voor de eerste twee milestones wel gelijk, maar staat in World12 bepaald dat er een Force bestaat die in een willekeurige richting op de drone werkt om zo wind te simuleren. Deze Force maakt deel uit van de fysische omstandigheden in de wereld (gedefinieerd in de klasse Physics) waaronder bijvoorbeeld ook de zwaartekracht valt. \\
+~\\
+\noindent
+Uiteraard moet de gebruiker van de simulator op een eenvoudige manier een beeld krijgen van de huidige opstelling en situatie. Daarom zorgen camera's vanuit verschillende standpunten voor beelden die eenvoudig opgevraagd kunnen worden in de grafische interface (GUI). De klasse GeneralCamera definieert de positie en de kijkrichting van de verschillende camera's en objecten van dit type dienen voor een globaal beeld. Een uitbreiding hiervan is de subklasse DroneCamera waarmee er gezorgd wordt voor twee beelden vanuit het standpunt van de drone. Twee instanties worden immers aangemaakt bij initialisatie van elke SimulationDrone. De methodes van de interface Camera van de API voor de verbinding tussen autopilot en simulator worden door CameraDrone ge\"implementeerd. Hetzelfde gebeurt door de SimulationDrone voor de Drone-interface van de API.
