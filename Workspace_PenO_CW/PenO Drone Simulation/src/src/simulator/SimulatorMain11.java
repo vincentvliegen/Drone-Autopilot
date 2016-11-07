@@ -1,13 +1,13 @@
-package simulator;
+package src.simulator;
 
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
 import simulator.GUI.GUI;
-import simulator.world.World11;
+import simulator.world.*;
 
-public class SimulatorMain {
+public class SimulatorMain11 {
 	
 	public final static void main(String[] args) {
 		

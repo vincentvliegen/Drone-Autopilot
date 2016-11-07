@@ -105,7 +105,6 @@ public class MoveToTarget{
 	}
 
 	public void flyTowardsTarget(float[] cogL, float[] cogR) {
-		System.out.println("visible" + this.getPhysicsCalculations().getVisiblePitch(cogL, cogR));
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
 		if (this.getPhysicsCalculations().getVisiblePitch(cogL,cogR)-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cogL)) >= 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());

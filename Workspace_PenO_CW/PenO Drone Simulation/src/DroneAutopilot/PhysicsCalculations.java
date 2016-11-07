@@ -58,7 +58,6 @@ public class PhysicsCalculations {
 		depth = Math.abs(depth);
 		} catch(IllegalArgumentException e){
 		}
-		System.out.println("depth" + depth);
 		return depth;
 	}
 		

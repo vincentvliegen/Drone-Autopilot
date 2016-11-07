@@ -148,6 +148,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return framebufferRight;
 	}
 	
+	public Physics getPhysics() {
+		return this.physics;
+	}
+	
 	
 	private int[] framebufferRight = new int[1];
 	
