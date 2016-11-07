@@ -63,21 +63,21 @@ public class SimulationDrone implements Drone {
 		
 	public void createRotateMatrix(){
 		rotateMatrix.clear();
-		rotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(-roll)));
-		rotateMatrix.add(- Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-roll))*Math.cos(Math.toRadians(-pitch))
-				+ Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(-pitch)));
-		rotateMatrix.add(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-roll))*Math.sin(Math.toRadians(-pitch))
-				+ Math.sin(Math.toRadians(yaw))*Math.cos(Math.toRadians(-pitch)));
+		rotateMatrix.add(Math.cos(Math.toRadians(-yaw))*Math.cos(Math.toRadians(-roll)));
+		rotateMatrix.add(- Math.cos(Math.toRadians(-yaw))*Math.sin(Math.toRadians(-roll))*Math.cos(Math.toRadians(-pitch))
+				+ Math.sin(Math.toRadians(-yaw))*Math.sin(Math.toRadians(-pitch)));
+		rotateMatrix.add(Math.cos(Math.toRadians(-yaw))*Math.sin(Math.toRadians(-roll))*Math.sin(Math.toRadians(-pitch))
+				+ Math.sin(Math.toRadians(-yaw))*Math.cos(Math.toRadians(-pitch)));
 		
 		rotateMatrix.add(Math.sin(Math.toRadians(-roll)));
 		rotateMatrix.add(Math.cos(Math.toRadians(-roll))*Math.cos(Math.toRadians(-pitch)));
 		rotateMatrix.add(- Math.cos(Math.toRadians(-roll))*Math.sin(Math.toRadians(-pitch)));
 		
-		rotateMatrix.add(- Math.sin(Math.toRadians(yaw))*Math.cos(Math.toRadians(-roll)));
-		rotateMatrix.add(Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(-roll))*Math.cos(Math.toRadians(-pitch))
-				+ Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(-pitch)));
-		rotateMatrix.add(- Math.sin(Math.toRadians(yaw))*Math.sin(Math.toRadians(-roll))*Math.sin(Math.toRadians(-pitch))
-				+ Math.cos(Math.toRadians(yaw))*Math.cos(Math.toRadians(-pitch)));
+		rotateMatrix.add(- Math.sin(Math.toRadians(-yaw))*Math.cos(Math.toRadians(-roll)));
+		rotateMatrix.add(Math.sin(Math.toRadians(-yaw))*Math.sin(Math.toRadians(-roll))*Math.cos(Math.toRadians(-pitch))
+				+ Math.cos(Math.toRadians(-yaw))*Math.sin(Math.toRadians(-pitch)));
+		rotateMatrix.add(- Math.sin(Math.toRadians(-yaw))*Math.sin(Math.toRadians(-roll))*Math.sin(Math.toRadians(-pitch))
+				+ Math.cos(Math.toRadians(-yaw))*Math.cos(Math.toRadians(-pitch)));
 	}
 	
 	private void createInverseRotate() {
@@ -110,7 +110,7 @@ public class SimulationDrone implements Drone {
 		gl.glPushMatrix(); // store current transform, so we can undo the rotation
 		//System.out.println(getTranslate()[0] + "  " + getTranslate()[1] + "  " + getTranslate()[2]);
 		translateDrone(getTranslate());
-		rotateDrone(getYaw(), getGlobalRoll(), getGlobalPitch());
+		rotateDrone(-getYaw(), -getGlobalRoll(), -getGlobalPitch());
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glBegin(gl.GL_QUADS);
 		
@@ -157,7 +157,7 @@ public class SimulationDrone implements Drone {
 	}
 
 	public void translateDrone(double[] translate) {
-		gl.glTranslated(-translate[0], -translate[1], -translate[2]);
+		gl.glTranslated(translate[0], translate[1], translate[2]);
 		this.translate = translate;
 	}
 	
@@ -337,7 +337,6 @@ public class SimulationDrone implements Drone {
 	}
 
 	public void timeHasPassed(float timePassed) {
-		
 		double yawPass = this.yawRate * timePassed;
 		createInverseRotate();
 		this.pitch += yawPass * new BigDecimal(inverseRotateMatrix.get(1)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
