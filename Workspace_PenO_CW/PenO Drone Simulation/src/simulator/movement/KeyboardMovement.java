@@ -11,43 +11,6 @@ public class KeyboardMovement implements KeyListener{
 	private float rotateX, rotateY, rotateZ;
 	public KeyboardMovement(){}
 	
-	public float getRotateX(){
-		return rotateX;
-	}
-	
-	public float getRotateY(){
-		return rotateY;
-	}
-	
-	public float getRotateZ(){
-		return rotateZ;
-	}
-	
-	public double getX() {
-		return x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public double getZ() {
-		return z;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public void setY(double y) {
-		this.y = y;
-	}
-
-	public void setZ(double z) {
-		this.z = z;
-	}
-
-
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
@@ -149,6 +112,42 @@ public class KeyboardMovement implements KeyListener{
 			rotateZ -= 10;
 		}
 		
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public void setZ(double z) {
+		this.z = z;
+	}
+
+	public float getRotateX(){
+		return rotateX;
+	}
+
+	public float getRotateY(){
+		return rotateY;
+	}
+
+	public float getRotateZ(){
+		return rotateZ;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public double getZ() {
+		return z;
 	}
 
 }

@@ -1,10 +1,6 @@
 package simulator.physics;
 
-import java.util.*;
-import simulator.camera.GeneralCamera;
 import simulator.objects.SimulationDrone;
-import simulator.objects.Sphere;
-import simulator.world.World;
 
 public class Movement {
 	private SimulationDrone drone;

@@ -32,77 +32,77 @@ public class GeneralCamera {
 	
 	//TODO voeg translatie/rotatie toe van de vaste camera's!!
 	
-	public float getUpX() {
-		return upX;
-	}
-
 	public void setUpX(float upX) {
 		this.upX = upX;
-	}
-
-	public float getUpY() {
-		return upY;
 	}
 
 	public void setUpY(float upY) {
 		this.upY = upY;
 	}
 
-	public float getUpZ() {
-		return upZ;
-	}
-
 	public void setUpZ(float upZ) {
 		this.upZ = upZ;
 	}
 
-	public float getEyeX() {
-		return eyeX;
-	}
 	public void setEyeX(float eyeX) {
 		this.eyeX = eyeX;
-	}
-
-	public float getEyeY() {
-		return eyeY;
 	}
 
 	public void setEyeY(float eyeY) {
 		this.eyeY = eyeY;
 	}
 
-	public float getEyeZ() {
-		return eyeZ;
-	}
-
 	public void setEyeZ(float eyeZ) {
 		this.eyeZ = eyeZ;
-	}
-
-	public float getLookAtX() {
-		return lookAtX;
 	}
 
 	public void setLookAtX(float lookAtX) {
 		this.lookAtX = lookAtX;
 	}
 
-	public float getLookAtY() {
-		return lookAtY;
-	}
-
 	public void setLookAtY(float lookAtY) {
 		this.lookAtY = lookAtY;
+	}
+
+	public void setLookAtZ(float lookAtZ) {
+		this.lookAtZ = lookAtZ;
+	}
+
+	public float getUpX() {
+		return upX;
+	}
+
+	public float getUpY() {
+		return upY;
+	}
+
+	public float getUpZ() {
+		return upZ;
+	}
+
+	public float getEyeX() {
+		return eyeX;
+	}
+	public float getEyeY() {
+		return eyeY;
+	}
+
+	public float getEyeZ() {
+		return eyeZ;
+	}
+
+	public float getLookAtX() {
+		return lookAtX;
+	}
+
+	public float getLookAtY() {
+		return lookAtY;
 	}
 
 	public float getLookAtZ() {
 		return lookAtZ;
 	}
 
-	public void setLookAtZ(float lookAtZ) {
-		this.lookAtZ = lookAtZ;
-	}
-	
 	public float getStartUpX() {
 		return startUpX;
 	}
