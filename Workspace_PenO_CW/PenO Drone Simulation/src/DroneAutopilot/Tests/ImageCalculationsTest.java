@@ -1,7 +1,13 @@
 package DroneAutopilot.Tests;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import javax.imageio.ImageIO;
+
 import DroneAutopilot.ImageCalculations;
 import exceptions.EmptyPositionListException;
 import exceptions.SmallCircleException;
@@ -14,7 +20,7 @@ import org.junit.Test;
 public class ImageCalculationsTest{
 
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException{
 		calc = new ImageCalculations();
 		red = 255;
 		white = 16777215;
@@ -73,12 +79,20 @@ public class ImageCalculationsTest{
 							     red,red,red,red,red,
 							     red,red,red,red,red};
 
+		bigBImageCenter = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/center1024x1024.jpg"));
+		bigBImageTopRight = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/topright2250x150.jpg"));
+
+		bigImageCenter = convertImageToIntArray(bigBImageCenter);
+		bigImageTopRight = convertImageToIntArray(bigBImageTopRight);
+		
 	   camera1 = createCameraForTesting(image10x10Empty, 1, 1, 10);
 	   camera2 = createCameraForTesting(image10x10Circle3InTopLeftCorner, 1, 1, 10);
 	   camera3 = createCameraForTesting(image10x10Circle4InCenter, 1, 1, 10);
 	   camera4 = createCameraForTesting(image9x9Circle3InTopMiddle, 1, 1, 9);
 	   camera5 = createCameraForTesting(image9x9Circle4InBottomRightCorner, 1, 1, 9);
 	   camera6 = createCameraForTesting(image5x5Red, 1, 1, 5);
+	   bigCamera1 = createCameraForTesting(bigImageCenter, 1, 1, 2048);
+	   bigCamera2 = createCameraForTesting(bigImageTopRight, 1, 1, 2048);
 	   
 	   pixellist1 = new ArrayList<int[]>(Arrays.asList(new int[0][0]));
 	   pixellist2 = new ArrayList<int[]>(Arrays.asList(new int[][] {{0,0},{1,0},{2,0},{0,1},{1,1},{2,1},{0,2},{1,2},{2,2}}));
@@ -196,25 +210,28 @@ public class ImageCalculationsTest{
 		calc.pointsOnCircumference(pixellist1, camera1);
 	}
 	
-	//TODO te onnauwkeurig, cirkels niet cirkelvormig genoeg, enkel bij grotere cirkels
 	@Test
 	public void centerOfCircleTest(){
-//		int[] point = calc.centerOfCircle(pixellist2, camera2);
-//		assertArrayEquals(new int[] {1,1}, point);//onnauwkeurig komt toevallig uit
-//		assertArrayEquals(new int[] {4,4}, calc.centerOfCircle(pixellist3, camera3));
-//		assertArrayEquals(new int[] {4,1}, calc.centerOfCircle(pixellist4, camera4));
-//		assertArrayEquals(new int[] {6,6}, calc.centerOfCircle(pixellist5, camera5));
+		ArrayList<int[]> list1 = calc.getRedPixels(bigCamera1);
+		assertArrayEquals(new float[] {1024,1024}, calc.centerOfCircle(list1, bigCamera1) ,0.001);
+	}
+	
+	@Test(expected = EmptyPositionListException.class)
+	public void centerOfCircleExcEPTest() throws SmallCircleException,EmptyPositionListException{
+		calc.centerOfCircle(pixellist1, camera1);
 	}
 	
 	@Test(expected = SmallCircleException.class)
-	public void centerOfCircleExcTest() throws SmallCircleException{
-		calc.centerOfCircle(pixellist2, camera1);
+	public void centerOfCircleExcSCTest() throws SmallCircleException,EmptyPositionListException{
+		calc.centerOfCircle(pixellist2, camera2);
+		calc.centerOfCircle(pixellist3, camera3);
+		calc.centerOfCircle(pixellist4, camera4);
+		calc.centerOfCircle(pixellist5, camera5);
 		calc.centerOfCircle(pixellist6, camera6);
 	}
 	
 	
 	//anonymous class implementing Camera interface
-	
 	//create camera that returns given images
 	public Camera createCameraForTesting(int[] image, int horAngle, int verAngle, int width){
 		return new Camera(){
@@ -240,6 +257,21 @@ public class ImageCalculationsTest{
 	    };
 	}
  
+	public int[] convertImageToIntArray(BufferedImage image){
+		byte[] allPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+		int pixelLength = 3;
+		int[] pixels = new int[allPixels.length/pixelLength];
+        for (int i = 0; i < allPixels.length; i += pixelLength) {
+           int brg = 0;
+           brg += ((int) allPixels[i])*256*256; // blue
+           brg += ((int) allPixels[i+1])*256; // green
+           brg += (int) allPixels[i+2]; // red
+           pixels[i/pixelLength] = brg;
+        }
+		return pixels;
+	}
+	
+	
     private ImageCalculations calc;
 
     private Camera camera1;
@@ -248,6 +280,8 @@ public class ImageCalculationsTest{
     private Camera camera4;
     private Camera camera5;
     private Camera camera6;
+    private Camera bigCamera1;
+    private Camera bigCamera2;
     
     private ArrayList<int[]> pixellist1;
     private ArrayList<int[]> pixellist2;
@@ -262,6 +296,9 @@ public class ImageCalculationsTest{
     private int[] image9x9Circle3InTopMiddle;
     private int[] image9x9Circle4InBottomRightCorner;
     private int[] image5x5Red;
+    
+    private BufferedImage bigBImageCenter;
+    private BufferedImage bigBImageTopRight;
     private int[] bigImageCenter;
     private int[] bigImageTopRight;
     

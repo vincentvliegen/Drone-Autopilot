@@ -2,8 +2,6 @@ package DroneAutopilot;
 
 import java.util.ArrayList;
 
-import com.sun.xml.internal.bind.marshaller.MinimumEscapeHandler;
-
 import exceptions.EmptyPositionListException;
 import exceptions.SmallCircleException;
 import p_en_o_cw_2016.Camera;
@@ -163,13 +161,13 @@ public class ImageCalculations {
 //			/*B*/RGB[2] = color / (256*256);
 //			return RGB;
 //		}
-//		
-//		//conversie (R,G,B) naar int  =   dec(BGR)
-//		public int colorRGBToInt(int[] RGB){
-//			int color = 0;
-//			color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
-//			return color;
-//		}
-//		
+		
+		//conversie (R,G,B) naar int  =   dec(BGR)
+		public int colorRGBToInt(int[] RGB){
+			int color = 0;
+			color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
+			return color;
+		}
+		
 	
 }
