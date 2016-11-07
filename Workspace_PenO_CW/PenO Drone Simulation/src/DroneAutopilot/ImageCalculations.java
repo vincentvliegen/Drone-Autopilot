@@ -2,7 +2,10 @@ package DroneAutopilot;
 
 import java.util.ArrayList;
 
+import com.sun.xml.internal.bind.marshaller.MinimumEscapeHandler;
+
 import exceptions.EmptyPositionListException;
+import exceptions.SmallCircleException;
 import p_en_o_cw_2016.Camera;
 
 public class ImageCalculations {
@@ -68,15 +71,15 @@ public class ImageCalculations {
 	
 	//berekening centrum cirkel
 	
-	//TODO nauwkeurigere uitwerking, geeft zeer onnauwkeurige waarden bij dicht bij een liggende punten/punten op zelfde hoogte of breedte (zeer kleine bollen/ zeer grote bollen met 1 zijde bijna recht), zo onbruikbaar
-	//center of circle GIVEN 3 points on circumference
-	public int[] centerOfCircle(ArrayList<int[]> listOfPixelCoordinates, Camera camera) throws IllegalArgumentException{
+	public int[] centerOfCircle(ArrayList<int[]> listOfPixelCoordinates, Camera camera) throws SmallCircleException,EmptyPositionListException{
 		ArrayList<int[]> threePoints = new ArrayList<int[]>();
 		try{
 			threePoints.addAll(pointsOnCircumference(listOfPixelCoordinates, camera));
 		}
-		catch (IllegalArgumentException e){
-			throw new IllegalArgumentException();
+		catch (SmallCircleException e){
+			throw new SmallCircleException(e.getSizeListCircPos());
+		}catch (EmptyPositionListException e){
+			throw new EmptyPositionListException(e.getList());
 		}
 		float X = 0;
 		float Y = 0;
@@ -96,12 +99,12 @@ public class ImageCalculations {
 	
 	//calculate 3 most representative points on circumference (3 furthest neighbours)
 	//ONLY if at least 3 points on circumference
-	public ArrayList<int[]> pointsOnCircumference (ArrayList<int[]> listOfPixelCoordinates, Camera camera) throws IllegalArgumentException{
+	public ArrayList<int[]> pointsOnCircumference (ArrayList<int[]> listOfPixelCoordinates, Camera camera) throws SmallCircleException,EmptyPositionListException{
 		ArrayList<int[]> AllEdges = new ArrayList<int[]>();
 		ArrayList<int[]> AllCPoints = new ArrayList<int[]>();
 		ArrayList<int[]> result = new ArrayList<int[]>();
 		if(listOfPixelCoordinates.size() == 0){
-			throw new IllegalArgumentException();
+			throw new EmptyPositionListException(listOfPixelCoordinates);
 		}
 		int y1 = listOfPixelCoordinates.get(0)[1];
 		int y2 = listOfPixelCoordinates.get(listOfPixelCoordinates.size()-1)[1];
@@ -131,8 +134,8 @@ public class ImageCalculations {
 				AllCPoints.add(AllEdges.get(j));
 			}
 		}
-		if(AllCPoints.size() < 3){
-			throw new IllegalArgumentException();
+		if(AllCPoints.size() < minimalSizeCircumferenceCircle){
+			throw new SmallCircleException(AllCPoints.size());
 		}
 		result.add(AllCPoints.get(0));
 		result.add(AllCPoints.get(AllCPoints.size()/2));//middelste punt ligt verst van eerste en laatste punt
@@ -140,7 +143,8 @@ public class ImageCalculations {
 		return result;
 	}
 	
-	
+	//groter of gelijk aan 3, onnauwkeurig voor kleine waarden, cirkels kunnen te klein zijn != cirkelvormig
+	public static final int minimalSizeCircumferenceCircle = 20;
 	
 	
 	// debug

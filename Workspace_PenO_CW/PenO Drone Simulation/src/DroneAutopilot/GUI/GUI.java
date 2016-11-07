@@ -108,7 +108,7 @@ public class GUI {
 			this.progressBar.setValue(this.maxValue - distance);
 		}
 		if (this.maxValue > 0){
-			this.progressBar.setString(((this.maxValue - distance) / this.maxValue)*100 + "%");			
+			this.progressBar.setString((Math.round(((this.maxValue - distance)*100) / (float)this.maxValue)) + "%");			
 		} else {
 			this.progressBar.setString("100%");
 		}

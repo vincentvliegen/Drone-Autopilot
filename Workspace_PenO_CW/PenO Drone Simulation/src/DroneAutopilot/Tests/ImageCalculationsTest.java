@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import DroneAutopilot.ImageCalculations;
 import exceptions.EmptyPositionListException;
+import exceptions.SmallCircleException;
 import p_en_o_cw_2016.Camera;
 
 import static org.junit.Assert.*;
@@ -159,16 +160,40 @@ public class ImageCalculationsTest{
 	
 	@Test
 	public void pointsOnCirTest(){
-		assertArrayEquals(circPoints2, calc.pointsOnCircumference(pixellist2, camera2).toArray(new int[0][0]));
-		assertArrayEquals(circPoints3, calc.pointsOnCircumference(pixellist3, camera3).toArray(new int[0][0]));
-		assertArrayEquals(circPoints4, calc.pointsOnCircumference(pixellist4, camera4).toArray(new int[0][0]));
-		assertArrayEquals(circPoints5, calc.pointsOnCircumference(pixellist5, camera5).toArray(new int[0][0]));
+		try {
+			assertArrayEquals(circPoints2, calc.pointsOnCircumference(pixellist2, camera2).toArray(new int[0][0]));
+		} catch (SmallCircleException|EmptyPositionListException e) {
+			e.printStackTrace();
+		}
+		try {
+			assertArrayEquals(circPoints3, calc.pointsOnCircumference(pixellist3, camera3).toArray(new int[0][0]));
+		} catch (SmallCircleException|EmptyPositionListException e) {
+			e.printStackTrace();
+		}
+		try {
+			assertArrayEquals(circPoints4, calc.pointsOnCircumference(pixellist4, camera4).toArray(new int[0][0]));
+		} catch (SmallCircleException|EmptyPositionListException e) {
+			e.printStackTrace();
+		}
+		try {
+			assertArrayEquals(circPoints5, calc.pointsOnCircumference(pixellist5, camera5).toArray(new int[0][0]));
+		} catch (SmallCircleException|EmptyPositionListException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
-	public void pointsOnCirExcTest() throws IllegalArgumentException{
-		calc.pointsOnCircumference(pixellist1, camera1);
+	@Test(expected = SmallCircleException.class)
+	public void pointsOnCirExcSCTest() throws SmallCircleException,EmptyPositionListException{
+		calc.pointsOnCircumference(pixellist2, camera2);
+		calc.pointsOnCircumference(pixellist3, camera3);
+		calc.pointsOnCircumference(pixellist4, camera4);
+		calc.pointsOnCircumference(pixellist5, camera5);
 		calc.pointsOnCircumference(pixellist6, camera6);
+	}
+	
+	@Test(expected = EmptyPositionListException.class)
+	public void pointsOnCirExcEPTest() throws SmallCircleException,EmptyPositionListException{
+		calc.pointsOnCircumference(pixellist1, camera1);
 	}
 	
 	//TODO te onnauwkeurig, cirkels niet cirkelvormig genoeg, enkel bij grotere cirkels
@@ -181,8 +206,8 @@ public class ImageCalculationsTest{
 //		assertArrayEquals(new int[] {6,6}, calc.centerOfCircle(pixellist5, camera5));
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
-	public void centerOfCircleExcTest() throws IllegalArgumentException{
+	@Test(expected = SmallCircleException.class)
+	public void centerOfCircleExcTest() throws SmallCircleException{
 		calc.centerOfCircle(pixellist2, camera1);
 		calc.centerOfCircle(pixellist6, camera6);
 	}
@@ -237,6 +262,8 @@ public class ImageCalculationsTest{
     private int[] image9x9Circle3InTopMiddle;
     private int[] image9x9Circle4InBottomRightCorner;
     private int[] image5x5Red;
+    private int[] bigImageCenter;
+    private int[] bigImageTopRight;
     
     private int index1;
     private int index4;
