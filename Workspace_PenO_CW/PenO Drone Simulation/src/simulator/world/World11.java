@@ -23,9 +23,9 @@ public class World11 extends World {
 
 	public World11() {
 		super();
-		super.addGeneralCamera(new GeneralCamera(-20, 20, 20, 0, 0, 0, 0, 1, 0));
-		super.addGeneralCamera(new GeneralCamera(20, 20, 20, 0, 0, 0, 0, 1, 0));
-		super.addGeneralCamera(new GeneralCamera(0, 40, -30, 0, 0, 0, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(-1, 1, 2, 0, 0, -2.5f, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(1, 1, 2, 0, 0, -2.5f, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(1, 4, 2, 0, 0, -2.5f, 0, 1, 0));
 		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
@@ -102,9 +102,9 @@ public class World11 extends World {
 		
 		// Input Sphere.
 		if (!setup) {
-			double[] translateSphere = { 0, 0, -30 };
+			double[] translateSphere = { 0, 0, -5f };
 			float[] colorSphere = { 1f, 0f, 0f };
-			Sphere sphere1 = new Sphere(gl, 5f, 64, 64, colorSphere, translateSphere);
+			Sphere sphere1 = new Sphere(gl, .2f, 64, 64, colorSphere, translateSphere);
 			sphere1.drawSphere();
 			this.sphere1 = sphere1;
 			addSphere(sphere1);
@@ -115,7 +115,7 @@ public class World11 extends World {
 		if (!setup) {
 			double[] translateDrone = { 0, 0, 0 };
 			float[] colorDrone = { 0f, 0f, 1f };
-			SimulationDrone drone1 = new SimulationDrone(gl, 3f, 4f, 4f, colorDrone, translateDrone, this);
+			SimulationDrone drone1 = new SimulationDrone(gl, .05f, .1f, .1f, colorDrone, translateDrone, this);
 			this.drone1 = drone1;
 			addSimulationDrone(drone1);
 			drone1.drawDrone();

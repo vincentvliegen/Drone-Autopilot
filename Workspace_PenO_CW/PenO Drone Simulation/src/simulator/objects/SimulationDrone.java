@@ -32,7 +32,7 @@ public class SimulationDrone implements Drone {
 	private float yaw = 0;
 	World world;
 	private Movement movement;
-	private static float weight = 10f;
+	private static float weight = 1.4f;
 	private float pitchRate = 0;
 	private float rollRate = 0;
 	private float yawRate = 0;
