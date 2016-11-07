@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import DroneAutopilot.GUI.GUI;
 import exceptions.EmptyPositionListException;
+import exceptions.SmallCircleException;
 import p_en_o_cw_2016.Drone;
 
 public class MoveToTarget{
@@ -87,11 +88,30 @@ public class MoveToTarget{
 		float[] cogLeft = {0,0};
 		float[] cogRight = {0,0};
 		try{
-			cogLeft = this.getImageCalculations().getCOG(leftCamera);
-			cogRight = this.getImageCalculations().getCOG(rightCamera);
-		} catch (EmptyPositionListException exception){
-			exception.printStackTrace();
+			cogLeft = this.getImageCalculations().centerOfCircle(leftCamera, this.getDrone().getLeftCamera());
+		} catch (SmallCircleException e) {
+			try {
+				cogLeft = this.getImageCalculations().getCOG(leftCamera);
+			} catch (EmptyPositionListException e1) {
+				e1.printStackTrace();
+			}
+			
+		} catch (EmptyPositionListException e) {
+			e.printStackTrace();
 		}
+		try{
+			cogRight = this.getImageCalculations().centerOfCircle(rightCamera, this.getDrone().getRightCamera());
+		} catch (SmallCircleException e) {
+			try {
+				cogRight = this.getImageCalculations().getCOG(rightCamera);
+			} catch (EmptyPositionListException e1) {
+				e1.printStackTrace();
+			}
+			
+		} catch (EmptyPositionListException e) {
+			e.printStackTrace();
+		}
+		
 		this.updateGUI(cogLeft, cogRight);
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
 				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= upperBoundary) {
