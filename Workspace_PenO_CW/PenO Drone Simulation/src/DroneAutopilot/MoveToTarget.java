@@ -147,7 +147,7 @@ public class MoveToTarget{
 	
 	public void updateGUI(float[] centerOfGravityL, float[] centerOfGravityR){
 		float distance = this.getPhysicsCalculations().getDistance(centerOfGravityL, centerOfGravityR);
-		this.getGUI().update((int)distance);//TODO verplaatsen naar MoveToTarget, GUI uit PhysicsCalculations halen
+		this.getGUI().update((int)(distance*100));//TODO verplaatsen naar MoveToTarget, GUI uit PhysicsCalculations halen
 	}
 
 
