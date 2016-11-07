@@ -3,22 +3,23 @@
 Het relatief assenstelsel hangt vast aan het centrum van de drone, zodat de linkercamera zich op de negatieve X-as bevindt en de rechtercamera op de positieve. De positieve Y-as staat loodrecht op de drone naar boven en de negatieve Z-as ligt in de diepte van het computerscherm. Het assenstelsel ondergaat identiek dezelfde bewegingen als de drone.
 \\
 \\
-De drone kan drie bewegingen uitvoeren: roll, pitch en yaw. Het voert eerst zijn yaw uit, dan zijn roll en ten slotte zijn pitch. De yaw roteert rond de Y-as, de roll rond de Z'-as (Z-as van het relatieve assenstelsel na yaw beweging) en de pitch rond de X''-as (X-as van het relatieve assenstelsel na alle vorige bewegingen). Merk op dat er een verschil bestaat tussen de roll en pitch die de drone op een gegeven ogenblik heeft en de yaw, roll en pitch die de drone moet uitvoeren om in zijn huidige positie te geraken. 
+De drone kan drie bewegingen uitvoeren: roll, pitch en yaw. Het voert eerst zijn yaw uit, dan zijn roll en ten slotte zijn pitch. De yaw roteert rond de Y-as, de roll rond de Z'-as\footnote{Z-as van het relatieve assenstelsel na yaw beweging.} en de pitch rond de X''-as\footnote{X-as van het relatieve assenstelsel na alle vorige bewegingen.}. Merk op dat er een verschil bestaat tussen de roll en pitch die de drone op een gegeven ogenblik heeft en de yaw, roll en pitch die de drone moet uitvoeren om in zijn huidige positie te geraken. Daarnaast zijn door de ori\"entatie van het assenstelsel zowel de roll, pitch als yaw negatieve waarden.
 \\
 \\
 Door de volgorde van de drie rotaties onstaat er een specifieke transformatiematrix die, vermenigvuldigd met de coördinaten van een punt (bv. het startpunt van de linkercamera), de coördinaten van het punt na de drie rotaties bepaalt. De verandering van de yaw/roll/pitch is ook afhankelijk van deze transformatiematrix. De verandering van de pitch is immers afhankelijk van de roll: hoe groter de roll, hoe trager de pitch verandert. 
 \\
+\\
 De bekomen rotatiematrix:
-\begin{equation*} 
+\begin{equation*}
 R = 
 \begin{bmatrix}
-	\cos(Y)*\cos(R) & -\cos(Y)*\sin(R)*\cos(P) + \sin(Y)*\sin(P) & \cos(Y)*\sin(R)*\sin(P)+\sin(Y)*\cos(P) \\
-	\sin(R) & \cos(R)*\cos(P) & -\cos(R)*\sin(P) \\ 
-	-\sin(Y)*\cos(R)& \sin(Y)*\sin(R)*\cos(P)+\cos(Y)*\sin(P)& 
-	-\sin(Y)*\sin(R)*\sin(P)+\cos(Y)*\cos(P)
+\cos(Y)\cos(R) & -\cos(Y)\sin(R)\cos(P) + \sin(Y)\sin(P) & \cos(Y)\sin(R)\sin(P)+\sin(Y)\cos(P) \\
+\sin(R) & \cos(R)\cos(P) & -\cos(R)\sin(P) \\ 
+-\sin(Y)\cos(R) & \sin(Y)\sin(R)\cos(P)+\cos(Y)\sin(P) & -\sin(Y)\sin(R)\sin(P)+\cos(Y)\cos(P)\\
 \end{bmatrix}
 \end{equation*}
-\\
+
+
 De berekening van de veranderingen van yaw, roll en pitch steunt op het volgend principe: 
 \begin{equation*}
 R\textsuperscript{-1} * R * x = x
@@ -36,13 +37,13 @@ m * g \\
 \end{Bmatrix}.
 \end{equation*} 
 \\
-De thrust daarentegen is afhankelijk van de huidige pitch en roll van de drone. Daarom zal deze vermenigvuldigd moeten worden met de transformatiematrix, om de huidige thrust te bekomen. Het resultaat van deze vermenigvuldiging is: 
+De thrust (\(T\)) daarentegen is afhankelijk van de huidige pitch en roll van de drone. Daarom zal deze vermenigvuldigd moeten worden met de transformatiematrix, om de huidige thrust te bekomen. Het resultaat van deze vermenigvuldiging is: 
 \begin{equation*} 
 \vec{T} = 
 \begin{Bmatrix}
-thrust*(\sin(P)*\sin(Y) - \cos(P)*\cos(Y)*\sin(R)\\ 
-thrust*\cos(P)*\cos(R) \\
-thrust*(\cos(Y)*\sin(P) + \cos(P)*\sin(R)*\sin(Y))
+T*(\sin(P)*\sin(Y) - \cos(P)*\cos(Y)*\sin(R))\\ 
+T*\cos(P)*\cos(R) \\
+T*(\cos(Y)*\sin(P) + \cos(P)*\sin(R)*\sin(Y))
 \end{Bmatrix}
 \end{equation*}
 \\
@@ -56,7 +57,7 @@ W_z
 \end{Bmatrix}
 \end{equation*}
 \\
-De wrijvingskracht is een kracht die evenredig is met de snelheid en een constante drag, d. Deze kracht werkt in tegen de snelheid, dus de constante is negatief. \\
+De wrijvingskracht is een kracht die evenredig is met de snelheid (\(v\)) en een constante drag (\(d\)). Deze kracht werkt in tegen de snelheid, dus de constante is negatief. \\
 \begin{equation*}
 \vec{F_d} = 
 \begin{Bmatrix}

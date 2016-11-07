@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.11" icons="true" automaticImage="PNG" always-add-relationships="false" 
-  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true" 
-  router="FAN">  
-  <class id="1" language="java" name="simulator.SimulatorMain" project="PenO Drone Simulation" 
-    file="/PenO Drone Simulation/src/simulator/SimulatorMain.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1403" y="-1016"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
-  <class id="2" language="java" name="simulator.camera.DroneCamera" project="PenO Drone Simulation" 
+<class-diagram version="1.1.9" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="simulator.camera.DroneCamera" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/camera/DroneCamera.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1017" y="95"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
@@ -20,43 +10,43 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="3" language="java" name="simulator.camera.GeneralCamera" project="PenO Drone Simulation" 
+  <class id="2" language="java" name="simulator.camera.GeneralCamera" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/camera/GeneralCamera.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="222" y="-244"/>    
-    <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
+    <position height="60" width="353" x="199" y="-427"/>    
+    <display autosize="false" stereotype="false" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="4" language="java" name="simulator.camera.DroneCameraPlace" project="PenO Drone Simulation" 
+  <enumeration id="3" language="java" name="simulator.camera.DroneCameraPlace" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/camera/DroneCameraPlace.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="653" y="-193"/>    
+    <position height="-1" width="-1" x="785" y="-238"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <class id="5" language="java" name="simulator.GUI.GUI" project="PenO Drone Simulation" 
+  <class id="4" language="java" name="simulator.GUI.GUI" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/GUI/GUI.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="208" y="-630"/>    
+    <position height="-1" width="-1" x="496" y="-612"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="6" language="java" name="simulator.objects.Sphere" project="PenO Drone Simulation" 
+  <class id="5" language="java" name="simulator.objects.Sphere" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/objects/Sphere.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="257" y="-955"/>    
+    <position height="-1" width="-1" x="498" y="-847"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="simulator.objects.SimulationDrone" project="PenO Drone Simulation" 
+  <class id="6" language="java" name="simulator.objects.SimulationDrone" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/objects/SimulationDrone.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1395" y="-550"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
@@ -65,34 +55,34 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="simulator.physics.Force" project="PenO Drone Simulation" 
+  <class id="7" language="java" name="simulator.physics.Force" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/physics/Force.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2127" y="-790"/>    
+    <position height="-1" width="-1" x="1747" y="-544"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="simulator.physics.Physics" project="PenO Drone Simulation" 
+  <class id="8" language="java" name="simulator.physics.Physics" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/physics/Physics.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1812" y="-805"/>    
+    <position height="-1" width="-1" x="1737" y="-771"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="simulator.physics.Movement" project="PenO Drone Simulation" 
+  <class id="9" language="java" name="simulator.physics.Movement" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/physics/Movement.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1926" y="-356"/>    
+    <position height="-1" width="-1" x="1795" y="-278"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="simulator.world.World11" project="PenO Drone Simulation" 
+  <class id="10" language="java" name="simulator.world.World11" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/world/World11.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="983" y="-1052"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
@@ -101,153 +91,157 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="simulator.world.World" project="PenO Drone Simulation" 
+  <class id="11" language="java" name="simulator.world.World" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/simulator/world/World.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="849" y="-582"/>    
+    <position height="-1" width="-1" x="961" y="-568"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="true" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="13">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="14" name="rightCamera">        
-        <position height="19" width="79" x="1005" y="-72"/>      
+  <association id="12">    
+    <end type="SOURCE" refId="11" navigable="false" variant="ASSOCIATION">      
+      <attribute id="13" name="drones">        
+        <position height="0" width="0" x="547" y="218"/>      
       </attribute>      
-      <multiplicity id="15" minimum="0" maximum="1">        
-        <position height="17" width="25" x="1049" y="-51"/>      
+      <multiplicity id="14" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="547" y="218"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <generalization id="15">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
   <association id="16">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="17" name="physics">        
-        <position height="0" width="0" x="538" y="293"/>      
+    <end type="SOURCE" refId="1" navigable="false" variant="ASSOCIATION">      
+      <attribute id="17" name="place">        
+        <position height="19" width="38" x="829" y="-167"/>      
       </attribute>      
       <multiplicity id="18" minimum="0" maximum="1">        
-        <position height="17" width="25" x="1669" y="-745"/>      
+        <position height="17" width="25" x="862" y="-146"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="9" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="19">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="20" name="currentCamera">        
-        <position height="19" width="93" x="436" y="-338"/>      
+    <end type="SOURCE" refId="11" navigable="false" variant="ASSOCIATION">      
+      <attribute id="20" name="spheres">        
+        <position height="0" width="0" x="-1348" y="-987"/>      
       </attribute>      
-      <multiplicity id="21" minimum="0" maximum="1">        
-        <position height="17" width="25" x="456" y="-321"/>      
+      <multiplicity id="21" minimum="0" maximum="2147483647">        
+        <position height="17" width="23" x="644" y="-770"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="22">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="23" name="drone1">        
-        <position height="19" width="47" x="1153" y="-788"/>      
-      </attribute>      
-      <multiplicity id="24" minimum="0" maximum="1">        
-        <position height="0" width="0" x="547" y="218"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="25">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="26" name="spheres">        
-        <position height="0" width="0" x="-1589" y="-1095"/>      
-      </attribute>      
-      <multiplicity id="27" minimum="0" maximum="2147483647">        
-        <position height="17" width="23" x="403" y="-878"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="28">    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="12"/>  
+  <generalization id="22">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
   </generalization>  
-  <association id="29">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="30" name="place">        
-        <position height="19" width="38" x="697" y="-122"/>      
-      </attribute>      
-      <multiplicity id="31" minimum="0" maximum="1">        
-        <position height="17" width="25" x="730" y="-101"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="32">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="33" name="generalCameras">        
-        <position height="19" width="100" x="409" y="-421"/>      
-      </attribute>      
-      <multiplicity id="34" minimum="0" maximum="2147483647">        
-        <position height="17" width="23" x="443" y="-400"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="35">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="36" name="forces">        
-        <position height="0" width="0" x="578" y="257"/>      
-      </attribute>      
-      <multiplicity id="37" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="578" y="257"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="38">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="39" name="drone">        
-        <position height="19" width="40" x="1581" y="-641"/>      
-      </attribute>      
-      <multiplicity id="40" minimum="0" maximum="1">        
-        <position height="17" width="25" x="1587" y="-625"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="41">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="42" name="drone">        
+  <association id="23">    
+    <end type="SOURCE" refId="1" navigable="false" variant="ASSOCIATION">      
+      <attribute id="24" name="drone">        
         <position height="19" width="40" x="1177" y="-262"/>      
       </attribute>      
-      <multiplicity id="43" minimum="0" maximum="1">        
+      <multiplicity id="25" minimum="0" maximum="1">        
         <position height="0" width="0" x="547" y="218"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="44">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="45" name="leftCamera">        
+  <association id="26">    
+    <end type="SOURCE" refId="6" navigable="false" variant="ASSOCIATION">      
+      <attribute id="27" name="leftCamera">        
         <position height="19" width="71" x="1137" y="-63"/>      
       </attribute>      
-      <multiplicity id="46" minimum="0" maximum="1">        
+      <multiplicity id="28" minimum="0" maximum="1">        
         <position height="17" width="25" x="1134" y="-43"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="29">    
+    <end type="SOURCE" refId="9" navigable="false" variant="ASSOCIATION">      
+      <attribute id="30" name="drone">        
+        <position height="19" width="40" x="1568" y="-451"/>      
+      </attribute>      
+      <multiplicity id="31" minimum="0" maximum="1">        
+        <position height="17" width="25" x="1578" y="-431"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="32">    
+    <end type="SOURCE" refId="11" navigable="false" variant="ASSOCIATION">      
+      <attribute id="33" name="generalCameras">        
+        <position height="19" width="100" x="510" y="-511"/>      
+      </attribute>      
+      <multiplicity id="34" minimum="0" maximum="2147483647">        
+        <position height="17" width="23" x="538" y="-488"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="35">    
+    <end type="SOURCE" refId="10" navigable="false" variant="ASSOCIATION">      
+      <attribute id="36" name="drone1">        
+        <position height="19" width="47" x="1153" y="-788"/>      
+      </attribute>      
+      <multiplicity id="37" minimum="0" maximum="1">        
+        <position height="0" width="0" x="547" y="218"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="4" navigable="false" variant="ASSOCIATION">      
+      <attribute id="39" name="world">        
+        <position height="0" width="0" x="-107" y="-940"/>      
+      </attribute>      
+      <multiplicity id="40" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-107" y="-940"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="41">    
+    <end type="SOURCE" refId="11" navigable="false" variant="ASSOCIATION">      
+      <attribute id="42" name="currentCamera">        
+        <position height="19" width="93" x="567" y="-436"/>      
+      </attribute>      
+      <multiplicity id="43" minimum="0" maximum="1">        
+        <position height="17" width="25" x="573" y="-413"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="44">    
+    <end type="SOURCE" refId="10" navigable="false" variant="ASSOCIATION">      
+      <attribute id="45" name="sphere1">        
+        <position height="0" width="0" x="-1348" y="-987"/>      
+      </attribute>      
+      <multiplicity id="46" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-1348" y="-987"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="47">    
-    <end type="SOURCE" refId="12" navigable="false">      
+    <end type="SOURCE" refId="11" navigable="false" variant="ASSOCIATION">      
       <attribute id="48" name="droneCameras">        
         <position height="0" width="0" x="714" y="-100"/>      
       </attribute>      
@@ -255,83 +249,55 @@
         <position height="0" width="0" x="714" y="-100"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="50">    
-    <end type="SOURCE" refId="10" navigable="false">      
-      <attribute id="51" name="drone">        
-        <position height="19" width="40" x="1568" y="-451"/>      
+    <end type="SOURCE" refId="6" navigable="false" variant="ASSOCIATION">      
+      <attribute id="51" name="movement">        
+        <position height="19" width="65" x="1669" y="-400"/>      
       </attribute>      
       <multiplicity id="52" minimum="0" maximum="1">        
-        <position height="17" width="25" x="1578" y="-431"/>      
+        <position height="17" width="25" x="1656" y="-353"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="9" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="53">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="3"/>  
-  </generalization>  
-  <association id="54">    
-    <end type="SOURCE" refId="12" navigable="false">      
-      <attribute id="55" name="drones">        
-        <position height="0" width="0" x="547" y="218"/>      
+  <association id="53">    
+    <end type="SOURCE" refId="6" navigable="false" variant="ASSOCIATION">      
+      <attribute id="54" name="rightCamera">        
+        <position height="19" width="79" x="1005" y="-72"/>      
       </attribute>      
-      <multiplicity id="56" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="547" y="218"/>      
+      <multiplicity id="55" minimum="0" maximum="1">        
+        <position height="17" width="25" x="1049" y="-51"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="57">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="58" name="world">        
-        <position height="0" width="0" x="-219" y="-954"/>      
+  <association id="56">    
+    <end type="SOURCE" refId="6" navigable="false" variant="ASSOCIATION">      
+      <attribute id="57" name="world">        
+        <position height="0" width="0" x="-107" y="-940"/>      
       </attribute>      
-      <multiplicity id="59" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-219" y="-954"/>      
+      <multiplicity id="58" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-107" y="-940"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
+    <end type="TARGET" refId="11" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="60">    
-    <end type="SOURCE" refId="11" navigable="false">      
-      <attribute id="61" name="sphere1">        
-        <position height="0" width="0" x="-1589" y="-1095"/>      
+  <association id="59">    
+    <end type="SOURCE" refId="8" navigable="false" variant="ASSOCIATION">      
+      <attribute id="60" name="forces">        
+        <position height="0" width="0" x="198" y="503"/>      
       </attribute>      
-      <multiplicity id="62" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-1589" y="-1095"/>      
+      <multiplicity id="61" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="198" y="503"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="63">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="64" name="world">        
-        <position height="0" width="0" x="-219" y="-954"/>      
-      </attribute>      
-      <multiplicity id="65" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-219" y="-954"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="12" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="66">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="67" name="movement">        
-        <position height="19" width="65" x="1761" y="-453"/>      
-      </attribute>      
-      <multiplicity id="68" minimum="0" maximum="1">        
-        <position height="17" width="25" x="1787" y="-431"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="10" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
