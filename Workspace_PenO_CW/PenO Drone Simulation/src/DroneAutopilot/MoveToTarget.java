@@ -52,7 +52,7 @@ public class MoveToTarget{
 	public void correctRoll() {
 		this.getDrone().setPitchRate(0);
 		this.getDrone().setYawRate(0);
-		this.getDrone().setThrust(-this.getDrone().getGravity()*this.getDrone().getWeight());
+		this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight());
 		if (this.getDrone().getRoll() >= upperBoundary)
 			this.getDrone().setRollRate(-this.getDrone().getMaxRollRate());
 		else if (this.getDrone().getRoll() <= underBoundary)
@@ -125,9 +125,11 @@ public class MoveToTarget{
 	}
 
 	public void flyTowardsTarget(float[] cogL, float[] cogR) {
+		System.out.println(this.getPhysicsCalculations().getVisiblePitch(cogL, cogR));
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
 		if (this.getPhysicsCalculations().getVisiblePitch(cogL,cogR)-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cogL)) >= 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
+			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));			
 			//System.out.println("pitch");
 			//this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));			
 		}
