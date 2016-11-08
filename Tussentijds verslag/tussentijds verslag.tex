@@ -14,6 +14,10 @@
 \documentclass[tt]{penoverslag}
 \usepackage{url}
 \usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath,bm}
+
 
 %%% PACKAGES %%%
 
@@ -51,7 +55,7 @@
 \rm 
 
 % == INLEIDING == %
-\section{Inleiding}
+\section*{Inleiding}
 \label{sec:Inleiding}
 \input{inleiding.tex}
 
@@ -76,6 +80,7 @@
 \input{algoritmes.tex}
 
 \subsection{Drone Autopilot}
+\label{sec:AlgoritmesAutopilot}
 \input{algoritmesDroneAutopilot.tex}
 
 
@@ -142,7 +147,7 @@
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=\textwidth]{KlassendiagramAutopilot.png}
+		\includegraphics[width=0.6\textwidth]{KlassendiagramAutopilot.png}
 	\end{center}
 \end{figure}
 
@@ -150,7 +155,7 @@
 
 \begin{figure}[h]
 	\begin{center}
-		\includegraphics[width=\textwidth]{KlassendiagramSimulator.png}
+		\includegraphics[width=0.9\textwidth]{KlassendiagramSimulator.png}
 	\end{center}
 \end{figure}
 

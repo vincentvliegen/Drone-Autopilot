@@ -26,33 +26,6 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		this.place = place;
 	}
 
-	public DroneCameraPlace getPlace() {
-		return place;
-	}
-
-	public SimulationDrone getDrone() {
-		return drone;
-	}
-
-	public void setDrone(SimulationDrone drone) {
-		this.drone = drone;
-	}
-
-	@Override
-	public float getHorizontalAngleOfView() {
-		return 60f;
-	}
-
-	@Override
-	public float getVerticalAngleOfView() {
-		return 50f;
-	}
-
-	@Override
-	public int getWidth() {
-		return drawable.getSurfaceWidth();
-	}
-
 	@Override
 	public int[] takeImage() {
 		int height = drawable.getSurfaceHeight();
@@ -84,26 +57,6 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		}
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 		return temp;
-	}
-
-	public void setCamera(GL2 gl, GLU glu) {
-		int height = drawable.getSurfaceHeight();
-		// Change to projection matrix.
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
-
-		// Perspective.
-		float widthHeightRatio = (float) getWidth() / (float) height;
-		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
-		// System.out.println("X " + getEyeX());
-		// System.out.println("LookAtX " + getLookAtX());
-
-		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(),
-				getUpZ());
-
-		// Change back to model view matrix.
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
 	}
 
 	public void updateDroneCamera() {
@@ -145,5 +98,52 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		setUpX((float) (drone.getRotateMatrix().get(1) * 1));
 		setUpY((float) (drone.getRotateMatrix().get(4) * 1));
 		setUpZ((float) (drone.getRotateMatrix().get(7) * 1));
+	}
+	
+	public void setCamera(GL2 gl, GLU glu) {
+		int height = drawable.getSurfaceHeight();
+		// Change to projection matrix.
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+	
+		// Perspective.
+		float widthHeightRatio = (float) getWidth() / (float) height;
+		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
+		// System.out.println("X " + getEyeX());
+		// System.out.println("LookAtX " + getLookAtX());
+	
+		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(),
+				getUpZ());
+	
+		// Change back to model view matrix.
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
+	}
+
+	public void setDrone(SimulationDrone drone) {
+		this.drone = drone;
+	}
+
+	public DroneCameraPlace getPlace() {
+		return place;
+	}
+
+	public SimulationDrone getDrone() {
+		return drone;
+	}
+
+	@Override
+	public float getHorizontalAngleOfView() {
+		return 60f;
+	}
+
+	@Override
+	public float getVerticalAngleOfView() {
+		return 50f;
+	}
+
+	@Override
+	public int getWidth() {
+		return drawable.getSurfaceWidth();
 	}
 }
