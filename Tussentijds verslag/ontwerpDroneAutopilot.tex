@@ -1,12 +1,12 @@
 {\em Auteur: Laura Vranken}\\
 
 \noindent
-De Drone Autopilot zorgt voor de besturing van de drone. Hij bepaalt zijn positie relatief ten opzichte van zijn doel a.d.h.v. twee beelden, gegeneerd door de dronecamera's. Bovendien kunnen ze opgevraagd worden vanuit de \textit{GUI} van het Virtual Testbed. Vervolgens zorgt de Autopilot ervoor dat de drone juist geori\"enteerd staat en naar zijn doel toe vliegt. Wanneer de drone zijn doel (in deze eerste fase is dit een rode bol) bereikt, moet hij daarin blijven zweven. Tenslotte moet de Autopilot ook rekening houden met een mogelijke invloed van wind die de drone van zijn koers doet afwijken.
+De Drone Autopilot zorgt voor de besturing van de drone. Hij bepaalt zijn positie relatief ten opzichte van zijn doel a.d.h.v. twee beelden, gegeneerd door de dronecamera's. Vervolgens zorgt de Autopilot ervoor dat de drone juist geori\"enteerd staat en naar zijn doel toe vliegt. Wanneer de drone zijn doel (in deze eerste fase is dit een rode bol) bereikt, moet hij daarin blijven zweven. Tenslotte moet de Autopilot ook rekening houden met een mogelijke invloed van wind die de drone van zijn koers doet afwijken.
 \\
 \\
 Ten eerste moeten de beelden die de Autopilot van de Virtual Testbed binnenkrijgt, geanalyseerd worden. Dit gebeurt door iteratief de integer waarden van elke pixel te vergelijken met de waarde van de kleur rood. Alle rode pixels worden bijgehouden door hun positie ten opzichte van het beeld, uitgedrukt in rij en kolom, op te slaan. We baseren onze komende berekeningen op het midden van de bol. Dat midden kan bepaald worden door het zwaartepunt van de rode pixels te berekenen via het gemiddelde van de opgeslagen co\"ordinaten.
 \\
-Indien de Autopilot geen rode pixels detecteert, zal de drone 360 graden ronddraaien of m.a.w. een yaw beweging uitvoeren, totdat in beide beelden rode pixels verschijnen. Dan zal de Autopilot stoppen met draaien en zijn positie tegenover het doel berekenen.
+Indien de Autopilot geen rode pixels detecteert, zal de drone geleidelijk 360 graden ronddraaien of m.a.w. een yaw beweging uitvoeren, totdat in beide beelden rode pixels verschijnen. Dan zal de Autopilot stoppen met draaien en zijn positie tegenover het doel berekenen.
 \\
 \\
 Om zijn positie tegenover het doel te berekenen, bepalen we eerst de diepte. Dit kan met behulp van de formule van stereo vision \cite{website:techbriefs} uitgewerkt worden. Zie figuur \ref{fig:DiepteberekeningDroneEnDoel} voor een grafische weergave van de berekening.
@@ -18,7 +18,7 @@ Om zijn positie tegenover het doel te berekenen, bepalen we eerst de diepte. Dit
 \end{figure}
 \\
 Vervolgens bepalen we de hoek waaronder de drone een yaw beweging moet uitvoeren om recht naar het doel gericht te zijn. Deze formule wordt afgeleid via de goniometrische regels. Zie figuur \ref{fig:RelatieveHorizontaleHoek} voor grafische ondersteuning. 
-
+\\
 Berekening brandpuntsafstand f:
 \begin{equation} \label{eq:RelatieveVerticaleHoekBegin}
 \tan(\frac{\delta}{2}) = \frac{\frac{b}{2}}{f}

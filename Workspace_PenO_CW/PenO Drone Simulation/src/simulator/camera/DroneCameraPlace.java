@@ -8,20 +8,20 @@ package simulator.camera;
 public enum DroneCameraPlace {
 	RIGHT, LEFT;
 	
-	public int getIndicator() {
-		if (this.equals(LEFT)) {
-			return -1;
-		} else {
-			return 1;
-		}
-	}
-	
 	@Override
 	public String toString() {
 		if (this.equals(LEFT)) {
 			return "Left";
 		} else {
 			return "Right";
+		}
+	}
+
+	public int getIndicator() {
+		if (this.equals(LEFT)) {
+			return -1;
+		} else {
+			return 1;
 		}
 	}
 }

@@ -17,48 +17,12 @@ public class ImageCalculations {
 	    return coord;
 	}
 
-	//zwaartepunt van groepje pixels bepalen
-	//als er geen rode pixels zijn, exception
-	// COG = center of gravity
-	public float[] getCOG (ArrayList<int[]> listOfPixelCoordinates) throws EmptyPositionListException{
-		float sumX = 0;
-		float sumY = 0;
-		float[] cOG = {0,0};
-		if(listOfPixelCoordinates.size() == 0){
-			throw new EmptyPositionListException(listOfPixelCoordinates);
-		}
-		for(int i = 0; i < listOfPixelCoordinates.size(); i++){
-			sumX += listOfPixelCoordinates.get(i)[0];
-			sumY += listOfPixelCoordinates.get(i)[1];
-		}
-		cOG[0] = sumX/listOfPixelCoordinates.size();
-		cOG[1] = sumY/listOfPixelCoordinates.size();
-		return cOG;
-	}
-	
-	//uitgewerkt voor rood in volgende functie
-	public ArrayList<int[]> getPixelsOfColor(Camera camera, int givenColor){
-        int[] image = camera.takeImage();
-        ArrayList<int[]> coloredPositions = new ArrayList<int[]>();
-        for(int i = 0; image.length > i; i++){
-            if(image[i] == givenColor){
-            	coloredPositions.add(indexToCoordinates(i, camera));
-            }
-        }
-        return coloredPositions;	
-	}
-	
 	// kleur in int
 	public final static int red = 255;
 	public final static int white = 16777215;
 	public final static int black = 0;
 	public final static int green = 65280;
 	public final static int blue = 16711680;
-	
-	//pixels of red color
-	public ArrayList<int[]> getRedPixels(Camera camera){
-		return getPixelsOfColor(camera, ImageCalculations.red);
-	}
 	
 	//check if image = red
 	public boolean checkIfAllRed(Camera camera){
@@ -171,6 +135,42 @@ public class ImageCalculations {
 	
 	//groter of gelijk aan 3, onnauwkeurig voor kleine waarden, cirkels kunnen te klein zijn != cirkelvormig
 	public static final int minimalSizeCircumferenceCircle = 20;
+
+	//zwaartepunt van groepje pixels bepalen
+	//als er geen rode pixels zijn, exception
+	// COG = center of gravity
+	public float[] getCOG (ArrayList<int[]> listOfPixelCoordinates) throws EmptyPositionListException{
+		float sumX = 0;
+		float sumY = 0;
+		float[] cOG = {0,0};
+		if(listOfPixelCoordinates.size() == 0){
+			throw new EmptyPositionListException(listOfPixelCoordinates);
+		}
+		for(int i = 0; i < listOfPixelCoordinates.size(); i++){
+			sumX += listOfPixelCoordinates.get(i)[0];
+			sumY += listOfPixelCoordinates.get(i)[1];
+		}
+		cOG[0] = sumX/listOfPixelCoordinates.size();
+		cOG[1] = sumY/listOfPixelCoordinates.size();
+		return cOG;
+	}
+
+	//uitgewerkt voor rood in volgende functie
+	public ArrayList<int[]> getPixelsOfColor(Camera camera, int givenColor){
+	    int[] image = camera.takeImage();
+	    ArrayList<int[]> coloredPositions = new ArrayList<int[]>();
+	    for(int i = 0; image.length > i; i++){
+	        if(image[i] == givenColor){
+	        	coloredPositions.add(indexToCoordinates(i, camera));
+	        }
+	    }
+	    return coloredPositions;	
+	}
+
+	//pixels of red color
+	public ArrayList<int[]> getRedPixels(Camera camera){
+		return getPixelsOfColor(camera, ImageCalculations.red);
+	}
 	
 	
 	// debug

@@ -1,5 +1,4 @@
-\noindent {\em Auteurs: Laura Vranken }\\
-Om deze tekst beter te kunnen volgen, staat het klassendiagramma van dit deel in bijlage \ref{App:KlassendiagramAutopilot}.
+\noindent {\em Auteurs: Laura Vranken }
 \\
 \\
 Het deel van de Autopilot begint bij het cre\"eren van een Autopilot in de \textit{DroneAutopilotFactory} klasse, ge\"implementeerd met de interface \textit{AutopilotFactory}. Hierin wordt een Autopilot aangemaakt en worden de beginwaarden voor yaw, roll, pitch en thrust direct ingesteld. De \textit{GUI} wordt hier ook aangemaakt.
@@ -10,5 +9,5 @@ De Autopilot wordt aangemaakt d.m.v. een nieuw object \textit{DroneAutopilot}, g
 \\
 De klasse \textit{MoveToTarget} bepaalt de bewegingen en aansturing van de drone. Ook worden hier de verschillende rates doorgegeven aan de simulator. \textit{MoveToTarget} steunt zowel op de informatie van de klasse \textit{ImageCalculations} als van \textit{PhysicsCalculations} om zijn bewegingen te bepalen. Bovendien wordt hierin ook telkens de \textit{GUI} ge\"updatet wanneer een nieuwe waarde voor de diepte bepaald is.
 \\
-\textit{ImageCalculations} is verantwoordelijk voor alles omtrent de beelden die de Autopilot binnen krijgt, m.a.w. de rode pixels zoeken en het zwaartepunt bepalen.
+\textit{ImageCalculations} is verantwoordelijk voor alles omtrent de beelden die de Autopilot binnenkrijgt, m.a.w. de rode pixels zoeken en het zwaartepunt bepalen.
 In de klasse \textit{PhysicsCalculations}, worden tensslotte alle fysische berekening van hoeken en afstanden uitgevoerd.
