@@ -116,8 +116,8 @@ public class ImageCalculations {
 		vc = frac*(-Suv*(Suuu+Suvv)+Suu*(Svvv+Suuv));
 		float X = uc + xavg;
 		float Y = vc + yavg;
-		float radius = (float) Math.sqrt(uc*uc+vc*vc+(Suu+Svv)/N);
-		System.out.println(radius);
+//		float radius = (float) Math.sqrt(uc*uc+vc*vc+(Suu+Svv)/N);
+//		System.out.println(radius);
 		return new float[] {X,Y};
 	}
 	
