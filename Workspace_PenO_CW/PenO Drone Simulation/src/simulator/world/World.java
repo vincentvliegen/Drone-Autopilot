@@ -34,18 +34,45 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private float lastTime;
 	private float timePassed = 0;
 	private float currentTime = 0;
-	public GeneralCamera currentCamera;
-	
 	private GLU glu;
 	
-	public List<GeneralCamera> getGeneralCameras() {
-		return generalCameras;
+	private int[] framebufferRight = new int[1];
+	private int[] framebufferLeft = new int[1];
+	//TODO meegeven in constructor?
+	/** The frames per second setting. */
+	private int fps = 60;
+	/** The OpenGL animator. */
+	private FPSAnimator animator;
+	private GLAutoDrawable drawable;
+	public GeneralCamera currentCamera;
+	int[] colorRenderbufferRight = new int[1];
+	int[] depthRenderbufferRight = new int[1];
+	int[] textureRight = new int[1];
+	int[] colorRenderbufferLeft = new int[1];
+	int[] depthRenderbufferLeft = new int[1];
+	int[] textureLeft = new int[1];
+	Physics physics;
+
+	public World() {
+		addGLEventListener(this);
 	}
-	
-	public float getCurrentTime() {
-		return timePassed;
+
+	public void addGeneralCamera(GeneralCamera camera){
+		generalCameras.add(camera);		
 	}
-	
+
+	public void addDroneCamera(DroneCamera camera){
+		droneCameras.add(camera);		
+	}
+
+	public void addSimulationDrone(SimulationDrone drone){
+		drones.add(drone);		
+	}
+
+	public void addSphere(Sphere sphere){
+		spheres.add(sphere);		
+	}
+
 	public float checkTimePassed() {
 		return timePassed - currentTime;
 	}
@@ -55,85 +82,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.timePassed += (System.nanoTime()*Math.pow(10, -9) - getLastTime());
 	}
 	
-	public float getLastTime() {
-		return this.lastTime;
-	}
-	
-	public List<DroneCamera> getDroneCameras() {
-		return droneCameras;
-	}
-	
-	public List<SimulationDrone> getDrones() {
-		return drones;
-	}
-	
-	public List<Sphere> getSpheres() {
-		return spheres;
-	}
-	
-	public GeneralCamera getCurrentCamera(){
-		return currentCamera;
-	}
-	
-	public GLU getGlu() {
-		return glu;
-	}
-	
-	public void addGeneralCamera(GeneralCamera camera){
-		generalCameras.add(camera);		
-	}
-	
-	public void addDroneCamera(DroneCamera camera){
-		droneCameras.add(camera);		
-	}
-	
-	public void addSimulationDrone(SimulationDrone drone){
-		drones.add(drone);		
-	}
-	
-	public void addSphere(Sphere sphere){
-		spheres.add(sphere);		
-	}
-	
-
-	public void setLastTime(float value) {
-		this.lastTime = value;
-	}
-	
-	public float getStartTime() {
-		return this.startTime;
-	}
-	
-	public int getFps() {
-		return animator.getFPS();
-	}
-
-	public void setCurrentCamera(GeneralCamera camera){
-		this.currentCamera = camera;
-	}
-
-	
-	private GLAutoDrawable drawable;
-	
-	public GLAutoDrawable getDrawable() {
-		return drawable;
-	}
-	
-	//TODO meegeven in constructor?
-	/** The frames per second setting. */
-	private int fps = 60;
-
-	/** The OpenGL animator. */
-	private FPSAnimator animator;
-	
-	public FPSAnimator getAnimator() {
-		return animator;
-	}
-	
-	public World() {
-		addGLEventListener(this);
-	}
-
 	@Override
 	public abstract void display(GLAutoDrawable drawable);
 
@@ -141,33 +89,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public void dispose(GLAutoDrawable drawable){
 	}
 
-	public int[] getFramebufferLeft() {
-		return framebufferLeft;
-	}
-	public int[] getFramebufferRight() {
-		return framebufferRight;
-	}
-	
-	public Physics getPhysics() {
-		return this.physics;
-	}
-	
-	
-	private int[] framebufferRight = new int[1];
-	
-	
-	private int[] framebufferLeft = new int[1];
-	
-	int[] colorRenderbufferRight = new int[1];
-	int[] depthRenderbufferRight = new int[1];
-	int[] textureRight = new int[1];
-	
-	int[] colorRenderbufferLeft = new int[1];
-	int[] depthRenderbufferLeft = new int[1];
-	int[] textureLeft = new int[1];
-	Physics physics;
-	
-	
 	/**
 	 * Sets up the screen.
 	 * 
@@ -251,6 +172,74 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
+	}
+
+	public void setLastTime(float value) {
+		this.lastTime = value;
+	}
+
+	public void setCurrentCamera(GeneralCamera camera){
+		this.currentCamera = camera;
+	}
+
+	public float getLastTime() {
+		return this.lastTime;
+	}
+
+	public List<DroneCamera> getDroneCameras() {
+		return droneCameras;
+	}
+
+	public List<SimulationDrone> getDrones() {
+		return drones;
+	}
+
+	public List<Sphere> getSpheres() {
+		return spheres;
+	}
+
+	public GeneralCamera getCurrentCamera(){
+		return currentCamera;
+	}
+
+	public GLU getGlu() {
+		return glu;
+	}
+
+	public List<GeneralCamera> getGeneralCameras() {
+		return generalCameras;
+	}
+
+	public float getCurrentTime() {
+		return timePassed;
+	}
+
+	public int[] getFramebufferLeft() {
+		return framebufferLeft;
+	}
+
+	public int[] getFramebufferRight() {
+		return framebufferRight;
+	}
+
+	public Physics getPhysics() {
+		return this.physics;
+	}
+
+	public float getStartTime() {
+		return this.startTime;
+	}
+
+	public int getFps() {
+		return animator.getFPS();
+	}
+
+	public GLAutoDrawable getDrawable() {
+		return drawable;
+	}
+
+	public FPSAnimator getAnimator() {
+		return animator;
 	}
 	
 }

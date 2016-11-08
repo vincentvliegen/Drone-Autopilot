@@ -1,28 +1,12 @@
 package simulator.physics;
 
-import java.util.*;
-import simulator.camera.GeneralCamera;
 import simulator.objects.SimulationDrone;
-import simulator.objects.Sphere;
-import simulator.world.World;
 
 public class Movement {
 	private SimulationDrone drone;
 	private float[] velocity = {0,0,0};
 	public double[] currentPosition;
 	
-
-	public double[] getCurrentPosition() {
-		return currentPosition;
-	}
-
-	public void setCurrentPosition(double[] currentPosition) {
-		this.currentPosition = currentPosition;
-	}
-	
-	public float[] getVelocity(){
-		return velocity;
-	}
 
 	public Movement(SimulationDrone drone) {
 		this.drone = drone;
@@ -40,6 +24,18 @@ public class Movement {
 	
 		setCurrentPosition(currentPos);
 		drone.translateDrone(currentPos);
+	}
+
+	public void setCurrentPosition(double[] currentPosition) {
+		this.currentPosition = currentPosition;
+	}
+
+	public double[] getCurrentPosition() {
+		return currentPosition;
+	}
+
+	public float[] getVelocity(){
+		return velocity;
 	}
 
 	

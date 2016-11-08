@@ -76,6 +76,8 @@ public class World11 extends World {
 		getDrones().get(0).getLeftDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+		
+		
 
 
 		//voor takeimage rechterCamera
@@ -88,9 +90,9 @@ public class World11 extends World {
 
 
 	private void draw() {
-
+	
 		GL2 gl = getGL().getGL2();
-
+	
 		// translate camera.
 		if(!(this.getCurrentCamera() instanceof DroneCamera)){
 			movement.update();
@@ -122,11 +124,10 @@ public class World11 extends World {
 		} else {
 			drone1.drawDrone();
 		}
-
+	
 		setup = true;
-
+	
 	}
-
 
 	// Update position camera's
 	public void setCamera(GL2 gl, GLU glu) {

@@ -69,29 +69,55 @@ public class ImageCalculations {
 	
 	//berekening centrum cirkel
 	
+	
+	//NIEUWE BEREKENING op basis van kleinste kwadratenberekening (http://www.dtcenter.org/met/users/docs/write_ups/circle_fit.pdf)
+	//de schommelende distance kwam doordat een berekening van een cirkel exact door drie pixels zelfs voor grote cirkels te hard schommelt
 	public float[] centerOfCircle(ArrayList<int[]> listOfPixelCoordinates, Camera camera) throws SmallCircleException,EmptyPositionListException{
-		ArrayList<int[]> threePoints = new ArrayList<int[]>();
+		ArrayList<int[]> AllPoints = new ArrayList<int[]>();
 		try{
-			threePoints.addAll(pointsOnCircumference(listOfPixelCoordinates, camera));
+			AllPoints.addAll(pointsOnCircumference(listOfPixelCoordinates, camera));
 		}
 		catch (SmallCircleException e){
 			throw new SmallCircleException(e.getSizeListCircPos());
 		}catch (EmptyPositionListException e){
 			throw new EmptyPositionListException(e.getList());
 		}
-		float X = 0;
-		float Y = 0;
-		float x1 = threePoints.get(0)[0];
-		float y1 = threePoints.get(0)[1];
-		float x2 = threePoints.get(1)[0];
-		float y2 = threePoints.get(1)[1];
-		float x3 = threePoints.get(2)[0];
-		float y3 = threePoints.get(2)[1];
-		//stelsel in x en y, met ay+b=0 TODO meer uitleg
-		float a = 2*(y1-y3)+2*(y1-y2)/(x1-x2)*(x1-x3);
-		float b = (float) (Math.pow(y3,2) + Math.pow(x3,2) - Math.pow(y1,2) - Math.pow(x1,2) + (Math.pow(y2,2) + Math.pow(x2,2) - Math.pow(y1,2) - Math.pow(x1,2))/(2*(x1-x2)));
-		Y =  (-b/a);
-		X =  (float) ((2*(y1-y2)*Y + Math.pow(y2,2) + Math.pow(x2,2) - Math.pow(y1,2) - Math.pow(x1,2))/(2*(x2-x1)));
+		int N = AllPoints.size();
+		float xavg=0;
+		float yavg=0;
+		for(int i = 0; i < AllPoints.size(); i++){
+			xavg += listOfPixelCoordinates.get(i)[0];
+			yavg += listOfPixelCoordinates.get(i)[1];
+		}
+		xavg = xavg/N;
+		yavg = yavg/N;
+		float Suu = 0;
+		float Suv = 0;
+		float Svv = 0;
+		float Suuu = 0;
+		float Suuv = 0;
+		float Suvv = 0;
+		float Svvv = 0;
+		for(int i = 0; i < N; i++){
+			float u = AllPoints.get(i)[0]-xavg;
+			float v = AllPoints.get(i)[1]-yavg;
+			Suu += u*u;
+			Suv += u*v;
+			Svv += v*v;
+			Suuu += u*u*u;
+			Suuv += u*u*v;
+			Suvv += u*v*v;
+			Svvv += v*v*v;
+		}
+		float uc;
+		float vc;
+		float frac = 1/(2*(Suu*Svv-Suv*Suv));
+		uc = frac*(Svv*(Suuu+Suvv)-Suv*(Svvv+Suuv));
+		vc = frac*(-Suv*(Suuu+Suvv)+Suu*(Svvv+Suuv));
+		float X = uc + xavg;
+		float Y = vc + yavg;
+		float radius = (float) Math.sqrt(uc*uc+vc*vc+(Suu+Svv)/N);
+		System.out.println(radius);
 		return new float[] {X,Y};
 	}
 	
@@ -130,15 +156,17 @@ public class ImageCalculations {
 		for(int j = 0; j<AllEdges.size();j++){// bepaal alle punten op de cirkel uit de randgroep
 			if(AllEdges.get(j)[1] < cameraHeight-1 && AllEdges.get(j)[1] > 0 && AllEdges.get(j)[0] < cameraWidth-1 && AllEdges.get(j)[0] > 0 ){// niet tegen de randen
 				AllCPoints.add(AllEdges.get(j));
+				//System.out.println(AllEdges.get(j)[0]+" , "+AllEdges.get(j)[1]);
 			}
 		}
 		if(AllCPoints.size() < minimalSizeCircumferenceCircle){
 			throw new SmallCircleException(AllCPoints.size());
 		}
-		result.add(AllCPoints.get(0));
-		result.add(AllCPoints.get(AllCPoints.size()/2));//middelste punt ligt verst van eerste en laatste punt
-		result.add(AllCPoints.get(AllCPoints.size()-1));
-		return result;
+//		result.add(AllCPoints.get(0));
+//		result.add(AllCPoints.get(AllCPoints.size()/2));//middelste punt ligt verst van eerste en laatste punt
+//		result.add(AllCPoints.get(AllCPoints.size()-1));
+//		return result;
+		return AllCPoints;
 	}
 	
 	//groter of gelijk aan 3, onnauwkeurig voor kleine waarden, cirkels kunnen te klein zijn != cirkelvormig
@@ -163,11 +191,11 @@ public class ImageCalculations {
 //		}
 		
 		//conversie (R,G,B) naar int  =   dec(BGR)
-		public int colorRGBToInt(int[] RGB){
-			int color = 0;
-			color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
-			return color;
-		}
+//		public int colorRGBToInt(int[] RGB){
+//			int color = 0;
+//			color = /*R*/RGB[0] + /*G*/ RGB[1]*256 + /*B*/RGB[2]*256*256;
+//			return color;
+//		}
 		
 	
 }
