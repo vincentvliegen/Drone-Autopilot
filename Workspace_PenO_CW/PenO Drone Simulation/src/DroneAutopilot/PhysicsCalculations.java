@@ -8,59 +8,14 @@ public class PhysicsCalculations {
 		this.setDrone(drone);
 	}
 	
-	public static final float getVisibilityFactor(){
-		return PhysicsCalculations.visibilityFactor;
-	}
 	private static final float visibilityFactor = 0.8f;
 	
-	public static final float getDecelerationFactor(){
-		return PhysicsCalculations.decelerationFactor;
-	}
 	private static final float decelerationFactor = 0.3f;
 	
-	public static float getDecelerationDistance() {
-		return DecelerationDistance;
-	}
 	private static final float DecelerationDistance = 1f;
 
-	public float getX1(float[] centerofGravityL){
-		float distance = centerofGravityL[0] - this.getDrone().getLeftCamera().getWidth()/2;
-		return distance;
-	}
-	
-	public float getX2(float[] centerofGravityR){
-		float distance = centerofGravityR[0] - this.getDrone().getRightCamera().getWidth()/2;
-		return distance;
-	}
-	
-	/**
-	 * The amount of pixels in height of the camera view.
-	 */
-	public int getCameraHeight(){
-		int height =  (int) Math.round(Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getfocalDistance()*2);
-		return height;
-	}
-	
-	public float getY(float[] centerofGravity){
-		float distance = ((float) this.getCameraHeight())/2 - centerofGravity[1];
-		return distance;
-	}
-	
-	public float getfocalDistance(){
-		float focal =(float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2)));
-		return focal;
-	}
-	
-	public float getDepth(float[] centerOfGravityL, float[]centerOfGravityR){
-		float depth=0;
-		try{
-		depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
-		depth = Math.abs(depth);
-		} catch(IllegalArgumentException e){
-		}
-		return depth;
-	}
-		
+	private Drone drone;
+
 	public float horizontalAngleDeviation(float[] centerOfGravityL, float[] centerOfGravityR){
 		float x = (this.getDepth(centerOfGravityL, centerOfGravityR) * Math.abs(this.getX1(centerOfGravityL))) / this.getfocalDistance();
 		float tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerOfGravityR);
@@ -71,6 +26,48 @@ public class PhysicsCalculations {
 		return (float) Math.toDegrees(Math.atan(this.getY(centerOfGravity) / this.getfocalDistance()));
 	}
 	
+	public void setDrone(Drone drone){
+		this.drone = drone;
+	}
+
+	public float getX1(float[] centerofGravityL){
+		float distance = centerofGravityL[0] - this.getDrone().getLeftCamera().getWidth()/2;
+		return distance;
+	}
+
+	public float getX2(float[] centerofGravityR){
+		float distance = centerofGravityR[0] - this.getDrone().getRightCamera().getWidth()/2;
+		return distance;
+	}
+
+	/**
+	 * The amount of pixels in height of the camera view.
+	 */
+	public int getCameraHeight(){
+		int height =  (int) Math.round(Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getfocalDistance()*2);
+		return height;
+	}
+
+	public float getY(float[] centerofGravity){
+		float distance = ((float) this.getCameraHeight())/2 - centerofGravity[1];
+		return distance;
+	}
+
+	public float getfocalDistance(){
+		float focal =(float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2)));
+		return focal;
+	}
+
+	public float getDepth(float[] centerOfGravityL, float[]centerOfGravityR){
+		float depth=0;
+		try{
+		depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
+		depth = Math.abs(depth);
+		} catch(IllegalArgumentException e){
+		}
+		return depth;
+	}
+
 	public float getVisiblePitch(float[] centerOfGravityL, float[] centerOfGravityR){
 		if (this.getDepth(centerOfGravityL, centerOfGravityR) <= getDecelerationDistance()){
 			return  (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getDecelerationFactor());
@@ -92,14 +89,21 @@ public class PhysicsCalculations {
 	}
 	
 	
-	public void setDrone(Drone drone){
-		this.drone = drone;
-	}
 	public Drone getDrone(){
 		return this.drone;
 	}
 
-	private Drone drone;
+	public static final float getVisibilityFactor(){
+		return PhysicsCalculations.visibilityFactor;
+	}
+
+	public static final float getDecelerationFactor(){
+		return PhysicsCalculations.decelerationFactor;
+	}
+
+	public static float getDecelerationDistance() {
+		return DecelerationDistance;
+	}
 	
 	
 	
