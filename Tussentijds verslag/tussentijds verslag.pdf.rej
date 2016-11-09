@@ -1,0 +1,29 @@
+diff a/Tussentijds verslag/tussentijds verslag.pdf b/Tussentijds verslag/tussentijds verslag.pdf	(rejected hunks)
+@@ -14,19 +14,20 @@
+                                           Laura Vranken
+ 
+         Academiejaar 2016-2017
+-                                                    Samenvatting
++                       Samenvatting
+ 
+ Auteur: Laura Vranken
+-Dit verslag behandelt het ontwerp en de implementatie van een Autopilot en een Virtual Test-
+-bed voor een drone. In de simulator is voor de eerste mijlpaal een rode bol in een witte ruimte
+-te zien. De drone wordt voorgesteld door een blauwe balk. Voor de tweede mijlpaal wordt
+-deze wereld uitgebreid met een windkracht in een willekeurige richting.
++
++Dit verslag behandelt het ontwerp en de implementatie van een Autopilot en Virtual Testbed
++voor een drone. In de simulator is voor de eerste mijlpaal een rode bol in een witte ruimte
++te zien. Voor de tweede mijlpaal wordt deze wereld uitgebreid met een windkracht in een
++willekeurige richting.
+ De Autopilot zorgt voor een correcte aansturing van de drone. Hij bepaalt de vliegroute op
+ basis van informatie, verkregen van twee camera’s die zich op de drone bevinden. Hierbij is de
+ relatieve plaatsbepaling van de bol ten opzichte van de drone van belang. De Autopilot leidt
+ daaruit de beweging van de drone af en laat de simulator deze uitvoeren.
+-De simulator wordt interactief gemaakt door het gebruik van een GUI. Deze geeft de moge-
+-lijkheid het camerastandpunt te kiezen, ook de voltooiingsgraad, de snelheid en positie van de
++Het programma wordt interactief gemaakt door het gebruik van een GUI. Deze geeft de mo-
++gelijkheid het camerastandpunt te kiezen, ook de voltooiingsgraad, snelheid en positie van de
+ drone worden weergegeven.
+ 
+ Inhoudsopgave
