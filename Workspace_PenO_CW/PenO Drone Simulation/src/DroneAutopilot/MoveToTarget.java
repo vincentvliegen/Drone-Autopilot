@@ -72,14 +72,17 @@ public class MoveToTarget{
 	}
 
 	public void noTargetFound() {
+		this.hover();
 		this.getDrone().setYawRate(slowYaw);
 	}
 
 	public void leftCameraFoundTarget() {
+		this.hover();
 		this.getDrone().setYawRate(-slowYaw);
 	}
 
 	public void rightCameraFoundTarget() {
+		this.hover();
 		this.getDrone().setYawRate(slowYaw);
 	}
 	
@@ -125,20 +128,17 @@ public class MoveToTarget{
 	}
 
 	public void flyTowardsTarget(float[] cogL, float[] cogR) {
-		System.out.println(this.getPhysicsCalculations().getVisiblePitch(cogL, cogR));
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
 		if (this.getPhysicsCalculations().getVisiblePitch(cogL,cogR)-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cogL)) >= 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
 			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));			
-			//System.out.println("pitch");
-			//this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));			
 		}
 		else if (halfAngleView-Math.abs(this.getPhysicsCalculations().verticalAngleDeviation(cogL)) <= pitchUpper) {
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
 			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));			
-			System.out.println("terugpitch");
+			//System.out.println("terugpitch");
 		} else if (this.getPhysicsCalculations().getVisiblePitch(cogL,cogR)== PhysicsCalculations.getDecelerationFactor()*halfAngleView){
-				System.out.println("max hoek changed" + this.getPhysicsCalculations().getVisiblePitch(cogL, cogR));
+				//System.out.println("max hoek changed" + this.getPhysicsCalculations().getVisiblePitch(cogL, cogR));
 				this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
 				this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));			
 		}
@@ -146,23 +146,27 @@ public class MoveToTarget{
 			this.getDrone().setPitchRate(0);
 			this.getDrone().setRollRate(0);
 			this.getDrone().setYawRate(0);
-			//System.out.println("thrust");
-			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));			
+			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));		
+			//System.out.println("thrust" + this.getPhysicsCalculations().getThrust(cogL));
 		}
 	}
 
 	public void hover() {
 		if (this.getDrone().getPitch() >= pitchUpper) {
 			this.getDrone().setPitchRate(Math.min(-this.getDrone().getMaxPitchRate(), -this.getDrone().getPitch()));
+			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));
+
 		}
 		
 		else if (this.getDrone().getPitch() <= pitchUnder) {
 			this.getDrone().setPitchRate(Math.min(this.getDrone().getMaxPitchRate(), -this.getDrone().getPitch()));
+			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));
+
 		}
 
 		else {
 			this.getDrone().setPitchRate(0);
-			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), -this.getDrone().getGravity()*this.getDrone().getWeight()));
+			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));
 		}
 
 	}

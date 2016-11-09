@@ -12,7 +12,7 @@ public class PhysicsCalculations {
 	
 	private static final float decelerationFactor = 0.3f;
 	
-	private static final float DecelerationDistance = 1f;
+	private static final float DecelerationDistance = 15f;
 
 	private Drone drone;
 
