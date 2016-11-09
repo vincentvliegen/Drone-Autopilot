@@ -1,10 +1,10 @@
 {\em Auteur: Bram Vandendriessche}
 \\
 \\
-De klasse \textit{World} kan het hart van de structuur van de simulator genoemd worden. Ze is ge\"implemen-teerd als een subklasse van GLCanvas en vormt zo de basis voor het visuele gedeelte van de 3D-wereld die opgebouwd wordt met OpenGL. \textit{World} houdt bij welke objecten (Camera, Drone, Sphere) er in de wereld bestaan en zal zorgen dat al deze objecten getekend worden door OpenGL. 
+Voor de simulator kan de klasse \textit{World} het hart van de structuur genoemd worden. Ze is ge-\"implementeerd als een subklasse van GLCanvas en vormt zo de basis voor het visuele gedeelte van de 3D-wereld die opgebouwd wordt met OpenGL. \textit{World} houdt bij welke objecten (Camera, Drone, Sphere) er in de wereld bestaan en zal zorgen dat al deze objecten getekend worden door OpenGL. 
 \\
 \\
-Om te kunnen voldoen aan de specifieke opstelling voor elke mijlpaal wordt de setting telkens in een subklasse van \textit{World} vastgelegd door implementatie van de OpenGL-functie \textit{display()}. Zo is de 3D-opstelling voor de eerste twee milestones wel gelijk, maar is er in \textit{World12} een extra \textit{Force} die in een willekeurige richting op de drone werkt om zo wind te simuleren. Deze \textit{Force} maakt deel uit van de fysische omstandigheden in de wereld (gedefinieerd in de klasse \textit{Physics}) waaronder bijvoorbeeld ook de zwaartekracht valt. 
+Om te kunnen voldoen aan de specifieke opstelling voor elke mijlpaal wordt de setting telkens in een subklasse van \textit{World} vastgelegd door implementatie van de OpenGL-functie \textit{display}. Zo is de 3D-opstelling voor de eerste twee milestones wel gelijk, maar is er in \textit{World12} een extra \textit{Force} die in een willekeurige richting op de drone werkt om zo wind te simuleren. Deze \textit{Force} maakt deel uit van de fysische omstandigheden in de wereld (gedefinieerd in de klasse \textit{Physics}) waaronder bijvoorbeeld ook de zwaartekracht valt. 
 \\
 \\
 Uiteraard moet de gebruiker van de simulator op een eenvoudige manier een beeld krijgen van de huidige opstelling en situatie. Daarom zorgen camera's vanuit verschillende standpunten voor beelden die eenvoudig opgevraagd kunnen worden in de grafische interface (\textit{GUI}). \\
