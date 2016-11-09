@@ -20,9 +20,9 @@ R =
 \end{equation*}
 De berekening van de veranderingen van yaw, roll en pitch steunt op het volgend principe: 
 \begin{equation*}
-R\textsuperscript{-1} * R * x = x
+R\textsuperscript{-1} \cdot R \cdot x = x
 \end{equation*} 
-met R de transformatiematrix, R\textsuperscript{-1} de inverse van de transformatiematrix en x de algemene beweging. R * x is een relatieve beweging, zoals de verandering van de pitch. Deze relatieve beweging vermenigvuldigd met de inverse geeft de algemene beweging die de drone uitvoert voor die bepaalde verandering.
+met \(R\) de transformatiematrix, \(R\textsuperscript{-1}\) de inverse van de transformatiematrix en \(x\) de algemene beweging.  \(R \cdot x \)  is een relatieve beweging, zoals de verandering van de pitch. Deze relatieve beweging vermenigvuldigd met de inverse geeft de algemene beweging die de drone uitvoert voor die bepaalde verandering.
 \\
 \\
 Elke drone heeft minstens twee krachten die erop uitgeoefend worden: de zwaartekracht en de thrust. De zwaartekracht is gelijk aan de massa maal de gravitatieconstante van de drone en zal altijd volgens de globale Y-as staan: \\
@@ -30,50 +30,67 @@ Elke drone heeft minstens twee krachten die erop uitgeoefend worden: de zwaartek
 \vec{G} =
 \begin{Bmatrix}
 0 \\
-m * g \\
+m \cdot g \\
 0 
 \end{Bmatrix}.
 \end{equation*} 
 \\
-De thrust (\(T\)) daarentegen is afhankelijk van de huidige pitch en roll van de drone. Daarom zal deze vermenigvuldigd moeten worden met de transformatiematrix, om de huidige thrust te bekomen. Het resultaat van deze vermenigvuldiging is: 
+De thrust \(T\) daarentegen is afhankelijk van de huidige pitch en roll van de drone. Daarom zal deze vermenigvuldigd moeten worden met de transformatiematrix, om de huidige thrust te bekomen. Het resultaat van deze vermenigvuldiging is: 
 \begin{equation*} 
 \vec{T} = 
 \begin{Bmatrix}
-T*(\sin(P)*\sin(Y) - \cos(P)*\cos(Y)*\sin(R))\\ 
-T*\cos(P)*\cos(R) \\
-T*(\cos(Y)*\sin(P) + \cos(P)*\sin(R)*\sin(Y))
+T\cdot(\sin(P)\sin(Y) - \cos(P)\cos(Y)\sin(R))\\ 
+T\cdot\cos(P)\cos(R) \\
+T\cdot(\cos(Y)\sin(P) + \cos(P)\sin(R)\sin(Y))
 \end{Bmatrix}
 \end{equation*}
 \\
-De windkracht is een kracht die een voorafbepaalde grootte en richting heeft. Deze kracht is optioneel in de implementatie. \\
-\begin{equation*}
-\vec{W} = 
-\begin{Bmatrix}
-W_x \\
-W_y \\
-W_z 
-\end{Bmatrix}
-\end{equation*}
+De windkracht, formule \ref{eq:windkracht}, is een kracht die een voorafbepaalde grootte en richting heeft. Deze kracht is optioneel in de implementatie. \\
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{.49\textwidth}
+		\begin{equation}
+		\vec{W} = 
+		\begin{Bmatrix}
+		W_x \\
+		W_y \\
+		W_z 
+		\end{Bmatrix}
+		\label{eq:windkracht}
+		\end{equation}
+	\end{minipage}
+	\begin{minipage}{.49\textwidth}
+		\begin{equation}
+		\vec{F_d} = 
+		\begin{Bmatrix}
+		v_x \cdot d \\
+		v_y \cdot d \\
+		v_z \cdot d
+		\end{Bmatrix}
+		\label{eq:wrijvingskracht}
+		\end{equation}
+	\end{minipage}
+\end{figure}
 \\
-De wrijvingskracht is een kracht die evenredig is met de snelheid (\(v\)) en een constante drag (\(d\)). Deze kracht werkt in tegen de snelheid, dus de constante is negatief. \\
-\begin{equation*}
-\vec{F_d} = 
-\begin{Bmatrix}
-v_x * d \\
-v_y * d \\
-v_z * d
-\end{Bmatrix}
-\end{equation*} \\
-Alle vectorkrachten die inwerken op een bepaalde drone worden vervolgens bij elkaar opgeteld. Deze vector, gedeeld door de massa van de drone, zal gelijk zijn aan de versnelling van de drone, volgens de formule: \\
-\begin{equation*}
-	\sum_{1}^{n} \vec{F_i} = m * \vec{a} 
-\end{equation*}
+De wrijvingskracht, formule \ref{eq:wrijvingskracht}, is een kracht die evenredig is met de snelheid \(v\) en een constante drag \(d\). Deze kracht werkt in tegen de snelheid, dus de constante is negatief.\\
 \\
-Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. \\
-\begin{equation*}
-v = a*t + v_0
-\end{equation*} 
-\begin{equation*}
-x = a*t^{2}/2 + v_0*t + x_0
-\end{equation*}
+Alle vectorkrachten die inwerken op een bepaalde drone worden vervolgens bij elkaar opgeteld. Deze vector, gedeeld door de massa van de drone, zal gelijk zijn aan de versnelling van de drone, volgens de formule \ref{eq:somKrachten} \\
+\\
+Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Respectievelijk formule \ref{eq:snelheid} en \ref{eq:positie}. \\
+
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{.49\textwidth}
+		\begin{equation}
+		\sum_{1}^{n} \vec{F_i} = m \cdot \vec{a} 
+		\label{eq:somKrachten}
+		\end{equation}
+	\end{minipage}
+	\begin{minipage}{.49\textwidth}
+		\begin{gather}
+		v = a\cdot t + v_0 \label{eq:snelheid}\\
+		x = a\cdot \frac{t^{2}}{2} + v_0\cdot t + x_0 \label{eq:positie}
+		\end{gather}
+	\end{minipage}
+\end{figure}
 

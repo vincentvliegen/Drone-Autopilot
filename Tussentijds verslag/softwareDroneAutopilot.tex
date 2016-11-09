@@ -1,13 +1,13 @@
 \noindent {\em Auteurs: Laura Vranken }
 \\
 \\
-Het deel van de Autopilot begint bij het cre\"eren van een Autopilot in de \textit{DroneAutopilotFactory} klasse, ge\"implementeerd met de interface \textit{AutopilotFactory}. Hierin wordt een Autopilot aangemaakt en worden de beginwaarden voor yaw, roll, pitch en thrust direct ingesteld. De \textit{GUI} wordt hier ook aangemaakt.
+Het deel van de Autopilot begint bij het cre\"eren van een Autopilot in de \textit{DroneAutopilotFactory}-klasse, ge\"implementeerd met de interface \textit{AutopilotFactory}. Hierin wordt zowel de Autopilot als \textit{GUI} aangemaakt en worden de beginwaarden voor yaw, roll, pitch en thrust direct ingesteld. 
 \\
 \\
-De Autopilot wordt aangemaakt d.m.v. een nieuw object \textit{DroneAutopilot}, ge\"implementeerd met de interface \textit{Autopilot}, aan te roepen. De \textit{DroneAutopilot} klasse bestaat uit één functie, namelijk \textit{timeHasPassed} die continu door de simulator wordt uitgevoerd. Vanuit deze methode wordt de klasse \textit{MoveToTarget} aangeroepen met de uit te voeren opdracht.
+Dit gebeurt d.m.v. een nieuw object \textit{DroneAutopilot} die de interface \textit{Autopilot} implementeert, aan te roepen. De \textit{DroneAutopilot}-klasse bestaat uit één functie, namelijk \textit{timeHasPassed} die continu door de simulator wordt uitgevoerd. Vanuit deze methode wordt de klasse \textit{MoveToTarget} aangeroepen met de uit te voeren opdracht.
 \\
 \\
-De klasse \textit{MoveToTarget} bepaalt de bewegingen en aansturing van de drone. Ook worden hier de verschillende rates doorgegeven aan de simulator. \textit{MoveToTarget} steunt zowel op de informatie van de klasse \textit{ImageCalculations} als van \textit{PhysicsCalculations} om zijn bewegingen te bepalen. Bovendien wordt hierin ook telkens de \textit{GUI} ge\"updatet wanneer een nieuwe waarde voor de diepte bepaald is.
+Deze klasse bepaalt de bewegingen en aansturing van de drone. Ook worden hier de verschillende rates doorgegeven aan de simulator. \textit{MoveToTarget} steunt zowel op de informatie van de klasse \textit{ImageCalculations} als van \textit{PhysicsCalculations} om zijn bewegingen te bepalen. Bovendien wordt hierin ook telkens de \textit{GUI} ge\"updatet wanneer een nieuwe waarde voor de diepte bepaald is.
 \\
 \textit{ImageCalculations} is verantwoordelijk voor alles omtrent de beelden die de Autopilot binnenkrijgt, m.a.w. de rode pixels zoeken en het zwaartepunt bepalen.
-In de klasse \textit{PhysicsCalculations}, worden tensslotte alle fysische berekening van hoeken en afstanden uitgevoerd.
+In de klasse \textit{PhysicsCalculations}, worden tenslotte alle fysische berekening van hoeken en afstanden uitgevoerd.
