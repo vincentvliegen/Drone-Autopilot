@@ -18,7 +18,7 @@ R =
 -\sin(Y)\cos(R) & \sin(Y)\sin(R)\cos(P)+\cos(Y)\sin(P) & -\sin(Y)\sin(R)\sin(P)+\cos(Y)\cos(P)\\
 \end{bmatrix}
 \end{equation*}
-De berekening van de veranderingen van yaw, roll en pitch steunt op het volgend principe: 
+De berekening van de veranderingen van yaw, roll en pitch steunt op het principe
 \begin{equation*}
 R\textsuperscript{-1} \cdot R \cdot x = x
 \end{equation*} 
@@ -42,7 +42,7 @@ De thrust \(T\) daarentegen is afhankelijk van de huidige pitch en roll van de d
 T\cdot(\sin(P)\sin(Y) - \cos(P)\cos(Y)\sin(R))\\ 
 T\cdot\cos(P)\cos(R) \\
 T\cdot(\cos(Y)\sin(P) + \cos(P)\sin(R)\sin(Y))
-\end{Bmatrix}
+\end{Bmatrix}.
 \end{equation*}
 \\
 De windkracht, formule \ref{eq:windkracht}, is een kracht die een voorafbepaalde grootte en richting heeft. Deze kracht is optioneel in de implementatie. \\
@@ -76,8 +76,7 @@ De wrijvingskracht, formule \ref{eq:wrijvingskracht}, is een kracht die evenredi
 \\
 Alle vectorkrachten die inwerken op een bepaalde drone worden vervolgens bij elkaar opgeteld. Deze vector, gedeeld door de massa van de drone, zal gelijk zijn aan de versnelling van de drone, volgens de formule \ref{eq:somKrachten} \\
 \\
-Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Respectievelijk formule \ref{eq:snelheid} en \ref{eq:positie}. \\
-
+Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Respectievelijk formule \ref{eq:snelheid} en \ref{eq:positie}.
 \begin{figure}[h]
 	\centering
 	\begin{minipage}{.49\textwidth}

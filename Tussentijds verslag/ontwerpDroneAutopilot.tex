@@ -19,25 +19,20 @@ Zie Figuur \ref{fig:DiepteberekeningDroneEnDoel} voor een grafische weergave van
 \\
 Vervolgens bepalen we de hoek waaronder de drone een yaw beweging moet uitvoeren om recht naar het doel gericht te zijn. Deze formule wordt afgeleid via de goniometrische regels. Zie Figuur \ref{fig:RelatieveHorizontaleHoek} voor grafische ondersteuning. 
 \\
-Berekening brandpuntsafstand f:
-\begin{equation} \label{eq:RelatieveVerticaleHoekBegin}
-\tan(\frac{\delta}{2}) = \frac{\frac{b}{2}}{f}
-\end{equation}
-\begin{equation} 
-f = \frac{\frac{b}{2}}{\tan(\frac{\delta}{2})}
-\end{equation}
-Berekening afstand x:
-\begin{equation} 
-\frac{x_2}{f} = \frac{x}{z}
-\end{equation}
-\begin{equation} \label{eq:RelatieveVerticaleHoekEind}
-x = z * \frac{x_2}{f}	
-\end{equation}
-\\
 \\
 Om tenslotte naar het doel te kunnen vliegen, moet een evenwicht gevonden worden tussen pitch en thrust. De pitch wordt gekozen zodat het middelpunt van het doel nog juist in beeld blijft. Deze hoek is gelijk aan het verschil tussen de helft van de verticale hoek die het beeld overspant en de verticale hoek waaronder de bol zich tegenover de drone bevindt, zie Figuur \ref{fig:RelatieveVerticaleHoek}. 
 \\
-\begin{figure}
+\\
+Wanneer de pitch vastligt, kan de hoeveelheid thrust berekend worden zodat de drone in rechte lijn naar het doel kan vliegen. Voor een gedetaileerde uitwerking zie sectie \ref{sec:AlgoritmesAutopilot}.
+\\
+\\
+Tenslotte moet dit proces herhaaldelijk worden uitgevoerd ten gevolge van de invloed van wind. De wind kan de drone namelijk uit koers brengen. Hierdoor zal de drone telkens zijn positie moeten herberekenen en zich opnieuw ori\"enteren. Ook kan de wind ervoor zorgen dat de drone een roll uitvoert. Deze moet eerst gecompenseerd worden, vooraleer we verder onze berekeningen kunnen uitvoeren.
+\\
+De drone bereikt zijn doel wanneer de Autopilot niets anders dan rode pixels opvangt. De drone zal dan de opdracht krijgen om zijn pitch te compenseren en vervolgens enkel via thrust de zwaartekracht tegen te werken.
+\\
+Het effectief laten vliegen van de drone gebeurt in de simulator. De Autopilot zendt enkel de verhouding in graden per seconden en de thrust in Newton door. Hiermee worden de pitch, yaw en roll berekend en uitgevoerd. Het is slechts door herhaaldelijk te controleren hoe ver nog gedraaid moet worden, dat kan besloten worden wanneer de beweging volledig uitgevoerd is en wanneer er gestopt mag worden.
+\\
+\begin{figure}[h]
 	\centering
 	\begin{minipage}{.45\textwidth}
 		\centering
@@ -54,12 +49,24 @@ Om tenslotte naar het doel te kunnen vliegen, moet een evenwicht gevonden worden
 	\caption*{In Figuur \ref{fig:RelatieveHorizontaleHoek} wordt de relatieve horizontale hoek tussen drone en doel weergegeven door \(\tan(\alpha) = \frac{x-\frac{c}{2}}{z}\), voor de volledige uitwerking zie formule \ref{eq:RelatieveVerticaleHoekBegin} tot \ref{eq:RelatieveVerticaleHoekEind}.\\
 		In Figuur \ref{fig:RelatieveVerticaleHoek} wordt de relatieve verticale hoek weergegeven tussen drone en doel. De relatie wordt gegeven door volgende formule: \(\tan(\beta) = \frac{y_1}{f}\).}
 \end{figure}
-\\
-Wanneer de pitch vastligt, kan de hoeveelheid thrust berekend worden zodat de drone in rechte lijn naar het doel kan vliegen. Voor een gedetaileerde uitwerking zie sectie \ref{sec:AlgoritmesAutopilot}.
-\\
-\\
-Tenslotte moet dit proces herhaaldelijk worden uitgevoerd ten gevolge van de invloed van wind. De wind kan de drone namelijk uit koers brengen. Hierdoor zal de drone telkens zijn positie moeten herberekenen en zich opnieuw ori\"enteren. Ook kan de wind ervoor zorgen dat de drone een roll uitvoert. Deze moet eerst gecompenseerd worden, vooraleer we verder onze berekeningen kunnen uitvoeren.
-\\
-De drone bereikt zijn doel wanneer de Autopilot niets anders dan rode pixels opvangt. De drone zal dan de opdracht krijgen om zijn pitch te compenseren en vervolgens enkel via thrust de zwaartekracht tegen te werken.
-\\
-Het effectief laten vliegen van de drone gebeurt in de simulator. De Autopilot zendt enkel de verhouding in graden per seconden en de thrust in Newton door. Hiermee worden de pitch, yaw en roll berekend en uitgevoerd. Het is slechts door herhaaldelijk te controleren hoe ver nog gedraaid moet worden, dat kan besloten worden wanneer de beweging volledig uitgevoerd is en wanneer er gestopt mag worden.
+\begin{figure}[h]
+	\centering
+	\begin{minipage}{.5\textwidth}
+		Berekening brandpuntsafstand f:
+		\begin{equation} \label{eq:RelatieveVerticaleHoekBegin}
+		\tan(\frac{\delta}{2}) = \frac{\frac{b}{2}}{f}
+		\end{equation}
+		\begin{equation} 
+		f = \frac{\frac{b}{2}}{\tan(\frac{\delta}{2})}
+		\end{equation}
+	\end{minipage}
+	\begin{minipage}{.45\textwidth}
+		Berekening afstand x:
+		\begin{equation} 
+		\frac{x_2}{f} = \frac{x}{z}
+		\end{equation}
+		\begin{equation} \label{eq:RelatieveVerticaleHoekEind}
+		x = z * \frac{x_2}{f}	
+		\end{equation}
+	\end{minipage}%
+\end{figure}
