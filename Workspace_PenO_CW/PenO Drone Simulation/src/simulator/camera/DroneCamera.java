@@ -134,12 +134,12 @@ public class DroneCamera extends GeneralCamera implements Camera {
 
 	@Override
 	public float getHorizontalAngleOfView() {
-		return 60f;
+		return (float) Math.toDegrees(Math.asin((double)1000/getWidth()));
 	}
 
 	@Override
 	public float getVerticalAngleOfView() {
-		return 50f;
+		return 45f;
 	}
 
 	@Override
