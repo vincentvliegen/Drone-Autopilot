@@ -90,6 +90,7 @@ public class MoveToTarget{
 		float[] cogLeft = this.findBestCenterOfGravity(leftCamera, this.getDrone().getLeftCamera());
 		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this.getDrone().getRightCamera());
 		this.updateGUI(cogLeft, cogRight);
+		this.updateSpeed(cogLeft, cogRight);
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
 				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= upperBoundary) {
 			this.getDrone().setYawRate(0);
@@ -165,7 +166,14 @@ public class MoveToTarget{
 		this.getGUI().update((int)(distance*100));
 	}
 
-
+	public void updateSpeed(float[] cogL, float[] cogR){
+		float newDistance =this.getPhysicsCalculations().getDistance(cogL, cogR);
+		float newTime = this.getDrone().getCurrentTime();
+		this.setSpeed(this.getPhysicsCalculations().calculateSpeed(previousDistance, newDistance, previousTime, newTime));
+		this.setPreviousDistance(newDistance);
+		this.setPreviousTime(newTime);
+	}
+	
 	public final ImageCalculations getImageCalculations() {
 		return this.imageCalculations;
 	}
@@ -193,7 +201,51 @@ public class MoveToTarget{
 	public GUI getGUI(){
 		return this.gui;
 	}
+
 	private GUI gui;
+	
+	/**
+	 * @return the previousDistance
+	 */
+	public float getPreviousDistance() {
+		return previousDistance;
+	}
+	/**
+	 * @param previousDistance the previousDistance to set
+	 */
+	public void setPreviousDistance(float previousDistance) {
+		this.previousDistance = previousDistance;
+	}
 
+	private float previousDistance;
+	
+	/**
+	 * @return the previousTime
+	 */
+	public float getPreviousTime() {
+		return previousTime;
+	}
+	/**
+	 * @param previousTime the previousTime to set
+	 */
+	public void setPreviousTime(float previousTime) {
+		this.previousTime = previousTime;
+	}
 
+	private float previousTime;
+	
+	/**
+	 * @return the speed
+	 */
+	public float getSpeed() {
+		return speed;
+	}
+	/**
+	 * @param speed the speed to set
+	 */
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+	
+	private float speed;
 }

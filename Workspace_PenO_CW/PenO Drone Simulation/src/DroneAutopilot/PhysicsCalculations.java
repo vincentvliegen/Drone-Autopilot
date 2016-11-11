@@ -78,7 +78,7 @@ public class PhysicsCalculations {
 	public float getThrust(float[] cog) {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
-		thrust = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
+		thrust = (float) (-this.getDrone().getGravity()*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
 		return thrust;
 	}
 	
@@ -88,6 +88,9 @@ public class PhysicsCalculations {
 		return distance;
 	}
 	
+	public float calculateSpeed(float distance1, float distance2, float time1,float time2){
+		return (distance2-distance1)/(time2-time1);
+	}
 	
 	public Drone getDrone(){
 		return this.drone;
@@ -105,6 +108,6 @@ public class PhysicsCalculations {
 		return DecelerationDistance;
 	}
 	
-	
+	public float[] acceleration;
 	
 }
