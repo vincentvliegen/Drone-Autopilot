@@ -125,12 +125,12 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		gl.glGenRenderbuffers(1, colorRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferLeft[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(), getHeight());
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getCamWidth(), getCamHeight());
 		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER, colorRenderbufferLeft[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getWidth(), getHeight());
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getCamWidth(), getCamHeight());
 		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
 
 		gl.glGenTextures(1, textureLeft, 0);
@@ -143,12 +143,12 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		gl.glGenRenderbuffers(1, colorRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferRight[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(), getHeight());
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getCamWidth(), getCamHeight());
 		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER, colorRenderbufferRight[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getWidth(), getHeight());
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getCamWidth(), getCamHeight());
 		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
 
 		gl.glGenTextures(1, textureRight, 0);
@@ -240,4 +240,12 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return animator;
 	}
 	
+	
+	public int getCamWidth() {
+		return 640;
+	}
+	
+	public int getCamHeight() {
+		return 480;
+	}
 }

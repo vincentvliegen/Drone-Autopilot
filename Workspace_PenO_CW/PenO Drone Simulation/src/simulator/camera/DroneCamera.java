@@ -28,7 +28,8 @@ public class DroneCamera extends GeneralCamera implements Camera {
 
 	@Override
 	public int[] takeImage() {
-		int height = drawable.getSurfaceHeight();
+//		int height = drawable.getSurfaceHeight();
+		int height = getHeight();
 		int[] temp = new int[getWidth() * height];
 		ByteBuffer buffer = ByteBuffer.allocateDirect(3 * getWidth() * height);
 
@@ -101,7 +102,8 @@ public class DroneCamera extends GeneralCamera implements Camera {
 	}
 	
 	public void setCamera(GL2 gl, GLU glu) {
-		int height = drawable.getSurfaceHeight();
+//		int height = drawable.getSurfaceHeight();
+		int height = getHeight();
 		// Change to projection matrix.
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
@@ -134,7 +136,7 @@ public class DroneCamera extends GeneralCamera implements Camera {
 
 	@Override
 	public float getHorizontalAngleOfView() {
-		return (float) (2*Math.toDegrees(Math.asin((double)1000/getWidth())));
+		return (float) (2*Math.toDegrees(Math.atan((double)1000/getWidth())));
 	}
 
 	@Override
@@ -144,6 +146,11 @@ public class DroneCamera extends GeneralCamera implements Camera {
 
 	@Override
 	public int getWidth() {
-		return drawable.getSurfaceWidth();
+//		return drawable.getSurfaceWidth();
+		return 640;
+	}
+	
+	public int getHeight() {
+		return 480;
 	}
 }
