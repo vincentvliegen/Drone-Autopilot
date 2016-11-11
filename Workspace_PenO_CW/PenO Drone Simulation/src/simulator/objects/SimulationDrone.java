@@ -41,6 +41,8 @@ public class SimulationDrone implements Drone {
 	World world;
 	List<Double> rotateMatrix = new ArrayList<>();
 	List<Double> inverseRotateMatrix = new ArrayList<>();
+	private float cameraSeperation = 0;
+	
 	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, double[] translate, World world) {
 		this.height = height;
 		this.width = width;
@@ -224,6 +226,7 @@ public class SimulationDrone implements Drone {
 		// add to list in world
 		getWorld().addDroneCamera(leftCamera);
 		getWorld().addDroneCamera(rightCamera);
+		cameraSeperation = getDroneWidth();
 	}
 
 	public void setThrust(float value) {
@@ -291,7 +294,7 @@ public class SimulationDrone implements Drone {
 
 	@Override
 	public float getCameraSeparation() {
-		return 0.5f;
+		return cameraSeperation;
 	}
 
 	@Override
