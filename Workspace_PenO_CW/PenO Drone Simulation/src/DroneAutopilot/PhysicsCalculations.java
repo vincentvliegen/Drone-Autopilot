@@ -1,11 +1,17 @@
 package DroneAutopilot;
 
+import java.util.ArrayList;
+
 import p_en_o_cw_2016.Drone;
 
 public class PhysicsCalculations {
 	
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
+		timeDistanceList = new ArrayList<float[]>();
+		float[] startTimeDistance = {0,0};
+		setPreviousTimeDistance(startTimeDistance);
+		setSpeed(0);
 	}
 	
 	private static final float visibilityFactor = 0.8f;
@@ -88,8 +94,27 @@ public class PhysicsCalculations {
 		return distance;
 	}
 	
-	public float calculateSpeed(float distance1, float distance2, float time1,float time2){
-		return (distance1-distance2)/(time2-time1);
+	public float calculateSpeed(float time, float distance){
+		float[] newTD = {time,distance};
+		timeDistanceList.add(newTD);
+		if(timeDistanceList.size() >= avgcounter){
+			float avgTime = 0;
+			float avgDistance = 0;
+			float size = timeDistanceList.size();
+			for(int i = timeDistanceList.size()-1; i > 0; i--){
+				float[] currentTD = timeDistanceList.get(i);
+				avgTime += currentTD[0];
+				avgDistance += currentTD[1];
+				timeDistanceList.remove(i);
+			}
+			avgTime = avgTime/size;
+			avgDistance = avgDistance/size;
+			this.setSpeed((getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
+			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
+		}
+		System.out.println(distance);
+		System.out.println("speed: " + this.getSpeed());
+		return this.getSpeed();
 	}
 	
 	public Drone getDrone(){
@@ -108,6 +133,47 @@ public class PhysicsCalculations {
 		return DecelerationDistance;
 	}
 	
-	public float[] acceleration;
+	/**
+	 * @return the timeDistanceList
+	 */
+	public ArrayList<float[]> getTimeDistanceList() {
+		return timeDistanceList;
+	}
+
+	private ArrayList<float[]> timeDistanceList;
+	
+	/**
+	 * @return the previousTimeDistance
+	 */
+	public float[] getPreviousTimeDistance() {
+		return previousTimeDistance;
+	}
+
+	/**
+	 * @param previousTimeDistance the previousTimeDistance to set
+	 */
+	public void setPreviousTimeDistance(float[] previousTimeDistance) {
+		this.previousTimeDistance = previousTimeDistance;
+	}
+	
+	private float[] previousTimeDistance;
+	
+	/**
+	 * @return the speed
+	 */
+	public float getSpeed() {
+		return speed;
+	}
+
+	/**
+	 * @param speed the speed to set
+	 */
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+	
+	private float speed;
+	
+	public final static int avgcounter = 7;
 	
 }
