@@ -120,7 +120,7 @@ public class MoveToTarget{
 	
 	public void flyTowardsTarget(float[] cogL, float[] cogR) {
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
-		if (this.getPhysicsCalculations().getDepth(cogL, cogR) <= 20f){
+		if (this.getPhysicsCalculations().getDepth(cogL, cogR) <= 10f){
 			this.hover();
 			System.out.println("hover");
 		}

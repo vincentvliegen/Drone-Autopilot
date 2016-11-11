@@ -8,9 +8,9 @@ public class PhysicsCalculations {
 		this.setDrone(drone);
 	}
 	
-	private static final float visibilityFactor = 0.5f;
+	private static final float visibilityFactor = 0.8f;
 	
-	private static final float decelerationFactor = 0.2f;
+	private static final float decelerationFactor = 0.4f;
 	
 	private static final float DecelerationDistance = 25f;
 
