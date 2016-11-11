@@ -89,7 +89,7 @@ public class PhysicsCalculations {
 	}
 	
 	public float calculateSpeed(float distance1, float distance2, float time1,float time2){
-		return (distance2-distance1)/(time2-time1);
+		return (distance1-distance2)/(time2-time1);
 	}
 	
 	public Drone getDrone(){
