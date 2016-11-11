@@ -146,19 +146,8 @@ public class MoveToTarget{
 	}
 
 	public void hover() {
-		if (this.getDrone().getPitch() > 0) {
-			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
-			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));
-		}
-		else if (this.getDrone().getPitch() < 0) {
-			this.getDrone().setPitchRate(Math.min(this.getDrone().getMaxPitchRate(), -this.getDrone().getPitch()));
-			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));
-		}
-		else {
-			this.getDrone().setPitchRate(0);
-			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));
-		}
-
+		this.getDrone().setPitchRate(0);
+		this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));
 	}
 	
 	public void updateGUI(float[] centerOfGravityL, float[] centerOfGravityR){
@@ -172,6 +161,12 @@ public class MoveToTarget{
 		this.setSpeed(this.getPhysicsCalculations().calculateSpeed(previousDistance, newDistance, previousTime, newTime));
 		this.setPreviousDistance(newDistance);
 		this.setPreviousTime(newTime);
+	}
+	
+	public float calculateDecelerationDistance(){
+		float alfa = this.getDrone().getPitch();
+		float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + this.getDrone().getGravity()*Math.tan(Math.toRadians(alfa)));
+		float distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*this.getSpeed()+ tegenpitch/this.getDrone().getMaxPitchRate()*this.getSpeed();
 	}
 	
 	public final ImageCalculations getImageCalculations() {
