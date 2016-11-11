@@ -95,6 +95,7 @@ public class MoveToTarget{
 		if(firstDistanceAndTime){
 			this.setPreviousDistance(this.getPhysicsCalculations().getDistance(cogLeft, cogRight));
 			this.setPreviousTime(this.getDrone().getCurrentTime());
+			firstDistanceAndTime = false;
 		}else{
 			this.updateSpeed(cogLeft, cogRight);
 		}
