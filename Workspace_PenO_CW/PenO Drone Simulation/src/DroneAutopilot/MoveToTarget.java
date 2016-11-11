@@ -15,6 +15,8 @@ public class MoveToTarget{
 		setSlowYaw();
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations(drone);
+		this.firstDistanceAndTime = true;
+		this.setSpeed(0);
 	}
 	
 	private float slowYaw;
@@ -90,7 +92,13 @@ public class MoveToTarget{
 		float[] cogLeft = this.findBestCenterOfGravity(leftCamera, this.getDrone().getLeftCamera());
 		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this.getDrone().getRightCamera());
 		this.updateGUI(cogLeft, cogRight);
-		this.updateSpeed(cogLeft, cogRight);
+		if(firstDistanceAndTime){
+			this.setPreviousDistance(this.getPhysicsCalculations().getDistance(cogLeft, cogRight));
+			this.setPreviousTime(this.getDrone().getCurrentTime());
+			firstDistanceAndTime = false;
+		}else{
+			this.updateSpeed(cogLeft, cogRight);
+		}
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
 				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= upperBoundary) {
 			this.getDrone().setYawRate(0);
@@ -243,4 +251,6 @@ public class MoveToTarget{
 	}
 	
 	private float speed;
+	
+	private boolean firstDistanceAndTime;
 }
