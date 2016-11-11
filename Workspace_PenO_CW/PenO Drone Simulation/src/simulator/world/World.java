@@ -30,10 +30,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private List<DroneCamera> droneCameras = new ArrayList<>();
 	private List<SimulationDrone> drones = new ArrayList<>();
 	private List<Sphere> spheres = new ArrayList<>();
-	private float startTime;
-	private float lastTime;
-	private float timePassed = 0;
-	private float currentTime = 0;
+	private long startTime;
+	private long lastTime;
+	private double timePassed = 0;
+	private double currentTime = 0;
 	private GLU glu;
 	
 	private int[] framebufferRight = new int[1];
@@ -73,13 +73,12 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		spheres.add(sphere);		
 	}
 
-	public float checkTimePassed() {
-		return timePassed - currentTime;
+	public double checkTimePassed() {
+		return (System.nanoTime() - getLastTime())*Math.pow(10, -9);
 	}
 	
 	public void updateTimePassed() {
-		this.currentTime = timePassed;
-		this.timePassed += (System.nanoTime()*Math.pow(10, -9) - getLastTime());
+		this.timePassed += (System.nanoTime() - getLastTime())*Math.pow(10, -9);
 	}
 	
 	@Override
@@ -96,7 +95,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	 */
 	public void init(GLAutoDrawable drawable) {
 		this.drawable = drawable;
-		this.startTime = (float) (System.nanoTime()*Math.pow(10, -9));
+		this.startTime = System.nanoTime();
 		this.lastTime = startTime;
 		this.physics = new Physics(this);
 		final GL2 gl = drawable.getGL().getGL2();
@@ -163,8 +162,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		
 		
 		// Start animator.
-		drawable.getGL().setSwapInterval(1);
-		animator = new FPSAnimator(this, fps, true);
+		animator = new FPSAnimator(this, fps);
 		animator.start();
 	}
 
@@ -174,7 +172,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glViewport(0, 0, width, height);
 	}
 
-	public void setLastTime(float value) {
+	public void setLastTime(long value) {
 		this.lastTime = value;
 	}
 
@@ -182,7 +180,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.currentCamera = camera;
 	}
 
-	public float getLastTime() {
+	public long getLastTime() {
 		return this.lastTime;
 	}
 
@@ -211,7 +209,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	}
 
 	public float getCurrentTime() {
-		return timePassed;
+		return (float) timePassed;
 	}
 
 	public int[] getFramebufferLeft() {
@@ -226,7 +224,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return this.physics;
 	}
 
-	public float getStartTime() {
+	public double getStartTime() {
 		return this.startTime;
 	}
 

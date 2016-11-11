@@ -54,13 +54,13 @@ public class World12 extends World {
 			super.getPhysics().addForce(windForce);
 		}
 		if (setup) {
-			float timePassed = super.checkTimePassed();
+			double timePassed = super.checkTimePassed();
 			windForce.setXNewton(windForceX);
 			windForce.setYNewton(windForceY);
 			windForce.setZNewton(windForceZ);
-			super.physics.run(timePassed);
-			drone1.timeHasPassed(timePassed);
-			super.setLastTime((float) (System.nanoTime()*Math.pow(10, -9)));
+			super.physics.run((float) timePassed);
+			drone1.timeHasPassed((float) timePassed);
+			super.setLastTime(System.nanoTime());
 		}
 		if (!super.getAnimator().isAnimating()) {
 			return;

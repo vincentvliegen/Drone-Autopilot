@@ -46,10 +46,10 @@ public class World11 extends World {
 	public void display(GLAutoDrawable drawable) {
 		super.updateTimePassed();
 		if (setup) {
-			float timePassed = super.checkTimePassed();
-			super.physics.run(timePassed);
-			drone1.timeHasPassed(timePassed);
-			super.setLastTime((float) (System.nanoTime()*Math.pow(10, -9)));
+			double timePassed = super.checkTimePassed();
+			super.physics.run((float) timePassed);
+			drone1.timeHasPassed((float) timePassed);
+			super.setLastTime(System.nanoTime());
 		}
 		if (!super.getAnimator().isAnimating()) {
 			return;
@@ -104,7 +104,7 @@ public class World11 extends World {
 		
 		// Input Sphere.
 		if (!setup) {
-			double[] translateSphere = { 0, 0, -5f };
+			double[] translateSphere = { 0, 0, -10f };
 			float[] colorSphere = { 1f, 0f, 0f };
 			Sphere sphere1 = new Sphere(gl, .2f, 64, 64, colorSphere, translateSphere);
 			sphere1.drawSphere();
