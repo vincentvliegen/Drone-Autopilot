@@ -114,7 +114,7 @@ public class PhysicsCalculations {
 			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
 		}
 		//System.out.println(distance);
-//		System.out.println("speed: " + this.getSpeed());
+		//System.out.println("speed: " + this.getSpeed());
 		return this.getSpeed();
 	}
 	
