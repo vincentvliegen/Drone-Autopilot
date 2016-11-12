@@ -56,11 +56,15 @@ public class World11 extends World {
 		}
 		GL2 gl = getGL().getGL2();
 
-		//voor scherm
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		setCamera(gl, getGlu());
-		draw();
 
+		//voor scherm
+		gl.glViewport(0, 480, drawable.getSurfaceWidth(), drawable.getSurfaceHeight()-480);
+		gl.glScissor(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight()-480);
+		gl.glEnable(GL.GL_SCISSOR_TEST);
+		setCamera(gl, getGlu());
+		gl.glDisable(GL.GL_SCISSOR_TEST);
+		draw();
 
 		/*
 		 * TODO
@@ -70,22 +74,32 @@ public class World11 extends World {
 		 * --> idee: ipv telkens een nieuwe int[] te maken, gewoon een grotere te gebruiken en de offset aan te passen?
 		 */
 
+		gl.glViewport(0, 0, 640, 480);
+		gl.glMatrixMode(GL2.GL_PROJECTION_MATRIX);
+		gl.glLoadIdentity();
 		//voor takeimage linkerCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferLeft()[0]);
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glScissor(0,0,640,480);
+		gl.glEnable(GL.GL_SCISSOR_TEST);
 		getDrones().get(0).getLeftDroneCamera().setCamera(gl, getGlu());
+		gl.glDisable(GL.GL_SCISSOR_TEST);
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 		
 		
 
-
+		gl.glViewport(640, 0, 640, 480);
+		gl.glMatrixMode(GL2.GL_PROJECTION_MATRIX);
+		gl.glLoadIdentity();
 		//voor takeimage rechterCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferRight()[0]);
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glScissor(640,0,640,480);
+		gl.glEnable(GL.GL_SCISSOR_TEST);
 		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
+		gl.glDisable(GL.GL_SCISSOR_TEST);
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+		
 	}	
 
 
