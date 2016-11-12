@@ -17,15 +17,15 @@ import simulator.physics.Physics;
 
 @SuppressWarnings("serial")
 public abstract class World extends GLCanvas implements GLEventListener {
-
+	
 	/*
 	 * Superklasse voor alle werelden die we nog moeten maken
 	 */
-
-	// TODO
-	// physics?
-	// movement?
-
+	
+	//TODO
+		//physics?
+		//movement?
+		
 	private List<GeneralCamera> generalCameras = new ArrayList<>();
 	private List<DroneCamera> droneCameras = new ArrayList<>();
 	private List<SimulationDrone> drones = new ArrayList<>();
@@ -35,10 +35,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private double timePassed = 0;
 	private double currentTime = 0;
 	private GLU glu;
-
+	
 	private int[] framebufferRight = new int[1];
 	private int[] framebufferLeft = new int[1];
-	// TODO meegeven in constructor?
+	//TODO meegeven in constructor?
 	/** The frames per second setting. */
 	private int fps = 60;
 	/** The OpenGL animator. */
@@ -57,35 +57,35 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		addGLEventListener(this);
 	}
 
-	public void addGeneralCamera(GeneralCamera camera) {
-		generalCameras.add(camera);
+	public void addGeneralCamera(GeneralCamera camera){
+		generalCameras.add(camera);		
 	}
 
-	public void addDroneCamera(DroneCamera camera) {
-		droneCameras.add(camera);
+	public void addDroneCamera(DroneCamera camera){
+		droneCameras.add(camera);		
 	}
 
-	public void addSimulationDrone(SimulationDrone drone) {
-		drones.add(drone);
+	public void addSimulationDrone(SimulationDrone drone){
+		drones.add(drone);		
 	}
 
-	public void addSphere(Sphere sphere) {
-		spheres.add(sphere);
+	public void addSphere(Sphere sphere){
+		spheres.add(sphere);		
 	}
 
 	public double checkTimePassed() {
-		return (System.nanoTime() - getLastTime()) * Math.pow(10, -9);
+		return (System.nanoTime() - getLastTime())*Math.pow(10, -9);
 	}
-
+	
 	public void updateTimePassed() {
-		this.timePassed += (System.nanoTime() - getLastTime()) * Math.pow(10, -9);
+		this.timePassed += (System.nanoTime() - getLastTime())*Math.pow(10, -9);
 	}
-
+	
 	@Override
 	public abstract void display(GLAutoDrawable drawable);
 
 	@Override
-	public void dispose(GLAutoDrawable drawable) {
+	public void dispose(GLAutoDrawable drawable){
 	}
 
 	/**
@@ -100,7 +100,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.physics = new Physics(this);
 		final GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(gl);
-
+		
 		// Enable z- (depth) buffer for hidden surface removal.
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL.GL_LEQUAL);
@@ -117,49 +117,50 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		// Create GLU.
 		glu = new GLU();
 
-		// FBO voor links
-
+		
+		//FBO voor links
+		
 		gl.glGenFramebuffers(1, framebufferLeft, 0);
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, framebufferLeft[0]);
 
 		gl.glGenRenderbuffers(1, colorRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferLeft[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getCamWidth(), getCamHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
-				colorRenderbufferLeft[0]);
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(), getHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER, colorRenderbufferLeft[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getCamWidth(), getCamHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
-				depthRenderbufferLeft[0]);
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getWidth(), getHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
 
 		gl.glGenTextures(1, textureLeft, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureLeft[0]);
-
-		// FBO voor rechts
-
+		
+		//FBO voor rechts
+		
 		gl.glGenFramebuffers(1, framebufferRight, 0);
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, framebufferRight[0]);
 
 		gl.glGenRenderbuffers(1, colorRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferRight[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getCamWidth(), getCamHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
-				colorRenderbufferRight[0]);
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(), getHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER, colorRenderbufferRight[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getCamWidth(), getCamHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
-				depthRenderbufferRight[0]);
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getWidth(), getHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
 
 		gl.glGenTextures(1, textureRight, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureRight[0]);
-
-		// set to default buffer
+		
+			
+		
+		//set to default buffer
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
+		
+		
 		// Start animator.
 		animator = new FPSAnimator(this, fps);
 		animator.start();
@@ -169,20 +170,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
-		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
-		glu.gluPerspective(45, (float) width / height, 1, 1000);
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
-
 	}
 
 	public void setLastTime(long value) {
 		this.lastTime = value;
 	}
 
-	public void setCurrentCamera(GeneralCamera camera) {
+	public void setCurrentCamera(GeneralCamera camera){
 		this.currentCamera = camera;
 	}
 
@@ -202,7 +196,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return spheres;
 	}
 
-	public GeneralCamera getCurrentCamera() {
+	public GeneralCamera getCurrentCamera(){
 		return currentCamera;
 	}
 
@@ -245,12 +239,5 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public FPSAnimator getAnimator() {
 		return animator;
 	}
-
-	public int getCamWidth() {
-		return 640;
-	}
-
-	public int getCamHeight() {
-		return 480;
-	}
+	
 }
