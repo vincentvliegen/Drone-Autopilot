@@ -24,20 +24,22 @@ public class MoveToTarget{
 	private static final float upperBoundary = 5;
 	
 	public void execute(){
-	ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
-	ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
-	if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
-			&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
-		System.out.println("bereikt");
-		this.hover();
-	}else{
-		if (this.checkRoll()){
-			this.checkcasespixelsfound(leftCameraList, rightCameraList);
+		this.calculateDecelerationDistance();
+		ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
+		ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
+		if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
+				&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
+			System.out.println("bereikt");
+			this.hover();
 		}else{
-			System.out.println("correct roll");
-			this.correctRoll();
+			if (this.checkRoll()){
+				this.checkcasespixelsfound(leftCameraList, rightCameraList);
+			}else{
+				System.out.println("correct roll");
+				this.correctRoll();
+			}
 		}
-		}}
+	}
 	private void setSlowYaw() {
 		 this.slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
 	}
@@ -129,9 +131,9 @@ public class MoveToTarget{
 	
 	public void flyTowardsTarget(float[] cogL, float[] cogR) {
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
-		if (this.getPhysicsCalculations().getDepth(cogL, cogR) <= 10f){
+		if (this.getPhysicsCalculations().getDepth(cogL, cogR) <= 1f){
 			this.hover();
-			System.out.println("hover");
+			//System.out.println("hover");
 		}
 		else if (this.getPhysicsCalculations().getVisiblePitch(cogL,cogR)-this.getPhysicsCalculations().verticalAngleDeviation(cogL) >= 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
@@ -172,9 +174,17 @@ public class MoveToTarget{
 	}
 	
 	public float calculateDecelerationDistance(){
-		float alfa = this.getDrone().getPitch();
-		float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + this.getDrone().getGravity()*Math.tan(Math.toRadians(alfa)));
-		float distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*this.getSpeed()+ tegenpitch/this.getDrone().getMaxPitchRate()*this.getSpeed();
+		float tegenpitch = 5f;
+		float distance = 0;
+		if (this.getSpeed() >= 0 && this.getSpeed()<6){
+		float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()*Math.tan(Math.toRadians(tegenpitch))/this.getDrone().getWeight());
+//		System.out.println("dec " +Math.pow(this.getSpeed(),2) / (2*deceleration));
+//		System.out.println("pitchtijd "+ this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*this.getSpeed());
+//		System.out.println("tegenpitch " +tegenpitch/this.getDrone().getMaxPitchRate()*this.getSpeed());
+		distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*this.getSpeed()+ tegenpitch/this.getDrone().getMaxPitchRate()*this.getSpeed();
+		System.out.println(distance);
+		}
+		return distance;
 	}
 	
 	public final ImageCalculations getImageCalculations() {
