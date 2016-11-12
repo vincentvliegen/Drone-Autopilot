@@ -1,17 +1,23 @@
 package simulator.GUI;
 
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import simulator.world.World;
+import simulator.world.World12;
 
 import javax.swing.JButton;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -21,12 +27,13 @@ public class GUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static World world;
-	private final GridBagConstraints constraintsButtonGeneralCameras;
-	private final GridBagConstraints constraintsButtonDroneCamera;
+	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsButtonGeneralCameras, constraintsButtonDroneCamera;
 	private JLabel position = new JLabel();
 	private JLabel speed = new JLabel();
+	private JLabel windX, windY, windZ;
 	private List<JButton> buttonsGeneralCameras = new ArrayList<>();
 	private List<JButton> buttonsDroneCameras = new ArrayList<>();
+	private List<JSlider> windSliders = new ArrayList<>();
 
 
 	/**
@@ -36,10 +43,6 @@ public class GUI extends JPanel {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0};
 		setLayout(gridBagLayout);
-		GridBagConstraints s = new GridBagConstraints();
-		s.insets = new Insets(1, 1, 1, 1);
-		GridBagConstraints p = new GridBagConstraints();
-		p.insets = new Insets(1, 1, 1, 1);
 		this.world = world;
 
 
@@ -103,6 +106,9 @@ public class GUI extends JPanel {
 		add(panelButtonDroneCameras, constraintsButtonDroneCamera);
 
 		// Speed
+		constraintsSpeed = new GridBagConstraints();
+		constraintsSpeed.insets = new Insets(1, 1, 1, 1);
+		
 		Timer timerSpeed = new Timer(1000, new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ev) {
@@ -118,12 +124,12 @@ public class GUI extends JPanel {
 					BigDecimal roundOffSpeed = bigDecimalSpeed.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					speed.setText("Speed: " + roundOffSpeed);
 					//System.out.println("Speed");
-					s.ipady = 50;      //make this component tall
-					s.weightx = 1;
-					s.gridx = 0;
-					s.gridy = 2;
-					s.gridwidth = 3;
-					add(speed, s);
+					constraintsSpeed.ipady = 20;      //make this component tall
+					constraintsSpeed.weightx = 1;
+					constraintsSpeed.gridx = 0;
+					constraintsSpeed.gridy = 2;
+					constraintsSpeed.gridwidth = 3;
+					add(speed, constraintsSpeed);
 					speed.revalidate();
 					speed.repaint();
 				}
@@ -132,6 +138,8 @@ public class GUI extends JPanel {
 		timerSpeed.start(); 
 
 		// Position
+		constraintsPosition = new GridBagConstraints();
+		constraintsPosition.insets = new Insets(1, 1, 1, 1);
 		Timer timerPosition = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -144,18 +152,152 @@ public class GUI extends JPanel {
 					BigDecimal roundOffPos2 = bigDecimalPos2.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					BigDecimal bigDecimalPos3 = new BigDecimal(currentPosition[2]);
 					BigDecimal roundOffPos3 = bigDecimalPos3.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					position.setText("Position (x,y,z): (" + roundOffPos1 + ", " + roundOffPos2 + ", " + roundOffPos3 + ")" );
-					p.ipady = 50;      //make this component tall
-					p.weightx = 1;
-					p.gridx = 0;
-					p.gridy = 3;
-					p.gridwidth = 3;
-					add(position, p);
+					position.setText("Position (x, y, z): (" + roundOffPos1 + ", " + roundOffPos2 + ", " + roundOffPos3 + ")" );
+					constraintsPosition.ipady = 20;      //make this component tall
+					constraintsPosition.weightx = 1;
+					constraintsPosition.gridx = 0;
+					constraintsPosition.gridy = 3;
+					constraintsPosition.gridwidth = 3;
+					add(position, constraintsPosition);
 					position.revalidate();
 					position.repaint();
 				}
 			}
 		});
 		timerPosition.start(); 
+	
+		
+		//GrivatySlider
+		JPanel panelGravity = new JPanel(new GridLayout(1,2));
+		GridBagConstraints constraintsPanelGravity = new GridBagConstraints();
+		constraintsPanelGravity.insets = new Insets(1, 1, 1, 1);
+		constraintsPanelGravity.gridy = 4;
+		int MAXGRAVITY =2000 ;
+
+		panelGravity.add(new JLabel("Gravity: "));
+
+		JSlider gravitySlider = new JSlider(JSlider.HORIZONTAL, 0, MAXGRAVITY, 981);
+		gravitySlider.setMajorTickSpacing(100);
+		gravitySlider.setPaintTicks(true);
+
+		//Create the label table
+		Hashtable labelTable = new Hashtable();
+		labelTable.put( new Integer( 0 ), new JLabel("0") );
+		labelTable.put( new Integer( 981 ), new JLabel("9.81") );
+		labelTable.put( new Integer( MAXGRAVITY ), new JLabel("20") );
+		gravitySlider.setLabelTable( labelTable );
+		gravitySlider.setPaintLabels(true);
+
+		gravitySlider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent evt) {
+				JSlider slider = (JSlider) evt.getSource();
+				if (!slider.getValueIsAdjusting()) {
+					double value = slider.getValue();
+					//VALUE moet gedeeld worden door 100 anders veel te groot
+					world.getDrones().get(0).setGravity((float)(-value/100));
+					//System.out.println("SLIDERGRAVITY: " + -value/100);
+				}
+			}
+		});
+
+		panelGravity.add(gravitySlider);
+		add(panelGravity, constraintsPanelGravity);
+				
+		if(world instanceof World12){
+			// Panel WindNams & Sliders
+
+			JPanel panelWindSliders = new JPanel(new GridLayout(2,3));
+			GridBagConstraints constraintsPanelWindSliders = new GridBagConstraints();
+			constraintsPanelWindSliders.insets = new Insets(1, 1, 1, 1);
+			constraintsPanelWindSliders.gridy = 5;
+
+			// Wind-sliders Names
+			windX = new JLabel("Wind x-richting: ");
+			windY = new JLabel("Wind y-richting: ");
+			windZ = new JLabel("Wind z-richting:");
+			panelWindSliders.add(windX);
+			panelWindSliders.add(windY);
+			panelWindSliders.add(windZ);
+
+			// WindSliders 
+			int MAXWIND = 10;
+			
+			//Create the label table
+			Hashtable labelTableWind = new Hashtable();
+			labelTableWind.put( new Integer( 0 ), new JLabel("-0.5") );
+			labelTableWind.put( new Integer( 5 ), new JLabel("0") );
+			labelTableWind.put( new Integer( MAXWIND ), new JLabel("0.5") );
+
+			//WindX
+			JSlider windXSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
+			windXSlider.setMajorTickSpacing(1);
+			windXSlider.setPaintTicks(true);
+			
+			windXSlider.setLabelTable( labelTable );
+			windXSlider.setPaintLabels(true);
+
+			windXSlider.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent evt) {
+					JSlider slider = (JSlider) evt.getSource();
+					if (!slider.getValueIsAdjusting()) {
+						double value = slider.getValue();
+						((World12) world).setWindForceX((float)((value-5)/10));
+						//System.out.println("SLIDERX: " + value/10);
+
+					}
+				}
+			});
+			windSliders.add(windXSlider);
+
+			//WindY
+			JSlider windYSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
+			windYSlider.setMajorTickSpacing(1);
+			windYSlider.setPaintTicks(true);
+			
+			windYSlider.setLabelTable( labelTable );
+			windYSlider.setPaintLabels(true);
+
+			windYSlider.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent evt) {
+					JSlider slider = (JSlider) evt.getSource();
+					if (!slider.getValueIsAdjusting()) {
+						double value = slider.getValue();
+						((World12) world).setWindForceY((float)((value-5)/10));
+						//System.out.println("SLIDERY: " + (double)(value/10));
+
+					}
+				}
+			});
+			windSliders.add(windYSlider);
+
+			//WindZ
+			JSlider windZSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
+			windZSlider.setMajorTickSpacing(1);
+			windZSlider.setPaintTicks(true);
+			
+			windZSlider.setLabelTable( labelTable );
+			windZSlider.setPaintLabels(true);
+
+			windZSlider.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent evt) {
+					JSlider slider = (JSlider) evt.getSource();
+					if (!slider.getValueIsAdjusting()) {
+						double value = slider.getValue();
+						//VALUE moet gedeeld worden door 10 anders veel te groot.
+						((World12) world).setWindForceZ((float)((value-5)/10));
+						//System.out.println("SLIDERZ: " + value/10);
+
+					}
+				}
+			});
+			windSliders.add(windZSlider);
+
+			panelWindSliders.add(windSliders.get(0));
+			panelWindSliders.add(windSliders.get(1));
+			panelWindSliders.add(windSliders.get(2));
+			add(panelWindSliders, constraintsPanelWindSliders);
+		}
+	
 	}
+	
 }
