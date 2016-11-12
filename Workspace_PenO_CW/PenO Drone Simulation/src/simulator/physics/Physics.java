@@ -37,6 +37,13 @@ public class Physics {
 		for (SimulationDrone currentDrone: world.getDrones()) {
 			float[] acceleration = getAcceleration(currentDrone);
 			currentDrone.getMovement().calculateMovement(timePassed, acceleration);
+			
+			//Random wind rotation
+			for (Force currentForce : forces) {
+				if ((currentForce.getXNewton() != 0) || (currentForce.getYNewton() != 0) || (currentForce.getZNewton() != 0)){
+					currentDrone.addRandomRotation();
+				}
+			}
 		}
 	}
 

@@ -15,7 +15,6 @@ public class MoveToTarget{
 		setSlowYaw();
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations(drone);
-		this.firstDistanceAndTime = true;
 		this.setSpeed(0);
 	}
 	
@@ -94,13 +93,7 @@ public class MoveToTarget{
 		float[] cogLeft = this.findBestCenterOfGravity(leftCamera, this.getDrone().getLeftCamera());
 		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this.getDrone().getRightCamera());
 		this.updateGUI(cogLeft, cogRight);
-		if(firstDistanceAndTime){
-			this.setPreviousDistance(this.getPhysicsCalculations().getDistance(cogLeft, cogRight));
-			this.setPreviousTime(this.getDrone().getCurrentTime());
-			firstDistanceAndTime = false;
-		}else{
-			this.updateSpeed(cogLeft, cogRight);
-		}
+		this.updateSpeed(cogLeft, cogRight);
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
 				|| this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= upperBoundary) {
 			this.getDrone().setYawRate(0);
@@ -166,11 +159,9 @@ public class MoveToTarget{
 	}
 
 	public void updateSpeed(float[] cogL, float[] cogR){
-		float newDistance =this.getPhysicsCalculations().getDistance(cogL, cogR);
-		float newTime = this.getDrone().getCurrentTime();
-		this.setSpeed(this.getPhysicsCalculations().calculateSpeed(previousDistance, newDistance, previousTime, newTime));
-		this.setPreviousDistance(newDistance);
-		this.setPreviousTime(newTime);
+		float distance =this.getPhysicsCalculations().getDistance(cogL, cogR);
+		float time = this.getDrone().getCurrentTime();
+		this.setSpeed(this.getPhysicsCalculations().calculateSpeed(time,distance));
 	}
 	
 	public float calculateDecelerationDistance(){
@@ -216,37 +207,7 @@ public class MoveToTarget{
 	}
 
 	private GUI gui;
-	
-	/**
-	 * @return the previousDistance
-	 */
-	public float getPreviousDistance() {
-		return previousDistance;
-	}
-	/**
-	 * @param previousDistance the previousDistance to set
-	 */
-	public void setPreviousDistance(float previousDistance) {
-		this.previousDistance = previousDistance;
-	}
-
-	private float previousDistance;
-	
-	/**
-	 * @return the previousTime
-	 */
-	public float getPreviousTime() {
-		return previousTime;
-	}
-	/**
-	 * @param previousTime the previousTime to set
-	 */
-	public void setPreviousTime(float previousTime) {
-		this.previousTime = previousTime;
-	}
-
-	private float previousTime;
-	
+		
 	/**
 	 * @return the speed
 	 */
@@ -262,5 +223,4 @@ public class MoveToTarget{
 	
 	private float speed;
 	
-	private boolean firstDistanceAndTime;
 }
