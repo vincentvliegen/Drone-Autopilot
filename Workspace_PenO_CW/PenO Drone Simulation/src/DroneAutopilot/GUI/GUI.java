@@ -115,6 +115,6 @@ public class GUI {
 	}
 
 	private final JProgressBar progressBar;
-	private int maxValue;
+	public int maxValue;
 	public boolean redOrbEnabled;
 }

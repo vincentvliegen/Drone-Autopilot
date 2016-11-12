@@ -26,19 +26,14 @@ public class MoveToTarget{
 		this.calculateDecelerationDistance();
 		ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
 		ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
-		if (this.getImageCalculations().checkIfAllRed(this.getDrone().getLeftCamera()) 
-				&& this.getImageCalculations().checkIfAllRed(this.getDrone().getRightCamera())){
-			System.out.println("bereikt");
-			this.hover();
+		if (this.checkRoll()){
+			this.checkcasespixelsfound(leftCameraList, rightCameraList);
 		}else{
-			if (this.checkRoll()){
-				this.checkcasespixelsfound(leftCameraList, rightCameraList);
-			}else{
-				System.out.println("correct roll");
-				this.correctRoll();
-			}
+			System.out.println("correct roll");
+			this.correctRoll();
 		}
 	}
+	
 	private void setSlowYaw() {
 		 this.slowYaw = Math.max(this.getDrone().getMaxYawRate()/4, 5);
 	}
@@ -122,11 +117,17 @@ public class MoveToTarget{
 		return cog;
 	}
 	
+	private boolean decel = false;
+	
 	public void flyTowardsTarget(float[] cogL, float[] cogR) {
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
-		if (this.getPhysicsCalculations().getDepth(cogL, cogR) <= 1f){
-			this.hover();
-			//System.out.println("hover");
+		//System.out.println("depth " + this.getPhysicsCalculations().getDepth(cogL, cogR));
+		//System.out.println("rem " + this.calculateDecelerationDistance());
+		if (this.getPhysicsCalculations().getDepth(cogL, cogR) <= this.calculateDecelerationDistance()){
+			decel = true;
+		}
+		if(decel){
+			this.startDeceleration(cogL,cogR);
 		}
 		else if (this.getPhysicsCalculations().getVisiblePitch(cogL,cogR)-this.getPhysicsCalculations().verticalAngleDeviation(cogL) >= 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
@@ -144,13 +145,21 @@ public class MoveToTarget{
 			this.getDrone().setRollRate(0);
 			this.getDrone().setYawRate(0);
 			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL),this.getDrone().getMaxThrust()));		
-			//System.out.println("thrust" + this.getPhysicsCalculations().getThrust(cogL));
 		}
 	}
 
 	public void hover() {
+		if (this.getDrone().getPitch() >0){
+			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
+			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));
+		}else if (this.getDrone().getPitch() <0){
+			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
+			this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));	
+		}
+		else{
 		this.getDrone().setPitchRate(0);
 		this.getDrone().setThrust(Math.min(this.getDrone().getMaxThrust(), Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()));
+		}
 	}
 	
 	public void updateGUI(float[] centerOfGravityL, float[] centerOfGravityR){
@@ -165,17 +174,47 @@ public class MoveToTarget{
 	}
 	
 	public float calculateDecelerationDistance(){
-		float tegenpitch = 5f;
+		float tegenpitch = 1f;
 		float distance = 0;
-		if (this.getSpeed() >= 0 && this.getSpeed()<6){
-		float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()*Math.tan(Math.toRadians(tegenpitch))/this.getDrone().getWeight());
-//		System.out.println("dec " +Math.pow(this.getSpeed(),2) / (2*deceleration));
-//		System.out.println("pitchtijd "+ this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*this.getSpeed());
-//		System.out.println("tegenpitch " +tegenpitch/this.getDrone().getMaxPitchRate()*this.getSpeed());
-		distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*this.getSpeed()+ tegenpitch/this.getDrone().getMaxPitchRate()*this.getSpeed();
-		System.out.println(distance);
+		if (this.getSpeed() >= 0){
+			float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()*Math.tan(Math.toRadians(tegenpitch)))/this.getDrone().getWeight();
+			float counterpitch = this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*this.getSpeed();
+			float backpitch = 2*tegenpitch/this.getDrone().getMaxPitchRate()*this.getSpeed();
+			distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + counterpitch+ 2*backpitch;
+			if (distance >= this.getGUI().maxValue){
+				distance = this.getGUI().maxValue;
+			}
 		}
+//		System.out.println(distance);
 		return distance;
+	}
+	
+	private boolean hover = false;
+	public void startDeceleration(float[] cogL, float[] cogR){
+		//System.out.println(this.getDrone().getPitch());
+		System.out.println(Math.abs(this.getDrone().getPitch())/this.getDrone().getMaxPitchRate());
+//		System.out.println(this.getPhysicsCalculations().getDepth(cogL, cogR));
+		if(this.getSpeed()<0.5
+				||this.getPhysicsCalculations().getDepth(cogL, cogR) <= Math.abs(this.getDrone().getPitch())/this.getDrone().getMaxPitchRate()*this.getSpeed()){
+			hover = true;
+		}
+		if(hover){
+			System.out.println("hover");
+			this.hover();
+		}else{
+			if (this.getDrone().getPitch() > 0){
+				this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
+				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
+			} else if (this.getDrone().getPitch() < 0 && this.getDrone().getPitch() > -5){
+				this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
+				float thrust = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()/Math.cos(Math.toRadians(this.getDrone().getPitch())));
+				this.getDrone().setThrust(thrust);
+			}else{
+				this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
+				float thrust = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()/Math.cos(Math.toRadians(this.getDrone().getPitch())));
+				this.getDrone().setThrust(thrust);
+			}
+		}
 	}
 	
 	public final ImageCalculations getImageCalculations() {

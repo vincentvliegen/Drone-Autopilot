@@ -114,7 +114,7 @@ public class PhysicsCalculations {
 			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
 		}
 		//System.out.println(distance);
-		System.out.println("speed: " + this.getSpeed());
+//		System.out.println("speed: " + this.getSpeed());
 		return this.getSpeed();
 	}
 	
@@ -124,7 +124,7 @@ public class PhysicsCalculations {
 			float Sy = 0;
 			float Sxx = 0;
 			float Sxy = 0;
-			float Syy = 0;
+			//float Syy = 0;
 			int n = TDList.size();
 			for(int i = 0; i < n; i++ ){
 				float x = TDList.get(i)[0];
@@ -140,7 +140,7 @@ public class PhysicsCalculations {
 			//weghalen van uitschieters
 //			System.out.println("a " + a);
 //			System.out.println("b "+b);
-			System.out.println(TDList);
+//			System.out.println(TDList);
 			for(int i = TDList.size()-1; i>=0; i--){
 //				System.out.println("x "+TDList.get(i)[0]);
 //				System.out.println("y "+TDList.get(i)[1]);
@@ -152,7 +152,6 @@ public class PhysicsCalculations {
 					TDList.remove(i);
 				}
 			}
-			System.out.println(TDList);
 		}
 		return TDList;
 	}
