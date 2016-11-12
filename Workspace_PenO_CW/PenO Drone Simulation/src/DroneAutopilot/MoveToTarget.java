@@ -177,7 +177,7 @@ public class MoveToTarget{
 		float tegenpitch = 4f;
 		float distance = 0;
 		if (this.getSpeed() >= 0){
-			float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()*Math.tan(Math.toRadians(tegenpitch/3)))/this.getDrone().getWeight();
+			float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()*Math.tan(Math.toRadians(tegenpitch/2)))/this.getDrone().getWeight();
 			float counterpitch = this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*this.getSpeed();
 			float backpitch = 2*tegenpitch/this.getDrone().getMaxPitchRate()*this.getSpeed();
 			distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + counterpitch+ 2*backpitch;
