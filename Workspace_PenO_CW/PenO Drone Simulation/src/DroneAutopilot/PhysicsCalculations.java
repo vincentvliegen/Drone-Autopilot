@@ -164,7 +164,7 @@ public class PhysicsCalculations {
 		float cosPitch = (float) Math.cos(Math.toRadians(this.getDrone().getPitch()));
 		float speed = this.getSpeed();
 		
-		float thrustToTarget=(float) Math.sqrt(Math.pow(thrust, 2)+2*cosPitch*thrust*weight*gravity + Math.pow((weight*gravity),2));
+		float thrustToTarget=(float) Math.sqrt(Math.abs(Math.pow(thrust, 2)+2*cosPitch*thrust*weight*gravity + Math.pow((weight*gravity),2)));
 		float force = thrustToTarget - drag*speed;
 		float acceleration = force/weight;
 		System.out.println(acceleration);
