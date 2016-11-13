@@ -20,7 +20,7 @@ public class SimulatorMain11 {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(gui, BorderLayout.EAST);
 		
-		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH); //Full-screen
+//		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); //Full-screen
 		
 		frame.setSize(1024, 768); // width, height
 		frame.setResizable(false); //Not resizable

@@ -13,12 +13,6 @@ public class PhysicsCalculations {
 		setPreviousTimeDistance(startTimeDistance);
 		setSpeed(0);
 	}
-	
-	private static final float visibilityFactor = 0.8f;
-	
-	private static final float decelerationFactor = 0.4f;
-	
-	private static final float DecelerationDistance = 25f;
 
 	private Drone drone;
 
@@ -75,9 +69,9 @@ public class PhysicsCalculations {
 	}
 
 	public float getVisiblePitch(float[] centerOfGravityL, float[] centerOfGravityR){
-		if (this.getDepth(centerOfGravityL, centerOfGravityR) <= getDecelerationDistance()){
-			return  (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getDecelerationFactor());
-		}
+//		if (this.getDistance(centerOfGravityL, centerOfGravityR) <= getDecelerationDistance()){
+//			return  (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getDecelerationFactor());
+//		}
 		return (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getVisibilityFactor());
 	}
 	
@@ -85,6 +79,8 @@ public class PhysicsCalculations {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
 		thrust = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
+		System.out.println("thrust "+thrust);
+		System.out.println("pitch "+this.getDrone().getPitch());
 		return thrust;
 	}
 	
@@ -167,10 +163,29 @@ public class PhysicsCalculations {
 		float thrustToTarget=(float) Math.sqrt(Math.abs(Math.pow(thrust, 2)+2*cosPitch*thrust*weight*gravity + Math.pow((weight*gravity),2)));
 		float force = thrustToTarget - drag*speed;
 		float acceleration = force/weight;
-		System.out.println(acceleration);
+//		System.out.println(acceleration);
 		return acceleration;
 	}
 
+	public float calculateDecelerationDistance(){
+		float tegenpitch = 5f;
+		float distance = 0;
+		if (this.getSpeed() >= 0){
+			float at = this.getAcceleration()*(this.getDrone().getPitch()/this.getDrone().getMaxPitchRate());
+			float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()*Math.tan(Math.toRadians(tegenpitch)))/this.getDrone().getWeight();
+			float counterpitch = this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*(this.getSpeed()+at);
+			float backpitch = tegenpitch/this.getDrone().getMaxPitchRate()*(this.getSpeed());
+			distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + counterpitch+ backpitch;
+//			System.out.println("speed " + this.getSpeed());
+//			System.out.println("pitch " + this.getDrone().getPitch());
+//			System.out.println("decel " + deceleration);
+//			System.out.println("counterpitch " + counterpitch);
+//			System.out.println("backpitch "+ backpitch);
+		}
+//		System.out.println("deceldistance "+ distance);		
+		return distance;
+	}
+	
 	public Drone getDrone(){
 		return this.drone;
 	}
@@ -183,9 +198,9 @@ public class PhysicsCalculations {
 		return PhysicsCalculations.decelerationFactor;
 	}
 
-	public static float getDecelerationDistance() {
-		return DecelerationDistance;
-	}
+//	public static float getDecelerationDistance() {
+//		return DecelerationDistance;
+//	}
 	
 	/**
 	 * @return the timeDistanceList
@@ -228,11 +243,34 @@ public class PhysicsCalculations {
 	
 	private float speed;
 	
+	/**
+	 * @return the acceleration
+	 */
+	public float getAcceleration() {
+		return acceleration;
+	}
+
+	/**
+	 * @param acceleration the acceleration to set
+	 */
+	public void setAcceleration(float acceleration) {
+		this.acceleration = acceleration;
+	}
+	
+	private float acceleration;
+	
 	// hoe groter hoe nauwkeuriger maar te groot = te traag updaten van speed (nu schommelt speed = s+-0.5)
 	// speed schommelt minder voor avgcounter = 9, maar daar zijn de waardes om een of andere reden te klein in vgl met de simulator speed... (ongeveer 3-4 keer kleiner)
 	public final static int avgcounter = 7; 
 	
 	//als avg counter groter wordt, kan deze groter en dus nauwkeuriger worden
 	public final static float deviationLinReg = 0.006f;	
+	
+	
+	private static final float visibilityFactor = 0.8f;
+	private static final float decelerationFactor = 0.4f;
+	
+	
+//	private static final float DecelerationDistance = 25f;
 	
 }

@@ -22,7 +22,6 @@ public class MoveToTarget{
 	private static final float upperBoundary = 1f;
 	
 	public void execute(){
-		this.calculateDecelerationDistance();
 		ArrayList<int[]> leftCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getLeftCamera());
 		ArrayList<int[]> rightCameraList = this.getImageCalculations().getRedPixels(this.getDrone().getRightCamera());
 		if (this.checkRoll()){
@@ -82,10 +81,12 @@ public class MoveToTarget{
 		this.getDrone().setRollRate(0);
 		float[] cogLeft = this.findBestCenterOfGravity(leftCamera, this.getDrone().getLeftCamera());
 		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this.getDrone().getRightCamera());
+		
 		this.updateDistance(cogLeft, cogRight);
 		this.updateSpeed(cogLeft, cogRight);
 		this.updateAcceleration(cogLeft);
 		this.updateGUI();
+		
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
 				&& this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= upperBoundary) {
 			this.getDrone().setYawRate(0);
@@ -121,7 +122,7 @@ public class MoveToTarget{
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
 		//System.out.println("depth " + this.getPhysicsCalculations().getDepth(cogL, cogR));
 		//System.out.println("rem " + this.calculateDecelerationDistance());
-		if (this.getPhysicsCalculations().getDepth(cogL, cogR) <= this.calculateDecelerationDistance()){
+		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().calculateDecelerationDistance()){
 			decel = true;
 		}
 		if(decel){
@@ -177,29 +178,8 @@ public class MoveToTarget{
 		this.setAcceleration(this.getPhysicsCalculations().calculateAcceleration(cog));
 	}
 	
-	public float calculateDecelerationDistance(){
-		float tegenpitch = 5f;
-		float distance = 0;
-		if (this.getSpeed() >= 0){
-			//System.out.println("speed " + this.getSpeed());
-			//System.out.println("pitch " + this.getDrone().getPitch());
-			float at = this.getAcceleration()*(this.getDrone().getPitch()/this.getDrone().getMaxPitchRate());
-			float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()*Math.tan(Math.toRadians(tegenpitch)))/this.getDrone().getWeight();
-			float counterpitch = this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*(this.getSpeed()+at);
-			float backpitch = tegenpitch/this.getDrone().getMaxPitchRate()*(this.getSpeed());
-			//System.out.println("decel " + deceleration);
-			//System.out.println("counterpitch " + counterpitch);
-			//System.out.println("backpitch "+ backpitch);
-			distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + counterpitch+ backpitch;
-			if (distance >= this.getGUI().maxValue){
-				distance = this.getGUI().maxValue;
-			}
-		}
-//		System.out.println(distance);
-		return distance;
-	}
-	
 	private boolean hover = false;
+	
 	public void startDeceleration(float[] cogL, float[] cogR){
 		//System.out.println("pitch" + this.getDrone().getPitch());
 		//System.out.println(Math.abs(this.getDrone().getPitch())/this.getDrone().getMaxPitchRate());
@@ -214,7 +194,7 @@ public class MoveToTarget{
 			if (this.getDrone().getPitch() > 0){
 				this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
 				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
-			} else if (this.getDrone().getPitch() < 0 && this.getDrone().getPitch() > -5f){
+			} else if (this.getDrone().getPitch() <= 0 && this.getDrone().getPitch() > -5f){
 				this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
 				float thrust = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()/Math.cos(Math.toRadians(this.getDrone().getPitch())));
 				this.getDrone().setThrust(thrust);
