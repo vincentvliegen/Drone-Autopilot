@@ -180,13 +180,14 @@ public class MoveToTarget{
 		if (this.getSpeed() >= 0){
 			//System.out.println("speed " + this.getSpeed());
 			//System.out.println("pitch " + this.getDrone().getPitch());
+			float at = this.getAcceleration()*(this.getDrone().getPitch()/this.getDrone().getMaxPitchRate());
 			float deceleration = (float) (this.getDrone().getDrag()*this.getSpeed() + Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()*Math.tan(Math.toRadians(tegenpitch)))/this.getDrone().getWeight();
-			float counterpitch = this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*this.getSpeed();
-			float backpitch = 2*tegenpitch/this.getDrone().getMaxPitchRate()*this.getSpeed();
+			float counterpitch = this.getDrone().getPitch()/this.getDrone().getMaxPitchRate()*(this.getSpeed()+at);
+			float backpitch = tegenpitch/this.getDrone().getMaxPitchRate()*(this.getSpeed());
 			//System.out.println("decel " + deceleration);
 			//System.out.println("counterpitch " + counterpitch);
 			//System.out.println("backpitch "+ backpitch);
-			distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + counterpitch+ 2*backpitch;
+			distance = (float) Math.pow(this.getSpeed(),2) / (2*deceleration) + counterpitch+ backpitch;
 			if (distance >= this.getGUI().maxValue){
 				distance = this.getGUI().maxValue;
 			}
