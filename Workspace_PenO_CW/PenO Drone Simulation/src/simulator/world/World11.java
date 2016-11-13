@@ -25,7 +25,7 @@ public class World11 extends World {
 		super();
 		super.addGeneralCamera(new GeneralCamera(-1, 1, 2, 0, 0, -2.5f, 0, 1, 0));
 		super.addGeneralCamera(new GeneralCamera(1, 1, 2, 0, 0, -2.5f, 0, 1, 0));
-		super.addGeneralCamera(new GeneralCamera(1, 4, -10, 0, 0, -10, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(3, 0, -8, 0, 0, -10, 0, 1, 0));
 		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
