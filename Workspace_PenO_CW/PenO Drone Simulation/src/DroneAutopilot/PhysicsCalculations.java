@@ -156,6 +156,18 @@ public class PhysicsCalculations {
 		return TDList;
 	}
 	
+	public float calculateAcceleration(float[] cog){
+		float thrust = this.getThrust(cog);
+		float weight = this.getDrone().getWeight();
+		float drag = this.getDrone().getDrag();
+		float gravity = this.getDrone().getGravity();
+		float cosPitch = (float) Math.acos(Math.toRadians(this.getDrone().getPitch()));
+		
+		float thrustToTarget=(float) Math.sqrt(Math.pow(thrust, 2)+2*cosPitch*thrust*weight*gravity + Math.pow((weight*gravity),2));
+		float force = (1-drag)*(thrustToTarget);
+		float acceleration = force/weight;
+		return acceleration;
+	}
 
 	public Drone getDrone(){
 		return this.drone;
@@ -218,7 +230,7 @@ public class PhysicsCalculations {
 	// speed schommelt minder voor avgcounter = 9, maar daar zijn de waardes om een of andere reden te klein in vgl met de simulator speed... (ongeveer 3-4 keer kleiner)
 	public final static int avgcounter = 7; 
 	
-	//als avg counter groter wordt, kan deze nauwkeuriger worden, maar als avg counter te groot is is lineaire regressie niet meer een goede benadering (15+ ofzo)
+	//als avg counter groter wordt, kan deze groter en dus nauwkeuriger worden
 	public final static float deviationLinReg = 0.006f;	
 	
 }
