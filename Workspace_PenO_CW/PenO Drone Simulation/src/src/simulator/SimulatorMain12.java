@@ -18,7 +18,11 @@ public class SimulatorMain12 {
 		frame.getContentPane().add(world, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(gui, BorderLayout.EAST);
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH); //Full-screen
+		
+		frame.setSize(1024, 768); // width, height
+		frame.setResizable(false); //Not resizable
 		world.requestFocus();
 		world.addKeyListener(World12.movement);
 		frame.setVisible(true);
