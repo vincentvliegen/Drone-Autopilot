@@ -22,7 +22,7 @@ public class World12 extends World {
 	private Sphere sphere1;
 	private Force windForce;
 	private float windForceX = 0;
-	private float windForceY = -0.01f;
+	private float windForceY = 0;
 	private float windForceZ = 0;
 
 	public World12() {
