@@ -86,7 +86,22 @@ public class World11 extends World {
 		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+		//voor uitschrijven van bestand
+//		if(getDrones().size() != 0){
+//			if(i == 100){
+//			getDrones().get(0).getLeftDroneCamera().dombiedom2();
+//			getDrones().get(0).getRightDroneCamera().dombiedom2();
+//			i++;
+//			}
+//			else
+//				i++;
+//
+//		}
 	}	
+
+	
+	int i = 0;
+	
 
 
 	private void draw() {
