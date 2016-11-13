@@ -1,6 +1,11 @@
 package simulator.camera;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import javax.imageio.ImageIO;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -134,7 +139,7 @@ public class DroneCamera extends GeneralCamera implements Camera {
 
 	@Override
 	public float getHorizontalAngleOfView() {
-		return (float) (2*Math.toDegrees(Math.atan((double)1000/getWidth())));
+		return (float) (180 - 2*Math.toDegrees(Math.atan(1000/getWidth())));
 	}
 
 	@Override
@@ -146,4 +151,40 @@ public class DroneCamera extends GeneralCamera implements Camera {
 	public int getWidth() {
 		return drawable.getSurfaceWidth();
 	}
+	
+	
+	//voor uitschrijven naar bestand
+	public void writeTakeImageToFile() {
+		  //		int width = getWidth();
+		  int height= getDrone().getWorld().getDrawable().getSurfaceHeight();
+		  String path = "/D:/Libraries/takeimageTest";
+		  if(getPlace() == DroneCameraPlace.LEFT)
+		    path = path + "-left.png";
+		  else
+		    path = path + "-right.png";
+
+		  File file = new File(path); // The file to save to.
+
+		  String format = "PNG"; // Example: "PNG" or "JPG"
+		  int[] temp = takeImage();
+
+
+		  BufferedImage image = new BufferedImage(getWidth(), height, BufferedImage.TYPE_INT_RGB);
+
+		  for(int x = 0; x < getWidth(); x++)
+		  {
+		    for(int y = 0; y < height; y++)
+		    {
+
+		      //TODO: geeft kleuren omgekeerd; krijgt autopilot ze wel juist door?
+		      image.setRGB(x, y, temp[y*getWidth()+x]);
+
+		      //						image.setRGB(x, height - (y + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
+
+		    }
+		  }
+		  try {
+		    ImageIO.write(image, format, file);
+		  } catch (IOException e) { e.printStackTrace(); }
+		}
 }
