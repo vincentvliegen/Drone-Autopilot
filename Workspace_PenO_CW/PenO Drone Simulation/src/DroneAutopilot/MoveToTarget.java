@@ -15,6 +15,7 @@ public class MoveToTarget{
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations(drone);
 		this.setSpeed(0);
+		this.setAcceleration(0);
 	}
 	
 	private static final float underBoundary = -1f;
@@ -83,6 +84,7 @@ public class MoveToTarget{
 		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this.getDrone().getRightCamera());
 		this.updateGUI(cogLeft, cogRight);
 		this.updateSpeed(cogLeft, cogRight);
+		this.updateAcceleration(cogLeft);
 		this.getPhysicsCalculations().calculateAcceleration(cogLeft);
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
 				&& this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= upperBoundary) {
@@ -166,6 +168,10 @@ public class MoveToTarget{
 		float distance =this.getPhysicsCalculations().getDistance(cogL, cogR);
 		float time = this.getDrone().getCurrentTime();
 		this.setSpeed(this.getPhysicsCalculations().calculateSpeed(time,distance));
+	}
+	
+	public void updateAcceleration(float[] cog){
+		this.setAcceleration(this.getPhysicsCalculations().calculateAcceleration(cog));
 	}
 	
 	public float calculateDecelerationDistance(){
@@ -258,7 +264,23 @@ public class MoveToTarget{
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
-	
+
 	private float speed;
+	
+	/**
+	 * @return the acceleration
+	 */
+	public float getAcceleration() {
+		return acceleration;
+	}
+
+	/**
+	 * @param acceleration the acceleration to set
+	 */
+	public void setAcceleration(float acceleration) {
+		this.acceleration = acceleration;
+	}
+	
+	private float acceleration;
 	
 }
