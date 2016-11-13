@@ -100,7 +100,8 @@ public class GUI {
 
 	}
 
-	public void update(int distance) {
+	public void update(float dist) {
+		int distance = (int) (dist*100);
 		if (distance > this.maxValue) {
 			this.maxValue = distance;
 			this.progressBar.setMaximum(distance);

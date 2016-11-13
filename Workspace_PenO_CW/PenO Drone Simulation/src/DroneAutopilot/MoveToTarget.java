@@ -82,10 +82,10 @@ public class MoveToTarget{
 		this.getDrone().setRollRate(0);
 		float[] cogLeft = this.findBestCenterOfGravity(leftCamera, this.getDrone().getLeftCamera());
 		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this.getDrone().getRightCamera());
-		this.updateGUI(cogLeft, cogRight);
+		this.updateDistance(cogLeft, cogRight);
 		this.updateSpeed(cogLeft, cogRight);
 		this.updateAcceleration(cogLeft);
-		this.getPhysicsCalculations().calculateAcceleration(cogLeft);
+		this.updateGUI();
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
 				&& this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= upperBoundary) {
 			this.getDrone().setYawRate(0);
@@ -159,11 +159,14 @@ public class MoveToTarget{
 		}
 	}
 	
-	public void updateGUI(float[] centerOfGravityL, float[] centerOfGravityR){
-		float distance = this.getPhysicsCalculations().getDistance(centerOfGravityL, centerOfGravityR);
-		this.getGUI().update((int)(distance*100));
+	public void updateGUI(){
+		this.getGUI().update(this.getDistance());
 	}
 
+	public void updateDistance(float[] cogL, float[] cogR){
+		this.setDistance(this.getPhysicsCalculations().getDistance(cogL, cogR));
+	}
+	
 	public void updateSpeed(float[] cogL, float[] cogR){
 		float distance =this.getPhysicsCalculations().getDistance(cogL, cogR);
 		float time = this.getDrone().getCurrentTime();
@@ -252,7 +255,23 @@ public class MoveToTarget{
 	}
 
 	private GUI gui;
-		
+	
+	/**
+	 * @return the distance
+	 */
+	public float getDistance() {
+		return distance;
+	}
+
+	/**
+	 * @param distance the distance to set
+	 */
+	public void setDistance(float distance) {
+		this.distance = distance;
+	}
+	
+	private float distance;
+	
 	/**
 	 * @return the speed
 	 */
