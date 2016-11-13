@@ -108,7 +108,7 @@ public class DroneCamera extends GeneralCamera implements Camera {
 	
 		// Perspective.
 		float widthHeightRatio = (float) getWidth() / (float) height;
-		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
+		glu.gluPerspective(45, widthHeightRatio, 1, 500);
 		// System.out.println("X " + getEyeX());
 		// System.out.println("LookAtX " + getLookAtX());
 	

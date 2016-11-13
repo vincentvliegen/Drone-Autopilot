@@ -137,7 +137,7 @@ public class World11 extends World {
 
 		// Perspective.
 		float widthHeightRatio = (float) getWidth() / (float) getHeight();
-		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
+		glu.gluPerspective(45, widthHeightRatio, 1, 500);
 		glu.gluLookAt(currentCamera.getEyeX(), currentCamera.getEyeY(), currentCamera.getEyeZ(), 
 				currentCamera.getLookAtX(), currentCamera.getLookAtY(), currentCamera.getLookAtZ(), 
 				currentCamera.getUpX(), currentCamera.getUpY(), currentCamera.getUpZ());
