@@ -159,13 +159,14 @@ public class PhysicsCalculations {
 	public float calculateAcceleration(float[] cog){
 		float thrust = this.getThrust(cog);
 		float weight = this.getDrone().getWeight();
+		float drag = this.getDrone().getDrag();
+		float gravity = this.getDrone().getGravity();
+		float cosPitch = (float) Math.cos(Math.toRadians(this.getDrone().getPitch()));
 		float speed = this.getSpeed();
-		float drag = this.getDrone().getDrag()*speed;
-		float alfa = this.getDrone().getPitch();
-		float beta = this.verticalAngleDeviation(cog);
 		
-		float lefteq = (float) (thrust*Math.sin(Math.toRadians(alfa) - drag*Math.cos(Math.toRadians(beta-alfa))));
-		float acceleration = (float) (lefteq/ (weight*Math.cos(Math.toRadians(beta-alfa))));
+		float thrustToTarget=(float) Math.sqrt(Math.pow(thrust, 2)+2*cosPitch*thrust*weight*gravity + Math.pow((weight*gravity),2));
+		float force = thrustToTarget - drag*speed;
+		float acceleration = force/weight;
 		System.out.println(acceleration);
 		return acceleration;
 	}
