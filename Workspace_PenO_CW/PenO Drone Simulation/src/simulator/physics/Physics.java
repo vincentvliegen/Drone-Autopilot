@@ -39,11 +39,11 @@ public class Physics {
 			currentDrone.getMovement().calculateMovement(timePassed, acceleration);
 			
 			//Random wind rotation
-			for (Force currentForce : forces) {
-				if ((currentForce.getXNewton() != 0) || (currentForce.getYNewton() != 0) || (currentForce.getZNewton() != 0)){
-					currentDrone.addRandomRotation();
-				}
-			}
+//			for (Force currentForce : forces) {
+//				if ((currentForce.getXNewton() != 0) || (currentForce.getYNewton() != 0) || (currentForce.getZNewton() != 0)){
+//					currentDrone.addRandomRotation();
+//				}
+//			}
 		}
 	}
 

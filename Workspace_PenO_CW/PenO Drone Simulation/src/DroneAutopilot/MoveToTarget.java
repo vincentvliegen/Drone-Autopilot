@@ -180,13 +180,17 @@ public class MoveToTarget{
 		this.setAcceleration(this.getPhysicsCalculations().calculateAcceleration(cog));
 	}
 	
+	private boolean hover=false;
 	public void startDeceleration(float[] cogL, float[] cogR){
 //		System.out.println("pitch" + this.getDrone().getPitch());
 //		System.out.println(Math.abs(this.getDrone().getPitch())/this.getDrone().getMaxPitchRate());
 //		System.out.println(this.getPhysicsCalculations().getDepth(cogL, cogR));
 //		System.out.println("    startdecel");
-		if(this.getSpeed()<0.5){
+		if(this.getSpeed()<0.3){
 			System.out.println("hover");
+			hover = true;
+		}
+		if(hover){
 			this.hover();
 		}
 		else{

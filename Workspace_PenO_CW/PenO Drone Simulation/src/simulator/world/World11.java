@@ -89,8 +89,8 @@ public class World11 extends World {
 		//voor uitschrijven van bestand
 //		if(getDrones().size() != 0){
 //			if(i == 100){
-//			getDrones().get(0).getLeftDroneCamera().dombiedom2();
-//			getDrones().get(0).getRightDroneCamera().dombiedom2();
+//			getDrones().get(0).getLeftDroneCamera().writeTakeImageToFile();
+//			getDrones().get(0).getRightDroneCamera().writeTakeImageToFile();
 //			i++;
 //			}
 //			else
