@@ -87,7 +87,7 @@ public class MoveToTarget{
 		this.updateSpeed(cogLeft, cogRight);
 		this.updateGUI();
 //		System.out.println("distance "+getDistance());
-//		System.out.println("speed "+getSpeed());
+		System.out.println("speed "+getSpeed());
 //		System.out.println("acceleration "+getAcceleration());
 		
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
@@ -187,7 +187,7 @@ public class MoveToTarget{
 //		System.out.println("pitch" + this.getDrone().getPitch());
 //		System.out.println(Math.abs(this.getDrone().getPitch())/this.getDrone().getMaxPitchRate());
 //		System.out.println(this.getPhysicsCalculations().getDepth(cogL, cogR));
-		System.out.println("    startdecel");
+//		System.out.println("    startdecel");
 		if(this.getSpeed()<0.5){
 			System.out.println("hover");
 			hover = true;

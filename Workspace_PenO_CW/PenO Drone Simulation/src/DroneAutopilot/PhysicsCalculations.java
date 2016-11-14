@@ -90,7 +90,7 @@ public class PhysicsCalculations {
 	}
 	
 	private boolean firstDistanceTime;
-	private final static float SpeedCorrector = 5f;//speed is veel te klein om een of andere reden
+	private final static float SpeedCorrector = 3f;//speed is veel te klein om een of andere reden
 	
 	public float calculateSpeed(float time, float distance){
 		float[] newTD = {time,distance};
@@ -100,26 +100,37 @@ public class PhysicsCalculations {
 			firstDistanceTime = false;
 		}
 		if(timeDistanceList.size() >= avgcounter){
-			timeDistanceList = filterAvg(timeDistanceList);//kan soms een lege lijst returnen, wanneer deviationLinReg te klein is
-			float avgTime = 0;
-			float avgDistance = 0;
-			float size = timeDistanceList.size();
-			for(int i = timeDistanceList.size()-1; i >= 0; i--){
-				float[] currentTD = timeDistanceList.get(i);
-				avgTime += currentTD[0];
-				avgDistance += currentTD[1];
-				timeDistanceList.remove(i);
-			}
-			avgTime = avgTime/size;
-			avgDistance = avgDistance/size;
-			this.setSpeed(SpeedCorrector*(getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
-			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
-		}
+			
+			//methode 1: filteredavg of distances
+//			timeDistanceList = filterAvg(timeDistanceList);//kan soms een lege lijst returnen, wanneer deviationLinReg te klein is
+//			float avgTime = 0;
+//			float avgDistance = 0;
+//			float size = timeDistanceList.size();
+//			for(int i = timeDistanceList.size()-1; i >= 0; i--){
+//				float[] currentTD = timeDistanceList.get(i);
+//				avgTime += currentTD[0];
+//				avgDistance += currentTD[1];
+//				timeDistanceList.remove(i);
+//			}
+//			avgTime = avgTime/size;
+//			avgDistance = avgDistance/size;
+//			this.setSpeed(SpeedCorrector* (getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
+//			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
+//		}
 		//System.out.println(distance);
 		//System.out.println("speed: " + this.getSpeed());
 		
+		
+		//methode 2: snelheid ifv versnelling
 //		float speed = this.getSpeed()+(newTD[0]-previousTimeDistance[0])*this.getAcceleration();
 //		this.setSpeed(speed);
+			
+		//methode 3: lineaire regressie, om te voorspellen wat de huidige afstand is	LIJKT NAUWKEURIGER DAN GEMIDDELDE
+			float[] ab = linRegExpectedValue(timeDistanceList);
+			timeDistanceList.clear();
+			float expectedDistance = ab[0]*newTD[0] + ab[1];
+			this.setSpeed((getPreviousTimeDistance()[1] - expectedDistance)/(newTD[0] - getPreviousTimeDistance()[0]));
+		}
 		return this.getSpeed();
 	}
 	
@@ -142,7 +153,9 @@ public class PhysicsCalculations {
 			//ax+b = y
 			float a = (n*Sxy-Sx*Sy)/(n*Sxx-Sx*Sx);
 			float b = (Sy - a*Sx)/n;
+			
 			//weghalen van uitschieters
+			
 //			System.out.println("a " + a);
 //			System.out.println("b "+b);
 //			System.out.println(TDList);
@@ -159,6 +172,28 @@ public class PhysicsCalculations {
 			}
 		}
 		return TDList;
+	}
+	
+	public float[] linRegExpectedValue(ArrayList<float[]> TDList){
+		float Sx = 0;
+		float Sy = 0;
+		float Sxx = 0;
+		float Sxy = 0;
+		//float Syy = 0;
+		int n = TDList.size();
+		for(int i = 0; i < n; i++ ){
+			float x = TDList.get(i)[0];
+			float y = TDList.get(i)[1];
+			Sx += x;
+			Sy += y;
+			Sxx += x*x;
+			Sxy += x*y;
+		}
+		//ax+b = y
+		float a = (n*Sxy-Sx*Sy)/(n*Sxx-Sx*Sx);
+		float b = (Sy - a*Sx)/n;
+		float[] result = {a,b};
+		return result;
 	}
 	
 	public float calculateAcceleration(float[] cog){
