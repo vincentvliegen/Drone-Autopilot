@@ -33,7 +33,9 @@ public class GUI extends JPanel {
 	private JLabel windX, windY, windZ;
 	private List<JButton> buttonsGeneralCameras = new ArrayList<>();
 	private List<JButton> buttonsDroneCameras = new ArrayList<>();
-	private List<JSlider> windSliders = new ArrayList<>();
+	private List<JSlider> windSlidersX = new ArrayList<>();
+	private List<JSlider> windSlidersY = new ArrayList<>();
+	private List<JSlider> windSlidersZ = new ArrayList<>();
 
 
 	/**
@@ -208,18 +210,26 @@ public class GUI extends JPanel {
 		if(world instanceof World12){
 			// Panel WindNams & Sliders
 
-			JPanel panelWindSliders = new JPanel(new GridLayout(2,3));
-			GridBagConstraints constraintsPanelWindSliders = new GridBagConstraints();
-			constraintsPanelWindSliders.insets = new Insets(1, 1, 1, 1);
-			constraintsPanelWindSliders.gridy = 5;
+			JPanel panelWindSlidersX = new JPanel(new GridLayout(1,2));
+			JPanel panelWindSlidersY = new JPanel(new GridLayout(1,2));
+			JPanel panelWindSlidersZ= new JPanel(new GridLayout(1,2));
+			GridBagConstraints constraintsPanelWindSlidersX = new GridBagConstraints();
+			constraintsPanelWindSlidersX.insets = new Insets(1, 1, 1, 1);
+			constraintsPanelWindSlidersX.gridy = 5;
+			GridBagConstraints constraintsPanelWindSlidersY = new GridBagConstraints();
+			constraintsPanelWindSlidersY.insets = new Insets(1, 1, 1, 1);
+			constraintsPanelWindSlidersY.gridy = 6;
+			GridBagConstraints constraintsPanelWindSlidersZ = new GridBagConstraints();
+			constraintsPanelWindSlidersZ.insets = new Insets(1, 1, 1, 1);
+			constraintsPanelWindSlidersZ.gridy = 7;
 
 			// Wind-sliders Names
 			windX = new JLabel("Wind x-richting: ");
 			windY = new JLabel("Wind y-richting: ");
 			windZ = new JLabel("Wind z-richting:");
-			panelWindSliders.add(windX);
-			panelWindSliders.add(windY);
-			panelWindSliders.add(windZ);
+			panelWindSlidersX.add(windX);
+			panelWindSlidersY.add(windY);
+			panelWindSlidersZ.add(windZ);
 
 			// WindSliders 
 			int MAXWIND = 10;
@@ -235,7 +245,7 @@ public class GUI extends JPanel {
 			windXSlider.setMajorTickSpacing(1);
 			windXSlider.setPaintTicks(true);
 			
-			windXSlider.setLabelTable( labelTable );
+			windXSlider.setLabelTable( labelTableWind );
 			windXSlider.setPaintLabels(true);
 
 			windXSlider.addChangeListener(new ChangeListener() {
@@ -249,14 +259,14 @@ public class GUI extends JPanel {
 					}
 				}
 			});
-			windSliders.add(windXSlider);
+			windSlidersX.add(windXSlider);
 
 			//WindY
 			JSlider windYSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
 			windYSlider.setMajorTickSpacing(1);
 			windYSlider.setPaintTicks(true);
 			
-			windYSlider.setLabelTable( labelTable );
+			windYSlider.setLabelTable( labelTableWind );
 			windYSlider.setPaintLabels(true);
 
 			windYSlider.addChangeListener(new ChangeListener() {
@@ -270,14 +280,14 @@ public class GUI extends JPanel {
 					}
 				}
 			});
-			windSliders.add(windYSlider);
+			windSlidersY.add(windYSlider);
 
 			//WindZ
 			JSlider windZSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
 			windZSlider.setMajorTickSpacing(1);
 			windZSlider.setPaintTicks(true);
 			
-			windZSlider.setLabelTable( labelTable );
+			windZSlider.setLabelTable( labelTableWind );
 			windZSlider.setPaintLabels(true);
 
 			windZSlider.addChangeListener(new ChangeListener() {
@@ -292,12 +302,14 @@ public class GUI extends JPanel {
 					}
 				}
 			});
-			windSliders.add(windZSlider);
+			windSlidersZ.add(windZSlider);
 
-			panelWindSliders.add(windSliders.get(0));
-			panelWindSliders.add(windSliders.get(1));
-			panelWindSliders.add(windSliders.get(2));
-			add(panelWindSliders, constraintsPanelWindSliders);
+			panelWindSlidersX.add(windSlidersX.get(0));
+			panelWindSlidersY.add(windSlidersY.get(0));
+			panelWindSlidersZ.add(windSlidersZ.get(0));
+			add(panelWindSlidersX, constraintsPanelWindSlidersX);
+			add(panelWindSlidersY, constraintsPanelWindSlidersY);
+			add(panelWindSlidersZ, constraintsPanelWindSlidersZ);
 		}
 	
 	}
