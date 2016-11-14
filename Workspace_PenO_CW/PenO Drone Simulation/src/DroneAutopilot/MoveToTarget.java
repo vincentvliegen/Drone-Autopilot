@@ -87,7 +87,7 @@ public class MoveToTarget{
 		this.updateSpeed(cogLeft, cogRight);
 		this.updateGUI();
 //		System.out.println("distance "+getDistance());
-		System.out.println("speed "+getSpeed());
+//		System.out.println("speed "+getSpeed());
 //		System.out.println("acceleration "+getAcceleration());
 		
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
@@ -188,9 +188,6 @@ public class MoveToTarget{
 //		System.out.println("    startdecel");
 		if(this.getSpeed()<0.3){
 			System.out.println("hover");
-			hover = true;
-		}
-		if(hover){
 			this.hover();
 		}
 		else{

@@ -136,7 +136,7 @@ public class PhysicsCalculations {
 	}
 	
 	public ArrayList<float[]> filterAvg(ArrayList<float[]> TDList){//gebaseerd op lineaire regressie (hoort eigenlijk zelfs kwadratisch te zijn, nauwkeurig genoeg voor kleinere waardes van avgcounter) (https://en.wikipedia.org/wiki/Simple_linear_regression)
-		System.out.println("voor " + TDList);
+		//System.out.println("voor " + TDList);
 		if(TDList.size() > 2){
 			float Sx = 0;
 			float Sy = 0;
@@ -173,7 +173,7 @@ public class PhysicsCalculations {
 				}
 			}
 		}
-		System.out.println("na "+TDList);
+		//System.out.println("na "+TDList);
 		return TDList;
 	}
 	

@@ -34,6 +34,7 @@ public class Movement {
 		System.out.println("AccelerationX " + acceleration[0]);
 		System.out.println("AccelerationY " + acceleration[1]);
 		System.out.println("AccelerationZ " + acceleration[2]);
+		System.out.println("Thrust " + drone.getThrust());
 		*/
 		
 		setCurrentPosition(currentPos);

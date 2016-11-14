@@ -125,7 +125,7 @@ public class GUI extends JPanel {
 					BigDecimal bigDecimalSpeed = new BigDecimal(currentSpeed);
 					BigDecimal roundOffSpeed = bigDecimalSpeed.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					speed.setText("Speed: " + roundOffSpeed);
-				System.out.println("----simulatorspeed "+currentSpeed);
+				//System.out.println("----simulatorspeed "+currentSpeed);
 					//System.out.println("Speed");
 					constraintsSpeed.ipady = 20;      //make this component tall
 					constraintsSpeed.weightx = 1;
