@@ -119,12 +119,11 @@ public class MoveToTarget{
 		return cog;
 	}
 	
-	
+	private boolean decel = false;
 	public void flyTowardsTarget(float[] cogL, float[] cogR) {
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
 		//System.out.println("depth " + this.getPhysicsCalculations().getDepth(cogL, cogR));
 		//System.out.println("rem " + this.calculateDecelerationDistance());
-		boolean decel = false;
 		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().calculateDecelerationDistance()){
 			decel = true;
 		}
