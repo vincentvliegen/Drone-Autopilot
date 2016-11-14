@@ -86,7 +86,7 @@ public class MoveToTarget{
 		this.updateAcceleration(cogLeft);
 		this.updateSpeed(cogLeft, cogRight);
 		this.updateGUI();
-//		System.out.println("distance "+getDistance());
+		System.out.println("distance "+getDistance());
 		System.out.println("speed "+getSpeed());
 //		System.out.println("acceleration "+getAcceleration());
 		
