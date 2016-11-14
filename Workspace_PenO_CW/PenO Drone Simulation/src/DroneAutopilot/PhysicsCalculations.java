@@ -83,10 +83,12 @@ public class PhysicsCalculations {
 		return thrust;
 	}
 	
+	private final static float distanceCorrectie = 1.765f;
+	
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
 		float distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
-		return distance;
+		return distance*distanceCorrectie;
 	}
 	
 	private boolean firstDistanceTime;
@@ -102,21 +104,21 @@ public class PhysicsCalculations {
 		if(timeDistanceList.size() >= avgcounter){
 			
 			//methode 1: filteredavg of distances
-//			timeDistanceList = filterAvg(timeDistanceList);//kan soms een lege lijst returnen, wanneer deviationLinReg te klein is
-//			float avgTime = 0;
-//			float avgDistance = 0;
-//			float size = timeDistanceList.size();
-//			for(int i = timeDistanceList.size()-1; i >= 0; i--){
-//				float[] currentTD = timeDistanceList.get(i);
-//				avgTime += currentTD[0];
-//				avgDistance += currentTD[1];
-//				timeDistanceList.remove(i);
-//			}
-//			avgTime = avgTime/size;
-//			avgDistance = avgDistance/size;
-//			this.setSpeed(SpeedCorrector* (getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
-//			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
-//		}
+			timeDistanceList = filterAvg(timeDistanceList);//kan soms een lege lijst returnen, wanneer deviationLinReg te klein is
+			float avgTime = 0;
+			float avgDistance = 0;
+			float size = timeDistanceList.size();
+			for(int i = timeDistanceList.size()-1; i >= 0; i--){
+				float[] currentTD = timeDistanceList.get(i);
+				avgTime += currentTD[0];
+				avgDistance += currentTD[1];
+				timeDistanceList.remove(i);
+			}
+			avgTime = avgTime/size;
+			avgDistance = avgDistance/size;
+			this.setSpeed(SpeedCorrector* (getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
+			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
+		}
 		//System.out.println(distance);
 		//System.out.println("speed: " + this.getSpeed());
 		
@@ -126,11 +128,11 @@ public class PhysicsCalculations {
 //		this.setSpeed(speed);
 			
 		//methode 3: lineaire regressie, om te voorspellen wat de huidige afstand is	LIJKT NAUWKEURIGER DAN GEMIDDELDE
-			float[] ab = linRegExpectedValue(timeDistanceList);
-			timeDistanceList.clear();
-			float expectedDistance = ab[0]*newTD[0] + ab[1];
-			this.setSpeed((getPreviousTimeDistance()[1] - expectedDistance)/(newTD[0] - getPreviousTimeDistance()[0]));
-		}
+//			float[] ab = linRegExpectedValue(timeDistanceList);
+//			timeDistanceList.clear();
+//			float expectedDistance = ab[0]*newTD[0] + ab[1];
+//			this.setSpeed((getPreviousTimeDistance()[1] - expectedDistance)/(newTD[0] - getPreviousTimeDistance()[0]));
+//		}
 		return this.getSpeed();
 	}
 	
