@@ -154,7 +154,7 @@ public class GUI extends JPanel {
 					BigDecimal bigDecimalPos3 = new BigDecimal(currentPosition[2]);
 					BigDecimal roundOffPos3 = bigDecimalPos3.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					position.setText("Position (x, y, z): (" + roundOffPos1 + ", " + roundOffPos2 + ", " + roundOffPos3 + ")" );
-				System.out.println("----distanceSimulator " + Math.sqrt(Math.pow(currentPosition[0], 2)+Math.pow(currentPosition[1], 2)+Math.pow(-10-currentPosition[2], 2)));
+				//System.out.println("----distanceSimulator " + Math.sqrt(Math.pow(currentPosition[0], 2)+Math.pow(currentPosition[1], 2)+Math.pow(-10-currentPosition[2], 2)));
 					constraintsPosition.ipady = 20;      //make this component tall
 					constraintsPosition.weightx = 1;
 					constraintsPosition.gridx = 0;

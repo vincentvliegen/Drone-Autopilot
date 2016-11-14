@@ -92,7 +92,6 @@ public class PhysicsCalculations {
 	}
 	
 	private boolean firstDistanceTime;
-	private final static float SpeedCorrector = 3f;//speed is veel te klein om een of andere reden
 	
 	public float calculateSpeed(float time, float distance){
 		float[] newTD = {time,distance};
@@ -116,7 +115,7 @@ public class PhysicsCalculations {
 			}
 			avgTime = avgTime/size;
 			avgDistance = avgDistance/size;
-			this.setSpeed(SpeedCorrector* (getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
+			this.setSpeed((getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
 			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
 		}
 		//System.out.println(distance);
@@ -137,6 +136,7 @@ public class PhysicsCalculations {
 	}
 	
 	public ArrayList<float[]> filterAvg(ArrayList<float[]> TDList){//gebaseerd op lineaire regressie (hoort eigenlijk zelfs kwadratisch te zijn, nauwkeurig genoeg voor kleinere waardes van avgcounter) (https://en.wikipedia.org/wiki/Simple_linear_regression)
+		System.out.println("voor " + TDList);
 		if(TDList.size() > 2){
 			float Sx = 0;
 			float Sy = 0;
@@ -173,6 +173,7 @@ public class PhysicsCalculations {
 				}
 			}
 		}
+		System.out.println("na "+TDList);
 		return TDList;
 	}
 	
@@ -319,8 +320,7 @@ public class PhysicsCalculations {
 	private float decelerationDistance;
 	
 	// hoe groter hoe nauwkeuriger maar te groot = te traag updaten van speed (nu schommelt speed = s+-0.5)
-	// speed schommelt minder voor avgcounter = 9, maar daar zijn de waardes om een of andere reden te klein in vgl met de simulator speed... (ongeveer 3-4 keer kleiner)
-	public final static int avgcounter = 7; 
+	public final static int avgcounter = 8; 
 	
 	//als avg counter groter wordt, kan deze groter en dus nauwkeuriger worden
 	public final static float deviationLinReg = 0.006f;	
