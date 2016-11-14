@@ -9,9 +9,8 @@ public class PhysicsCalculations {
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
 		timeDistanceList = new ArrayList<float[]>();
-		float[] startTimeDistance = {0,0};
-		setPreviousTimeDistance(startTimeDistance);
 		setSpeed(0);
+		firstDistanceTime = true;
 	}
 
 	private Drone drone;
@@ -69,9 +68,9 @@ public class PhysicsCalculations {
 	}
 
 	public float getVisiblePitch(float[] centerOfGravityL, float[] centerOfGravityR){
-//		if (this.getDistance(centerOfGravityL, centerOfGravityR) <= getDecelerationDistance()){
-//			return  (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getDecelerationFactor());
-//		}
+		if (this.getDistance(centerOfGravityL, centerOfGravityR) <= getDecelerationDistance()){
+			return  (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getDecelerationFactor());
+		}
 		return (float) ((this.getDrone().getLeftCamera().getVerticalAngleOfView()/2)*getVisibilityFactor());
 	}
 	
@@ -79,8 +78,8 @@ public class PhysicsCalculations {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
 		thrust = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() * Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / Math.cos(Math.toRadians(beta)));
-		System.out.println("thrust "+thrust);
-		System.out.println("pitch "+this.getDrone().getPitch());
+//		System.out.println("thrust "+thrust);
+//		System.out.println("pitch "+this.getDrone().getPitch());
 		return thrust;
 	}
 	
@@ -90,9 +89,16 @@ public class PhysicsCalculations {
 		return distance;
 	}
 	
+	private boolean firstDistanceTime;
+	private final static float SpeedCorrector = 5f;//speed is veel te klein om een of andere reden
+	
 	public float calculateSpeed(float time, float distance){
 		float[] newTD = {time,distance};
 		timeDistanceList.add(newTD);
+		if(firstDistanceTime){
+			this.setPreviousTimeDistance(newTD);
+			firstDistanceTime = false;
+		}
 		if(timeDistanceList.size() >= avgcounter){
 			timeDistanceList = filterAvg(timeDistanceList);//kan soms een lege lijst returnen, wanneer deviationLinReg te klein is
 			float avgTime = 0;
@@ -106,11 +112,14 @@ public class PhysicsCalculations {
 			}
 			avgTime = avgTime/size;
 			avgDistance = avgDistance/size;
-			this.setSpeed((getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
+			this.setSpeed(SpeedCorrector*(getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
 			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
 		}
 		//System.out.println(distance);
 		//System.out.println("speed: " + this.getSpeed());
+		
+//		float speed = this.getSpeed()+(newTD[0]-previousTimeDistance[0])*this.getAcceleration();
+//		this.setSpeed(speed);
 		return this.getSpeed();
 	}
 	
@@ -164,7 +173,8 @@ public class PhysicsCalculations {
 		float force = thrustToTarget - drag*speed;
 		float acceleration = force/weight;
 //		System.out.println(acceleration);
-		return acceleration;
+		this.setAcceleration(acceleration);
+		return this.getAcceleration();
 	}
 
 	public float calculateDecelerationDistance(){
@@ -182,7 +192,7 @@ public class PhysicsCalculations {
 //			System.out.println("counterpitch " + counterpitch);
 //			System.out.println("backpitch "+ backpitch);
 		}
-//		System.out.println("deceldistance "+ distance);		
+//		System.out.println("deceldistance "+ distance);	
 		return distance;
 	}
 	
@@ -258,6 +268,18 @@ public class PhysicsCalculations {
 	}
 	
 	private float acceleration;
+	
+
+	public float getDecelerationDistance() {
+		return decelerationDistance;
+	}
+
+
+	public void setDecelerationDistance(float distance) {
+		this.decelerationDistance = distance;
+	}
+	
+	private float decelerationDistance;
 	
 	// hoe groter hoe nauwkeuriger maar te groot = te traag updaten van speed (nu schommelt speed = s+-0.5)
 	// speed schommelt minder voor avgcounter = 9, maar daar zijn de waardes om een of andere reden te klein in vgl met de simulator speed... (ongeveer 3-4 keer kleiner)

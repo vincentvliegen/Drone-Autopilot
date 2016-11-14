@@ -90,7 +90,6 @@ public class ImageCalculations {
 	public ArrayList<int[]> pointsOnCircumference (ArrayList<int[]> listOfPixelCoordinates, Camera camera) throws SmallCircleException,EmptyPositionListException{
 		ArrayList<int[]> AllEdges = new ArrayList<int[]>();
 		ArrayList<int[]> AllCPoints = new ArrayList<int[]>();
-		ArrayList<int[]> result = new ArrayList<int[]>();
 		if(listOfPixelCoordinates.size() == 0){
 			throw new EmptyPositionListException(listOfPixelCoordinates);
 		}

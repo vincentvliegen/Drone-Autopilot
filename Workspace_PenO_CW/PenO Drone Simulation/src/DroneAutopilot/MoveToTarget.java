@@ -83,9 +83,12 @@ public class MoveToTarget{
 		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this.getDrone().getRightCamera());
 		
 		this.updateDistance(cogLeft, cogRight);
-		this.updateSpeed(cogLeft, cogRight);
 		this.updateAcceleration(cogLeft);
+		this.updateSpeed(cogLeft, cogRight);
 		this.updateGUI();
+//		System.out.println("distance "+getDistance());
+//		System.out.println("speed "+getSpeed());
+//		System.out.println("acceleration "+getAcceleration());
 		
 		if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) >= underBoundary
 				&& this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft,cogRight) <= upperBoundary) {
@@ -116,12 +119,12 @@ public class MoveToTarget{
 		return cog;
 	}
 	
-	private boolean decel = false;
 	
 	public void flyTowardsTarget(float[] cogL, float[] cogR) {
 		float halfAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/2;
 		//System.out.println("depth " + this.getPhysicsCalculations().getDepth(cogL, cogR));
 		//System.out.println("rem " + this.calculateDecelerationDistance());
+		boolean decel = false;
 		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().calculateDecelerationDistance()){
 			decel = true;
 		}
@@ -181,9 +184,10 @@ public class MoveToTarget{
 	private boolean hover = false;
 	
 	public void startDeceleration(float[] cogL, float[] cogR){
-		//System.out.println("pitch" + this.getDrone().getPitch());
-		//System.out.println(Math.abs(this.getDrone().getPitch())/this.getDrone().getMaxPitchRate());
+//		System.out.println("pitch" + this.getDrone().getPitch());
+//		System.out.println(Math.abs(this.getDrone().getPitch())/this.getDrone().getMaxPitchRate());
 //		System.out.println(this.getPhysicsCalculations().getDepth(cogL, cogR));
+		System.out.println("    startdecel");
 		if(this.getSpeed()<0.5){
 			System.out.println("hover");
 			hover = true;
