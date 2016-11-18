@@ -1,21 +1,191 @@
 package DroneAutopilot;
 
+import java.util.ArrayList;
+
+import DroneAutopilot.GUI.GUI;
+import exceptions.EmptyPositionListException;
+import exceptions.SmallCircleException;
+import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
 public class MoveToTarget_new {
-	
-	//TODO: setbeginMovementTime bij begin van vliegfunctie.
 
-	private final PhysicsCalculations physicsCalculations;
+	private final PhysicsCalculations_new physicsCalculations;
+	private final ImageCalculations_new imageCalculations;
 	private Drone drone;
+	private float startFlyingTime;
+	private GUI gui;
+	private boolean basisgeval;
 
 	public MoveToTarget_new(Drone drone) {
 		this.setDrone(drone);
-		this.physicsCalculations = new PhysicsCalculations(drone);
+		this.imageCalculations = new ImageCalculations_new();
+		this.physicsCalculations = new PhysicsCalculations_new(drone);
 	}
 
-	public final PhysicsCalculations getPhysicsCalculations() {
+	public void exectue(int color){
+		ArrayList<int[]> leftCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getLeftCamera(), color);
+		ArrayList<int[]> rightCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getRightCamera(), color);
+		if (this.checkRoll()) {
+			this.checkcasespixelsfound(leftCameraList, rightCameraList);
+		} else {
+			System.out.println("Correct roll");
+			this.correctRoll();
+		}
+	}
+
+	public boolean checkRoll() {
+		//TODO Controller
+		if (this.getDrone().getRoll() == 0
+				&& this.getDrone().getRoll() == 0) {
+			this.getDrone().setRollRate(0);
+			return true;
+		}
+		return false;
+	}
+
+	public void correctRoll() {
+		this.getDrone().setPitchRate(0);
+		this.getDrone().setYawRate(0);
+		this.getDrone().setThrust(
+				Math.min(this.getDrone().getMaxThrust(),
+						Math.abs(this.getDrone().getGravity())
+						* this.getDrone().getWeight()));
+		if (this.getDrone().getRoll() > 0)
+			this.getDrone().setRollRate(-this.getDrone().getMaxRollRate());
+		else if (this.getDrone().getRoll() < 0)
+			this.getDrone().setRollRate(this.getDrone().getMaxRollRate());
+	}
+
+	public void checkcasespixelsfound(ArrayList<int[]> leftcamera,
+			ArrayList<int[]> rightcamera) {
+		if (leftcamera.isEmpty() && rightcamera.isEmpty())
+			noTargetFound();
+		else if (!leftcamera.isEmpty() && rightcamera.isEmpty())
+			leftCameraFoundTarget();
+		else if (leftcamera.isEmpty() && !rightcamera.isEmpty())
+			rightCameraFoundTarget();
+		else if (!leftcamera.isEmpty() && !rightcamera.isEmpty()) {
+			targetVisible(leftcamera, rightcamera);
+		}
+	}
+
+	public void noTargetFound() {
+		this.getDrone().setYawRate(this.getDrone().getMaxYawRate());
+	}
+
+	public void leftCameraFoundTarget() {
+		this.getDrone().setYawRate(-this.getDrone().getMaxYawRate());
+	}
+
+	public void rightCameraFoundTarget() {
+		this.getDrone().setYawRate(this.getDrone().getMaxYawRate());
+	}
+
+	public void targetVisible(ArrayList<int[]> leftCamera,
+			ArrayList<int[]> rightCamera) {
+		float[] cogLeft = this.findBestCenterOfGravity(leftCamera, this
+				.getDrone().getLeftCamera());
+		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this
+				.getDrone().getRightCamera());
+		updateGUI(cogLeft, cogRight);
+
+		if(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight)==0){
+			this.getDrone().setYawRate(0);
+			this.flyTowardsTarget(cogLeft, cogRight);
+		}else if (this.getPhysicsCalculations().horizontalAngleDeviation(
+				cogLeft, cogRight) < 0) {
+			this.getDrone().setYawRate(-this.getDrone().getMaxYawRate());
+		} else if (this.getPhysicsCalculations().horizontalAngleDeviation(
+				cogLeft, cogRight) > 0)
+			this.getDrone().setYawRate(this.getDrone().getMaxYawRate());
+	}
+
+	public void updateGUI(float[] centerOfGravityL, float[] centerOfGravityR) {
+		this.getGUI().update(this.getPhysicsCalculations().getDistance(centerOfGravityL, centerOfGravityR));
+	}
+
+	public float[] findBestCenterOfGravity(ArrayList<int[]> pixelsFound,
+			Camera camera) {
+		float[] cog = { 0, 0 };
+		try {
+			cog = this.getImageCalculations().centerOfCircle(pixelsFound,
+					camera);
+		} catch (SmallCircleException e) {
+			try {
+				cog = this.getImageCalculations().getCOG(pixelsFound);
+			} catch (EmptyPositionListException e1) {
+				e1.printStackTrace();
+			}
+
+		} catch (EmptyPositionListException e) {
+			e.printStackTrace();
+		}
+		return cog;
+	}
+
+	public void hover() {
+		if (this.getDrone().getPitch() > 0) {
+			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
+			this.getDrone().setThrust(
+					Math.min(this.getDrone().getMaxThrust(),
+							Math.abs(this.getDrone().getGravity())
+							* this.getDrone().getWeight()));
+		} else if (this.getDrone().getPitch() < 0) {
+			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
+			this.getDrone().setThrust(
+					Math.min(this.getDrone().getMaxThrust(),
+							Math.abs(this.getDrone().getGravity())
+							* this.getDrone().getWeight()));
+		} else {
+			this.getDrone().setPitchRate(0);
+			this.getDrone().setThrust(
+					Math.min(this.getDrone().getMaxThrust(),
+							Math.abs(this.getDrone().getGravity())
+							* this.getDrone().getWeight()));
+		}
+	}
+
+	public void flyTowardsTarget(float[] cogL, float[] cogR) { 
+		setStartFlyingTime(this.getDrone().getCurrentTime());
+		float fourthAngleView = this.getDrone().getLeftCamera()
+				.getVerticalAngleOfView() / 4;
+
+		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this
+				.getPhysicsCalculations().calculateDecelerationDistance()) {
+			this.startDeceleration(cogL,cogR);
+		}
+
+		if(!basisgeval){
+			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)>0){
+				//TODO: goede waarde vinden vr value.
+				this.getDrone().setThrust(value);
+			}else if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)<0){
+				this.getDrone().setThrust(-value);
+			}else{
+				basisgeval=true;
+			}
+		}else{
+			if(this.getDrone().getPitch() < fourthAngleView){
+				this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate()/2);
+				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
+			}else{
+				this.getDrone().setPitchRate(0);
+				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
+			}
+		}		
+	}
+
+	public void startDeceleration(float[] cogL, float[] cogR) {
+		
+	}
+
+	public final PhysicsCalculations_new getPhysicsCalculations() {
 		return this.physicsCalculations;
+	}
+
+	public final ImageCalculations_new getImageCalculations() {
+		return this.imageCalculations;
 	}
 
 	public void setDrone(Drone drone) {
@@ -25,5 +195,24 @@ public class MoveToTarget_new {
 	public Drone getDrone() {
 		return this.drone;
 	}
+
+	public float getStartFlyingTime() {
+		return startFlyingTime;
+	}
+
+	public void setStartFlyingTime(float time) {
+		this.startFlyingTime = time;
+	}
+
+	public void setGUI(GUI gui) {
+		this.gui = gui;
+	}
+
+	public GUI getGUI() {
+		return this.gui;
+	}
+
+
+
 
 }
