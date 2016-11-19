@@ -159,7 +159,7 @@ public class MoveToTarget_new {
 			firstTimeFlyTowardsTarget=true;
 		}
 		float partAngleView = this.getDrone().getLeftCamera()
-				.getVerticalAngleOfView() / 20;
+				.getVerticalAngleOfView()/10;
 
 		if(!basisgeval && !deceleration){
 			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)>upperBoundary){
@@ -182,8 +182,8 @@ public class MoveToTarget_new {
 			}
 		}
 
-		System.out.println("remafstand: " + this.getPhysicsCalculations().calculateDecelerationDistance(cogL, cogR, startFlyingTime));
-		System.out.println("distance: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
+		//System.out.println("remafstand: " + this.getPhysicsCalculations().calculateDecelerationDistance(cogL, cogR, startFlyingTime));
+		//System.out.println("distance: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
 		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this
 				.getPhysicsCalculations().calculateDecelerationDistance(cogL,cogR,this.getStartFlyingTime())) {
 			this.startDeceleration(cogL,cogR);
@@ -198,7 +198,7 @@ public class MoveToTarget_new {
 
 	public void startDeceleration(float[] cogL, float[] cogR) {
 		float partAngleView = this.getDrone().getLeftCamera()
-				.getVerticalAngleOfView() / 20;
+				.getVerticalAngleOfView()/10;
 		if(this.getDrone().getPitch()>-partAngleView){
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
 			System.out.println("TRGPITCHEN");
