@@ -70,8 +70,10 @@ public class PhysicsCalculations_new {
 	}
 
 	public float calculateSpeed(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
+		float timeDev=this.getDrone().getCurrentTime()-startTime; 
 		float timeCalculation = this.getDrone().getCurrentTime()-startTime-this.getPreviousTimeDev();
 		float acceleration = calculateAcceleration(centerOfGravityL, centerOfGravityR, startTime);
+		this.setPreviousTimeDev(timeDev);
 		float speed = acceleration * timeCalculation + this.getPreviousSpeed();
 		this.setPreviousSpeed(speed);
 		this.setSpeed(speed);
@@ -79,24 +81,23 @@ public class PhysicsCalculations_new {
 	}
 
 	public float calculateAcceleration(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
-		float timeDev=this.getDrone().getCurrentTime()-startTime; 
 		float timeCalculation = this.getDrone().getCurrentTime()-startTime-this.getPreviousTimeDev();
-		this.setPreviousTimeDev(timeDev);
 		float distanceDev=this.getPreviousDistance()-this.getDistance(centerOfGravityL, centerOfGravityR);
 		float acceleration = this.getAcceleration();
 		if(timeCalculation!=0){
 			acceleration=(float) (2*(distanceDev-(this.getPreviousSpeed()*timeCalculation))/Math.pow(timeCalculation, 2));
 		}
 		this.setPreviousDistance(this.getDistance(centerOfGravityL, centerOfGravityR));
-				System.out.println(acceleration);
-		//this.setAcceleration(acceleration);
+		System.out.println("disdev" + distanceDev);
+		System.out.println("acc" + acceleration);
+		this.setAcceleration(acceleration);
 		return acceleration;
 	}
 
 	public float calculateDecelerationDistance(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
 		//System.out.println("acc: " + this.getAcceleration());
-		System.out.println("speed: " + this.getSpeed());
 		this.calculateSpeed(centerOfGravityL, centerOfGravityR, startTime);
+		System.out.println("speed: " + this.getSpeed());
 		float decelerationDistance = firstDistance/2;
 				
 //				(float) (Math.pow(this.getSpeed(), 2)/
