@@ -13,12 +13,12 @@ public class DroneAutopilot_new implements Autopilot{
 	/**
 	 * An object of the class MoveToTarget.
 	 */
-	private final MoveToTarget moveToTarget;
+	private final MoveToTarget_new moveToTarget;
 	
 	
 	public DroneAutopilot_new(Drone drone){
 		this.setDrone(drone);
-		this.moveToTarget = new MoveToTarget(drone);
+		this.moveToTarget = new MoveToTarget_new(drone);
 	}
 	
 	
@@ -32,7 +32,7 @@ public class DroneAutopilot_new implements Autopilot{
 	@Override
 	public void timeHasPassed() {
 		if (this.getMoveToTarget().getGUI().redOrbEnabled) {
-			this.getMoveToTarget().execute();
+			this.getMoveToTarget().execute(255);
 			}else{
 				this.getMoveToTarget().hover();
 			}
@@ -58,7 +58,7 @@ public class DroneAutopilot_new implements Autopilot{
 	/**
 	 * Return an object of the class MoveToTarget, which will execute the movements of the drone.
 	 */
-	public final MoveToTarget getMoveToTarget(){
+	public final MoveToTarget_new getMoveToTarget(){
 		return this.moveToTarget;
 	}
 	

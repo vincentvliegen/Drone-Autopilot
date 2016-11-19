@@ -14,8 +14,8 @@ public class DroneAutopilotFactory_new implements AutopilotFactory{
     The Drone and Camera objects are not thread-safe; calls of methods of these
     objects should occur only in the AWT/Swing GUI thread. */
 	@Override
-	public DroneAutopilot create(Drone drone) {		
-		DroneAutopilot autopilot = new DroneAutopilot(drone);
+	public DroneAutopilot_new create(Drone drone) {		
+		DroneAutopilot_new autopilot = new DroneAutopilot_new(drone);
 		GUI gui = new GUI();
 		autopilot.getMoveToTarget().setGUI(gui);
 		drone.setThrust(Math.abs(drone.getGravity()*drone.getWeight()));

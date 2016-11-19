@@ -8,6 +8,7 @@ public class PhysicsCalculations_new {
 	
 	private Drone drone;
 	private float speed;
+	private float acceleration;
 	private float previousSpeed;
 	private float previousDistance;
 	private float totalAcceleration;
@@ -61,10 +62,12 @@ public class PhysicsCalculations_new {
 	}
 	
 	public float calculateIntervalSpeed(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
+		System.out.println("sT: " + startTime);
+		System.out.println("cT: " + this.getDrone().getCurrentTime());
 		float timeDev=this.getDrone().getCurrentTime()-startTime; 
 		float acceleration = calculateAccelerationInterval(centerOfGravityL, centerOfGravityR, startTime);
 		float speed = acceleration * timeDev + this.getPreviousSpeed();
-		this.setPreviousSpeed(this.getSpeed());
+		this.setPreviousSpeed(speed);
 		return speed;
 	}
 	
@@ -74,23 +77,34 @@ public class PhysicsCalculations_new {
 		return totalSpeed;
 	}
 	
-	public float calculateAccelerationInterval(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
-		float timeDev=this.getDrone().getCurrentTime()-startTime;
-		float distanceDiv=this.getDistance(centerOfGravityL, centerOfGravityR)-this.getPreviousDistance();
-		//TODO delen door nul
-		float acceleration=(float) (2*(distanceDiv-this.getPreviousSpeed()*timeDev)/Math.pow(timeDev, 2));
+	public float calculateAccelerationInterval(float[] centerOfGravityL, float[] centerOfGravityR, float previousTime){
+		float timeDev=this.getDrone().getCurrentTime()-previousTime;
+		float distanceDev=this.getDistance(centerOfGravityL, centerOfGravityR)-this.getPreviousDistance();
+		float acceleration = this.getAcceleration();
+		if(timeDev!=0){
+		acceleration=(float) (2*(distanceDev-(this.getPreviousSpeed()*timeDev))/Math.pow(timeDev, 2));
+		}
 		this.setPreviousDistance(this.getDistance(centerOfGravityL, centerOfGravityR));
 //		System.out.println(acceleration);
 		return acceleration;
 	}
 	
-	public float calculateTotalAcceleration(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
-		totalAcceleration += this.calculateAccelerationInterval(centerOfGravityL, centerOfGravityR, startTime);
+	public float calculateTotalAcceleration(float[] centerOfGravityL, float[] centerOfGravityR, float previousTime){
+		totalAcceleration += this.calculateAccelerationInterval(centerOfGravityL, centerOfGravityR, previousTime);
+		this.setAcceleration(totalAcceleration);
 		return totalAcceleration;
 	}
 	
-	public float calculateDecelerationDistance(){
-		//TODO snelheid^2/(2*versnelling);
+	public float calculateDecelerationDistance(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
+		System.out.println("acc: " + this.getAcceleration());
+		System.out.println("speed: " + this.getSpeed());
+		this.calculateTotalSpeed(centerOfGravityL, centerOfGravityR, startTime);
+		this.calculateTotalAcceleration(centerOfGravityL, centerOfGravityR, startTime);
+		float decelerationDistance = (float) (Math.pow(this.getSpeed(), 2)/
+				(2*this.getAcceleration()/2));
+		//TODO snelheid^2/(2*versnelling); hier versnelling gedeeld door 2 om wisselen van pos nr negatief te compenseren.
+		
+		return decelerationDistance;
 	}
 	
 	private void setPreviousSpeed(float speed) {
@@ -144,6 +158,14 @@ public class PhysicsCalculations_new {
 	
 	public float getSpeed() {
 		return speed;
+	}
+	
+	public void setAcceleration(float acceleration) {
+		this.acceleration = acceleration;
+	}
+	
+	public float getAcceleration() {
+		return acceleration;
 	}
 	
 

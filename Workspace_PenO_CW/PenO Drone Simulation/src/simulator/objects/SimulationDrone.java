@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import DroneAutopilot.DroneAutopilot;
-import DroneAutopilot.DroneAutopilotFactory;
+import DroneAutopilot.DroneAutopilotFactory_new;
+import DroneAutopilot.DroneAutopilot_new;
 
 import com.jogamp.opengl.GL2;
 
@@ -28,7 +28,7 @@ public class SimulationDrone implements Drone {
 	private float pitchRate = 0;
 	private float rollRate = 0;
 	private float yawRate = 0;
-	private DroneAutopilot autopilot;
+	private DroneAutopilot_new autopilot;
 	private float gravityConstant = -9.81f;
 	public DroneCamera leftCamera;
 	public DroneCamera rightCamera;
@@ -55,7 +55,7 @@ public class SimulationDrone implements Drone {
 		this.world = world;
 		this.movement = new Movement(this);
 		generateDroneCameras();
-		DroneAutopilotFactory ap = new DroneAutopilotFactory();
+		DroneAutopilotFactory_new ap = new DroneAutopilotFactory_new();
 		this.autopilot = ap.create(this);
 	}
 
