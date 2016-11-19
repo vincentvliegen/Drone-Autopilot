@@ -17,7 +17,8 @@ public class MoveToTarget_new {
 	private GUI gui;
 	private boolean basisgeval;
 	private boolean firstTimeFlyTowardsTarget;
-	
+	private boolean deceleration;
+
 	private static final float underBoundary = -1f;
 	private static final float upperBoundary = 1f;
 
@@ -96,7 +97,7 @@ public class MoveToTarget_new {
 
 		if(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight)>=underBoundary 
 				&& this.getPhysicsCalculations().horizontalAngleDeviation(
-				cogLeft, cogRight) <= upperBoundary){
+						cogLeft, cogRight) <= upperBoundary){
 			this.getDrone().setYawRate(0);
 			this.flyTowardsTarget(cogLeft, cogRight);
 		}else if (this.getPhysicsCalculations().horizontalAngleDeviation(
@@ -157,10 +158,10 @@ public class MoveToTarget_new {
 			this.setStartFlyingTime(this.getDrone().getCurrentTime());
 			firstTimeFlyTowardsTarget=true;
 		}
-		float fourthAngleView = this.getDrone().getLeftCamera()
-				.getVerticalAngleOfView() / 4;
+		float partAngleView = this.getDrone().getLeftCamera()
+				.getVerticalAngleOfView() / 20;
 
-		if(!basisgeval){
+		if(!basisgeval && !deceleration){
 			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)>upperBoundary){
 				//TODO: goede waarde vinden vr value.
 				this.getDrone().setThrust((float) (-1.2*this.getDrone().getWeight()*this.getDrone().getGravity()));
@@ -171,8 +172,8 @@ public class MoveToTarget_new {
 			else{
 				basisgeval=true;
 			}
-		}else{
-			if(this.getDrone().getPitch() < fourthAngleView){
+		}else if(basisgeval && !deceleration){
+			if(this.getDrone().getPitch() < partAngleView){
 				this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate()/2);
 				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 			}else{
@@ -180,28 +181,32 @@ public class MoveToTarget_new {
 				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 			}
 		}
-		
+
 		System.out.println("remafstand: " + this.getPhysicsCalculations().calculateDecelerationDistance(cogL, cogR, startFlyingTime));
 		System.out.println("distance: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
 		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this
 				.getPhysicsCalculations().calculateDecelerationDistance(cogL,cogR,this.getStartFlyingTime())) {
 			this.startDeceleration(cogL,cogR);
+			deceleration = true;
 		}
-		
-		if(this.getPhysicsCalculations().getDistance(cogL, cogR)==1){
+
+		if(this.getPhysicsCalculations().getDistance(cogL, cogR)<=0.1){
 			this.hover();
 		}
-		
-		this.setStartFlyingTime(this.getDrone().getCurrentTime());
 
 	}
 
 	public void startDeceleration(float[] cogL, float[] cogR) {
-		float fourthAngleView = this.getDrone().getLeftCamera()
-				.getVerticalAngleOfView() / 4;
-		while(this.getDrone().getPitch()>fourthAngleView)
+		float partAngleView = this.getDrone().getLeftCamera()
+				.getVerticalAngleOfView() / 20;
+		if(this.getDrone().getPitch()>-partAngleView){
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
-		this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
+			System.out.println("TRGPITCHEN");
+			this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
+		}else{
+			this.getDrone().setPitchRate(0);
+			this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
+		}
 	}
 
 	public final PhysicsCalculations_new getPhysicsCalculations() {
