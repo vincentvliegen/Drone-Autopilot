@@ -184,8 +184,7 @@ public class MoveToTarget_new {
 
 		//System.out.println("remafstand: " + this.getPhysicsCalculations().calculateDecelerationDistance(cogL, cogR, startFlyingTime));
 		//System.out.println("distance: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
-		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this
-				.getPhysicsCalculations().calculateDecelerationDistance(cogL,cogR,this.getStartFlyingTime())) {
+		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().getDecelerationDistance()) {
 			this.startDeceleration(cogL,cogR);
 			deceleration = true;
 		}

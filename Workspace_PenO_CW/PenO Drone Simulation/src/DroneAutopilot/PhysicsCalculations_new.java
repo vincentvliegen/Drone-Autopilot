@@ -9,28 +9,28 @@ public class PhysicsCalculations_new {
 	private Drone drone;
 	private float speed;
 	private float acceleration;
-	private float previousSpeed;
-	private float previousDistance;
-	private float previousTimeDev;
 	private float firstDistance;
 	private float doneDistance;
 	private float totalAcceleration;
 	private float totalSpeed;
-	private boolean firstTime;
+	private boolean firstTimeUpdate;
+	private float[] previousTimeAndDistance;
+	private float decelerationDistance;
 
 
 	public PhysicsCalculations_new(Drone drone){
 		this.setDrone(drone);
+		
+		//Zolang er geen bol in zicht is, zullen acceleration, speed en decelDist 0 geven
+		firstTimeUpdate = true;
 		setSpeed(0);
+		setAcceleration(0);
+		setDecelerationDistance(0);
 	}
 
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
 		float distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
-		if(!firstTime){
-			firstDistance = distance;
-			firstTime=true;
-		}
 		return distance;
 	}
 
@@ -69,65 +69,55 @@ public class PhysicsCalculations_new {
 		return (float) Math.toDegrees(Math.atan(this.getY(centerOfGravity) / this.getfocalDistance()));
 	}
 
-	public float calculateSpeed(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
-		float timeDev=this.getDrone().getCurrentTime()-startTime; 
-		float timeCalculation = this.getDrone().getCurrentTime()-startTime-this.getPreviousTimeDev();
-		float acceleration = calculateAcceleration(centerOfGravityL, centerOfGravityR, startTime);
-		this.setPreviousTimeDev(timeDev);
-		float speed = acceleration * timeCalculation + this.getPreviousSpeed();
-		this.setPreviousSpeed(speed);
-		this.setSpeed(speed);
-		return speed;
-	}
-
-	public float calculateAcceleration(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
-		float timeCalculation = this.getDrone().getCurrentTime()-startTime-this.getPreviousTimeDev();
-		float distanceDev=this.getPreviousDistance()-this.getDistance(centerOfGravityL, centerOfGravityR);
-		float acceleration = this.getAcceleration();
-		if(timeCalculation!=0){
-			acceleration=(float) (2*(distanceDev-(this.getPreviousSpeed()*timeCalculation))/Math.pow(timeCalculation, 2));
+	
+	// berekent acceleration, speed en deceleration distance. Elk van deze heeft een eigen getter en setter ter beschikking ipv de calculate...
+	// TODO deze functie moet in het begin opgeroepen worden (in moveToTarget) VOORDAT acceleratie, speed of decelerationsdistance wordt gebruikt
+	public void updateAccVelDist(float currentDistance){
+		float currentTime = this.getDrone().getCurrentTime();
+		if(firstTimeUpdate){
+			firstTimeUpdate = false;
+			firstDistance = currentDistance;
+		}else{
+			this.calculateAcceleration(currentTime,currentDistance);
+			this.calculateSpeed(currentTime);//speed wordt berekend na acceleration, omdat deze de huidige acceleration nodig heeft
+			this.calculateDecelerationDistance();//decelerationdist wordt berekend na speed en acceleration, omdat deze de huidige speed en acceleration nodig heeft
 		}
-		this.setPreviousDistance(this.getDistance(centerOfGravityL, centerOfGravityR));
-		System.out.println("disdev" + distanceDev);
-		System.out.println("acc" + acceleration);
+		//nadat alle bovenstaande waardes zijn berekend, kunnen de vorige tijd en afstand opnieuw ingesteld worden voor volgende cyclus.
+		this.setPreviousTimeAndDistance(new float[] {currentTime,currentDistance});
+	}
+	
+	public void calculateSpeed(float currentTime){
+		float previousTime = this.getPreviousTimeAndDistance()[0];//t0
+		float acceleration = this.getAcceleration();//a
+		float previousSpeed = this.getSpeed();//v0
+		//v2 = a*(t1-t0) + v0
+		float speed =  acceleration * (currentTime-previousTime) + previousSpeed;
+		this.setSpeed(speed);
+	}
+	
+	public void calculateAcceleration(float currentTime, float currentDistance){
+		float previousTime = this.getPreviousTimeAndDistance()[0]; //t0
+		float previousDistance = this.getPreviousTimeAndDistance()[1]; //x0
+		float previousSpeed = this.getSpeed(); //v0
+		float previousAcceleration = this.getAcceleration(); //a0
+		float acceleration = 0; //a
+		if(currentTime!=previousTime){
+			//a = 2*((x0-x1)-(v0*(t1-t0)))/((t1-t0)^2)
+			acceleration=(float) (2*((previousDistance-currentDistance)-(previousSpeed*(currentTime-previousTime)))/Math.pow((currentTime-previousTime), 2));
+		}else{
+			//a=a0
+			acceleration = previousAcceleration;
+		}
 		this.setAcceleration(acceleration);
-		return acceleration;
 	}
 
-	public float calculateDecelerationDistance(float[] centerOfGravityL, float[] centerOfGravityR, float startTime){
-		//System.out.println("acc: " + this.getAcceleration());
-		this.calculateSpeed(centerOfGravityL, centerOfGravityR, startTime);
-		System.out.println("speed: " + this.getSpeed());
-		float decelerationDistance = firstDistance/2;
-				
+	public void calculateDecelerationDistance(){
+		//vertraag halfweg?
+		float decelerationDistance = firstDistance/2;		
 //				(float) (Math.pow(this.getSpeed(), 2)/
 //				(2*this.getAcceleration()) // hier moet er nog een bepaalde distance bij zodanig dat de tijd vh pitchen gecompenseerd wordt.
 //				+3);
-		return decelerationDistance;
-	}
-
-	private void setPreviousTimeDev(float time) {
-		this.previousTimeDev = time;
-	}
-
-	private float getPreviousTimeDev() {
-		return previousTimeDev;
-	}
-
-	private void setPreviousSpeed(float speed) {
-		previousSpeed = speed;
-	}
-
-	private float getPreviousSpeed() {
-		return previousSpeed;
-	}
-
-	private void setPreviousDistance(float distance) {
-		previousDistance = distance;
-	}
-
-	private float getPreviousDistance() {
-		return previousDistance;
+		this.setDecelerationDistance(decelerationDistance);
 	}
 
 	public float getThrust(float[] cog) {
@@ -175,5 +165,19 @@ public class PhysicsCalculations_new {
 		return acceleration;
 	}
 
+	public float[] getPreviousTimeAndDistance() {
+		return previousTimeAndDistance;
+	}
 
+	public void setPreviousTimeAndDistance(float[] previousTimeDistance) {
+		this.previousTimeAndDistance = previousTimeDistance;
+	}
+	
+	public void setDecelerationDistance(float distance){
+		this.decelerationDistance = distance;
+	}
+	
+	public float getDecelerationDistance(){
+		return this.decelerationDistance;
+	}
 }
