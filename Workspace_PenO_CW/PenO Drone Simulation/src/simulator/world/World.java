@@ -19,12 +19,10 @@ import simulator.physics.Physics;
 public abstract class World extends GLCanvas implements GLEventListener {
 	
 	/*
-	 * Superklasse voor alle werelden die we nog moeten maken
+	 * Superklasse voor alle werelden aan te maken werelden
 	 */
 	
-	//TODO
-		//physics?
-		//movement?
+
 		
 	private List<GeneralCamera> generalCameras = new ArrayList<>();
 	private List<DroneCamera> droneCameras = new ArrayList<>();

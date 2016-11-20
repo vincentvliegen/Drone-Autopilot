@@ -1,5 +1,10 @@
 package simulator.camera;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.GLU;
+
+import simulator.world.World;
+
 public class GeneralCamera {
 	
 	private float eyeX=0, eyeY=0, eyeZ =0;
@@ -9,7 +14,7 @@ public class GeneralCamera {
 	private float startLookAtX=0, startLookAtY=0, startLookAtZ=0;
 	private float startUpX=0, startUpY=0, startUpZ=0;
 	
-	public GeneralCamera(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ){
+	public GeneralCamera(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ, World world){
 		this.setEyeX(eyeX);
 		this.startEyeX = eyeX;
 		this.setEyeY(eyeY);
@@ -28,9 +33,16 @@ public class GeneralCamera {
 		this.startUpY = upY;
 		this.setUpZ(upZ);
 		this.startUpZ = upZ;
+		this.world = world;
 	}
 	
 	//TODO voeg translatie/rotatie toe van de vaste camera's!!
+	
+	private World world;
+	
+	private World getWorld() {
+		return world;
+	}
 	
 	public void setUpX(float upX) {
 		this.upX = upX;
@@ -139,5 +151,24 @@ public class GeneralCamera {
 	public float getStartLookAtZ() {
 		return startLookAtZ;
 	}
+	
+	public void setCamera(GL2 gl, GLU glu) {
+		int height = getWorld().getDrawable().getSurfaceHeight();
+		int width = getWorld().getDrawable().getSurfaceWidth();
+		// Change to projection matrix.
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+	
+		// Perspective.
+		float widthHeightRatio = (float) width / (float) height;
+		glu.gluPerspective(45, widthHeightRatio, 1, 500);
+		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(),
+				getUpZ());
+	
+		// Change back to model view matrix.
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
+	}
+
 
 }

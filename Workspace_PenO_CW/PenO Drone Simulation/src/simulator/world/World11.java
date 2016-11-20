@@ -6,8 +6,6 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.glu.GLU;
-
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.movement.KeyboardMovement;
@@ -23,9 +21,9 @@ public class World11 extends World {
 
 	public World11() {
 		super();
-		super.addGeneralCamera(new GeneralCamera(-1, 1, 2, 0, 0, -2.5f, 0, 1, 0));
-		super.addGeneralCamera(new GeneralCamera(1, 1, 2, 0, 0, -2.5f, 0, 1, 0));
-		super.addGeneralCamera(new GeneralCamera(3, 0, -8, 0, 0, -10, 0, 1, 0));
+		super.addGeneralCamera(new GeneralCamera(-1, 1, 2, 0, 0, -2.5f, 0, 1, 0, this));
+		super.addGeneralCamera(new GeneralCamera(1, 1, 2, 0, 0, -2.5f, 0, 1, 0, this));
+		super.addGeneralCamera(new GeneralCamera(3, 0, -8, 0, 0, -10, 0, 1, 0, this));
 		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
@@ -58,7 +56,7 @@ public class World11 extends World {
 
 		//voor scherm
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		setCamera(gl, getGlu());
+		getCurrentCamera().setCamera(gl, getGlu());
 		draw();
 
 
@@ -144,20 +142,5 @@ public class World11 extends World {
 	
 	}
 
-	// Update position camera's
-	public void setCamera(GL2 gl, GLU glu) {
-		// Change to projection matrix.
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
 
-		// Perspective.
-		float widthHeightRatio = (float) getWidth() / (float) getHeight();
-		glu.gluPerspective(45, widthHeightRatio, 1, 500);
-		glu.gluLookAt(currentCamera.getEyeX(), currentCamera.getEyeY(), currentCamera.getEyeZ(), 
-				currentCamera.getLookAtX(), currentCamera.getLookAtY(), currentCamera.getLookAtZ(), 
-				currentCamera.getUpX(), currentCamera.getUpY(), currentCamera.getUpZ());
-		// Change back to model view matrix.
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
-	}
 }

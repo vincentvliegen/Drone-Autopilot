@@ -10,10 +10,9 @@ import javax.imageio.ImageIO;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.glu.GLU;
-
 import p_en_o_cw_2016.Camera;
 import simulator.objects.SimulationDrone;
+import simulator.world.World;
 
 public class DroneCamera extends GeneralCamera implements Camera {
 
@@ -23,8 +22,8 @@ public class DroneCamera extends GeneralCamera implements Camera {
 	private DroneCameraPlace place;
 
 	public DroneCamera(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX,
-			float upY, float upZ, SimulationDrone drone, DroneCameraPlace place) {
-		super(eyeX, eyeY, eyeZ, lookAtX, lookAtY, lookAtZ, upX, upY, upZ);
+			float upY, float upZ, World world, SimulationDrone drone, DroneCameraPlace place) {
+		super(eyeX, eyeY, eyeZ, lookAtX, lookAtY, lookAtZ, upX, upY, upZ, world);
 		this.setDrone(drone);
 		this.gl = getDrone().getWorld().getGL().getGL2();
 		this.drawable = getDrone().getWorld().getDrawable();
@@ -105,25 +104,6 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		setUpZ((float) (drone.getRotateMatrix().get(7) * 1));
 	}
 	
-	public void setCamera(GL2 gl, GLU glu) {
-		int height = drawable.getSurfaceHeight();
-		// Change to projection matrix.
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
-	
-		// Perspective.
-		float widthHeightRatio = (float) getWidth() / (float) height;
-		glu.gluPerspective(45, widthHeightRatio, 1, 500);
-		// System.out.println("X " + getEyeX());
-		// System.out.println("LookAtX " + getLookAtX());
-	
-		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(),
-				getUpZ());
-	
-		// Change back to model view matrix.
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
-	}
 
 	public void setDrone(SimulationDrone drone) {
 		this.drone = drone;

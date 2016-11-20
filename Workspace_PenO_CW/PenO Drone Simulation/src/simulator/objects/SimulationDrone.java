@@ -12,6 +12,7 @@ import DroneAutopilot.DroneAutopilotFactory_new;
 import DroneAutopilot.DroneAutopilot_new;
 
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL2ES3;
 
 import simulator.camera.DroneCamera;
 import simulator.camera.DroneCameraPlace;
@@ -76,7 +77,7 @@ public class SimulationDrone implements Drone {
 		translateDrone(getTranslate());
 		rotateDrone(-getYaw(), -getGlobalRoll(), -getGlobalPitch());
 		gl.glColor3f(color[0], color[1], color[2]);
-		gl.glBegin(gl.GL_QUADS);
+		gl.glBegin(GL2ES3.GL_QUADS);
 
 		// Top
 		gl.glVertex3f(getDroneWidth() / 2, getDroneHeight() / 2, -getDroneDepth() / 2);
@@ -231,13 +232,13 @@ public class SimulationDrone implements Drone {
 		// left
 		float leftX = -getDroneWidth() / 2;
 		float leftZ = -getDroneDepth() / 2;
-		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ - 100, 0, 1, 0, this,
+		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ - 100, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.LEFT);
 
 		// right
 		float rightX = getDroneWidth() / 2;
 		float rightZ = -getDroneDepth() / 2;
-		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ - 100, 0, 1, 0, this,
+		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ - 100, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.RIGHT);
 
 		// add to list in world
