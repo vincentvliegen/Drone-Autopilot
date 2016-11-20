@@ -79,6 +79,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.timePassed += (System.nanoTime() - getLastTime())*Math.pow(10, -9);
 	}
 	
+	public abstract void setup();
+	
 	@Override
 	public abstract void display(GLAutoDrawable drawable);
 
@@ -157,7 +159,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		//set to default buffer
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
-		
+		//TODO op de juiste plaats?
+		setup();
 		
 		// Start animator.
 		gl.setSwapInterval(1);

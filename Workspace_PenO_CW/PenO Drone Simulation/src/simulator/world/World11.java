@@ -4,8 +4,6 @@ package simulator.world;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLProfile;
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.movement.KeyboardMovement;
@@ -15,9 +13,6 @@ import simulator.objects.Sphere;
 public class World11 extends World {
 
 	private static final long serialVersionUID = 1L;
-	private boolean setup;
-	private SimulationDrone drone1;
-	private Sphere sphere1;
 
 	public World11() {
 		super();
@@ -27,120 +22,123 @@ public class World11 extends World {
 		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
-	/**
-	 * @return Some standard GL capabilities (with alpha).
-	 */
-	public static GLCapabilities createGLCapabilities() {
-		GLCapabilities capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL2));
-		capabilities.setRedBits(8);
-		capabilities.setBlueBits(8);
-		capabilities.setGreenBits(8);
-		capabilities.setAlphaBits(8);
-		return capabilities;
-	}
+	
+	//TODO nodig??????
+//	/**
+//	 * @return Some standard GL capabilities (with alpha).
+//	 */
+//	public static GLCapabilities createGLCapabilities() {
+//		GLCapabilities capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL2));
+//		capabilities.setRedBits(8);
+//		capabilities.setBlueBits(8);
+//		capabilities.setGreenBits(8);
+//		capabilities.setAlphaBits(8);
+//		return capabilities;
+//	}
 
 	public static KeyboardMovement movement = new KeyboardMovement();
 
 	public void display(GLAutoDrawable drawable) {
+		System.out.println("Display");
 		super.updateTimePassed();
-		if (setup) {
-			double timePassed = super.checkTimePassed();
-			super.physics.run((float) timePassed);
-			drone1.timeHasPassed((float) timePassed);
-			super.setLastTime(System.nanoTime());
+		double timePassed = super.checkTimePassed();
+		super.physics.run((float) timePassed);
+
+		for (SimulationDrone drone : getDrones()) {
+			drone.timeHasPassed((float) timePassed);
+
 		}
+
+		super.setLastTime(System.nanoTime());
 		if (!super.getAnimator().isAnimating()) {
 			return;
 		}
 		GL2 gl = getGL().getGL2();
 
-		//voor scherm
+		// voor scherm
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		getCurrentCamera().setCamera(gl, getGlu());
 		draw();
 
-
 		/*
-		 * TODO
-		 * Moet slimmer aangepakt worden, wat als er nu meerdere drones zijn? Dan moeten er voor elke drone
-		 * (manueel) 2 buffers aangemaakt worden (een voor linker en een voor rechter camera);
-		 * dus vermijden..! 
-		 * --> idee: ipv telkens een nieuwe int[] te maken, gewoon een grotere te gebruiken en de offset aan te passen?
+		 * TODO Moet slimmer aangepakt worden, wat als er nu meerdere drones
+		 * zijn? Dan moeten er voor elke drone (manueel) 2 buffers aangemaakt
+		 * worden (een voor linker en een voor rechter camera); dus vermijden..!
+		 * --> idee: ipv telkens een nieuwe int[] te maken, gewoon een grotere
+		 * te gebruiken en de offset aan te passen?
 		 */
 
-		//voor takeimage linkerCamera
+		// voor takeimage linkerCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferLeft()[0]);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		getDrones().get(0).getLeftDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
-		
-		
 
-
-		//voor takeimage rechterCamera
+		// voor takeimage rechterCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferRight()[0]);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
-		//voor uitschrijven van bestand
-//		if(getDrones().size() != 0){
-//			if(i == 100){
-//			getDrones().get(0).getLeftDroneCamera().writeTakeImageToFile();
-//			getDrones().get(0).getRightDroneCamera().writeTakeImageToFile();
-//			i++;
-//			}
-//			else
-//				i++;
-//
-//		}
-	}	
+		// voor uitschrijven van bestand
+		// if(getDrones().size() != 0){
+		// if(i == 100){
+		// getDrones().get(0).getLeftDroneCamera().writeTakeImageToFile();
+		// getDrones().get(0).getRightDroneCamera().writeTakeImageToFile();
+		// i++;
+		// }
+		// else
+		// i++;
+		//
+		// }
+	}
+
+//	int i = 0;
 
 	
-	int i = 0;
-	
+	//TODO verplaats indien mogelijk naar World
+	protected void draw() {
 
-
-	private void draw() {
-	
 		GL2 gl = getGL().getGL2();
-	
+
 		// translate camera.
-		if(!(this.getCurrentCamera() instanceof DroneCamera)){
+		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
 			movement.update();
 			gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
 			gl.glRotated(movement.getRotateX(), 1, 0, 0);
 			gl.glRotated(movement.getRotateY(), 0, 1, 0);
 			gl.glRotated(movement.getRotateZ(), 0, 0, 1);
 		}
+
+		//TODO werk evt met objects ipv drones en spheres apart
 		
-		// Input Sphere.
-		if (!setup) {
-			double[] translateSphere = { 0, 0, -10f };
-			float[] colorSphere = { 1f, 0f, 0f };
-			Sphere sphere1 = new Sphere(gl, .2f, 64, 64, colorSphere, translateSphere);
-			sphere1.drawSphere();
-			this.sphere1 = sphere1;
-			addSphere(sphere1);
-		} else {
-			sphere1.drawSphere();
+		for (SimulationDrone drone : getDrones()) {
+			drone.drawDrone();
 		}
-		// Input Drone.
-		if (!setup) {
-			double[] translateDrone = { 0, 0, 0 };
-			float[] colorDrone = { 0f, 0f, 1f };
-			SimulationDrone drone1 = new SimulationDrone(gl, .05f, .1f, .1f, colorDrone, translateDrone, this);
-			this.drone1 = drone1;
-			addSimulationDrone(drone1);
-			drone1.drawDrone();
-		} else {
-			drone1.drawDrone();
+
+		for (Sphere sphere : getSpheres()) {
+			sphere.drawSphere();
 		}
-	
-		setup = true;
-	
+
 	}
 
+	@Override
+	public void setup() {
+		GL2 gl = getGL().getGL2();
+
+		double[] translateSphere = { 0, 0, -10f };
+		float[] colorSphere = { 1f, 0f, 0f };
+		Sphere sphere1 = new Sphere(gl, .2f, 64, 64, colorSphere, translateSphere);
+		sphere1.drawSphere();
+		addSphere(sphere1);
+
+		double[] translateDrone = { 0, 0, 0 };
+		float[] colorDrone = { 0f, 0f, 1f };
+		SimulationDrone drone1 = new SimulationDrone(gl, .05f, .1f, .1f, colorDrone, translateDrone, this);
+		addSimulationDrone(drone1);
+		drone1.drawDrone();
+
+	}
 
 }

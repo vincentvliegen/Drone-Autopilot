@@ -69,7 +69,7 @@ public class World12 extends World {
 
 		//voor scherm
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		setCamera(gl, getGlu());
+		getCurrentCamera().setCamera(gl, getGlu());
 		draw();
 
 
@@ -139,22 +139,6 @@ public class World12 extends World {
 	}
 
 
-	// Update position camera's
-	public void setCamera(GL2 gl, GLU glu) {
-		// Change to projection matrix.
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
-
-		// Perspective.
-		float widthHeightRatio = (float) getWidth() / (float) getHeight();
-		glu.gluPerspective(45, widthHeightRatio, 1, 500);
-		glu.gluLookAt(currentCamera.getEyeX(), currentCamera.getEyeY(), currentCamera.getEyeZ(), 
-				currentCamera.getLookAtX(), currentCamera.getLookAtY(), currentCamera.getLookAtZ(), 
-				currentCamera.getUpX(), currentCamera.getUpY(), currentCamera.getUpZ());
-		// Change back to model view matrix.
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
-	}
 	
 	public void setWindForceX(float value) {
 		this.windForceX = value;
@@ -166,5 +150,11 @@ public class World12 extends World {
 	
 	public void setWindForceZ(float value) {
 		this.windForceZ = value;
+	}
+	
+	@Override
+	public void setup() {
+		// TODO Auto-generated method stub
+		
 	}
 }
