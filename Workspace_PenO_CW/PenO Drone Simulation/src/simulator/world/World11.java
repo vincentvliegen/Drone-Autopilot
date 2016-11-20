@@ -40,15 +40,16 @@ public class World11 extends World {
 
 	public void display(GLAutoDrawable drawable) {
 		super.updateTimePassed();
-		double timePassed = super.checkTimePassed();
-		super.physics.run((float) timePassed);
+		super.getPhysics().run((float) checkTimePassed());
 
 		for (SimulationDrone drone : getDrones()) {
-			drone.timeHasPassed((float) timePassed);
+			drone.timeHasPassed((float) checkTimePassed());
 
 		}
 
 		super.setLastTime(System.nanoTime());
+
+		// TODO plaats van dit?
 		if (!super.getAnimator().isAnimating()) {
 			return;
 		}

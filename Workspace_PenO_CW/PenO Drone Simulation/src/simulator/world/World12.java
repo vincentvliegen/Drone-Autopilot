@@ -9,7 +9,7 @@ public class World12 extends World11 {
 
 	private static final long serialVersionUID = 1L;
 
-	private Force windForce = new Force(0, 0, 0);
+	private Force windForce;
 	private float windForceX = 0;
 	private float windForceY = 0;
 	private float windForceZ = 0;
@@ -29,12 +29,10 @@ public class World12 extends World11 {
 
 	public void display(GLAutoDrawable drawable) {
 
-		// TODO wat is de juiste volgorde, if any?
 		getWindForce().setXNewton(windForceX);
 		getWindForce().setYNewton(windForceY);
 		getWindForce().setZNewton(windForceZ);
 		super.display(drawable);
-		super.getPhysics().run((float) checkTimePassed());
 
 	}
 
@@ -53,5 +51,12 @@ public class World12 extends World11 {
 
 	private Force getWindForce() {
 		return windForce;
+	}
+
+	@Override
+	protected void setup() {
+		super.setup();
+		windForce = new Force(0, 0, 0);
+		physics.addForce(windForce);
 	}
 }
