@@ -34,6 +34,7 @@ public class PhysicsCalculations_vincent {
 		setDecelerationDistance(0);
 	}
 
+	//UPDATE ALL
 	
 	// berekent alles in PhysicsCalculations
 	// TODO deze functie moet in het begin opgeroepen worden (in moveToTarget) voordat er een waarde wordt gebruikt
@@ -59,7 +60,7 @@ public class PhysicsCalculations_vincent {
 	// vanaf dat de afstand bepaald is, kunnen volgende waardes berekend worden
 		if(isFirstDistanceNeeded()){
 			setFirstDistanceNeeded(false);;
-			firstDistance = getDistance();
+			setFirstDistance(this.getDistance());
 		}else{
 			this.calculateAcceleration();//heeft distance nodig
 			this.calculateSpeed();//heeft acceleration nodig
@@ -353,10 +354,6 @@ public class PhysicsCalculations_vincent {
 	private void setFocalDistance(float focalDistance) {
 		this.focalDistance = focalDistance;
 	}
-
-
-
-
 	
 	/**
 	 * @return the firstDistanceNeeded
@@ -364,10 +361,6 @@ public class PhysicsCalculations_vincent {
 	public boolean isFirstDistanceNeeded() {
 		return firstDistanceNeeded;
 	}
-	
-
-
-
 
 	/**
 	 * @param firstDistanceNeeded the firstDistanceNeeded to set
@@ -380,7 +373,7 @@ public class PhysicsCalculations_vincent {
 		return firstDistance;
 	}
 
-	public void setFirstDistance(float firstDistance) {
+	private void setFirstDistance(float firstDistance) {
 		this.firstDistance = firstDistance;
 	}
 
