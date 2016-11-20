@@ -1,5 +1,6 @@
 package simulator.camera;
 
+import java.applet.AppletStub;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
 
+import com.jogamp.newt.event.GestureHandler;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -31,6 +33,18 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		this.place = place;
 	}
 
+	
+	//TODO voeg ook in bij de 
+	private float fovy = 45;
+
+
+	/**
+	 * from www.learnopengl.com:
+	 * If you want to render your whole screen to a texture of a smaller or
+	 * larger size you need to call glViewport again (before rendering to your
+	 * framebuffer) with the new dimensions of your texture, otherwise only a
+	 * small part of the texture or screen would be drawn onto the texture.
+	 */
 	@Override
 	public int[] takeImage() {
 		int height = drawable.getSurfaceHeight();
@@ -67,30 +81,29 @@ public class DroneCamera extends GeneralCamera implements Camera {
 	public void updateDroneCamera() {
 		drone.createRotateMatrix();
 		/*
-		if (this.place.equals(DroneCameraPlace.LEFT)) {
-			System.out.println("DroneX " + drone.getTranslate()[0]);
-			System.out.println("DroneY " + drone.getTranslate()[1]);
-			System.out.println("DroneZ " + drone.getTranslate()[2]);
-			System.out.println("EyeX " + getEyeX());
-			System.out.println("EyeY " + getEyeY());
-			System.out.println("EyeZ " + getEyeZ());
-			System.out.println("LookX " + getLookAtX());
-			System.out.println("LookY " + getLookAtY());
-			System.out.println("LookZ " + getLookAtZ());
-			System.out.println("UpX " + getUpX());
-			System.out.println("UpY " + getUpY());
-			System.out.println("UpZ " + getUpZ());
-			System.out.println("StartX " + drone.getRotateMatrix().get(3));
-			System.out.println("StartY " + drone.getRotateMatrix().get(4));
-			System.out.println("StartZ " + drone.getRotateMatrix().get(5));
-		}
-		*/
+		 if (this.place.equals(DroneCameraPlace.LEFT)) { System.out.println(
+		 "DroneX " + drone.getTranslate()[0]); System.out.println("DroneY " +
+		 drone.getTranslate()[1]); System.out.println("DroneZ " +
+		 drone.getTranslate()[2]); System.out.println("EyeX " + getEyeX());
+		 System.out.println("EyeY " + getEyeY()); System.out.println("EyeZ " +
+		 getEyeZ()); System.out.println("LookX " + getLookAtX());
+		 System.out.println("LookY " + getLookAtY()); System.out.println(
+		 "LookZ " + getLookAtZ()); System.out.println("UpX " + getUpX());
+		 System.out.println("UpY " + getUpY()); System.out.println("UpZ " +
+		 getUpZ()); System.out.println("StartX " +
+		 drone.getRotateMatrix().get(3)); System.out.println("StartY " +
+		 drone.getRotateMatrix().get(4)); System.out.println("StartZ " +
+		 drone.getRotateMatrix().get(5)); }
+		  */
 		setEyeX((float) (getStartEyeX() * drone.getRotateMatrix().get(0)
-				+ getStartEyeY() * drone.getRotateMatrix().get(1) + getStartEyeZ() * drone.getRotateMatrix().get(2) + drone.getTranslate()[0]));
+				+ getStartEyeY() * drone.getRotateMatrix().get(1) + getStartEyeZ() * drone.getRotateMatrix().get(2)
+				+ drone.getTranslate()[0]));
 		setEyeY((float) (getStartEyeX() * drone.getRotateMatrix().get(3)
-				+ getStartEyeY() * drone.getRotateMatrix().get(4) + getStartEyeZ() * drone.getRotateMatrix().get(5) + drone.getTranslate()[1]));
+				+ getStartEyeY() * drone.getRotateMatrix().get(4) + getStartEyeZ() * drone.getRotateMatrix().get(5)
+				+ drone.getTranslate()[1]));
 		setEyeZ((float) (getStartEyeX() * drone.getRotateMatrix().get(6)
-				+ getStartEyeY() * drone.getRotateMatrix().get(7) + getStartEyeZ() * drone.getRotateMatrix().get(8) + drone.getTranslate()[2]));
+				+ getStartEyeY() * drone.getRotateMatrix().get(7) + getStartEyeZ() * drone.getRotateMatrix().get(8)
+				+ drone.getTranslate()[2]));
 		setLookAtX((float) (getStartLookAtX() * drone.getRotateMatrix().get(0)
 				+ getStartLookAtY() * drone.getRotateMatrix().get(1)
 				+ getStartLookAtZ() * drone.getRotateMatrix().get(2) + drone.getTranslate()[0]));
@@ -104,22 +117,22 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		setUpY((float) (drone.getRotateMatrix().get(4) * 1));
 		setUpZ((float) (drone.getRotateMatrix().get(7) * 1));
 	}
-	
+
 	public void setCamera(GL2 gl, GLU glu) {
 		int height = drawable.getSurfaceHeight();
 		// Change to projection matrix.
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-	
+
 		// Perspective.
 		float widthHeightRatio = (float) getWidth() / (float) height;
 		glu.gluPerspective(45, widthHeightRatio, 1, 500);
 		// System.out.println("X " + getEyeX());
 		// System.out.println("LookAtX " + getLookAtX());
-	
+
 		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(),
 				getUpZ());
-	
+
 		// Change back to model view matrix.
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
@@ -137,54 +150,70 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		return drone;
 	}
 
+	
+
+	/**
+	 * FOVH = 2*atan(aspectRatio (tan(FOVV/2))
+	 * ratio = width/height
+	 * 
+	 * bron: http://gamedev.stackexchange.com/questions/43922/opengl-fovx-question
+	 * 
+	 */
+
 	@Override
 	public float getHorizontalAngleOfView() {
-		return (float) (180 - 2*Math.toDegrees(Math.atan((double)1000/getWidth())));
+
+		float aspectRatio = (float) getWidth()/drawable.getSurfaceHeight();		
+		return (float) Math.toDegrees(2 * Math.atan(aspectRatio * Math.tan(Math.toRadians(getVerticalAngleOfView()/2))));
+		
+		
 	}
+
 
 	@Override
 	public float getVerticalAngleOfView() {
-		return (float) (180 - 2*Math.toDegrees(Math.atan((double)1000/drawable.getSurfaceHeight())));
+		//		return (float) (180 - 2 * Math.toDegrees(Math.atan((double) 1000 / drawable.getSurfaceHeight())));
+		return fovy;
 	}
 
 	@Override
 	public int getWidth() {
 		return drawable.getSurfaceWidth();
 	}
-	
-	
-	//voor uitschrijven naar bestand
+
+	// voor uitschrijven naar bestand
 	public void writeTakeImageToFile() {
-		  //		int width = getWidth();
-		  int height= getDrone().getWorld().getDrawable().getSurfaceHeight();
-		  String path = "/D:/Libraries/takeimageTest";
-		  if(getPlace() == DroneCameraPlace.LEFT)
-		    path = path + "-left.png";
-		  else
-		    path = path + "-right.png";
+		// int width = getWidth();
+		int height = getDrone().getWorld().getDrawable().getSurfaceHeight();
+		String path = "/D:/Libraries/takeimageTest";
+		if (getPlace() == DroneCameraPlace.LEFT)
+			path = path + "-left.png";
+		else
+			path = path + "-right.png";
 
-		  File file = new File(path); // The file to save to.
+		File file = new File(path); // The file to save to.
 
-		  String format = "PNG"; // Example: "PNG" or "JPG"
-		  int[] temp = takeImage();
+		String format = "PNG"; // Example: "PNG" or "JPG"
+		int[] temp = takeImage();
 
+		BufferedImage image = new BufferedImage(getWidth(), height, BufferedImage.TYPE_INT_RGB);
 
-		  BufferedImage image = new BufferedImage(getWidth(), height, BufferedImage.TYPE_INT_RGB);
+		for (int x = 0; x < getWidth(); x++) {
+			for (int y = 0; y < height; y++) {
 
-		  for(int x = 0; x < getWidth(); x++)
-		  {
-		    for(int y = 0; y < height; y++)
-		    {
+				// TODO: geeft kleuren omgekeerd; krijgt autopilot ze wel juist
+				// door?
+				image.setRGB(x, y, temp[y * getWidth() + x]);
 
-		      //TODO: geeft kleuren omgekeerd; krijgt autopilot ze wel juist door?
-		      image.setRGB(x, y, temp[y*getWidth()+x]);
+				// image.setRGB(x, height - (y + 1), (0xFF << 24) | (r << 16) |
+				// (g << 8) | b);
 
-		      //						image.setRGB(x, height - (y + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
-
-		    }
-		  }
-		  try {
-		    ImageIO.write(image, format, file);
-		  } catch (IOException e) { e.printStackTrace(); }
+			}
 		}
+		try {
+			ImageIO.write(image, format, file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
