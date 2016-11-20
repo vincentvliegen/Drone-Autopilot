@@ -24,7 +24,7 @@ public class SimulatorMain12 {
 		frame.setSize(1024, 768); // width, height
 		frame.setResizable(false); //Not resizable
 		world.requestFocus();
-		world.addKeyListener(World12.movement);
+		world.addKeyListener(World12.getMovement());
 		frame.setVisible(true);
 		
 	}

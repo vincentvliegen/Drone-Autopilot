@@ -22,24 +22,23 @@ public class World11 extends World {
 		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
-	
-	//TODO nodig??????
-//	/**
-//	 * @return Some standard GL capabilities (with alpha).
-//	 */
-//	public static GLCapabilities createGLCapabilities() {
-//		GLCapabilities capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL2));
-//		capabilities.setRedBits(8);
-//		capabilities.setBlueBits(8);
-//		capabilities.setGreenBits(8);
-//		capabilities.setAlphaBits(8);
-//		return capabilities;
-//	}
+	// TODO nodig??????
+	// /**
+	// * @return Some standard GL capabilities (with alpha).
+	// */
+	// public static GLCapabilities createGLCapabilities() {
+	// GLCapabilities capabilities = new
+	// GLCapabilities(GLProfile.get(GLProfile.GL2));
+	// capabilities.setRedBits(8);
+	// capabilities.setBlueBits(8);
+	// capabilities.setGreenBits(8);
+	// capabilities.setAlphaBits(8);
+	// return capabilities;
+	// }
 
 	public static KeyboardMovement movement = new KeyboardMovement();
 
 	public void display(GLAutoDrawable drawable) {
-		System.out.println("Display");
 		super.updateTimePassed();
 		double timePassed = super.checkTimePassed();
 		super.physics.run((float) timePassed);
@@ -94,10 +93,9 @@ public class World11 extends World {
 		// }
 	}
 
-//	int i = 0;
+	// int i = 0;
 
-	
-	//TODO verplaats indien mogelijk naar World
+	// TODO verplaats indien mogelijk naar World
 	protected void draw() {
 
 		GL2 gl = getGL().getGL2();
@@ -111,8 +109,8 @@ public class World11 extends World {
 			gl.glRotated(movement.getRotateZ(), 0, 0, 1);
 		}
 
-		//TODO werk evt met objects ipv drones en spheres apart
-		
+		// TODO werk evt met objects ipv drones en spheres apart
+
 		for (SimulationDrone drone : getDrones()) {
 			drone.drawDrone();
 		}
@@ -124,7 +122,7 @@ public class World11 extends World {
 	}
 
 	@Override
-	public void setup() {
+	protected void setup() {
 		GL2 gl = getGL().getGL2();
 
 		double[] translateSphere = { 0, 0, -10f };
