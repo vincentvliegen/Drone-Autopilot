@@ -137,14 +137,30 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		return drone;
 	}
 
+	/**
+	 * FOVH = 2*atan(aspectRatio (tan(FOVV/2))
+	 * ratio = width/height
+	 * 
+	 * bron: http://gamedev.stackexchange.com/questions/43922/opengl-fovx-question
+	 * 
+	 */
+	
+	private float fovy = 45;
+
 	@Override
 	public float getHorizontalAngleOfView() {
-		return (float) (180 - 2*Math.toDegrees(Math.atan((double)1000/getWidth())));
+
+		float aspectRatio = (float) getWidth()/drawable.getSurfaceHeight();		
+		return (float) Math.toDegrees(2 * Math.atan(aspectRatio * Math.tan(Math.toRadians(getVerticalAngleOfView()/2))));
+		
+		
 	}
+
 
 	@Override
 	public float getVerticalAngleOfView() {
-		return (float) (180 - 2*Math.toDegrees(Math.atan((double)1000/drawable.getSurfaceHeight())));
+		//		return (float) (180 - 2 * Math.toDegrees(Math.atan((double) 1000 / drawable.getSurfaceHeight())));
+		return fovy;
 	}
 
 	@Override
