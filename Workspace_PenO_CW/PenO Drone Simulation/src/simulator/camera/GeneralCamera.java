@@ -40,7 +40,7 @@ public class GeneralCamera {
 	
 	private World world;
 	
-	private World getWorld() {
+	protected World getWorld() {
 		return world;
 	}
 	

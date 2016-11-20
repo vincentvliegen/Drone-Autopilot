@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
 import p_en_o_cw_2016.Camera;
 import simulator.objects.SimulationDrone;
 import simulator.world.World;
@@ -17,7 +16,6 @@ import simulator.world.World;
 public class DroneCamera extends GeneralCamera implements Camera {
 
 	private GL2 gl;
-	private GLAutoDrawable drawable;
 	private SimulationDrone drone;
 	private DroneCameraPlace place;
 
@@ -25,33 +23,37 @@ public class DroneCamera extends GeneralCamera implements Camera {
 			float upY, float upZ, World world, SimulationDrone drone, DroneCameraPlace place) {
 		super(eyeX, eyeY, eyeZ, lookAtX, lookAtY, lookAtZ, upX, upY, upZ, world);
 		this.setDrone(drone);
-		this.gl = getDrone().getWorld().getGL().getGL2();
-		this.drawable = getDrone().getWorld().getDrawable();
+		this.gl = getWorld().getGL().getGL2();
 		this.place = place;
+	}
+	
+	
+	public int getHeight() {
+		
+		return getWorld().getDrawable().getSurfaceHeight();
 	}
 
 	@Override
 	public int[] takeImage() {
-		int height = drawable.getSurfaceHeight();
-		int[] temp = new int[getWidth() * height];
-		ByteBuffer buffer = ByteBuffer.allocateDirect(3 * getWidth() * height);
+		int[] temp = new int[getWidth() * getHeight()];
+		ByteBuffer buffer = ByteBuffer.allocateDirect(3 * getWidth() * getHeight());
 
 		// TODO eventueel met switch werken
 
 		if (getPlace() == DroneCameraPlace.LEFT)
-			gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getDrone().getWorld().getFramebufferLeft()[0]);
+			gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getWorld().getFramebufferLeft()[0]);
 		else
-			gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getDrone().getWorld().getFramebufferRight()[0]);
+			gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getWorld().getFramebufferRight()[0]);
 
 		gl.glPixelStorei(GL.GL_PACK_ALIGNMENT, 1);
-		gl.glReadPixels(0, 0, getWidth(), height, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, buffer);
+		gl.glReadPixels(0, 0, getWidth(), getHeight(), GL.GL_RGB, GL.GL_UNSIGNED_BYTE, buffer);
 		buffer.rewind();
 		int bpp = 3;
 		int i = 0;
 
-		for (int r = 0; r < height; r++) {
+		for (int r = 0; r < getHeight(); r++) {
 			for (int c = 0; c < getWidth(); c++) {
-				i = ((height - r - 1) * getWidth() + c) * bpp;
+				i = ((getHeight() - r - 1) * getWidth() + c) * bpp;
 				int red = buffer.get(i) & 0xFF;
 				int green = buffer.get(i + 1) & 0xFF;
 				int blue = buffer.get(i + 2) & 0xFF;
@@ -130,7 +132,7 @@ public class DroneCamera extends GeneralCamera implements Camera {
 	@Override
 	public float getHorizontalAngleOfView() {
 
-		float aspectRatio = (float) getWidth()/drawable.getSurfaceHeight();		
+		float aspectRatio = (float) getWidth()/getHeight();		
 		return (float) Math.toDegrees(2 * Math.atan(aspectRatio * Math.tan(Math.toRadians(getVerticalAngleOfView()/2))));
 		
 		
@@ -139,20 +141,19 @@ public class DroneCamera extends GeneralCamera implements Camera {
 
 	@Override
 	public float getVerticalAngleOfView() {
-		//		return (float) (180 - 2 * Math.toDegrees(Math.atan((double) 1000 / drawable.getSurfaceHeight())));
+		//		return (float) (180 - 2 * Math.toDegrees(Math.atan((double) 1000 / getHeight())));
 		return fovy;
 	}
 
 	@Override
 	public int getWidth() {
-		return drawable.getSurfaceWidth();
+		return getWorld().getDrawable().getSurfaceWidth();
 	}
 	
 	
 	//voor uitschrijven naar bestand
 	public void writeTakeImageToFile() {
 		  //		int width = getWidth();
-		  int height= getDrone().getWorld().getDrawable().getSurfaceHeight();
 		  String path = "/D:/Libraries/takeimageTest";
 		  if(getPlace() == DroneCameraPlace.LEFT)
 		    path = path + "-left.png";
@@ -165,17 +166,17 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		  int[] temp = takeImage();
 
 
-		  BufferedImage image = new BufferedImage(getWidth(), height, BufferedImage.TYPE_INT_RGB);
+		  BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 
 		  for(int x = 0; x < getWidth(); x++)
 		  {
-		    for(int y = 0; y < height; y++)
+		    for(int y = 0; y < getHeight(); y++)
 		    {
 
 		      //TODO: geeft kleuren omgekeerd; krijgt autopilot ze wel juist door?
 		      image.setRGB(x, y, temp[y*getWidth()+x]);
 
-		      //						image.setRGB(x, height - (y + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
+		      //						image.setRGB(x, getHeight() - (y + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
 
 		    }
 		  }
