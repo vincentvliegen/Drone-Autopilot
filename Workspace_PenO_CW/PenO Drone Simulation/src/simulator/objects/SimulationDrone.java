@@ -158,6 +158,7 @@ public class SimulationDrone implements Drone {
 	}
 
 	public void timeHasPassed(float timePassed) {
+		/*
 		double yawPass = this.yawRate * timePassed;
 		createInverseRotate();
 		this.pitch += yawPass
@@ -184,8 +185,11 @@ public class SimulationDrone implements Drone {
 				* new BigDecimal(inverseRotateMatrix.get(3)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		this.roll += pitchPass
 				* new BigDecimal(inverseRotateMatrix.get(6)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-
-		/*
+	*/
+		this.yaw += yawRate*timePassed;
+		this.roll += rollRate*timePassed;
+		this.pitch += pitchRate*timePassed*Math.cos(Math.toRadians(roll));
+		
 		 System.out.println("global pitch " + this.pitch);
 		 System.out.println("global yaw " + this.yaw);
 		 System.out.println("global roll " + this.roll);
@@ -194,7 +198,7 @@ public class SimulationDrone implements Drone {
 		 System.out.println("pitchRate " + this.pitchRate);
 		 System.out.println("yawRate " + this.yawRate);
 		 System.out.println("rollRate " + this.rollRate);
-		 */
+		 
 
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
@@ -407,11 +411,11 @@ public class SimulationDrone implements Drone {
 	}
 
 	public float getPitch() {
-		return (float) (this.pitch * Math.cos(Math.toRadians(yaw)) + this.roll * Math.sin(Math.toRadians(yaw)));
+		return this.pitch;
 	}
 
 	public float getRoll() {
-		return (float) (this.roll * Math.cos(Math.toRadians(yaw)) - this.pitch * Math.sin(Math.toRadians(yaw)));
+		return this.roll;
 	}
 
 	public float getYaw() {
