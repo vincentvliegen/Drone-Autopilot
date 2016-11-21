@@ -57,22 +57,19 @@ public class GUI extends JPanel {
 		for(int i=0; i< world.getGeneralCameras().size(); i++){
 			//System.out.println(world.getGeneralCameras().size());
 			buttonsGeneralCameras.add(new JButton("Camera " + (i+1)));
-			buttonsGeneralCameras.get(i).addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String nameButton = e.getActionCommand();
-					if(nameButton.equalsIgnoreCase("Camera 1")){
-						world.setCurrentCamera(world.getGeneralCameras().get(0));
-					}
-					else if(nameButton.equalsIgnoreCase("Camera 2")){
-						world.setCurrentCamera(world.getGeneralCameras().get(1));
-					}
-					else if(nameButton.equalsIgnoreCase("Camera 3")){
-						world.setCurrentCamera(world.getGeneralCameras().get(2));
-					}
-				}
-			});
 			panelButtonsGeneralCameras.add(buttonsGeneralCameras.get(i), constraintsButtonGeneralCameras);
+		}
+		for(int i=0; i<buttonsGeneralCameras.size(); i++){
+			final int j =i;
+		buttonsGeneralCameras.get(i).addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String nameButton = e.getActionCommand();
+				if(nameButton.equalsIgnoreCase("Camera " + Integer.toString(j+1))){
+					world.setCurrentCamera(world.getGeneralCameras().get(j));
+				}
+			}
+		});
 		}
 		add(panelButtonsGeneralCameras, constraintsButtonGeneralCameras);
 
