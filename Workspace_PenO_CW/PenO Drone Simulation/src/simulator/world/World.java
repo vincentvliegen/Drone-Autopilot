@@ -14,6 +14,7 @@ import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
+import simulator.objects.WorldObject;
 import simulator.physics.Physics;
 
 @SuppressWarnings("serial")
@@ -51,6 +52,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	int[] depthRenderbufferLeft = new int[1];
 	int[] textureLeft = new int[1];
 	Physics physics;
+	private List<WorldObject> worldObjectsList = new ArrayList<>();
 
 	public World() {
 		addGLEventListener(this);
@@ -65,10 +67,12 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	}
 
 	public void addSimulationDrone(SimulationDrone drone){
+		worldObjectsList.add(drone);
 		drones.add(drone);		
 	}
 
 	public void addSphere(Sphere sphere){
+		worldObjectsList.add(sphere);
 		spheres.add(sphere);		
 	}
 
@@ -81,7 +85,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	}
 	
 	protected abstract void setup();
-	protected abstract void handleCollision();
+	protected abstract void handleCollision(WorldObject object, SimulationDrone drone);
 	
 	@Override
 	public abstract void display(GLAutoDrawable drawable);
@@ -245,12 +249,14 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	}
 	
 	public void checkCollision(SimulationDrone drone) {
-		for (Sphere currentSphere: getSpheres()) {
-			double[] spherePos = currentSphere.getTranslate();
+		for (WorldObject currentObject: getSpheres()) {
+			if (currentObject == drone)
+				continue;
+			double[] objectPos = currentObject.getTranslate();
 			double[] dronePos = drone.getTranslate();
-			double distance = Math.sqrt(Math.pow(spherePos[0] - dronePos[0], 2) + Math.pow(spherePos[1] - dronePos[1], 2) + Math.pow(spherePos[2] - dronePos[2], 2));
-			if (distance <= (currentSphere.getRadius() + drone.getRadius()))
-				handleCollision();
+			double distance = Math.sqrt(Math.pow(objectPos[0] - dronePos[0], 2) + Math.pow(objectPos[1] - dronePos[1], 2) + Math.pow(objectPos[2] - dronePos[2], 2));
+			if (distance <= (currentObject.getRadius() + drone.getRadius()))
+				handleCollision(currentObject, drone);
 		}
 	}
 }
