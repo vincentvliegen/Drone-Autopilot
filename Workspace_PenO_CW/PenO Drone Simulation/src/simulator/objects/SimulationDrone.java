@@ -287,24 +287,24 @@ public class SimulationDrone implements Drone, WorldObject{
 
 	@Override
 	public void setPitchRate(float value) {
-		if (value > getMaxPitchRate())
-			this.pitchRate = getMaxPitchRate();
+		if (Math.abs(value) > getMaxPitchRate())
+			this.pitchRate = getMaxPitchRate()*Math.signum(value);
 		else
 			this.pitchRate = value;
 	}
 
 	@Override
 	public void setRollRate(float value) {
-		if (value > getMaxRollRate())
-			this.rollRate = getMaxRollRate();
+		if (Math.abs(value) > getMaxRollRate())
+			this.rollRate = getMaxRollRate()*Math.signum(value);
 		else
 			this.rollRate = value;
 	}
 
 	@Override
 	public void setYawRate(float value) {
-		if (value > getMaxYawRate())
-			this.yawRate = getMaxYawRate();
+		if (Math.abs(value) > getMaxYawRate())
+			this.yawRate = getMaxYawRate()*Math.signum(value);
 		else
 			this.yawRate = value;
 	}
