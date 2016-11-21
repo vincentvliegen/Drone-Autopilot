@@ -10,6 +10,7 @@ import simulator.world.World;
 import simulator.world.World12;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,15 +28,15 @@ public class GUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static World world;
-	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsButtonGeneralCameras, constraintsButtonDroneCamera;
+	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsComboboxGeneralCameras, constraintsButtonDroneCamera;
 	private JLabel position = new JLabel();
 	private JLabel speed = new JLabel();
 	private JLabel windX, windY, windZ;
-	private List<JButton> buttonsGeneralCameras = new ArrayList<>();
 	private List<JButton> buttonsDroneCameras = new ArrayList<>();
 	private List<JSlider> windSlidersX = new ArrayList<>();
 	private List<JSlider> windSlidersY = new ArrayList<>();
 	private List<JSlider> windSlidersZ = new ArrayList<>();
+	private List<String> listNameButtons = new ArrayList<>();
 
 
 	/**
@@ -49,29 +50,38 @@ public class GUI extends JPanel {
 
 
 		// #buttonsGeneralCameras
-		JPanel panelButtonsGeneralCameras = new JPanel(new GridLayout(1,3));
-		constraintsButtonGeneralCameras = new GridBagConstraints();
-		constraintsButtonGeneralCameras.insets = new Insets(1, 1, 1, 1);
-		constraintsButtonGeneralCameras.gridy = 0;
+		JPanel panelComboboxGeneralCameras = new JPanel(new GridLayout(2,2));
+		constraintsComboboxGeneralCameras = new GridBagConstraints();
+		constraintsComboboxGeneralCameras.insets = new Insets(1, 1, 1, 1);
+		constraintsComboboxGeneralCameras.gridy = 0;
 
-		for(int i=0; i< world.getGeneralCameras().size(); i++){
-			//System.out.println(world.getGeneralCameras().size());
-			buttonsGeneralCameras.add(new JButton("Camera " + (i+1)));
-			panelButtonsGeneralCameras.add(buttonsGeneralCameras.get(i), constraintsButtonGeneralCameras);
-		}
-		for(int i=0; i<buttonsGeneralCameras.size(); i++){
+		JLabel select = new JLabel("Select general camera: ");
+		panelComboboxGeneralCameras.add(select);
+
+		for(int i=0; i < world.getGeneralCameras().size(); i++){
 			final int j =i;
-		buttonsGeneralCameras.get(i).addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nameButton = e.getActionCommand();
-				if(nameButton.equalsIgnoreCase("Camera " + Integer.toString(j+1))){
-					world.setCurrentCamera(world.getGeneralCameras().get(j));
-				}
-			}
-		});
+			listNameButtons.add("camera " + Integer.toString(j+1));
 		}
-		add(panelButtonsGeneralCameras, constraintsButtonGeneralCameras);
+		
+		JComboBox comboboxGeneralCameras = new JComboBox(listNameButtons.toArray());
+		
+		for(int i=0; i < world.getGeneralCameras().size(); i++){
+			final int j =i;
+			comboboxGeneralCameras.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					JComboBox comboboxGeneralCameras = (JComboBox) e.getSource();
+					Object selected = comboboxGeneralCameras.getSelectedItem();
+					if(selected.toString().equalsIgnoreCase("Camera " + Integer.toString(j+1))){
+						world.setCurrentCamera(world.getGeneralCameras().get(j));
+					}
+				}
+			});
+		}
+		panelComboboxGeneralCameras.add(comboboxGeneralCameras);
+		add(panelComboboxGeneralCameras, constraintsComboboxGeneralCameras);
+
+
 
 		// #buttonsDroneCameras
 		JPanel panelButtonDroneCameras = new JPanel(new GridLayout(1,2));
@@ -79,7 +89,7 @@ public class GUI extends JPanel {
 		constraintsButtonDroneCamera.insets = new Insets(1, 1, 1, 1);
 		constraintsButtonDroneCamera.gridy = 1;
 
-		
+
 		buttonsDroneCameras.add(new JButton("Left dronecamera"));
 		buttonsDroneCameras.add(new JButton("Right dronecamera"));
 		buttonsDroneCameras.get(0).addActionListener(new ActionListener() {
@@ -107,7 +117,7 @@ public class GUI extends JPanel {
 		// Speed
 		constraintsSpeed = new GridBagConstraints();
 		constraintsSpeed.insets = new Insets(1, 1, 1, 1);
-		
+
 		Timer timerSpeed = new Timer(1000, new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ev) {
@@ -122,7 +132,7 @@ public class GUI extends JPanel {
 					BigDecimal bigDecimalSpeed = new BigDecimal(currentSpeed);
 					BigDecimal roundOffSpeed = bigDecimalSpeed.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					speed.setText("Speed: " + roundOffSpeed);
-				//System.out.println("----simulatorspeed "+currentSpeed);
+					//System.out.println("----simulatorspeed "+currentSpeed);
 					//System.out.println("Speed");
 					constraintsSpeed.ipady = 20;      //make this component tall
 					constraintsSpeed.weightx = 1;
@@ -153,7 +163,7 @@ public class GUI extends JPanel {
 					BigDecimal bigDecimalPos3 = new BigDecimal(currentPosition[2]);
 					BigDecimal roundOffPos3 = bigDecimalPos3.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					position.setText("Position (x, y, z): (" + roundOffPos1 + ", " + roundOffPos2 + ", " + roundOffPos3 + ")" );
-				//System.out.println("----distanceSimulator " + Math.sqrt(Math.pow(currentPosition[0], 2)+Math.pow(currentPosition[1], 2)+Math.pow(-10-currentPosition[2], 2)));
+					//System.out.println("----distanceSimulator " + Math.sqrt(Math.pow(currentPosition[0], 2)+Math.pow(currentPosition[1], 2)+Math.pow(-10-currentPosition[2], 2)));
 					constraintsPosition.ipady = 20;      //make this component tall
 					constraintsPosition.weightx = 1;
 					constraintsPosition.gridx = 0;
@@ -166,8 +176,8 @@ public class GUI extends JPanel {
 			}
 		});
 		timerPosition.start(); 
-	
-		
+
+
 		//GrivatySlider
 		JPanel panelGravity = new JPanel(new GridLayout(1,2));
 		GridBagConstraints constraintsPanelGravity = new GridBagConstraints();
@@ -203,7 +213,7 @@ public class GUI extends JPanel {
 
 		panelGravity.add(gravitySlider);
 		add(panelGravity, constraintsPanelGravity);
-				
+
 		if(world instanceof World12){
 			// Panel WindNams & Sliders
 
@@ -230,7 +240,7 @@ public class GUI extends JPanel {
 
 			// WindSliders 
 			int MAXWIND = 10;
-			
+
 			//Create the label table
 			Hashtable labelTableWind = new Hashtable();
 			labelTableWind.put( new Integer( 0 ), new JLabel("-0.5") );
@@ -241,7 +251,7 @@ public class GUI extends JPanel {
 			JSlider windXSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
 			windXSlider.setMajorTickSpacing(1);
 			windXSlider.setPaintTicks(true);
-			
+
 			windXSlider.setLabelTable( labelTableWind );
 			windXSlider.setPaintLabels(true);
 
@@ -262,7 +272,7 @@ public class GUI extends JPanel {
 			JSlider windYSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
 			windYSlider.setMajorTickSpacing(1);
 			windYSlider.setPaintTicks(true);
-			
+
 			windYSlider.setLabelTable( labelTableWind );
 			windYSlider.setPaintLabels(true);
 
@@ -283,7 +293,7 @@ public class GUI extends JPanel {
 			JSlider windZSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
 			windZSlider.setMajorTickSpacing(1);
 			windZSlider.setPaintTicks(true);
-			
+
 			windZSlider.setLabelTable( labelTableWind );
 			windZSlider.setPaintLabels(true);
 
@@ -308,7 +318,7 @@ public class GUI extends JPanel {
 			add(panelWindSlidersY, constraintsPanelWindSlidersY);
 			add(panelWindSlidersZ, constraintsPanelWindSlidersZ);
 		}
-	
+
 	}
-	
+
 }
