@@ -12,10 +12,10 @@ import exceptions.SmallCircleException;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
-public class MoveToTarget_new {
+public class MoveToTarget {
 
-	private final PhysicsCalculations_new physicsCalculations;
-	private final ImageCalculations_new imageCalculations;
+	private final PhysicsCalculations physicsCalculations;
+	private final ImageCalculations imageCalculations;
 	private final YawController yawPI;
 	private final RollController rollPI;
 	private final PitchController pitchPI;
@@ -30,11 +30,11 @@ public class MoveToTarget_new {
 	private static final float underBoundary = -1f;
 	private static final float upperBoundary = 1f;
 
-	public MoveToTarget_new(Drone drone) {
+	public MoveToTarget(Drone drone) {
 		this.setDrone(drone);
-		this.imageCalculations = new ImageCalculations_new();
-		this.physicsCalculations = new PhysicsCalculations_new(drone);
-		this.yawPI = new YawController(10,0);
+		this.imageCalculations = new ImageCalculations();
+		this.physicsCalculations = new PhysicsCalculations(drone);
+		this.yawPI = new YawController(300,0);
 		this.rollPI = new RollController(0,0);
 		this.pitchPI = new PitchController(0,0);
 		this.thrustPI = new ThrustController(0,0);
@@ -231,11 +231,11 @@ public class MoveToTarget_new {
 		}
 	}
 
-	public final PhysicsCalculations_new getPhysicsCalculations() {
+	public final PhysicsCalculations getPhysicsCalculations() {
 		return this.physicsCalculations;
 	}
 
-	public final ImageCalculations_new getImageCalculations() {
+	public final ImageCalculations getImageCalculations() {
 		return this.imageCalculations;
 	}
 	
