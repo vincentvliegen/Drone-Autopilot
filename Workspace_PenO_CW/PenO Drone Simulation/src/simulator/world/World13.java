@@ -28,6 +28,18 @@ public class World13 extends World {
 		sphere1.draw();
 		addSphere(sphere1);
 		
+		double[] translateSphere2 = { 20f, 5f, 0f };
+		float[] colorSphere2 = { 1f, 1f, 0f };
+		Sphere sphere2 = new Sphere(gl, .5f, 64, 64, colorSphere2, translateSphere2);
+		sphere2.draw();
+		addSphere(sphere2);
+		
+		double[] translateSphere3 = { 5f, -2f, 1f };
+		float[] colorSphere3 = { 0f, 1f, 0f };
+		Sphere sphere3 = new Sphere(gl, .5f, 64, 64, colorSphere3, translateSphere3);
+		sphere3.draw();
+		addSphere(sphere3);
+		
 		double[] translateDrone = { 0, 0, 0 };
 		float[] colorDrone = { 0f, 0f, 1f };
 		SimulationDrone drone1 = new SimulationDrone(gl, .03f, .175f, .175f, colorDrone, translateDrone, this);
