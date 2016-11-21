@@ -16,7 +16,6 @@ public class MoveToTarget_new {
 	private float startFlyingTime;
 	private GUI gui;
 	private boolean basisgeval;
-	private boolean firstTimeFlyTowardsTarget;
 	private boolean deceleration;
 
 	private static final float underBoundary = -1f;
@@ -131,19 +130,16 @@ public class MoveToTarget_new {
 		return cog;
 	}
 
-	public void hover() {
+	public void hover(float[] cog) {
+		System.out.println("hover");
 		if (this.getDrone().getPitch() > 0) {
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
 			this.getDrone().setThrust(
-					Math.min(this.getDrone().getMaxThrust(),
-							Math.abs(this.getDrone().getGravity())
-							* this.getDrone().getWeight()));
+					Math.min(this.getDrone().getMaxThrust(),this.getPhysicsCalculations().getThrust(cog)));
 		} else if (this.getDrone().getPitch() < 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
 			this.getDrone().setThrust(
-					Math.min(this.getDrone().getMaxThrust(),
-							Math.abs(this.getDrone().getGravity())
-							* this.getDrone().getWeight()));
+					Math.min(this.getDrone().getMaxThrust(),this.getPhysicsCalculations().getThrust(cog)));
 		} else {
 			this.getDrone().setPitchRate(0);
 			this.getDrone().setThrust(
@@ -156,7 +152,6 @@ public class MoveToTarget_new {
 	public void flyTowardsTarget(float[] cogL, float[] cogR) { 
 		this.getPhysicsCalculations().updateAccSpeed(cogL);
 		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;
-
 		if(!basisgeval && !deceleration){
 			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)>upperBoundary){
 				//TODO: goede waarde vinden vr value.
@@ -178,15 +173,18 @@ public class MoveToTarget_new {
 			}
 		}
 
-		//System.out.println("remafstand: " + this.getPhysicsCalculations().calculateDecelerationDistance(cogL, cogR, startFlyingTime));
+		//System.out.println("remafstand: " + this.getPhysicsCalculations().getDecelerationDistance());
 		//System.out.println("distance: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
 		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().getDecelerationDistance()) {
 			this.startDeceleration(cogL,cogR);
 			deceleration = true;
 		}
 
-		if(this.getPhysicsCalculations().getDistance(cogL, cogR)<=0.1){
-			this.hover();
+		if(this.getPhysicsCalculations().getSpeed()<=0.3 && deceleration){
+			this.hover(cogL);
+		}
+		else if(deceleration){
+			this.startDeceleration(cogL, cogR);
 		}
 
 	}
