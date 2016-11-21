@@ -9,21 +9,22 @@ public abstract class PIController {
 	private float currTime;
 	private float lastTime;
 	
-	public PIController(double Kp, double Ki, float currentTime){
+	public PIController(double Kp, double Ki){
 		this.Kp = Kp;
 		this.Ki = Ki;
-		this.currTime = currentTime;
 	}
 	
 	public void resetSetpoint(float setpoint){
 		this.setpoint = setpoint;
 		this.integraal = 0;
+		
 	}
 	
-	public Float calculateRate(float value){
+	public float calculateRate(float value, float currentTime){
+		this.currTime = currentTime;
 		if (this.lastTime == 0){
 			this.lastTime = this.currTime;
-			return null;
+			return 0;
 		}
 		float error = this.setpoint - value;
 		float dt = this.currTime - this.lastTime;

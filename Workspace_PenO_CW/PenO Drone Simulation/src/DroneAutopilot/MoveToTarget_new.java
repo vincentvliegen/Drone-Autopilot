@@ -3,6 +3,10 @@ package DroneAutopilot;
 import java.util.ArrayList;
 
 import DroneAutopilot.GUI.GUI;
+import DroneAutopilot.controllers.PitchController;
+import DroneAutopilot.controllers.RollController;
+import DroneAutopilot.controllers.ThrustController;
+import DroneAutopilot.controllers.YawController;
 import exceptions.EmptyPositionListException;
 import exceptions.SmallCircleException;
 import p_en_o_cw_2016.Camera;
@@ -12,6 +16,11 @@ public class MoveToTarget_new {
 
 	private final PhysicsCalculations_new physicsCalculations;
 	private final ImageCalculations_new imageCalculations;
+	private final YawController yawPI;
+	private final RollController rollPI;
+	private final PitchController pitchPI;
+	private final ThrustController thrustPI;
+
 	private Drone drone;
 	private float startFlyingTime;
 	private GUI gui;
@@ -25,6 +34,10 @@ public class MoveToTarget_new {
 		this.setDrone(drone);
 		this.imageCalculations = new ImageCalculations_new();
 		this.physicsCalculations = new PhysicsCalculations_new(drone);
+		this.yawPI = new YawController(10,0);
+		this.rollPI = new RollController(0,0);
+		this.pitchPI = new PitchController(0,0);
+		this.thrustPI = new ThrustController(0,0);
 	}
 
 	public void execute(int color){
@@ -86,6 +99,7 @@ public class MoveToTarget_new {
 		this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
 	}
 
+	boolean yawStarted;
 	public void targetVisible(ArrayList<int[]> leftCamera,
 			ArrayList<int[]> rightCamera) {
 		float[] cogLeft = this.findBestCenterOfGravity(leftCamera, this
@@ -94,17 +108,32 @@ public class MoveToTarget_new {
 				.getDrone().getRightCamera());
 		updateGUI(cogLeft, cogRight);
 
+		
 		if(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight)>=underBoundary 
 				&& this.getPhysicsCalculations().horizontalAngleDeviation(
 						cogLeft, cogRight) <= upperBoundary){
+			System.out.println("tussen 1 en -1");
+			this.yawStarted = false;
 			this.getDrone().setYawRate(0);
 			this.flyTowardsTarget(cogLeft, cogRight);
 		}else if (this.getPhysicsCalculations().horizontalAngleDeviation(
 				cogLeft, cogRight) <= upperBoundary) {
-			this.getDrone().setYawRate(-this.getDrone().getMaxYawRate());
+			if(!yawStarted){
+				this.yawPI.resetSetpoint(0);
+				this.yawStarted = true;
+			}else{
+				this.getDrone().setYawRate(this.yawPI.calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), this.getDrone().getCurrentTime()));
+			}
 		} else if (this.getPhysicsCalculations().horizontalAngleDeviation(
-				cogLeft, cogRight) >= upperBoundary)
-			this.getDrone().setYawRate(this.getDrone().getMaxYawRate());
+				cogLeft, cogRight) >= upperBoundary){
+			if(!yawStarted){
+				this.yawPI.resetSetpoint(0);
+				this.yawStarted = true;
+			}else{
+				System.out.println("output" + this.yawPI.calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), this.getDrone().getCurrentTime()));
+				this.getDrone().setYawRate(this.yawPI.calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), this.getDrone().getCurrentTime()));
+			}
+		}	
 	}
 
 	public void updateGUI(float[] centerOfGravityL, float[] centerOfGravityR) {
@@ -208,6 +237,22 @@ public class MoveToTarget_new {
 
 	public final ImageCalculations_new getImageCalculations() {
 		return this.imageCalculations;
+	}
+	
+	public final YawController getYawPI() {
+		return this.yawPI;
+	}
+	
+	public final RollController getRollPI() {
+		return this.rollPI;
+	}
+	
+	public final PitchController getPitchPI() {
+		return this.pitchPI;
+	}
+	
+	public final ThrustController getThrustPI() {
+		return this.thrustPI;
 	}
 
 	public void setDrone(Drone drone) {
