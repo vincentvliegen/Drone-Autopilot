@@ -34,7 +34,7 @@ public class MoveToTarget_new {
 		if (this.checkRoll()) {
 			this.checkcasespixelsfound(leftCameraList, rightCameraList);
 		} else {
-			System.out.println("Correct roll");
+			//System.out.println("Correct roll");
 			this.correctRoll();
 		}
 	}
@@ -154,12 +154,8 @@ public class MoveToTarget_new {
 	}
 
 	public void flyTowardsTarget(float[] cogL, float[] cogR) { 
-		if(!firstTimeFlyTowardsTarget){
-			this.setStartFlyingTime(this.getDrone().getCurrentTime());
-			firstTimeFlyTowardsTarget=true;
-		}
-		float partAngleView = this.getDrone().getLeftCamera()
-				.getVerticalAngleOfView()/10;
+		this.getPhysicsCalculations().updateAccSpeed(cogL);
+		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;
 
 		if(!basisgeval && !deceleration){
 			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)>upperBoundary){

@@ -1,7 +1,5 @@
 package DroneAutopilot;
 
-import java.util.ArrayList;
-
 import p_en_o_cw_2016.Drone;
 
 public class PhysicsCalculations_new {
@@ -10,19 +8,12 @@ public class PhysicsCalculations_new {
 	private float speed;
 	private float acceleration;
 	private float firstDistance;
-	private float doneDistance;
-	private float totalAcceleration;
-	private float totalSpeed;
-	private boolean firstTimeUpdate;
-	private float[] previousTimeAndDistance;
+	private float previousTime;
 	private float decelerationDistance;
 
 
 	public PhysicsCalculations_new(Drone drone){
 		this.setDrone(drone);
-		
-		//Zolang er geen bol in zicht is, zullen acceleration, speed en decelDist 0 geven
-		firstTimeUpdate = true;
 		setSpeed(0);
 		setAcceleration(0);
 		setDecelerationDistance(0);
@@ -70,47 +61,22 @@ public class PhysicsCalculations_new {
 	}
 
 	
-	// berekent acceleration, speed en deceleration distance. Elk van deze heeft een eigen getter en setter ter beschikking ipv de calculate...
-	// TODO deze functie moet in het begin opgeroepen worden (in moveToTarget) VOORDAT acceleratie, speed of decelerationsdistance wordt gebruikt
-	public void updateAccVelDist(float currentDistance){
-		float currentTime = this.getDrone().getCurrentTime();
-		if(firstTimeUpdate){
-			firstTimeUpdate = false;
-			firstDistance = currentDistance;
-		}else{
-			this.calculateAcceleration(currentTime,currentDistance);
-			this.calculateSpeed(currentTime);//speed wordt berekend na acceleration, omdat deze de huidige acceleration nodig heeft
-			this.calculateDecelerationDistance();//decelerationdist wordt berekend na speed en acceleration, omdat deze de huidige speed en acceleration nodig heeft
-		}
-		//nadat alle bovenstaande waardes zijn berekend, kunnen de vorige tijd en afstand opnieuw ingesteld worden voor volgende cyclus.
-		this.setPreviousTimeAndDistance(new float[] {currentTime,currentDistance});
-	}
-	
-	public void calculateSpeed(float currentTime){
-		float previousTime = this.getPreviousTimeAndDistance()[0];//t0
-		float acceleration = this.getAcceleration();//a
-		float previousSpeed = this.getSpeed();//v0
-		//v2 = a*(t1-t0) + v0
-		float speed =  acceleration * (currentTime-previousTime) + previousSpeed;
+	public void updateAccSpeed(float[] cog){
+		float v0 = getSpeed();
+		float T = this.getThrust(cog);
+		float D = this.getDrone().getDrag();
+		float pitch = this.getDrone().getPitch();
+		float cos = (float) Math.cos(Math.toRadians(this.verticalAngleDeviation(cog)-pitch));
+		float timeDev = this.getDrone().getCurrentTime() - this.getPreviousTime();
+		float acc = (float) ((T*Math.sin(Math.toRadians(pitch)) - D*v0*cos) / (cos*(D*timeDev + this.getDrone().getWeight())));
+		System.out.println("acc"+acc);
+		this.setAcceleration(acc);
+		float speed = acc*timeDev + v0;
+		System.out.println("speed" +speed);
 		this.setSpeed(speed);
+		this.setPreviousTime(this.getDrone().getCurrentTime());
 	}
 	
-	public void calculateAcceleration(float currentTime, float currentDistance){
-		float previousTime = this.getPreviousTimeAndDistance()[0]; //t0
-		float previousDistance = this.getPreviousTimeAndDistance()[1]; //x0
-		float previousSpeed = this.getSpeed(); //v0
-		float previousAcceleration = this.getAcceleration(); //a0
-		float acceleration = 0; //a
-		if(currentTime!=previousTime){
-			//a = 2*((x0-x1)-(v0*(t1-t0)))/((t1-t0)^2)
-			acceleration=(float) (2*((previousDistance-currentDistance)-(previousSpeed*(currentTime-previousTime)))/Math.pow((currentTime-previousTime), 2));
-		}else{
-			//a=a0
-			acceleration = previousAcceleration;
-		}
-		this.setAcceleration(acceleration);
-	}
-
 	public void calculateDecelerationDistance(){
 		//vertraag halfweg?
 		float decelerationDistance = firstDistance/2;		
@@ -126,8 +92,6 @@ public class PhysicsCalculations_new {
 		thrust = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() * 
 				Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / 
 				Math.cos(Math.toRadians(beta)));
-		//		System.out.println("thrust "+thrust);
-		//		System.out.println("pitch "+this.getDrone().getPitch());
 		return thrust;
 	}
 
@@ -165,12 +129,12 @@ public class PhysicsCalculations_new {
 		return acceleration;
 	}
 
-	public float[] getPreviousTimeAndDistance() {
-		return previousTimeAndDistance;
+	public float getPreviousTime() {
+		return previousTime;
 	}
 
-	public void setPreviousTimeAndDistance(float[] previousTimeDistance) {
-		this.previousTimeAndDistance = previousTimeDistance;
+	public void setPreviousTime(float previousTime) {
+		this.previousTime = previousTime;
 	}
 	
 	public void setDecelerationDistance(float distance){
