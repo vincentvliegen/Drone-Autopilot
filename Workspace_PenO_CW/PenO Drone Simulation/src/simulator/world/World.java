@@ -12,6 +12,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
+import simulator.movement.KeyboardMovement;
 import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
 import simulator.objects.WorldObject;
@@ -53,6 +54,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	int[] textureLeft = new int[1];
 	Physics physics;
 	private List<WorldObject> worldObjectsList = new ArrayList<>();
+	public static KeyboardMovement movement = new KeyboardMovement();
 
 	public World() {
 		addGLEventListener(this);
@@ -86,6 +88,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	protected abstract void setup();
 	protected abstract void handleCollision(WorldObject object, SimulationDrone drone);
+	protected abstract void draw();
 	
 	@Override
 	public abstract void display(GLAutoDrawable drawable);
@@ -248,8 +251,14 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return animator;
 	}
 	
+	public List<WorldObject> getWorldObjectList() {
+		return this.worldObjectsList;
+	}
+	
 	public void checkCollision(SimulationDrone drone) {
-		for (WorldObject currentObject: getSpheres()) {
+		List<WorldObject> copyList = new ArrayList();
+		copyList.addAll(getWorldObjectList());
+		for (WorldObject currentObject: copyList) {
 			if (currentObject == drone)
 				continue;
 			double[] objectPos = currentObject.getTranslate();
