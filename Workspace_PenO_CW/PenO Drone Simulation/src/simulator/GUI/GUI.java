@@ -12,6 +12,7 @@ import simulator.world.World12;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -50,7 +51,7 @@ public class GUI extends JPanel {
 
 
 		// #buttonsGeneralCameras
-		JPanel panelComboboxGeneralCameras = new JPanel(new GridLayout(2,2));
+		JPanel panelComboboxGeneralCameras = new JPanel(new GridLayout(2,1));
 		constraintsComboboxGeneralCameras = new GridBagConstraints();
 		constraintsComboboxGeneralCameras.insets = new Insets(1, 1, 1, 1);
 		constraintsComboboxGeneralCameras.gridy = 0;
@@ -62,9 +63,9 @@ public class GUI extends JPanel {
 			final int j =i;
 			listNameButtons.add("camera " + Integer.toString(j+1));
 		}
-		
+
 		JComboBox comboboxGeneralCameras = new JComboBox(listNameButtons.toArray());
-		
+
 		for(int i=0; i < world.getGeneralCameras().size(); i++){
 			final int j =i;
 			comboboxGeneralCameras.addActionListener(new ActionListener() {
@@ -81,14 +82,12 @@ public class GUI extends JPanel {
 		panelComboboxGeneralCameras.add(comboboxGeneralCameras);
 		add(panelComboboxGeneralCameras, constraintsComboboxGeneralCameras);
 
-
-
+		
 		// #buttonsDroneCameras
 		JPanel panelButtonDroneCameras = new JPanel(new GridLayout(1,2));
 		constraintsButtonDroneCamera = new GridBagConstraints();
 		constraintsButtonDroneCamera.insets = new Insets(1, 1, 1, 1);
 		constraintsButtonDroneCamera.gridy = 1;
-
 
 		buttonsDroneCameras.add(new JButton("Left dronecamera"));
 		buttonsDroneCameras.add(new JButton("Right dronecamera"));
@@ -188,7 +187,7 @@ public class GUI extends JPanel {
 		panelGravity.add(new JLabel("Gravity: "));
 
 		JSlider gravitySlider = new JSlider(JSlider.HORIZONTAL, 0, MAXGRAVITY, 981);
-		gravitySlider.setMajorTickSpacing(100);
+		gravitySlider.setMajorTickSpacing(200);
 		gravitySlider.setPaintTicks(true);
 
 		//Create the label table
@@ -261,7 +260,7 @@ public class GUI extends JPanel {
 					if (!slider.getValueIsAdjusting()) {
 						double value = slider.getValue();
 						((World12) world).setWindForceX((float)((value-5)/10));
-						//System.out.println("SLIDERX: " + value/10);
+						System.out.println("SLIDERX: " + value/10);
 
 					}
 				}
@@ -319,6 +318,8 @@ public class GUI extends JPanel {
 			add(panelWindSlidersZ, constraintsPanelWindSlidersZ);
 		}
 
+		//resize
+		this.setPreferredSize(new Dimension(390, 768));
 	}
 
 }
