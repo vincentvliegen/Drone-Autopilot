@@ -44,7 +44,7 @@ public class SimulationDrone implements Drone, WorldObject{
 	List<Double> rotateMatrix = new ArrayList<>();
 	List<Double> inverseRotateMatrix = new ArrayList<>();
 	private float cameraSeperation = 0;
-	private float radius = 0.25f;
+	private float radius;
 
 	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, double[] translate,
 			World world) {
@@ -59,6 +59,7 @@ public class SimulationDrone implements Drone, WorldObject{
 		generateDroneCameras();
 		DroneAutopilotFactory_new ap = new DroneAutopilotFactory_new();
 		this.autopilot = ap.create(this);
+		this.radius = (float) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2) + Math.pow(depth, 2));
 	}
 
 	// TODO afmetingen (voor collision detection)
