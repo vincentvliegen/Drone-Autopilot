@@ -124,25 +124,25 @@ public class SimulationDrone implements Drone, WorldObject{
 
 	public void createRotateMatrix() {
 		rotateMatrix.clear();
-		rotateMatrix.add(Math.cos(Math.toRadians(-yaw)) * Math.cos(Math.toRadians(-roll)));
+		rotateMatrix.add(Math.cos(Math.toRadians(-yaw)) * Math.cos(Math.toRadians(-pitch)));
 		rotateMatrix.add(
-				-Math.cos(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-roll)) * Math.cos(Math.toRadians(-pitch))
-						+ Math.sin(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-pitch)));
+				-Math.cos(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-pitch)) * Math.cos(Math.toRadians(roll))
+						+ Math.sin(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(roll)));
 		rotateMatrix
-				.add(Math.cos(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-roll)) * Math.sin(Math.toRadians(-pitch))
-						+ Math.sin(Math.toRadians(-yaw)) * Math.cos(Math.toRadians(-pitch)));
+				.add(Math.cos(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-pitch)) * Math.sin(Math.toRadians(roll))
+						+ Math.sin(Math.toRadians(-yaw)) * Math.cos(Math.toRadians(roll)));
 
-		rotateMatrix.add(Math.sin(Math.toRadians(-roll)));
-		rotateMatrix.add(Math.cos(Math.toRadians(-roll)) * Math.cos(Math.toRadians(-pitch)));
-		rotateMatrix.add(-Math.cos(Math.toRadians(-roll)) * Math.sin(Math.toRadians(-pitch)));
+		rotateMatrix.add(Math.sin(Math.toRadians(-pitch)));
+		rotateMatrix.add(Math.cos(Math.toRadians(-pitch)) * Math.cos(Math.toRadians(roll)));
+		rotateMatrix.add(-Math.cos(Math.toRadians(-pitch)) * Math.sin(Math.toRadians(roll)));
 
-		rotateMatrix.add(-Math.sin(Math.toRadians(-yaw)) * Math.cos(Math.toRadians(-roll)));
+		rotateMatrix.add(-Math.sin(Math.toRadians(-yaw)) * Math.cos(Math.toRadians(-pitch)));
 		rotateMatrix
-				.add(Math.sin(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-roll)) * Math.cos(Math.toRadians(-pitch))
-						+ Math.cos(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-pitch)));
+				.add(Math.sin(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-pitch)) * Math.cos(Math.toRadians(roll))
+						+ Math.cos(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(roll)));
 		rotateMatrix.add(
-				-Math.sin(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-roll)) * Math.sin(Math.toRadians(-pitch))
-						+ Math.cos(Math.toRadians(-yaw)) * Math.cos(Math.toRadians(-pitch)));
+				-Math.sin(Math.toRadians(-yaw)) * Math.sin(Math.toRadians(-pitch)) * Math.sin(Math.toRadians(roll))
+						+ Math.cos(Math.toRadians(-yaw)) * Math.cos(Math.toRadians(roll)));
 	}
 
 	// TODO afmetingen (voor collision detection)
@@ -210,7 +210,7 @@ public class SimulationDrone implements Drone, WorldObject{
 
 	private void createInverseRotate() {
 		inverseRotateMatrix.clear();
-		inverseRotateMatrix.add(Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(-roll)));
+		inverseRotateMatrix.add(Math.cos(Math.toRadians(-yaw)) * Math.cos(Math.toRadians(-roll)));
 		inverseRotateMatrix.add(Math.sin(Math.toRadians(-roll)));
 		inverseRotateMatrix.add(-Math.cos(Math.toRadians(-roll)) * Math.sin(Math.toRadians(yaw)));
 
@@ -236,15 +236,15 @@ public class SimulationDrone implements Drone, WorldObject{
 		float commonY = 0;
 
 		// left
-		float leftX = -getDroneWidth() / 2;
+		float leftX = getDroneWidth() / 2;
 		float leftZ = -getDroneDepth() / 2;
-		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX, commonY, leftZ - 100, 0, 1, 0, getWorld(), this,
+		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX+100, commonY, leftZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.LEFT);
 
 		// right
 		float rightX = getDroneWidth() / 2;
-		float rightZ = -getDroneDepth() / 2;
-		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX, commonY, rightZ - 100, 0, 1, 0, getWorld(), this,
+		float rightZ = getDroneDepth() / 2;
+		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX+100, commonY, rightZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.RIGHT);
 
 		// add to list in world
