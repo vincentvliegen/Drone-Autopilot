@@ -190,6 +190,7 @@ public class SimulationDrone implements Drone {
 		this.roll += rollRate*timePassed;
 		this.pitch += pitchRate*timePassed*Math.cos(Math.toRadians(roll));
 		
+		/*
 		 System.out.println("global pitch " + this.pitch);
 		 System.out.println("global yaw " + this.yaw);
 		 System.out.println("global roll " + this.roll);
@@ -198,7 +199,7 @@ public class SimulationDrone implements Drone {
 		 System.out.println("pitchRate " + this.pitchRate);
 		 System.out.println("yawRate " + this.yawRate);
 		 System.out.println("rollRate " + this.rollRate);
-		 
+		 */
 
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
