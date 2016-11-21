@@ -122,11 +122,7 @@ public class World11 extends World {
 	protected void setup() {
 		GL2 gl = getGL().getGL2();
 
-<<<<<<< HEAD
-		double[] translateSphere = { 0, 0, -10f };
-=======
 		double[] translateSphere = { 0f, 0, -10f };
->>>>>>> 5485acbbc5e190c78ebda5491436ab4775ec6f2a
 		float[] colorSphere = { 1f, 0f, 0f };
 		Sphere sphere1 = new Sphere(gl, .2f, 64, 64, colorSphere, translateSphere);
 		sphere1.draw();
