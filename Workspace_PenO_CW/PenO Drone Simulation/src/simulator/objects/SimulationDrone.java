@@ -192,6 +192,11 @@ public class SimulationDrone implements Drone, WorldObject{
 		this.roll += rollRate*timePassed;
 		this.pitch += pitchRate*timePassed*Math.cos(Math.toRadians(roll));
 		
+		//Wind rotation stuff
+		this.yaw += world.getWindRotationY()*timePassed;
+		this.roll += world.getWindRotationX()*timePassed;
+		this.pitch += world.getWindRotationZ()*timePassed;
+		
 		/*
 		 System.out.println("global pitch " + this.pitch);
 		 System.out.println("global yaw " + this.yaw);

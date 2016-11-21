@@ -55,6 +55,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	Physics physics;
 	private List<WorldObject> worldObjectsList = new ArrayList<>();
 	public static KeyboardMovement movement = new KeyboardMovement();
+	private int xWindRotation = 0;
+	private int yWindRotation = 0;
+	private int zWindRotation = 0;
 
 	public World() {
 		addGLEventListener(this);
@@ -253,6 +256,30 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	public List<WorldObject> getWorldObjectList() {
 		return this.worldObjectsList;
+	}
+	
+	public int getWindRotationX() {
+		return xWindRotation;
+	}
+	
+	public int getWindRotationY() {
+		return yWindRotation;
+	}
+	
+	public int getWindRotationZ() {
+		return zWindRotation;
+	}
+	
+	public void setWindRotationX(int value) {
+		xWindRotation = value;
+	}
+	
+	public void setWindRotationY(int value) {
+		yWindRotation = value;
+	}
+	
+	public void setWindRotationZ(int value) {
+		zWindRotation = value;
 	}
 	
 	public void checkCollision(SimulationDrone drone) {
