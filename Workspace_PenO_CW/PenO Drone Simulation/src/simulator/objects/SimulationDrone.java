@@ -19,7 +19,7 @@ import simulator.camera.DroneCameraPlace;
 import simulator.physics.Movement;
 import simulator.world.World;
 
-public class SimulationDrone implements Drone {
+public class SimulationDrone implements Drone, WorldObject{
 	private float pitch = 0;
 	private float roll = 0;
 	private float thrust = 0;
@@ -44,6 +44,7 @@ public class SimulationDrone implements Drone {
 	List<Double> rotateMatrix = new ArrayList<>();
 	List<Double> inverseRotateMatrix = new ArrayList<>();
 	private float cameraSeperation = 0;
+	private float radius = 0.25f;
 
 	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, double[] translate,
 			World world) {
@@ -68,7 +69,7 @@ public class SimulationDrone implements Drone {
 
 	// TODO afmetingen (voor collision detection)
 
-	public void drawDrone() {
+	public void draw() {
 
 		gl.glPushMatrix(); // store current transform, so we can undo the
 							// rotation
@@ -425,5 +426,9 @@ public class SimulationDrone implements Drone {
 
 	public float getThrust() {
 		return this.thrust;
+	}
+	
+	public float getRadius() {
+		return this.radius;
 	}
 }

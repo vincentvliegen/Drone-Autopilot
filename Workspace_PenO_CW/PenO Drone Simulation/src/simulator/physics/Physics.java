@@ -3,6 +3,7 @@ package simulator.physics;
 import java.util.*;
 
 import simulator.objects.SimulationDrone;
+import simulator.objects.Sphere;
 import simulator.world.World;
 
 public class Physics {
@@ -37,6 +38,7 @@ public class Physics {
 		for (SimulationDrone currentDrone: world.getDrones()) {
 			float[] acceleration = getAcceleration(currentDrone);
 			currentDrone.getMovement().calculateMovement(timePassed, acceleration);
+			world.checkCollision(currentDrone);
 			
 			//Random wind rotation
 //			for (Force currentForce : forces) {
@@ -77,6 +79,5 @@ public class Physics {
 		acceleration[2] = zAcceleration;
 		return acceleration;
 	}
-	
 	
 }

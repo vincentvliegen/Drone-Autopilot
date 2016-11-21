@@ -74,42 +74,42 @@ public class KeyboardMovement implements KeyListener{
 			rotateLeft = false;
 	}
 	
-	public void update(){
+	public void update(float dt){
 		if(right){
-			x -= 1;
+			x -= 1*dt;
 		}
 		if(left){
-			x += 1;
+			x += 1*dt;
 		}
 		if(up){
-			y -= 1;
+			y -= 1*dt;
 		}
 		if(down){
-			y += 1;
+			y += 1*dt;
 		}
 		if(front){
-			z -= 1;
+			z -= 1*dt;
 		}
 		if(back){
-			z += 1;
+			z += 1*dt;
 		}
 		if(rotateUp){
-			 rotateX -=10;
+			 rotateX -=10*dt;
 		}
 		if(rotateDown){
-			rotateX +=10;
+			rotateX +=10*dt;
 		}
 		if(rotateRight){
-			rotateY += 10;
+			rotateY += 10*dt;
 		}
 		if(rotateLeft){
-			rotateY -= 10;
+			rotateY -= 10*dt;
 		}
 		if(rotateZ1){
-			rotateZ += 10;
+			rotateZ += 10*dt;
 		}
 		if(rotateZ2){
-			rotateZ -= 10;
+			rotateZ -= 10*dt;
 		}
 		
 	}

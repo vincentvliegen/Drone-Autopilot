@@ -103,7 +103,7 @@ public class World11 extends World {
 
 		// translate camera.
 		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
-			movement.update();
+			movement.update((float)checkTimePassed());
 			gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
 			gl.glRotated(movement.getRotateX(), 1, 0, 0);
 			gl.glRotated(movement.getRotateY(), 0, 1, 0);
@@ -113,11 +113,11 @@ public class World11 extends World {
 		// TODO werk evt met objects ipv drones en spheres apart
 
 		for (SimulationDrone drone : getDrones()) {
-			drone.drawDrone();
+			drone.draw();
 		}
 
 		for (Sphere sphere : getSpheres()) {
-			sphere.drawSphere();
+			sphere.draw();
 		}
 
 	}
@@ -129,15 +129,21 @@ public class World11 extends World {
 		double[] translateSphere = { 0, 0, -10f };
 		float[] colorSphere = { 1f, 0f, 0f };
 		Sphere sphere1 = new Sphere(gl, .2f, 64, 64, colorSphere, translateSphere);
-		sphere1.drawSphere();
+		sphere1.draw();
 		addSphere(sphere1);
 
 		double[] translateDrone = { 0, 0, 0 };
 		float[] colorDrone = { 0f, 0f, 1f };
 		SimulationDrone drone1 = new SimulationDrone(gl, .05f, .1f, .1f, colorDrone, translateDrone, this);
 		addSimulationDrone(drone1);
-		drone1.drawDrone();
+		drone1.draw();
 
+	}
+
+	@Override
+	protected void handleCollision() {
+		// Nothing happens with collision
+		
 	}
 
 }

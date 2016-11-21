@@ -9,6 +9,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
+
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.objects.SimulationDrone;
@@ -80,6 +81,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	}
 	
 	protected abstract void setup();
+	protected abstract void handleCollision();
 	
 	@Override
 	public abstract void display(GLAutoDrawable drawable);
@@ -242,4 +244,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return animator;
 	}
 	
+	public void checkCollision(SimulationDrone drone) {
+		for (Sphere currentSphere: getSpheres()) {
+			double[] spherePos = currentSphere.getTranslate();
+			double[] dronePos = drone.getTranslate();
+			double distance = Math.sqrt(Math.pow(spherePos[0] - dronePos[0], 2) + Math.pow(spherePos[1] - dronePos[1], 2) + Math.pow(spherePos[2] - dronePos[2], 2));
+			if (distance <= (currentSphere.getRadius() + drone.getRadius()))
+				handleCollision();
+		}
+	}
 }

@@ -3,7 +3,7 @@ package simulator.objects;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-public class Sphere {
+public class Sphere implements WorldObject{
 	
 	GL2 gl;
 	float radius;
@@ -27,7 +27,7 @@ public class Sphere {
 		this(gl, radius, slices, stacks, color, standardTranslate);
 	}
 	
-	public void drawSphere(){
+	public void draw(){
 		GLUT glut = new GLUT();
 		gl.glPushMatrix();
 		gl.glColor3f(color[0], color[1], color[2]);
@@ -50,4 +50,7 @@ public class Sphere {
 		return this.translate;
 	}
 	
+	public float getRadius() {
+		return this.radius;
+	}
 }
