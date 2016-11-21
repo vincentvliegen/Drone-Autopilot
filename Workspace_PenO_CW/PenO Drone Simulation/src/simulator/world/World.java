@@ -42,7 +42,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	/** The OpenGL animator. */
 	private FPSAnimator animator;
 	private GLAutoDrawable drawable;
-	public GeneralCamera currentCamera;
+	private GeneralCamera currentCamera;
 	int[] colorRenderbufferRight = new int[1];
 	int[] depthRenderbufferRight = new int[1];
 	int[] textureRight = new int[1];
@@ -78,6 +78,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public void updateTimePassed() {
 		this.timePassed += (System.nanoTime() - getLastTime())*Math.pow(10, -9);
 	}
+	
+	protected abstract void setup();
 	
 	@Override
 	public abstract void display(GLAutoDrawable drawable);
@@ -157,7 +159,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		//set to default buffer
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
-		
+		//TODO op de juiste plaats?
+		setup();
 		
 		// Start animator.
 		gl.setSwapInterval(1);
