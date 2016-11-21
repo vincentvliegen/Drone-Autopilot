@@ -34,7 +34,7 @@ public class DroneAutopilot_new implements Autopilot{
 		if (this.getMoveToTarget().getGUI().redOrbEnabled) {
 			this.getMoveToTarget().execute(255);
 			}else{
-				this.getMoveToTarget().hover();
+				this.getDrone().setThrust(Math.abs(this.getDrone().getGravity()*this.getDrone().getWeight()));;
 			}
 		}
 	

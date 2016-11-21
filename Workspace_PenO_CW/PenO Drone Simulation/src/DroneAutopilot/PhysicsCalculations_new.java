@@ -69,21 +69,37 @@ public class PhysicsCalculations_new {
 		float cos = (float) Math.cos(Math.toRadians(this.verticalAngleDeviation(cog)-pitch));
 		float timeDev = this.getDrone().getCurrentTime() - this.getPreviousTime();
 		float acc = (float) ((T*Math.sin(Math.toRadians(pitch)) - D*v0*cos) / (cos*(D*timeDev + this.getDrone().getWeight())));
-		System.out.println("acc"+acc);
+		//System.out.println("acc"+acc);
+		this.calculateDecelerationDistance(timeDev);
 		this.setAcceleration(acc);
 		float speed = acc*timeDev + v0;
-		System.out.println("speed" +speed);
+		//System.out.println("speed" +speed);
 		this.setSpeed(speed);
 		this.setPreviousTime(this.getDrone().getCurrentTime());
 	}
 	
-	public void calculateDecelerationDistance(){
+	public void calculateDecelerationDistance(float timeDev){
 		//vertraag halfweg?
-		float decelerationDistance = firstDistance/2;		
+//		float decelerationDistance = firstDistance/2;		
 //				(float) (Math.pow(this.getSpeed(), 2)/
 //				(2*this.getAcceleration()) // hier moet er nog een bepaalde distance bij zodanig dat de tijd vh pitchen gecompenseerd wordt.
 //				+3);
-		this.setDecelerationDistance(decelerationDistance);
+		float beta = -this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;
+		float tegenpitch = -this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;
+		float pitch = this.getDrone().getPitch();
+		float pitchrate = this.getDrone().getMaxPitchRate();
+		float speed = this.getSpeed();
+		float T = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() * 
+				Math.cos(Math.toRadians(beta - tegenpitch)) / 
+				Math.cos(Math.toRadians(beta)));
+		float D = this.getDrone().getDrag();
+		float cos = (float) Math.cos(Math.toRadians(beta-tegenpitch));
+		float acc = (float) ((T*Math.sin(Math.toRadians(tegenpitch)) - D*speed*cos) / (cos*(D*timeDev + this.getDrone().getWeight())));
+		if (acc!= 0){
+			float distance = (float) (2*pitch/pitchrate*speed + (Math.pow(0.1, 2)-Math.pow(speed, 2))/(2*acc) + tegenpitch/pitchrate*0.1);
+			System.out.println("rem" + distance);
+			this.setDecelerationDistance(distance);
+		}
 	}
 
 	public float getThrust(float[] cog) {
