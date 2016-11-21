@@ -161,7 +161,7 @@ public class GeneralCamera {
 	
 		// Perspective.
 		float widthHeightRatio = (float) width / (float) height;
-		glu.gluPerspective(45, widthHeightRatio, 1, 500);
+		glu.gluPerspective(45, widthHeightRatio, 0.01, 500);
 		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(),
 				getUpZ());
 	
