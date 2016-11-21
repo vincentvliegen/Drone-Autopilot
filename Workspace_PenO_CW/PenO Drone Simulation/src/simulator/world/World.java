@@ -58,6 +58,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private int xWindRotation = 0;
 	private int yWindRotation = 0;
 	private int zWindRotation = 0;
+	private int xWindSpeed = 0;
+	private int yWindSpeed = 0;
+	private int zWindSpeed = 0;
 
 	public World() {
 		addGLEventListener(this);
@@ -280,6 +283,30 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	public void setWindRotationZ(int value) {
 		zWindRotation = value;
+	}
+	
+	public int getWindSpeedX() {
+		return xWindSpeed;
+	}
+	
+	public int getWindSpeedY() {
+		return yWindSpeed;
+	}
+	
+	public int getWindSpeedZ() {
+		return zWindSpeed;
+	}
+	
+	public void setWindSpeedX(int value) {
+		xWindSpeed = value;
+	}
+	
+	public void setWindSpeedY(int value) {
+		yWindSpeed = value;
+	}
+	
+	public void setWindSpeedZ(int value) {
+		zWindSpeed = value;
 	}
 	
 	public void checkCollision(SimulationDrone drone) {
