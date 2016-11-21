@@ -22,10 +22,11 @@ public class MoveToTarget_new {
 	private final ThrustController thrustPI;
 
 	private Drone drone;
-	private float startFlyingTime;
 	private GUI gui;
 	private boolean basisgeval;
 	private boolean deceleration;
+	private boolean yawStarted;
+	private boolean rollStarted;
 
 	private static final float underBoundary = -0.2f;
 	private static final float upperBoundary = 0.2f;
@@ -35,7 +36,7 @@ public class MoveToTarget_new {
 		this.imageCalculations = new ImageCalculations_new();
 		this.physicsCalculations = new PhysicsCalculations_new(drone);
 		this.yawPI = new YawController(7,4);
-		this.rollPI = new RollController(0,0);
+		this.rollPI = new RollController(1,0);
 		this.pitchPI = new PitchController(0,0);
 		this.thrustPI = new ThrustController(0,0);
 	}
@@ -43,56 +44,12 @@ public class MoveToTarget_new {
 	public void execute(int color){
 		ArrayList<int[]> leftCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getLeftCamera(), color);
 		ArrayList<int[]> rightCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getRightCamera(), color);
-		if (this.checkRoll()) {
-			this.checkcasespixelsfound(leftCameraList, rightCameraList);
-		} else {
-			//System.out.println("Correct roll");
-			this.correctRoll();
-		}
-	}
-
-	public boolean checkRoll() {
-		//TODO Controller
-		if (this.getDrone().getRoll() <= upperBoundary
-				&& this.getDrone().getRoll() >= underBoundary) {
-			this.getDrone().setRollRate(0);
-			this.rollStarted = false;
-			return true;
-		}
-		return false;
-	}
-
-	boolean rollStarted;
-	public void correctRoll() {
-		this.getDrone().setPitchRate(0);
-		this.getDrone().setYawRate(0);
-		//TODO thrust?
-		this.getDrone().setThrust(
-				Math.min(this.getDrone().getMaxThrust(),
-						Math.abs(this.getDrone().getGravity())
-						* this.getDrone().getWeight()));
-		//TODO check waarden output + of -
-		if (this.getDrone().getRoll() > upperBoundary){
-			if(!rollStarted){
-				this.rollPI.resetSetpoint(0);
-				this.rollStarted = true;
-			}else{
-				float output =-this.rollPI.calculateRate(this.getDrone().getRoll(), this.getDrone().getCurrentTime());
-				this.getDrone().setRollRate(Math.max(output, -this.getDrone().getMaxYawRate()));
-			}
-		}else if (this.getDrone().getRoll() < underBoundary){
-			if(!rollStarted){
-				this.rollPI.resetSetpoint(0);
-				this.rollStarted = true;
-			}else{
-				float output =-this.rollPI.calculateRate(this.getDrone().getRoll(), this.getDrone().getCurrentTime());
-				this.getDrone().setRollRate(Math.min(output, this.getDrone().getMaxYawRate()));
-			}
-		}
+		this.checkcasespixelsfound(leftCameraList, rightCameraList);
 	}
 
 	public void checkcasespixelsfound(ArrayList<int[]> leftcamera,
 			ArrayList<int[]> rightcamera) {
+		this.correctRoll();
 		if (leftcamera.isEmpty() && rightcamera.isEmpty())
 			noTargetFound();
 		else if (!leftcamera.isEmpty() && rightcamera.isEmpty())
@@ -115,8 +72,32 @@ public class MoveToTarget_new {
 	public void rightCameraFoundTarget() {
 		this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
 	}
+	
+	public void correctRoll() {
+		if (this.getDrone().getRoll() <= upperBoundary && this.getDrone().getRoll() >= underBoundary) {
+			this.getDrone().setRollRate(0);
+			this.setRollStarted(false);
+		}
+		else if (this.getDrone().getRoll() > upperBoundary){
+			if(!this.getRollStarted()){
+				this.getRollPI().resetSetpoint(0);
+				this.setRollStarted(true);
+			}else{
+				float output =this.getRollPI().calculateRate(this.getDrone().getRoll(), this.getDrone().getCurrentTime());
+				this.getDrone().setRollRate(Math.max(output, -this.getDrone().getMaxYawRate()));
+			}
+		}
+		else if (this.getDrone().getRoll() < underBoundary){
+			if(!this.getRollStarted()){
+				this.getRollPI().resetSetpoint(0);
+				this.setRollStarted(true);
+			}else{
+				float output =this.getRollPI().calculateRate(this.getDrone().getRoll(), this.getDrone().getCurrentTime());
+				this.getDrone().setRollRate(Math.min(output, this.getDrone().getMaxYawRate()));
+			}
+		}
+	}
 
-	boolean yawStarted;
 	public void targetVisible(ArrayList<int[]> leftCamera,
 			ArrayList<int[]> rightCamera) {
 		float[] cogLeft = this.findBestCenterOfGravity(leftCamera, this
@@ -124,31 +105,31 @@ public class MoveToTarget_new {
 		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this
 				.getDrone().getRightCamera());
 		updateGUI(cogLeft, cogRight);
-
-		System.out.println(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight));
+		this.correctYaw(cogLeft, cogRight);
+	}
+	
+	public void correctYaw(float[] cogLeft, float[] cogRight){
 		if(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight)>=underBoundary 
-				&& this.getPhysicsCalculations().horizontalAngleDeviation(
-						cogLeft, cogRight) <= upperBoundary){
-			System.out.println("tussen 1 en -1");
-			this.yawStarted = false;
+				&& this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) <= upperBoundary){
+			this.setYawStarted(false);
 			this.getDrone().setYawRate(0);
 			this.flyTowardsTarget(cogLeft, cogRight);
-		}else if (this.getPhysicsCalculations().horizontalAngleDeviation(
-				cogLeft, cogRight) < upperBoundary) {
-			if(!yawStarted){
-				this.yawPI.resetSetpoint(0);
-				this.yawStarted = true;
+		}
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) < upperBoundary) {
+			if(!this.getYawStarted()){
+				this.getYawPI().resetSetpoint(0);
+				this.setYawStarted(true);
 			}else{
-				float output =-this.yawPI.calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), this.getDrone().getCurrentTime());
+				float output =-this.getYawPI().calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), this.getDrone().getCurrentTime());
 				this.getDrone().setYawRate(Math.max(output, -this.getDrone().getMaxYawRate()));
 			}
-		} else if (this.getPhysicsCalculations().horizontalAngleDeviation(
-				cogLeft, cogRight) > upperBoundary){
-			if(!yawStarted){
-				this.yawPI.resetSetpoint(0);
-				this.yawStarted = true;
+		} 
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) > upperBoundary){
+			if(!this.getYawStarted()){
+				this.getYawPI().resetSetpoint(0);
+				this.setYawStarted(true);
 			}else{
-				float output = -this.yawPI.calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), this.getDrone().getCurrentTime());
+				float output = -this.getYawPI().calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), this.getDrone().getCurrentTime());
 				this.getDrone().setYawRate(Math.min(output, this.getDrone().getMaxYawRate()));
 			}
 		}	
@@ -170,7 +151,6 @@ public class MoveToTarget_new {
 			} catch (EmptyPositionListException e1) {
 				e1.printStackTrace();
 			}
-
 		} catch (EmptyPositionListException e) {
 			e.printStackTrace();
 		}
@@ -281,14 +261,6 @@ public class MoveToTarget_new {
 		return this.drone;
 	}
 
-	public float getStartFlyingTime() {
-		return startFlyingTime;
-	}
-
-	public void setStartFlyingTime(float time) {
-		this.startFlyingTime = time;
-	}
-
 	public void setGUI(GUI gui) {
 		this.gui = gui;
 	}
@@ -297,7 +269,20 @@ public class MoveToTarget_new {
 		return this.gui;
 	}
 
-
-
+	public void setYawStarted(boolean isStarted){
+		this.yawStarted = isStarted;
+	}
+	
+	public boolean getYawStarted(){
+		return this.yawStarted;
+	}
+	
+	public void setRollStarted(boolean isStarted){
+		this.rollStarted = isStarted;
+	}
+	
+	public boolean getRollStarted(){
+		return this.rollStarted;
+	}
 
 }
