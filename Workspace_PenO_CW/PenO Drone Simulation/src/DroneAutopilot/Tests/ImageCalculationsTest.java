@@ -135,6 +135,15 @@ public class ImageCalculationsTest{
 		calc.getCOG(pixellist1);
 	}
     
+	@Test
+	public void checkAllRedTest(){
+		assertFalse(calc.checkIfAllRed(camera1));
+		assertFalse(calc.checkIfAllRed(camera2));
+		assertFalse(calc.checkIfAllRed(camera3));
+		assertFalse(calc.checkIfAllRed(camera4));
+		assertFalse(calc.checkIfAllRed(camera5));
+		assertTrue(calc.checkIfAllRed(camera6));
+	}
 	
 	@Test
 	public void indexToCoordinatesTest(){

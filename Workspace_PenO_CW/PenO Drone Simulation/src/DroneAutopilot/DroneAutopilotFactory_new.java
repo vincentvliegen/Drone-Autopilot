@@ -4,7 +4,7 @@ import DroneAutopilot.GUI.GUI;
 import p_en_o_cw_2016.AutopilotFactory;
 import p_en_o_cw_2016.Drone;
 
-public class DroneAutopilotFactory implements AutopilotFactory{
+public class DroneAutopilotFactory_new implements AutopilotFactory{
 
 	/** Called by the testbed in the AWT/Swing GUI thread to create and start an Autopilot.
     At this point, the drone exists in the virtual world, with zero pitch and roll. The
@@ -14,8 +14,8 @@ public class DroneAutopilotFactory implements AutopilotFactory{
     The Drone and Camera objects are not thread-safe; calls of methods of these
     objects should occur only in the AWT/Swing GUI thread. */
 	@Override
-	public DroneAutopilot create(Drone drone) {		
-		DroneAutopilot autopilot = new DroneAutopilot(drone);
+	public DroneAutopilot_new create(Drone drone) {		
+		DroneAutopilot_new autopilot = new DroneAutopilot_new(drone);
 		GUI gui = new GUI();
 		autopilot.getMoveToTarget().setGUI(gui);
 		drone.setThrust(Math.abs(drone.getGravity()*drone.getWeight()));
