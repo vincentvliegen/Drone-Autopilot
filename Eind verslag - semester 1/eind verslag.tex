@@ -1,0 +1,148 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                                                                     %%%
+%%%   LaTeX template voor het verslag van P&O: Computerwetenschappen.   %%%
+%%%                                                                     %%%
+%%%   Opties:                                                           %%%
+%%%     tt      Tussentijdsverslag                                      %%%
+%%%     eind    Eindverslag                                             %%%
+%%%                                                                     %%%
+%%%   3 oktober 2016                                   %%%
+%%%   Versie 1.4                                                        %%%
+%%%                                                                     %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[eind]{penoverslag}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath,bm}
+
+
+%%% PACKAGES %%%
+
+
+
+\begin{document}
+
+% == TITELPAGINA == %
+\team{Zilver}
+\year{2016-2017}
+\members{Bram Vandendriessche (Co\"ordinator)\\
+         Arne Vlietinck (Secretaris)\\
+         Matthias Van der Heyden \\
+         Jef Versyck\\
+         Vincent Vliegen\\
+         Laura Vranken}
+\maketitlepage
+
+
+% == SAMENVATTING == %
+\begin{abstract}
+%\input{abstract.tex}
+
+
+\end{abstract}
+
+
+% == INHOUDSOPGAVE == %
+\tableofcontents\newpage
+
+%Dit zal dan verwijderd worden, wanneer het verslag volledig is.
+%\input{algemeneRichtlijnen.tex}
+
+
+\rm 
+
+% == INLEIDING == %
+\section*{Inleiding}
+\label{sec:Inleiding}
+%\input{inleiding.tex}
+
+
+% == Beschrijving materiaal en bouw drone == %
+\section{Ontwerp}
+\label{sec:Ontwerp}
+%\input{ontwerp.tex}
+
+
+\subsection{Drone Autopilot}
+%\input{ontwerpDroneAutopilot.tex}
+
+
+\subsection{Virtual Testbed}
+%\input{ontwerpVirtualTestbed.tex}
+
+
+% == ALGORITMES == %
+\section{Algoritmes}
+\label{sec:Algoritmes}
+%\input{algoritmes.tex}
+
+\subsection{Drone Autopilot}
+\label{sec:AlgoritmesAutopilot}
+%\input{algoritmesDroneAutopilot.tex}
+
+
+\subsection{Virtual Testbed}
+%\input{algoritmesVirtualTestbed.tex}
+
+
+% == SOFTWARE == %
+\section{Software}
+\label{sec:Software}
+%\input{software.tex}
+
+
+\subsection{Drone Autopilot}
+%\input{softwareDroneAutopilot.tex}
+
+
+\subsection{Virtual Testbed}
+%\input{softwareVirtualTestbed.tex}
+
+% == GUI == %
+\section{GUI}
+\label{sec:GUI}
+%\input{gui.tex}
+
+
+\subsection{Drone Autopilot}
+%\input{guiDroneAutopilot.tex}
+
+
+\subsection{Virtual Testbed}
+%\input{guiVirtualTestbed.tex}
+
+
+% == Testen == %
+\section{Testen}
+\label{sec:Testen}
+%\input{testen.tex}
+
+
+\subsection{Drone Autopilot}
+%\input{testenDroneAutopilot.tex}
+
+
+\subsection{Virtual Testbed}
+%\input{testenVirtualTestbed.tex}
+
+% == BESLUIT == %
+\section*{Besluit}
+\label{sec:Besluit}
+%\input{besluit.tex}
+
+% == REFERENTIES == %
+\bibliographystyle{siam}
+\bibliography{references.bib}
+
+
+% == APPENDICES == %
+%\newpage\makeappendix
+
+
+%\section{MOET NOG WEG}
+%\input{finaleOpmerkingen.tex}
+
+\end{document}
