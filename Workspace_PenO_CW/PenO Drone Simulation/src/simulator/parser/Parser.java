@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import simulator.objects.Sphere;
@@ -83,7 +84,12 @@ public class Parser {
 	public void parse() throws IOException{
 
 
-		//TODO kan fileLocation met relatief path?
+		
+//		print working dir
+//		System.out.println(System.getProperty("user.dir"));
+	
+		
+		
 		FileReader input = new FileReader("inputFile.txt");
 		BufferedReader bufRead = new BufferedReader(input);
 		String myLine = null;
@@ -109,6 +115,7 @@ public class Parser {
 		myLine = bufRead.readLine();
 		splitArray = myLine.split(" ");
 		int splitArrayLength = splitArray.length;
+		System.out.println(Arrays.toString(splitArray));
 		arrayXValues = new float[splitArrayLength];
 		arrayXTimes = new float[splitArrayLength];				
 		for(int i = 0; i < splitArrayLength; i++) {
@@ -191,6 +198,8 @@ public class Parser {
 				windRotationZTimes[i/2]=Float.parseFloat(splitArray[i]);
 			}
 			else{
+				System.out.println(i);
+
 				windRotationZValues[(i-1)/2]=Float.parseFloat(splitArray[i]);
 			}
 		}

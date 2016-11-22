@@ -16,6 +16,7 @@ import simulator.movement.KeyboardMovement;
 import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
 import simulator.objects.WorldObject;
+import simulator.parser.Parser;
 import simulator.physics.Physics;
 
 @SuppressWarnings("serial")
@@ -36,6 +37,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private double timePassed = 0;
 	private double currentTime = 0;
 	private GLU glu;
+	
+	//TODO verplaatsen
+	private Parser parser = new Parser(this);
+	public Parser getParser() {
+		return parser;
+	}
+	
 	
 	private int[] framebufferRight = new int[1];
 	private int[] framebufferLeft = new int[1];
