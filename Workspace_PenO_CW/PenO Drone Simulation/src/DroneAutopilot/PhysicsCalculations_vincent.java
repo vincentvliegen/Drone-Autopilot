@@ -59,7 +59,7 @@ public class PhysicsCalculations_vincent {
 		
 	// vanaf dat de afstand bepaald is, kunnen volgende waardes berekend worden
 		if(isFirstDistanceNeeded()){
-			setFirstDistanceNeeded(false);;
+			setFirstDistanceNeeded(false);
 			setFirstDistance(this.getDistance());
 		}else{
 			this.calculateAcceleration();//heeft distance nodig
