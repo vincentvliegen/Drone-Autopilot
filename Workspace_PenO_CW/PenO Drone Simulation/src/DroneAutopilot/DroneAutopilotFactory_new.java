@@ -1,6 +1,7 @@
 package DroneAutopilot;
 
 import DroneAutopilot.GUI.GUI;
+import DroneAutopilot.GUI.GraphPI;
 import p_en_o_cw_2016.AutopilotFactory;
 import p_en_o_cw_2016.Drone;
 
@@ -18,6 +19,8 @@ public class DroneAutopilotFactory_new implements AutopilotFactory{
 		DroneAutopilot_new autopilot = new DroneAutopilot_new(drone);
 		GUI gui = new GUI();
 		autopilot.getMoveToTarget().setGUI(gui);
+		//GraphPI graphPI = new GraphPI();
+		//autopilot.getMoveToTarget().setGraphPI(graphPI);
 		drone.setThrust(Math.abs(drone.getGravity()*drone.getWeight()));
 		drone.setPitchRate(0);
 		drone.setYawRate(0);

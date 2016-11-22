@@ -3,6 +3,7 @@ package DroneAutopilot;
 import java.util.ArrayList;
 
 import DroneAutopilot.GUI.GUI;
+import DroneAutopilot.GUI.GraphPI;
 import DroneAutopilot.controllers.PitchController;
 import DroneAutopilot.controllers.RollController;
 import DroneAutopilot.controllers.ThrustController;
@@ -23,6 +24,7 @@ public class MoveToTarget_new {
 
 	private Drone drone;
 	private GUI gui;
+	private GraphPI graphPI;
 	private boolean basisgeval;
 	private boolean deceleration;
 	private boolean yawStarted;
@@ -121,6 +123,7 @@ public class MoveToTarget_new {
 				this.setYawStarted(true);
 			}else{
 				float output =-this.getYawPI().calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), this.getDrone().getCurrentTime());
+				//this.updategraphPI((int) this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), (int) this.getDrone().getCurrentTime());
 				this.getDrone().setYawRate(Math.max(output, -this.getDrone().getMaxYawRate()));
 			}
 		} 
@@ -130,6 +133,7 @@ public class MoveToTarget_new {
 				this.setYawStarted(true);
 			}else{
 				float output = -this.getYawPI().calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight), this.getDrone().getCurrentTime());
+				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight)*10));
 				this.getDrone().setYawRate(Math.min(output, this.getDrone().getMaxYawRate()));
 			}
 		}	
@@ -137,6 +141,10 @@ public class MoveToTarget_new {
 
 	public void updateGUI(float[] centerOfGravityL, float[] centerOfGravityR) {
 		this.getGUI().update(this.getPhysicsCalculations().getDistance(centerOfGravityL, centerOfGravityR));
+	}
+	
+	public void updategraphPI(int x, int y){
+		this.getGraphPI().update(x,y);
 	}
 
 	public float[] findBestCenterOfGravity(ArrayList<int[]> pixelsFound,
@@ -267,6 +275,14 @@ public class MoveToTarget_new {
 
 	public GUI getGUI() {
 		return this.gui;
+	}
+	
+	public void setGraphPI(GraphPI graphPID) {
+		this.graphPI = graphPID;
+	}
+
+	public GraphPI getGraphPI() {
+		return this.graphPI;
 	}
 
 	public void setYawStarted(boolean isStarted){
