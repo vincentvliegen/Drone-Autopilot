@@ -29,6 +29,7 @@ public class MoveToTarget_new {
 	private boolean deceleration;
 	private boolean yawStarted;
 	private boolean rollStarted;
+	private boolean pitchStarted;
 
 	private static final float underBoundary = -0.2f;
 	private static final float upperBoundary = 0.2f;
@@ -39,7 +40,7 @@ public class MoveToTarget_new {
 		this.physicsCalculations = new PhysicsCalculations_new(drone);
 		this.yawPI = new YawController(7,4);
 		this.rollPI = new RollController(1,0);
-		this.pitchPI = new PitchController(0,0);
+		this.pitchPI = new PitchController(1,0);
 		this.thrustPI = new ThrustController(0,0);
 	}
 
@@ -199,10 +200,19 @@ public class MoveToTarget_new {
 				basisgeval=true;
 			}
 		}else if(basisgeval && !deceleration){
+			//TODO met wind rekening houden dat die wordt weggeblazen dus ook terug pitch tegensturen als > angle
+			//TODO plus klein intervalletje rond partAngleView want anders nooit in het stop geval.
 			if(this.getDrone().getPitch() < partAngleView){
-				this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate()/2);
-				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
+				if(!this.getPitchStarted()){
+					this.getPitchPI().resetSetpoint(partAngleView);
+					this.setPitchStarted(true);
+				}else{
+					float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
+					this.getDrone().setPitchRate(Math.min(output, this.getDrone().getMaxPitchRate()));
+					this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
+				}
 			}else{
+				this.setPitchStarted(false);
 				this.getDrone().setPitchRate(0);
 				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 			}
@@ -299,6 +309,14 @@ public class MoveToTarget_new {
 	
 	public boolean getRollStarted(){
 		return this.rollStarted;
+	}
+
+	public void setPitchStarted(boolean isStarted){
+		this.pitchStarted = isStarted;
+	}
+	
+	public boolean getPitchStarted(){
+		return this.pitchStarted;
 	}
 
 }
