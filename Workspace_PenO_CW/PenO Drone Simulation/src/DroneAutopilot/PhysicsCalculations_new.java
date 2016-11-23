@@ -20,18 +20,24 @@ public class PhysicsCalculations_new {
 	}
 
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
+		float distance=0;
+		try{
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
-		float distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
+		distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
+		}
+		catch(IllegalArgumentException e){
+			e.printStackTrace();
+		}
 		return distance;
 	}
 
 	public float getDepth(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth=0;
-		try{
 			depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
 			depth = Math.abs(depth);
-		} catch(IllegalArgumentException e){
-		}
+			if(Float.isNaN(depth) || Float.isInfinite(depth)){
+				throw new IllegalArgumentException();
+			}
 		return depth;
 	}
 
@@ -51,8 +57,13 @@ public class PhysicsCalculations_new {
 	}
 
 	public float horizontalAngleDeviation(float[] centerOfGravityL, float[] centerOfGravityR){
+		float tanAlfa = 0;
+		try{
 		float x = (this.getDepth(centerOfGravityL, centerOfGravityR) * this.getX1(centerOfGravityL)) / this.getfocalDistance();
-		float tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerOfGravityR);
+		tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerOfGravityR);
+		}catch(IllegalArgumentException e){
+			e.printStackTrace();
+		}
 		return (float) Math.toDegrees(Math.atan(tanAlfa));
 	}
 
@@ -79,11 +90,6 @@ public class PhysicsCalculations_new {
 	}
 	
 	public void calculateDecelerationDistance(float timeDev){
-		//vertraag halfweg?
-//		float decelerationDistance = firstDistance/2;		
-//				(float) (Math.pow(this.getSpeed(), 2)/
-//				(2*this.getAcceleration()) // hier moet er nog een bepaalde distance bij zodanig dat de tijd vh pitchen gecompenseerd wordt.
-//				+3);
 		float beta = -this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;
 		float tegenpitch = -this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;
 		float pitch = this.getDrone().getPitch();
@@ -97,7 +103,7 @@ public class PhysicsCalculations_new {
 		float acc = (float) ((T*Math.sin(Math.toRadians(tegenpitch)) - D*speed*cos) / (cos*(D*timeDev + this.getDrone().getWeight())));
 		if (acc!= 0){
 			float distance = (float) (2*pitch/pitchrate*speed + (Math.pow(0.1, 2)-Math.pow(speed, 2))/(2*acc) + tegenpitch/pitchrate*0.1);
-			System.out.println("rem" + distance);
+			//System.out.println("rem" + distance);
 			this.setDecelerationDistance(distance);
 		}
 	}

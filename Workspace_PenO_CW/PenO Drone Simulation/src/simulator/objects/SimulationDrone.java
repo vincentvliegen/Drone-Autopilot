@@ -394,7 +394,7 @@ public class SimulationDrone implements Drone, WorldObject{
 
 	@Override
 	public float getMaxYawRate() {
-		return 5f;
+		return 40f;
 	}
 
 	@Override
