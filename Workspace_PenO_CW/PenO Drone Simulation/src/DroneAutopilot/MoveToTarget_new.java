@@ -6,7 +6,8 @@ import DroneAutopilot.GUI.GUI;
 import DroneAutopilot.GUI.GraphPI;
 import DroneAutopilot.controllers.PitchController;
 import DroneAutopilot.controllers.RollController;
-import DroneAutopilot.controllers.ThrustController;
+import DroneAutopilot.controllers.DistanceController;
+import DroneAutopilot.controllers.HeightController;
 import DroneAutopilot.controllers.YawController;
 import exceptions.EmptyPositionListException;
 import exceptions.SmallCircleException;
@@ -20,7 +21,8 @@ public class MoveToTarget_new {
 	private final YawController yawPI;
 	private final RollController rollPI;
 	private final PitchController pitchPI;
-	private final ThrustController thrustPI;
+	private final HeightController heightPI;
+	private final DistanceController distancePI;
 
 	private Drone drone;
 	private GUI gui;
@@ -30,6 +32,7 @@ public class MoveToTarget_new {
 	private boolean yawStarted;
 	private boolean rollStarted;
 	private boolean pitchStarted;
+	private boolean heightStarted;
 
 	private static final float underBoundary = -0.2f;
 	private static final float upperBoundary = 0.2f;
@@ -41,7 +44,8 @@ public class MoveToTarget_new {
 		this.yawPI = new YawController(30,2);
 		this.rollPI = new RollController(1,0);
 		this.pitchPI = new PitchController(1,0);
-		this.thrustPI = new ThrustController(0,0);
+		this.heightPI = new HeightController(500,0);
+		this.distancePI = new DistanceController(0,0);
 	}
 
 	public void execute(int color){
@@ -186,24 +190,59 @@ public class MoveToTarget_new {
 			this.deceleration=false;
 		}
 	}
+	
+	public void correctHeight(float[] cogL, float[] cogR, float partAngleView){
+		if(this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))>= 
+				this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(-partAngleView))
+				&& this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))<= 
+						this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(partAngleView))){
+			this.setHeightStarted(false);
+			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight());
+		}
+		else if (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))<
+				this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(-partAngleView))) {
+			if(!this.getHeightStarted()){
+				this.getHeightPI().resetSetpoint(0);
+				this.setHeightStarted(true);
+			}else{
+				float output = -this.getHeightPI().calculateRate((float)(this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))), this.getDrone().getCurrentTime());
+				this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
+				this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() + Math.max(output, -this.getDrone().getMaxThrust()));
+			}
+		} 
+		else if (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))>
+		this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(partAngleView))){
+			if(!this.getHeightStarted()){
+				this.getHeightPI().resetSetpoint(0);
+				this.setHeightStarted(true);
+			}else{
+				float output = -this.getHeightPI().calculateRate((float)(this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))), this.getDrone().getCurrentTime());
+				this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
+				System.out.println("output stijgen" + output);
+				System.out.println("maxtrust" + this.getDrone().getMaxThrust());
+				this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()+Math.min(output, this.getDrone().getMaxThrust()));
+			}
+		}	
+	}
 
 	public void flyTowardsTarget(float[] cogL, float[] cogR) { 
-		System.out.println("pitch: " + this.getDrone().getPitch());
 		this.correctYaw(cogL, cogR);
 		this.getPhysicsCalculations().updateAccSpeed(cogL);
-		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;
+		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/20;
 		if(!basisgeval && !deceleration){
-			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)>partAngleView){
-				//TODO: goede waarde vinden vr value.
-				this.getDrone().setThrust((float) (-1.2*this.getDrone().getWeight()*this.getDrone().getGravity()));
-			} 
-			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)<-partAngleView){
-				this.getDrone().setThrust((float) (1.2*this.getDrone().getWeight()*this.getDrone().getGravity()));
-			}
-			else{
-				basisgeval=true;
-			}
+			this.basisgeval = true;
+//			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)>partAngleView){
+//				//TODO: goede waarde vinden vr value.
+//				this.getDrone().setThrust((float) (-1.2*this.getDrone().getWeight()*this.getDrone().getGravity()));
+//			} 
+//			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)<-partAngleView){
+//				this.getDrone().setThrust((float) (1.2*this.getDrone().getWeight()*this.getDrone().getGravity()));
+//			}
+//			else{
+//				basisgeval=true;
+//			}
 		}else if(basisgeval && !deceleration){
+			this.correctHeight(cogL, cogR, partAngleView);
 			//TODO met wind rekening houden dat die wordt weggeblazen dus ook terug pitch tegensturen als > angle
 			//TODO plus klein intervalletje rond partAngleView want anders nooit in het stop geval.
 			if(this.getDrone().getPitch() < partAngleView){
@@ -271,8 +310,12 @@ public class MoveToTarget_new {
 		return this.pitchPI;
 	}
 	
-	public final ThrustController getThrustPI() {
-		return this.thrustPI;
+	public final HeightController getHeightPI() {
+		return this.heightPI;
+	}
+	
+	public final DistanceController getDistancePI() {
+		return this.distancePI;
 	}
 
 	public void setDrone(Drone drone) {
@@ -322,5 +365,11 @@ public class MoveToTarget_new {
 	public boolean getPitchStarted(){
 		return this.pitchStarted;
 	}
-
+	public void setHeightStarted(boolean isStarted){
+		this.heightStarted = isStarted;
+	}
+	
+	public boolean getHeightStarted(){
+		return this.heightStarted;
+	}
 }
