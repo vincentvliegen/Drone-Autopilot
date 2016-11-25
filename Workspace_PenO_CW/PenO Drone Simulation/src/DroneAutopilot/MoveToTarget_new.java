@@ -188,7 +188,7 @@ public class MoveToTarget_new {
 				&& Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))<= 
 				Math.tan(Math.toRadians(partAngleView))){
 			this.setHeightStarted(false);
-			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight());
+			this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 		}
 		else if (Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))<
 				Math.tan(Math.toRadians(-partAngleView))) {
