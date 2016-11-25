@@ -251,12 +251,15 @@ public class MoveToTarget_new {
 					this.setPitchStarted(true);
 				}else{
 					float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
-					this.getDrone().setPitchRate(Math.min(output, this.getDrone().getMaxPitchRate()));
+					float pitchRate = Math.min(output, this.getDrone().getMaxPitchRate());
+					this.getDrone().setPitchRate(pitchRate);
+					this.getPhysicsCalculations().setPreviousPitchRate(pitchRate);
 					this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 				}
 			}else{
 				this.setPitchStarted(false);
 				this.getDrone().setPitchRate(0);
+				this.getPhysicsCalculations().setPreviousPitchRate(0);
 				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 			}
 		}
@@ -282,10 +285,12 @@ public class MoveToTarget_new {
 				.getVerticalAngleOfView()/10;
 		if(this.getDrone().getPitch()>-partAngleView){
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
+			this.getPhysicsCalculations().setPreviousPitchRate(-this.getDrone().getMaxPitchRate());
 			System.out.println("TRGPITCHEN");
 			this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 		}else{
 			this.getDrone().setPitchRate(0);
+			this.getPhysicsCalculations().setPreviousPitchRate(0);
 			this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 		}
 	}

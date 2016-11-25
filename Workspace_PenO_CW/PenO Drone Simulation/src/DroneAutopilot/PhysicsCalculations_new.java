@@ -10,6 +10,8 @@ public class PhysicsCalculations_new {
 	private float firstDistance;
 	private float previousTime;
 	private float decelerationDistance;
+	private float previousPitch;
+	private float previousPitchRate;
 
 
 	public PhysicsCalculations_new(Drone drone){
@@ -74,35 +76,53 @@ public class PhysicsCalculations_new {
 	
 	public void updateAccSpeed(float[] cog){
 		float v0 = getSpeed();
+		float weight = this.getDrone().getWeight();
+		float gravity = this.getDrone().getGravity();
 		float T = this.getThrust(cog);
-		float D = this.getDrone().getDrag();
+		float D = this.getDrone().getDrag(); 
 		float pitch = this.getDrone().getPitch();
-		float cos = (float) Math.cos(Math.toRadians(this.verticalAngleDeviation(cog)-pitch));
+		float beta = this.verticalAngleDeviation(cog);
+		float delta = beta-pitch;
 		float timeDev = this.getDrone().getCurrentTime() - this.getPreviousTime();
-		float acc = (float) ((T*Math.sin(Math.toRadians(pitch)) - D*v0*cos) / (cos*(D*timeDev + this.getDrone().getWeight())));
-		//System.out.println("acc"+acc);
-		this.calculateDecelerationDistance(timeDev);
+		float acc = (float) ((T*Math.sin(Math.toRadians(pitch))/(Math.cos(Math.toRadians(delta)) - D*v0)/(/*D*timeDev + */weight)));
+		System.out.println("acc"+acc);
 		this.setAcceleration(acc);
-		float speed = acc*timeDev + v0;
-		//System.out.println("speed" +speed);
+		
+		//wanneer versnelling afhankelijk is van de tijd varieert de snelheid //pitch = p0 + pitchrate*(t-t0)
+		float speed =0;
+		if (previousPitchRate == 0){
+			speed = acc*timeDev + v0;
+		} else{
+			speed = (float) (v0 +timeDev*(v0*D/weight-gravity*Math.sin(Math.toRadians(delta))) - gravity*Math.cos(Math.toRadians(delta))*Math.log(Math.cos(Math.toRadians(delta+previousPitch + timeDev*previousPitchRate)))/previousPitchRate);
+		}
+		System.out.println("beta " + beta);
+		System.out.println("pitch " + pitch);
+		System.out.println("delta" + delta);
+		System.out.println(delta+previousPitch + timeDev*previousPitchRate + "  ==   " + this.getDrone().getPitch());
+		System.out.println("speed" +speed);
 		this.setSpeed(speed);
+		this.calculateDecelerationDistance(timeDev,cog);
 		this.setPreviousTime(this.getDrone().getCurrentTime());
+		this.setPreviousPitch(pitch);
+		//TODO elke keer dat de pitchrate wordt ingesteld moet this.setPreviousPitchRate worden aangepast (wanneer target = visible)
 	}
-	
-	public void calculateDecelerationDistance(float timeDev){
-		float beta = -this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;
-		float tegenpitch = -this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;
+		
+	public void calculateDecelerationDistance(float timeDev,float[] cog){
+		//TODO parameter voor maxPitch (hoogte/2*1/10) in MoveToTarget of hier
 		float pitch = this.getDrone().getPitch();
 		float pitchrate = this.getDrone().getMaxPitchRate();
+		float tegenPitch = -this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;//TODO enkel wanneer max pitch het tegengestelde is, deze moet even groot zijn
+		//tegenbeta = tegenPitch+delta = tegenPitch + (beta-pitch)
+		float tegenBeta = tegenPitch + (this.verticalAngleDeviation(cog)-pitch);
 		float speed = this.getSpeed();
+		float cosDelta = (float) Math.cos(Math.toRadians(tegenBeta-tegenPitch));
 		float T = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() * 
-				Math.cos(Math.toRadians(beta - tegenpitch)) / 
-				Math.cos(Math.toRadians(beta)));
+				cosDelta / 
+				Math.cos(Math.toRadians(tegenBeta)));
 		float D = this.getDrone().getDrag();
-		float cos = (float) Math.cos(Math.toRadians(beta-tegenpitch));
-		float acc = (float) ((T*Math.sin(Math.toRadians(tegenpitch)) - D*speed*cos) / (cos*(D*timeDev + this.getDrone().getWeight())));
+		float acc = (float) ((T*Math.sin(Math.toRadians(tegenPitch)) - D*speed*cosDelta) / (cosDelta*(/* D*timeDev +*/ this.getDrone().getWeight())));
 		if (acc!= 0){
-			float distance = (float) (2*pitch/pitchrate*speed + (Math.pow(0.1, 2)-Math.pow(speed, 2))/(2*acc) + tegenpitch/pitchrate*0.1);
+			float distance = (float) (2*pitch/pitchrate*speed + (Math.pow(0.1, 2)-Math.pow(speed, 2))/(2*acc) + tegenPitch/pitchrate*0.1);
 			//System.out.println("rem" + distance);
 			this.setDecelerationDistance(distance);
 		}
@@ -165,5 +185,21 @@ public class PhysicsCalculations_new {
 	
 	public float getDecelerationDistance(){
 		return this.decelerationDistance;
+	}
+	
+	public float getPreviousPitch() {
+		return previousPitch;
+	}
+
+	public void setPreviousPitch(float previousPitch) {
+		this.previousPitch = previousPitch;
+	}
+	
+	public float getPreviousPitchRate() {
+		return previousPitchRate;
+	}
+
+	public void setPreviousPitchRate(float previousPitchRate) {
+		this.previousPitchRate = previousPitchRate;
 	}
 }
