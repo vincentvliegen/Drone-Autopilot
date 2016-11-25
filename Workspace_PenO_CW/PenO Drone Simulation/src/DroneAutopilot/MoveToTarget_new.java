@@ -27,7 +27,6 @@ public class MoveToTarget_new {
 	private Drone drone;
 	private GUI gui;
 	private GraphPI graphPI;
-	private boolean basisgeval;
 	private boolean deceleration;
 	private boolean yawStarted;
 	private boolean rollStarted;
@@ -44,7 +43,7 @@ public class MoveToTarget_new {
 		this.yawPI = new YawController(30,2);
 		this.rollPI = new RollController(1,0);
 		this.pitchPI = new PitchController(1,0);
-		this.heightPI = new HeightController(500,0);
+		this.heightPI = new HeightController(10,0);
 		this.distancePI = new DistanceController(0,0);
 	}
 
@@ -171,55 +170,45 @@ public class MoveToTarget_new {
 		return cog;
 	}
 
-	public void hover(float[] cog) {
+	public void hover() {
 		System.out.println("hover");
 		if (this.getDrone().getPitch() > 0) {
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
-			this.getDrone().setThrust(
-					Math.min(this.getDrone().getMaxThrust(),this.getPhysicsCalculations().getThrust(cog)));
 		} else if (this.getDrone().getPitch() < 0) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
-			this.getDrone().setThrust(
-					Math.min(this.getDrone().getMaxThrust(),this.getPhysicsCalculations().getThrust(cog)));
 		} else {
 			this.getDrone().setPitchRate(0);
-			this.getDrone().setThrust(
-					Math.min(this.getDrone().getMaxThrust(),
-							Math.abs(this.getDrone().getGravity())
-							* this.getDrone().getWeight()));
 			this.deceleration=false;
 		}
 	}
 	
-	public void correctHeight(float[] cogL, float[] cogR, float partAngleView){
+	public void correctHeight(float[] cogL, float[] cogR){
 		if(this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))>= 
-				this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(-partAngleView))
+				this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(underBoundary))
 				&& this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))<= 
-						this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(partAngleView))){
+						this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(upperBoundary))){
 			this.setHeightStarted(false);
 			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight());
 		}
 		else if (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))<
-				this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(-partAngleView))) {
+				this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(underBoundary))) {
 			if(!this.getHeightStarted()){
 				this.getHeightPI().resetSetpoint(0);
 				this.setHeightStarted(true);
 			}else{
 				float output = -this.getHeightPI().calculateRate((float)(this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))), this.getDrone().getCurrentTime());
-				this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
+				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
 				this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() + Math.max(output, -this.getDrone().getMaxThrust()));
 			}
 		} 
 		else if (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))>
-		this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(partAngleView))){
+		this.getPhysicsCalculations().getDepth(cogL, cogR)*Math.tan(Math.toRadians(upperBoundary))){
 			if(!this.getHeightStarted()){
 				this.getHeightPI().resetSetpoint(0);
 				this.setHeightStarted(true);
 			}else{
 				float output = -this.getHeightPI().calculateRate((float)(this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))), this.getDrone().getCurrentTime());
-				this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
-				System.out.println("output stijgen" + output);
-				System.out.println("maxtrust" + this.getDrone().getMaxThrust());
+				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
 				this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()+Math.min(output, this.getDrone().getMaxThrust()));
 			}
 		}	
@@ -227,22 +216,10 @@ public class MoveToTarget_new {
 
 	public void flyTowardsTarget(float[] cogL, float[] cogR) { 
 		this.correctYaw(cogL, cogR);
+		this.correctHeight(cogL, cogR);
 		this.getPhysicsCalculations().updateAccSpeed(cogL);
 		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/20;
-		if(!basisgeval && !deceleration){
-			this.basisgeval = true;
-//			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)>partAngleView){
-//				//TODO: goede waarde vinden vr value.
-//				this.getDrone().setThrust((float) (-1.2*this.getDrone().getWeight()*this.getDrone().getGravity()));
-//			} 
-//			if(this.getPhysicsCalculations().verticalAngleDeviation(cogL)<-partAngleView){
-//				this.getDrone().setThrust((float) (1.2*this.getDrone().getWeight()*this.getDrone().getGravity()));
-//			}
-//			else{
-//				basisgeval=true;
-//			}
-		}else if(basisgeval && !deceleration){
-			this.correctHeight(cogL, cogR, partAngleView);
+		if(!deceleration){
 			//TODO met wind rekening houden dat die wordt weggeblazen dus ook terug pitch tegensturen als > angle
 			//TODO plus klein intervalletje rond partAngleView want anders nooit in het stop geval.
 			if(this.getDrone().getPitch() < partAngleView){
@@ -251,16 +228,11 @@ public class MoveToTarget_new {
 					this.setPitchStarted(true);
 				}else{
 					float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
-					float pitchRate = Math.min(output, this.getDrone().getMaxPitchRate());
-					this.getDrone().setPitchRate(pitchRate);
-					this.getPhysicsCalculations().setPreviousPitchRate(pitchRate);
-					this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
+					this.getDrone().setPitchRate(Math.min(output, this.getDrone().getMaxPitchRate()));
 				}
 			}else{
 				this.setPitchStarted(false);
 				this.getDrone().setPitchRate(0);
-				this.getPhysicsCalculations().setPreviousPitchRate(0);
-				this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 			}
 		}
 
@@ -272,7 +244,7 @@ public class MoveToTarget_new {
 		}
 
 		if(Math.abs(this.getPhysicsCalculations().getSpeed())<=0.3 && deceleration){
-			this.hover(cogL);
+			this.hover();
 		}
 		else if(deceleration){
 			this.startDeceleration(cogL, cogR);
@@ -285,13 +257,9 @@ public class MoveToTarget_new {
 				.getVerticalAngleOfView()/10;
 		if(this.getDrone().getPitch()>-partAngleView){
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
-			this.getPhysicsCalculations().setPreviousPitchRate(-this.getDrone().getMaxPitchRate());
 			System.out.println("TRGPITCHEN");
-			this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 		}else{
 			this.getDrone().setPitchRate(0);
-			this.getPhysicsCalculations().setPreviousPitchRate(0);
-			this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
 		}
 	}
 
