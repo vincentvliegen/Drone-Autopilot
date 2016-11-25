@@ -22,24 +22,17 @@ public class PhysicsCalculations_new {
 	}
 
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
-		float distance=0;
-		try{
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
-		distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
-		}
-		catch(IllegalArgumentException e){
-			e.printStackTrace();
-		}
+		float distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
 		return distance;
 	}
 
 	public float getDepth(float[] centerOfGravityL, float[]centerOfGravityR){
-		float depth=0;
-			depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
-			depth = Math.abs(depth);
-			if(Float.isNaN(depth) || Float.isInfinite(depth)){
-				throw new IllegalArgumentException();
-			}
+		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
+		depth = Math.abs(depth);
+		if(Float.isNaN(depth) || Float.isInfinite(depth)){
+			depth =0;
+		}
 		return depth;
 	}
 
@@ -59,14 +52,15 @@ public class PhysicsCalculations_new {
 	}
 
 	public float horizontalAngleDeviation(float[] centerOfGravityL, float[] centerOfGravityR){
-		float tanAlfa = 0;
-		try{
-		float x = (this.getDepth(centerOfGravityL, centerOfGravityR) * this.getX1(centerOfGravityL)) / this.getfocalDistance();
-		tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerOfGravityR);
-		}catch(IllegalArgumentException e){
-			e.printStackTrace();
+		float alfa;
+		if (this.getDepth(centerOfGravityL, centerOfGravityR)!=0){
+			float x = (this.getDepth(centerOfGravityL, centerOfGravityR) * this.getX1(centerOfGravityL)) / this.getfocalDistance();
+			float tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerOfGravityR);
+			alfa = (float) Math.toDegrees(Math.atan(tanAlfa));
+		}else{
+			alfa = 0;
 		}
-		return (float) Math.toDegrees(Math.atan(tanAlfa));
+		return alfa ;
 	}
 
 	public float verticalAngleDeviation(float[] centerOfGravity){
