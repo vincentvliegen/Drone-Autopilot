@@ -79,7 +79,7 @@ public class PhysicsCalculations_new {
 		float delta = beta-pitch;
 		float timeDev = this.getDrone().getCurrentTime() - this.getPreviousTime();
 		float acc = (float) ((T*Math.sin(Math.toRadians(pitch))/(Math.cos(Math.toRadians(delta)) - D*v0)/(/*D*timeDev + */weight)));
-		System.out.println("acc"+acc);
+		//System.out.println("acc"+acc);
 		this.setAcceleration(acc);
 		
 		//wanneer versnelling afhankelijk is van de tijd varieert de snelheid //pitch = p0 + pitchrate*(t-t0)
@@ -87,13 +87,14 @@ public class PhysicsCalculations_new {
 		if (previousPitchRate == 0){
 			speed = acc*timeDev + v0;
 		} else{
-			speed = (float) (v0 +timeDev*(v0*D/weight-gravity*Math.sin(Math.toRadians(delta))) - gravity*Math.cos(Math.toRadians(delta))*Math.log(Math.cos(Math.toRadians(delta+previousPitch + timeDev*previousPitchRate)))/previousPitchRate);
+			speed = (float) (v0 +timeDev*(v0*D/weight-gravity*Math.sin(Math.toRadians(delta))) 
+					- gravity*Math.cos(Math.toRadians(delta))/previousPitchRate*(Math.log(Math.cos(Math.toRadians(delta+previousPitch + timeDev*previousPitchRate))-Math.log(Math.cos(Math.toRadians(delta+previousPitch))))));
+			
 		}
-		System.out.println("beta " + beta);
+		//System.out.println("beta " + beta);
 		System.out.println("pitch " + pitch);
-		System.out.println("delta" + delta);
-		System.out.println(delta+previousPitch + timeDev*previousPitchRate + "  ==   " + this.getDrone().getPitch());
-		System.out.println("speed" +speed);
+		//System.out.println("delta" + delta); //TODO is niet 0 in world 11?
+		System.out.println("speed " +speed);
 		this.setSpeed(speed);
 		this.calculateDecelerationDistance(timeDev,cog);
 		this.setPreviousTime(this.getDrone().getCurrentTime());
@@ -117,7 +118,7 @@ public class PhysicsCalculations_new {
 		float acc = (float) ((T*Math.sin(Math.toRadians(tegenPitch)) - D*speed*cosDelta) / (cosDelta*(/* D*timeDev +*/ this.getDrone().getWeight())));
 		if (acc!= 0){
 			float distance = (float) (2*pitch/pitchrate*speed + (Math.pow(0.1, 2)-Math.pow(speed, 2))/(2*acc) + tegenPitch/pitchrate*0.1);
-			//System.out.println("rem" + distance);
+			System.out.println("rem " + distance);
 			this.setDecelerationDistance(distance);
 		}
 	}
