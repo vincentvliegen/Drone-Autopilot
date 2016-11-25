@@ -75,26 +75,28 @@ public class PhysicsCalculations_new {
 		float T = this.getThrust(cog);
 		float D = this.getDrone().getDrag(); 
 		float pitch = this.getDrone().getPitch();
-		float beta = this.verticalAngleDeviation(cog);
+		float beta = this.verticalAngleDeviation(cog)
+				;
 		float delta = beta-pitch;
 		float timeDev = this.getDrone().getCurrentTime() - this.getPreviousTime();
 		float acc = (float) ((T*Math.sin(Math.toRadians(pitch))/(Math.cos(Math.toRadians(delta)) - D*v0)/(/*D*timeDev + */weight)));
 		//System.out.println("acc"+acc);
+		//System.out.println("accdif" + (this.getAcceleration()-acc));
 		this.setAcceleration(acc);
 		
 		//wanneer versnelling afhankelijk is van de tijd varieert de snelheid //pitch = p0 + pitchrate*(t-t0)
 		float speed =0;
-		if (previousPitchRate == 0){
+		if (getPreviousPitchRate() == 0){
 			speed = acc*timeDev + v0;
-		} else{
-			speed = (float) (v0 +timeDev*(v0*D/weight-gravity*Math.sin(Math.toRadians(delta))) 
-					- gravity*Math.cos(Math.toRadians(delta))/previousPitchRate*(Math.log(Math.cos(Math.toRadians(delta+previousPitch + timeDev*previousPitchRate))-Math.log(Math.cos(Math.toRadians(delta+previousPitch))))));
-			
+			//System.out.println("without pitchrate speed " + speed );
+		} else{//snelheid ifv pitch(t)
+			speed = (float) (v0 +timeDev*(-v0*D/weight+gravity*Math.sin(Math.toRadians(delta))) 
+					+ gravity*Math.cos(Math.toRadians(delta))*(Math.log(Math.cos(Math.toRadians(beta)))-Math.log(Math.cos(Math.toRadians(/*previousBeta*/delta+getPreviousPitch()))))/getPreviousPitchRate());
+			//System.out.println("with pitchrate speed " + speed );
 		}
 		//System.out.println("beta " + beta);
-		System.out.println("pitch " + pitch);
-		//System.out.println("delta" + delta); //TODO is niet 0 in world 11?
-		System.out.println("speed " +speed);
+		//System.out.println("pitch " + pitch);
+		//System.out.println("delta" + delta); //TODO is niet +- 0 in world 11? gaat helaas niet anders blijkbaar
 		this.setSpeed(speed);
 		this.calculateDecelerationDistance(timeDev,cog);
 		this.setPreviousTime(this.getDrone().getCurrentTime());
@@ -118,7 +120,7 @@ public class PhysicsCalculations_new {
 		float acc = (float) ((T*Math.sin(Math.toRadians(tegenPitch)) - D*speed*cosDelta) / (cosDelta*(/* D*timeDev +*/ this.getDrone().getWeight())));
 		if (acc!= 0){
 			float distance = (float) (2*pitch/pitchrate*speed + (Math.pow(0.1, 2)-Math.pow(speed, 2))/(2*acc) + tegenPitch/pitchrate*0.1);
-			System.out.println("rem " + distance);
+			//System.out.println("rem " + distance);
 			this.setDecelerationDistance(distance);
 		}
 	}
@@ -126,7 +128,7 @@ public class PhysicsCalculations_new {
 	public float getThrust(float[] cog) {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
-		thrust = (float) (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() * 
+		thrust = (float) (-this.getDrone().getGravity()*this.getDrone().getWeight() * 
 				Math.cos(Math.toRadians(beta - this.getDrone().getPitch())) / 
 				Math.cos(Math.toRadians(beta)));
 		return thrust;
