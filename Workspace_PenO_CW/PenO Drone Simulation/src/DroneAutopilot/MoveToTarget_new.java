@@ -43,7 +43,7 @@ public class MoveToTarget_new {
 		this.yawPI = new YawController(30,2);
 		this.rollPI = new RollController(1,0);
 		this.pitchPI = new PitchController(1,0);
-		this.heightPI = new HeightController(10,0);
+		this.heightPI = new HeightController(3,0);
 		this.distancePI = new DistanceController(0,0);
 	}
 
@@ -199,6 +199,8 @@ public class MoveToTarget_new {
 				float output = -this.getHeightPI().calculateRate((float)(this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))), this.getDrone().getCurrentTime());
 				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
 				this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() + Math.max(output, -this.getDrone().getMaxThrust()));
+				//System.out.println("gravity: "+this.getDrone().getGravity()*this.getDrone().getWeight());
+				//System.out.println("thrust1: " + (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() + Math.max(output, -this.getDrone().getMaxThrust())));
 			}
 		} 
 		else if (Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))>
@@ -210,13 +212,14 @@ public class MoveToTarget_new {
 				float output = -this.getHeightPI().calculateRate((float)(this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))), this.getDrone().getCurrentTime());
 				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
 				this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()+Math.min(output, this.getDrone().getMaxThrust()));
+				//System.out.println("thrust2: " + (Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()+Math.min(output, this.getDrone().getMaxThrust())));
 			}
 		}	
 	}
 
 	public void flyTowardsTarget(float[] cogL, float[] cogR) { 
 		this.correctYaw(cogL, cogR);
-		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/30;
+		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/200;
 		this.correctHeight(cogL, cogR, partAngleView);
 		this.getPhysicsCalculations().updateAccSpeed(cogL);
 		if(!deceleration){
@@ -253,7 +256,7 @@ public class MoveToTarget_new {
 	}
 
 	public void startDeceleration(float[] cogL, float[] cogR) {
-		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/30;
+		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/200;
 		if(this.getDrone().getPitch()>-partAngleView){
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
 			System.out.println("TRGPITCHEN");

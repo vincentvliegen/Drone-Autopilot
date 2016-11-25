@@ -73,7 +73,7 @@ public class GraphPI extends JFrame{
 			this.y.add(300);
 		}
 		else if(this.x.size()>1){
-			int intervalX = (x-oldTimeValue)*5;
+			int intervalX = (x-oldTimeValue)*10;
 			this.x.add(this.x.get(this.x.size()-1)+intervalX);
 			this.y.add(this.y.get(0)-y);
 			oldTimeValue = x;
@@ -96,7 +96,11 @@ public class GraphPI extends JFrame{
 				//Y-as
 				g.drawLine(10, 300, 10, 150);
 				y.add(300);
+				for(int i = 10; i<(700-10); i+=10)
+				g.drawRect(i, 300, 2, 2);
 			}
+			
+			
 
 			g.setColor(Color.RED);
 			for(int i=0; i<x.size(); i++){
