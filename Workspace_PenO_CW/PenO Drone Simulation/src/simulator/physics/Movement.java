@@ -22,11 +22,6 @@ public class Movement {
 		velocity[1] += (acceleration[1] * timePassed);
 		velocity[2] += (acceleration[2] * timePassed);
 		
-		//Wind stuff 
-		velocity[0] += (drone.getWorld().getWindSpeedX()*timePassed);
-		velocity[1] += (drone.getWorld().getWindSpeedY()*timePassed);
-		velocity[2] += (drone.getWorld().getWindSpeedZ()*timePassed);
-				
 		/*
 		System.out.println("Total time passed " + drone.getWorld().getCurrentTime());
 		System.out.println("Time " + timePassed);
