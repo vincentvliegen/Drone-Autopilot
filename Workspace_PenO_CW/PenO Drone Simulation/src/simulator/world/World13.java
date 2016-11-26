@@ -9,7 +9,6 @@ import simulator.objects.WorldObject;
 import com.jogamp.opengl.*;
 
 public class World13 extends World {
-	
 	public World13(){
 		super();
 		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 0, 0, 1, 0, this));
@@ -64,7 +63,6 @@ public class World13 extends World {
 
 		for (SimulationDrone drone : getDrones()) {
 			drone.timeHasPassed((float) checkTimePassed());
-
 		}
 
 		super.setLastTime(System.nanoTime());
@@ -77,6 +75,7 @@ public class World13 extends World {
 
 		// voor scherm
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 		getCurrentCamera().setCamera(gl, getGlu());
 		draw();
 
@@ -90,6 +89,7 @@ public class World13 extends World {
 
 		// voor takeimage linkerCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferLeft()[0]);
+		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		getDrones().get(0).getLeftDroneCamera().setCamera(gl, getGlu());
 		draw();
@@ -97,21 +97,24 @@ public class World13 extends World {
 
 		// voor takeimage rechterCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferRight()[0]);
+		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+		
 		// voor uitschrijven van bestand
-		// if(getDrones().size() != 0){
-		// if(i == 100){
-		// getDrones().get(0).getLeftDroneCamera().writeTakeImageToFile();
-		// getDrones().get(0).getRightDroneCamera().writeTakeImageToFile();
-		// i++;
-		// }
-		// else
-		// i++;
-		//
-		// }
+		/*
+		if(getDrones().size() != 0){
+			if(i == 100){
+		getDrones().get(0).getLeftDroneCamera().writeTakeImageToFile();
+		 getDrones().get(0).getRightDroneCamera().writeTakeImageToFile();
+		 i++;
+		 }
+		 else
+		 i++;
+		 }
+		 */
 	}
 
 	@Override
