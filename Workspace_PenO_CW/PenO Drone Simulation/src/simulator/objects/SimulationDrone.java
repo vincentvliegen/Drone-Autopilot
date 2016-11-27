@@ -59,7 +59,7 @@ public class SimulationDrone implements Drone, WorldObject{
 		generateDroneCameras();
 		DroneAutopilotFactory_new ap = new DroneAutopilotFactory_new();
 		this.autopilot = ap.create(this);
-		this.radius = (float) Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2) + Math.pow(depth, 2));
+		this.radius = (float) Math.sqrt(Math.pow(height/2, 2) + Math.pow(width/2, 2) + Math.pow(depth/2, 2));
 	}
 
 	// TODO afmetingen (voor collision detection)
