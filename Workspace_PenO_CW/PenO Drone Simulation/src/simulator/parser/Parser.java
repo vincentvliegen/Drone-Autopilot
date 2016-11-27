@@ -113,96 +113,35 @@ public class Parser {
 
 		// line 2
 		myLine = bufRead.readLine();
-		splitArray = myLine.split(" ");
-		int splitArrayLength = splitArray.length;
 		System.out.println(Arrays.toString(splitArray));
-		arrayXValues = new float[splitArrayLength];
-		arrayXTimes = new float[splitArrayLength];				
-		for(int i = 0; i < splitArrayLength; i++) {
-			if(i % 2 == 0){
-				arrayXTimes[i/2]=Float.parseFloat(splitArray[i]);
-			}
-			else{
-				arrayXValues[(i-1)/2]=Float.parseFloat(splitArray[i]);
-			}
-		}
+		arrayXValues = readInTimesAndValues(myLine, false);
+		arrayXTimes = readInTimesAndValues(myLine, true);
 
 		// line 3
 		myLine = bufRead.readLine();
-		splitArray = myLine.split(" ");
-		splitArrayLength = splitArray.length;
-		arrayYValues = new float[splitArrayLength];
-		arrayYTimes = new float[splitArrayLength];				
-		for(int i = 0; i < splitArrayLength; i++) {
-			if(i % 2 == 0){
-				arrayYTimes[i/2]=Float.parseFloat(splitArray[i]);
-			}
-			else{
-				arrayYValues[(i-1)/2]=Float.parseFloat(splitArray[i]);
-			}
-		}
+		arrayYValues = readInTimesAndValues(myLine, false);
+		arrayYTimes = readInTimesAndValues(myLine, true);
 
 		// line 4
 		myLine = bufRead.readLine();
-		splitArray = myLine.split(" ");
-		splitArrayLength = splitArray.length;
-		arrayZValues = new float[splitArrayLength];
-		arrayZTimes = new float[splitArrayLength];				
-		for(int i = 0; i < splitArrayLength; i++) {
-			if(i % 2 == 0){
-				arrayZTimes[i/2]=Float.parseFloat(splitArray[i]);
-			}
-			else{
-				arrayZValues[(i-1)/2]=Float.parseFloat(splitArray[i]);
-			}
-		}
+		arrayZValues = readInTimesAndValues(myLine, false);
+		arrayZTimes = readInTimesAndValues(myLine, true);
+
 
 		// line 5
 		myLine = bufRead.readLine();
-		splitArray = myLine.split(" ");
-		splitArrayLength = splitArray.length;
-		windRotationXTimes= new float[splitArrayLength];
-		windRotationXValues = new float[splitArrayLength];				
-		for(int i = 0; i < splitArrayLength; i++) {
-			if(i % 2 == 0){
-				windRotationXTimes[i/2]=Float.parseFloat(splitArray[i]);
-			}
-			else{
-				windRotationXValues[(i-1)/2]=Float.parseFloat(splitArray[i]);
-			}
-		}
+		windRotationXTimes= readInTimesAndValues(myLine, true);
+		windRotationXValues = readInTimesAndValues(myLine, false);
 
 		// line 6
 		myLine = bufRead.readLine();
-		splitArray = myLine.split(" ");
-		splitArrayLength = splitArray.length;
-		windRotationYValues = new float[splitArrayLength];
-		windRotationYTimes = new float[splitArrayLength];				
-		for(int i = 0; i < splitArrayLength; i++) {
-			if(i % 2 == 0){
-				windRotationYTimes[i/2]=Float.parseFloat(splitArray[i]);
-			}
-			else{
-				windRotationYValues[(i-1)/2]=Float.parseFloat(splitArray[i]);
-			}
-		}
+		windRotationYValues  = readInTimesAndValues(myLine, false);
+		windRotationYTimes = readInTimesAndValues(myLine, true);
 
 		// line 7
 		myLine = bufRead.readLine();
-		splitArray = myLine.split(" ");
-		splitArrayLength = splitArray.length;
-		windRotationZValues = new float[splitArrayLength];
-		windRotationZTimes = new float[splitArrayLength];				
-		for(int i = 0; i < splitArrayLength; i++) {
-			if(i % 2 == 0){
-				windRotationZTimes[i/2]=Float.parseFloat(splitArray[i]);
-			}
-			else{
-				System.out.println(i);
-
-				windRotationZValues[(i-1)/2]=Float.parseFloat(splitArray[i]);
-			}
-		}
+		windRotationZValues = readInTimesAndValues(myLine, false);
+		windRotationZTimes = readInTimesAndValues(myLine, true);				
 
 
 		Random rand = new Random();
@@ -241,6 +180,28 @@ public class Parser {
 		bufRead.close();
 
 	}
+	
+	
+	private float[] readInTimesAndValues(String myLine, boolean time) {
+		String[] splitArray = myLine.split(" ");
+		int splitArrayLength = splitArray.length;
+		float[] returnArray = new float[splitArrayLength/2];
+		for(int i = 0; i < splitArrayLength; i++) {
+			if(time) {
+				if(i % 2 == 0){
+					returnArray[i/2]=Float.parseFloat(splitArray[i]);
+				}
+			}
+			else{
+				if(i % 2 != 0)
+					returnArray[(i-1)/2]=Float.parseFloat(splitArray[i]);
+			}
+		}
+		return returnArray;
+	}
+	
+	
+	
 
 
 	public double getHorizontalAngleOfView() {
