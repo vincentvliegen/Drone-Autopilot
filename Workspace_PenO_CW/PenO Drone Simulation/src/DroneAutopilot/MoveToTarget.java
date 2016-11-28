@@ -240,26 +240,23 @@ public class MoveToTarget{
 			}
 		}
 
-<<<<<<< HEAD
 		//System.out.println("remafstand: " + this.getPhysicsCalculations().getDecelerationDistance());
 		//System.out.println("distance: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
-		
+
 		//if-statement die deceleration uitschakelt als 1.1 of 1.2 niet
 		if(this.getGUI().lastOrbEnabled){
-		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().getDecelerationDistance()) {
-			this.startDeceleration(cogL,cogR);
-			deceleration = true;
-		}
+			if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().getDecelerationDistance()) {
+				this.startDeceleration(cogL,cogR);
+				deceleration = true;
+			}
 
-		if(Math.abs(this.getPhysicsCalculations().getSpeed())<=0.3 && deceleration){
-			this.hover();
-		}
-		else if(deceleration){
-			this.startDeceleration(cogL, cogR);
-		}}
+			if(Math.abs(this.getPhysicsCalculations().getSpeed())<=0.3 && deceleration){
+				this.hover();
+			}
+			else if(deceleration){
+				this.startDeceleration(cogL, cogR);
+			}}
 
-=======
->>>>>>> 59fe24e2a820757ddc09b53e128cc20a844402df
 	}
 
 	public void startDeceleration(float[] cogL, float[] cogR) {
@@ -270,6 +267,12 @@ public class MoveToTarget{
 		}else{
 			this.getDrone().setPitchRate(0);
 		}
+	}
+
+	public void worldScan(){
+		// Draai 360°, bekijk bollen, vlieg nr dichtsbijzijnde
+		//PRBLM 1: wind => ???
+		//PRBLM 2: geen bol in zicht (enkel boven of onder..) => wat vooruit of achteruitvliegen tot die in het zicht is? 
 	}
 
 	public final PhysicsCalculations getPhysicsCalculations() {
