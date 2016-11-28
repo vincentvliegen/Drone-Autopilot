@@ -9,9 +9,11 @@ import javax.imageio.ImageIO;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+
 import p_en_o_cw_2016.Camera;
 import simulator.objects.SimulationDrone;
 import simulator.world.World;
+import simulator.world.WorldParser;
 
 public class DroneCamera extends GeneralCamera implements Camera {
 
@@ -29,7 +31,8 @@ public class DroneCamera extends GeneralCamera implements Camera {
 	
 	
 	public int getHeight() {
-		
+		if (getDrone().getWorld() instanceof WorldParser)
+			return getDrone().getWorld().getParser().getImageHeight();
 		return getWorld().getDrawable().getSurfaceHeight();
 	}
 
@@ -131,7 +134,8 @@ public class DroneCamera extends GeneralCamera implements Camera {
 
 	@Override
 	public float getHorizontalAngleOfView() {
-
+		if (getDrone().getWorld() instanceof WorldParser)
+			return (float) getDrone().getWorld().getParser().getHorizontalAngleOfView();
 		float aspectRatio = (float) getWidth()/getHeight();		
 		return (float) Math.toDegrees(2 * Math.atan(aspectRatio * Math.tan(Math.toRadians(getVerticalAngleOfView()/2))));
 		
@@ -141,12 +145,15 @@ public class DroneCamera extends GeneralCamera implements Camera {
 
 	@Override
 	public float getVerticalAngleOfView() {
-		//		return (float) (180 - 2 * Math.toDegrees(Math.atan((double) 1000 / getHeight())));
+		if (getDrone().getWorld() instanceof WorldParser)
+			return (float) getDrone().getWorld().getParser().getVerticalAngleOfView();
 		return fovy;
 	}
 
 	@Override
 	public int getWidth() {
+		if (getDrone().getWorld() instanceof WorldParser)
+			return getDrone().getWorld().getParser().getImageWidth();
 		return getWorld().getDrawable().getSurfaceWidth();
 	}
 	

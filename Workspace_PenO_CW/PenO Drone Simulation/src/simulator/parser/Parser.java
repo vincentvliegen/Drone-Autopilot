@@ -28,8 +28,8 @@ public class Parser {
 	//TODO verander naar float?
 	double horizontalAngleOfView;
 	double verticalAngleOfView;
-	double imageWidth;
-	double imageHeight;
+	int imageWidth;
+	int imageHeight;
 	double cameraSeparation; 
 	double weight ;
 	double gravity; 
@@ -96,8 +96,8 @@ public class Parser {
 		String[] splitArray = myLine.split(" ");
 		horizontalAngleOfView = Double.parseDouble(splitArray[0]);
 		verticalAngleOfView = Double.parseDouble(splitArray[1]);
-		imageWidth = Double.parseDouble(splitArray[2]);
-		imageHeight = Double.parseDouble(splitArray[3]);
+		imageWidth = Integer.parseInt(splitArray[2]);
+		imageHeight = Integer.parseInt(splitArray[3]);
 		cameraSeparation = Double.parseDouble(splitArray[4]);
 		weight = Double.parseDouble(splitArray[5]);
 		gravity = Double.parseDouble(splitArray[6]);
@@ -200,12 +200,12 @@ public class Parser {
 	}
 
 
-	public double getImageWidth() {
+	public int getImageWidth() {
 		return imageWidth;
 	}
 
 
-	public double getImageHeight() {
+	public int getImageHeight() {
 		return imageHeight;
 	}
 
