@@ -62,7 +62,6 @@ public class Parser {
 
 	//TODO aanpassen
 
-	float vasteRadius = 0.5f;
 	int vasteSlices = 64;
 	int vasteStacks = 64;
 
@@ -162,7 +161,7 @@ public class Parser {
 					b = rand.nextFloat();
 				}
 				float[] color = {r, g, b};
-				targetBalls.add(new Sphere(getWorld().getGL().getGL2(), vasteRadius, color , position));
+				targetBalls.add(new Sphere(getWorld().getGL().getGL2(), color , position));
 
 			}
 
@@ -171,7 +170,7 @@ public class Parser {
 			else if(splitArray[0] == "obstacle_ball") {
 				b = rand.nextFloat();
 				float[] color = {b, b, b};
-				obstacleBalls.add(new Sphere(getWorld().getGL().getGL2(), vasteRadius, color , position));
+				obstacleBalls.add(new Sphere(getWorld().getGL().getGL2(), color , position));
 
 			}
 
@@ -331,11 +330,6 @@ public class Parser {
 
 	public ArrayList<Sphere> getTargetBalls() {
 		return targetBalls;
-	}
-
-
-	public float getVasteRadius() {
-		return vasteRadius;
 	}
 
 
