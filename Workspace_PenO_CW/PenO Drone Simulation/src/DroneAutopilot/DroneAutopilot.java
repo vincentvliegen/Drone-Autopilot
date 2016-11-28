@@ -32,7 +32,7 @@ public class DroneAutopilot implements Autopilot{
 	@Override
 	public void timeHasPassed() {
 		if (this.getMoveToTarget().getGUI().redOrbEnabled) {
-			this.getMoveToTarget().execute(255);
+			this.getMoveToTarget().execute(16711680);
 			}else{
 				this.getDrone().setThrust(Math.abs(this.getDrone().getGravity()*this.getDrone().getWeight()));;
 			}

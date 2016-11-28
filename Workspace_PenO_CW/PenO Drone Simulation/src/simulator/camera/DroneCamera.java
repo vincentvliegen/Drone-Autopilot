@@ -54,9 +54,9 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		for (int r = 0; r < getHeight(); r++) {
 			for (int c = 0; c < getWidth(); c++) {
 				i = ((getHeight() - r - 1) * getWidth() + c) * bpp;
-				int red = buffer.get(i) & 0xFF;
+				int blue = buffer.get(i) & 0xFF;
 				int green = buffer.get(i + 1) & 0xFF;
-				int blue = buffer.get(i + 2) & 0xFF;
+				int red = buffer.get(i + 2) & 0xFF;
 				temp[r * getWidth() + c] = red | green << 8 | blue << 16;
 
 			}
@@ -154,7 +154,7 @@ public class DroneCamera extends GeneralCamera implements Camera {
 	//voor uitschrijven naar bestand
 	public void writeTakeImageToFile() {
 		  //		int width = getWidth();
-		  String path = "/D:/Libraries/takeimageTest";
+		  String path = "/home/r0578402/bb";
 		  if(getPlace() == DroneCameraPlace.LEFT)
 		    path = path + "-left.png";
 		  else
