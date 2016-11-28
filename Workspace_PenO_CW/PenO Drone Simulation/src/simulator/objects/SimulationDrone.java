@@ -18,6 +18,7 @@ import simulator.camera.DroneCamera;
 import simulator.camera.DroneCameraPlace;
 import simulator.physics.Movement;
 import simulator.world.World;
+import simulator.world.WorldParser;
 
 public class SimulationDrone implements Drone, WorldObject{
 	private float pitch = 0;
@@ -33,6 +34,7 @@ public class SimulationDrone implements Drone, WorldObject{
 	private float gravityConstant = -9.81f;
 	public DroneCamera leftCamera;
 	public DroneCamera rightCamera;
+	public DroneCamera middleCamera;
 	GL2 gl;
 	float height;
 	float width;
@@ -162,7 +164,7 @@ public class SimulationDrone implements Drone, WorldObject{
 	}
 
 	public void timeHasPassed(float timePassed) {
-		
+		//TODO Put caps on pitch, yaw, roll
 		double yawPass = this.yawRate * timePassed;
 		createInverseRotate();
 		this.pitch += yawPass
@@ -196,6 +198,7 @@ public class SimulationDrone implements Drone, WorldObject{
 		this.pitch += world.getWindRotationZ()*timePassed;
 		
 		/*
+		 System.out.println("--------------");
 		 System.out.println("global pitch " + this.pitch);
 		 System.out.println("global yaw " + this.yaw);
 		 System.out.println("global roll " + this.roll);
@@ -204,10 +207,12 @@ public class SimulationDrone implements Drone, WorldObject{
 		 System.out.println("pitchRate " + this.pitchRate);
 		 System.out.println("yawRate " + this.yawRate);
 		 System.out.println("rollRate " + this.rollRate);
+		 System.out.println("--------------");
 		 */
-
+		 
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
+		getMiddleCamera().updateDroneCamera();
 		
 		this.autopilot.timeHasPassed();
 	}
@@ -237,23 +242,27 @@ public class SimulationDrone implements Drone, WorldObject{
 		// lookat moet recht vooruit zijn
 		// dus X moet zelfde zijn, Y ook, Z iets verder
 
-		float commonY = 0;
+		float commonY = getDroneHeight()/2;
 
 		// left
-		float leftX = getCameraSeparation() / 2;
-		float leftZ = -getDroneDepth() / 2;
+		float leftX = getDroneWidth() / 2;
+		float leftZ = -getCameraSeparation() / 2;
 		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX+100, commonY, leftZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.LEFT);
 
 		// right
-		float rightX = getCameraSeparation() / 2;
-		float rightZ = getDroneDepth() / 2;
+		float rightX = getDroneWidth() / 2;
+		float rightZ = getCameraSeparation() / 2;
 		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX+100, commonY, rightZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.RIGHT);
+		
+		// middle
+		middleCamera = new DroneCamera(-2, 0.5f, 0, -1+100, 0, 0, 0, 1, 0, getWorld(), this, DroneCameraPlace.MIDDLE);
 
 		// add to list in world
 		getWorld().addDroneCamera(leftCamera);
 		getWorld().addDroneCamera(rightCamera);
+		getWorld().addDroneCamera(middleCamera);
 	}
 
 	public void addRandomRotation() {
@@ -346,6 +355,8 @@ public class SimulationDrone implements Drone, WorldObject{
 
 	@Override
 	public float getCameraSeparation() {
+		if (getWorld() instanceof WorldParser)
+			return (float) world.getParser().getCameraSeparation();
 		return cameraSeperation;
 	}
 
@@ -361,36 +372,50 @@ public class SimulationDrone implements Drone, WorldObject{
 
 	@Override
 	public float getWeight() {
+		if (getWorld() instanceof WorldParser)
+			return (float) getWorld().getParser().getWeight();
 		return SimulationDrone.weight;
 	}
 
 	@Override
 	public float getGravity() {
+		if (getWorld() instanceof WorldParser)
+			return (float) -getWorld().getParser().getGravity();
 		return this.gravityConstant;
 	}
 
 	@Override
 	public float getDrag() {
+		if (getWorld() instanceof WorldParser)
+			return (float) getWorld().getParser().getDrag();
 		return 0.1f;
 	}
 
 	@Override
 	public float getMaxThrust() {
+		if (getWorld() instanceof WorldParser)
+			return (float) getWorld().getParser().getMaxThrust();
 		return -3f * SimulationDrone.weight * getGravity();
 	}
 
 	@Override
 	public float getMaxPitchRate() {
+		if (getWorld() instanceof WorldParser)
+			return (float) getWorld().getParser().getMaxPitchRate();
 		return 5f;
 	}
 
 	@Override
 	public float getMaxRollRate() {
+		if (getWorld() instanceof WorldParser)
+			return (float) getWorld().getParser().getMaxRollRate();
 		return 5f;
 	}
 
 	@Override
 	public float getMaxYawRate() {
+		if (getWorld() instanceof WorldParser)
+			return (float) getWorld().getParser().getMaxYawRate();
 		return 40f;
 	}
 
@@ -433,5 +458,9 @@ public class SimulationDrone implements Drone, WorldObject{
 	
 	public float getRadius() {
 		return this.radius;
+	}
+	
+	public DroneCamera getMiddleCamera() {
+		return middleCamera;
 	}
 }

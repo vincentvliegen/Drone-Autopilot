@@ -33,7 +33,7 @@ public class DroneAutopilot implements Autopilot{
 	@Override
 	public void timeHasPassed() {
 		if (this.getMoveToTarget().getGUI().lastOrbEnabled) {
-			this.getMoveToTarget().execute(255);
+			this.getMoveToTarget().execute(16711680);
 		} else if (this.getMoveToTarget().getGUI().flyShortest) {
 			this.getShortestPath().execute();
 		} else if (this.getMoveToTarget().getGUI().test) {
@@ -41,7 +41,7 @@ public class DroneAutopilot implements Autopilot{
 			this.getShortestPath().getBiggestOrbs();
 		} else {
 			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity() * this.getDrone().getWeight()));
-			
+
 		}
 	}
 	

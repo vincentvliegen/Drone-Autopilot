@@ -103,7 +103,7 @@ public class GUI extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String nameButton = e.getActionCommand();
 				if(nameButton.equalsIgnoreCase("Right Dronecamera")){
-					world.setCurrentCamera(world.getDroneCameras().get(1));
+					world.setCurrentCamera(world.getDroneCameras().get(2));
 				}
 			}
 		});
@@ -241,7 +241,7 @@ public class GUI extends JPanel {
 					JSlider slider = (JSlider) evt.getSource();
 					if (!slider.getValueIsAdjusting()) {
 						double value = slider.getValue();
-						((World12) world).setWindForceX((float)((value-5)/10));
+						((World12) world).setWindSpeedX((value-5)/10);
 						System.out.println("SLIDERX: " + value/10);
 
 					}
@@ -261,7 +261,7 @@ public class GUI extends JPanel {
 					JSlider slider = (JSlider) evt.getSource();
 					if (!slider.getValueIsAdjusting()) {
 						double value = slider.getValue();
-						((World12) world).setWindForceY((float)((value-5)/10));
+						((World12) world).setWindSpeedY((value-5)/10);
 						//System.out.println("SLIDERY: " + (double)(value/10));
 
 					}
@@ -282,7 +282,7 @@ public class GUI extends JPanel {
 					if (!slider.getValueIsAdjusting()) {
 						double value = slider.getValue();
 						//VALUE moet gedeeld worden door 10 anders veel te groot.
-						((World12) world).setWindForceZ((float)((value-5)/10));
+						((World12) world).setWindSpeedZ((value-5)/10);
 						//System.out.println("SLIDERZ: " + value/10);
 
 					}

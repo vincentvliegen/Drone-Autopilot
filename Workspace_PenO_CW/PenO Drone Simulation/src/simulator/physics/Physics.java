@@ -58,7 +58,7 @@ public class Physics {
 		Force thrustForce = calculateThrustForce(drone);
 		Force gravity = new Force(0, drone.getGravity() * drone.getWeight(), 0);
 		Force drag = new Force(-drone.getDrag()*drone.getMovement().getVelocity()[0], -drone.getDrag()*drone.getMovement().getVelocity()[1],-drone.getDrag()*drone.getMovement().getVelocity()[2]);
-		Force wind = new Force(drone.getDrag()*world.getWindSpeedX(), drone.getDrag()*world.getWindSpeedY(), drone.getDrag()*world.getWindSpeedZ());
+		Force wind = new Force((float)(drone.getDrag()*world.getWindSpeedX()), (float)(drone.getDrag()*world.getWindSpeedY()), (float)(drone.getDrag()*world.getWindSpeedZ()));
 		forces.add(thrustForce);
 		forces.add(gravity);
 		forces.add(drag);

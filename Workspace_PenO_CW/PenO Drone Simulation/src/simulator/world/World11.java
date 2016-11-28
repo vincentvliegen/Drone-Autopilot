@@ -127,7 +127,7 @@ public class World11 extends World {
 
 		double[] translateSphere = { 10f, 0, 0f };
 		float[] colorSphere = { 1f, 0f, 0f };
-		Sphere sphere1 = new Sphere(gl, .5f, colorSphere, translateSphere);
+		Sphere sphere1 = new Sphere(gl, colorSphere, translateSphere);
 		sphere1.draw();
 		addSphere(sphere1);
 

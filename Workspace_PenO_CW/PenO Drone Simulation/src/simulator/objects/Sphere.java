@@ -6,7 +6,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 public class Sphere implements WorldObject{
 	
 	GL2 gl;
-	float radius;
+	static float radius = 0.5f;
 	int slices = 64;
 	int stacks = 64;
 	float[] color = new float[3];
@@ -14,12 +14,12 @@ public class Sphere implements WorldObject{
 	static double[] standardTranslate = {0,0,0};
 	
 	
-	public Sphere(GL2 gl, float radius, float[] color, double[] translate){
+	public Sphere(GL2 gl, float[] color, double[] translate){
 		this.gl = gl;
-		this.radius = radius;
 		this.color = color;
 		this.position = translate;
 	};
+	
 	
 	
 	public void draw(){

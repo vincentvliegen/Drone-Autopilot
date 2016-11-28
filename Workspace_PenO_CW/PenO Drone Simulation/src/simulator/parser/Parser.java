@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-
+import simulator.objects.ObstacleSphere;
 import simulator.objects.Sphere;
 import simulator.world.World;
 
@@ -30,8 +28,8 @@ public class Parser {
 	//TODO verander naar float?
 	double horizontalAngleOfView;
 	double verticalAngleOfView;
-	double imageWidth;
-	double imageHeight;
+	int imageWidth;
+	int imageHeight;
 	double cameraSeparation; 
 	double weight ;
 	double gravity; 
@@ -62,7 +60,6 @@ public class Parser {
 
 	//TODO aanpassen
 
-	float vasteRadius = 0.5f;
 	int vasteSlices = 64;
 	int vasteStacks = 64;
 
@@ -99,8 +96,8 @@ public class Parser {
 		String[] splitArray = myLine.split(" ");
 		horizontalAngleOfView = Double.parseDouble(splitArray[0]);
 		verticalAngleOfView = Double.parseDouble(splitArray[1]);
-		imageWidth = Double.parseDouble(splitArray[2]);
-		imageHeight = Double.parseDouble(splitArray[3]);
+		imageWidth = Integer.parseInt(splitArray[2]);
+		imageHeight = Integer.parseInt(splitArray[3]);
 		cameraSeparation = Double.parseDouble(splitArray[4]);
 		weight = Double.parseDouble(splitArray[5]);
 		gravity = Double.parseDouble(splitArray[6]);
@@ -113,7 +110,6 @@ public class Parser {
 
 		// line 2
 		myLine = bufRead.readLine();
-		System.out.println(Arrays.toString(splitArray));
 		arrayXValues = readInTimesAndValues(myLine, false);
 		arrayXTimes = readInTimesAndValues(myLine, true);
 
@@ -144,35 +140,25 @@ public class Parser {
 		windRotationZTimes = readInTimesAndValues(myLine, true);				
 
 
-		Random rand = new Random();
-		float r = 0, g = 0, b = 0;
-
 		while ( (myLine = bufRead.readLine()) != null)
-		{    
+		{
+			
 			splitArray = myLine.split(" ");
-			double[] position = {Double.parseDouble(splitArray[1]), Double.parseDouble(splitArray[1]), Double.parseDouble(splitArray[3])};
-
+			double[] position = {Double.parseDouble(splitArray[1]), Double.parseDouble(splitArray[2]), Double.parseDouble(splitArray[3])};
+	
+			
 			//target_balls
-
-			if(splitArray[0] == "target_ball") {
-				//TODO argumenten aanpassen!!
-				while (r == g && r == b && g == b){
-					r = rand.nextFloat();
-					g = rand.nextFloat();
-					b = rand.nextFloat();
-				}
-				float[] color = {r, g, b};
-				targetBalls.add(new Sphere(getWorld().getGL().getGL2(), vasteRadius, color , position));
+			
+			if(splitArray[0].equals("target_ball")) {
+				
+				getWorld().addSphereWithRandomColor(position);
 
 			}
 
 			//obstacle_balls
 
-			else if(splitArray[0] == "obstacle_ball") {
-				b = rand.nextFloat();
-				float[] color = {b, b, b};
-				obstacleBalls.add(new Sphere(getWorld().getGL().getGL2(), vasteRadius, color , position));
-
+			else if(splitArray[0].equals("obstacle_ball")) {
+				getWorld().addObstacleSphere(new ObstacleSphere(getWorld().getGL().getGL2(), position));
 			}
 
 		}
@@ -214,12 +200,12 @@ public class Parser {
 	}
 
 
-	public double getImageWidth() {
+	public int getImageWidth() {
 		return imageWidth;
 	}
 
 
-	public double getImageHeight() {
+	public int getImageHeight() {
 		return imageHeight;
 	}
 
@@ -331,11 +317,6 @@ public class Parser {
 
 	public ArrayList<Sphere> getTargetBalls() {
 		return targetBalls;
-	}
-
-
-	public float getVasteRadius() {
-		return vasteRadius;
 	}
 
 
