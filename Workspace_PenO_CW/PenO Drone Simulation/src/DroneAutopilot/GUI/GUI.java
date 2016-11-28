@@ -63,7 +63,7 @@ public class GUI {
 		select.setFont(font);
 		panel.add(select);
 
-		String[] list = { " ", "Fly to red orb" };
+		String[] list = { " ", "Fly to red orb","Fly shortest path","TEST" };
 		JComboBox menu = new JComboBox(list);
 		menu.setPreferredSize(new Dimension(250,30));
 		panel.add(menu);
@@ -76,10 +76,26 @@ public class GUI {
 
 				Object selected = menu.getSelectedItem();
 				if (selected.toString().equals("Fly to red orb")){
-					redOrbEnabled = true;
+					lastOrbEnabled = true;
+					flyShortest = false;
+					test = false;
+				}
+				else if (selected.toString().equals("Fly shortest path")){
+					flyShortest = true;
+					lastOrbEnabled = false;
+					test = false;
+				}
+				else if (selected.toString().equals("TEST")){
+					System.out.println("test");
+					lastOrbEnabled = false;
+					flyShortest = false;
+					test = true;
+					System.out.println("test: " +test);
 				}
 				else if(selected.toString().equals(" "))
-					redOrbEnabled = false;
+					lastOrbEnabled = false;
+					flyShortest = false;
+					test = false;
 			}
 		});
 
@@ -126,5 +142,7 @@ public class GUI {
 
 	private final JProgressBar progressBar;
 	public int maxValue;
-	public boolean redOrbEnabled;
+	public boolean lastOrbEnabled;
+	public boolean flyShortest;
+	public boolean test;
 }

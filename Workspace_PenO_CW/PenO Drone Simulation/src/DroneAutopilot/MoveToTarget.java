@@ -229,6 +229,9 @@ public class MoveToTarget{
 
 		//System.out.println("remafstand: " + this.getPhysicsCalculations().getDecelerationDistance());
 		//System.out.println("distance: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
+		
+		//if-statement die deceleration uitschakelt als 1.1 of 1.2 niet
+		if(this.getGUI().lastOrbEnabled){
 		if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().getDecelerationDistance()) {
 			this.startDeceleration(cogL,cogR);
 			deceleration = true;
@@ -239,7 +242,7 @@ public class MoveToTarget{
 		}
 		else if(deceleration){
 			this.startDeceleration(cogL, cogR);
-		}
+		}}
 
 	}
 

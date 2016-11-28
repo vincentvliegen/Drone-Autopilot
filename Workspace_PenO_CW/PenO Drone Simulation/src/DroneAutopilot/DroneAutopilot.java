@@ -14,11 +14,12 @@ public class DroneAutopilot implements Autopilot{
 	 * An object of the class MoveToTarget.
 	 */
 	private final MoveToTarget moveToTarget;
-	
+	private final ShortestPath shortestPath;
 	
 	public DroneAutopilot(Drone drone){
 		this.setDrone(drone);
 		this.moveToTarget = new MoveToTarget(drone);
+		this.shortestPath = new ShortestPath(this.getMoveToTarget());
 	}
 	
 	
@@ -31,12 +32,18 @@ public class DroneAutopilot implements Autopilot{
     */
 	@Override
 	public void timeHasPassed() {
-		if (this.getMoveToTarget().getGUI().redOrbEnabled) {
+		if (this.getMoveToTarget().getGUI().lastOrbEnabled) {
 			this.getMoveToTarget().execute(255);
-			}else{
-				this.getDrone().setThrust(Math.abs(this.getDrone().getGravity()*this.getDrone().getWeight()));;
-			}
+		} else if (this.getMoveToTarget().getGUI().flyShortest) {
+			this.getShortestPath().execute();
+		} else if (this.getMoveToTarget().getGUI().test) {
+			System.out.println("thp");
+			this.getShortestPath().getBiggestOrbs();
+		} else {
+			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity() * this.getDrone().getWeight()));
+			
 		}
+	}
 	
 	
 	/**
@@ -60,6 +67,11 @@ public class DroneAutopilot implements Autopilot{
 	 */
 	public final MoveToTarget getMoveToTarget(){
 		return this.moveToTarget;
+	}
+
+
+	public ShortestPath getShortestPath() {
+		return shortestPath;
 	}
 	
 	
