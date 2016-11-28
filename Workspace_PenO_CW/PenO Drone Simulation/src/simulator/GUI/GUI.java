@@ -2,6 +2,7 @@ package simulator.GUI;
 
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -12,6 +13,7 @@ import simulator.world.World12;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -30,30 +32,29 @@ public class GUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static World world;
-	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsComboboxGeneralCameras, constraintsButtonDroneCamera, constraintsPanelGravity;
+	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsComboboxGeneralCameras, constraintsButtonDroneCamera, constraintsPanelGravity, constraintsAddButton;
 	private JLabel position = new JLabel();
 	private JLabel speed = new JLabel();
-	private JLabel windX, windY, windZ;
 	private List<JButton> buttonsDroneCameras = new ArrayList<>();
 	private List<JSlider> windSlidersX = new ArrayList<>();
 	private List<JSlider> windSlidersY = new ArrayList<>();
 	private List<JSlider> windSlidersZ = new ArrayList<>();
 	private List<String> listNameButtons = new ArrayList<>();
+	private int MAXWIND = 10;
+	int MAXGRAVITY = 2000;
 
 	/**
 	 * Create the panel.
 	 */
 	public GUI(World world) {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0};
 		setLayout(gridBagLayout);
 		this.world = world;
-
 
 		// #buttonsGeneralCameras
 		JPanel panelComboboxGeneralCameras = new JPanel(new GridLayout(2,1));
 		constraintsComboboxGeneralCameras = new GridBagConstraints();
-		makeConstraints(constraintsComboboxGeneralCameras,new Insets(1, 1, 1, 1),0,0);
+		makeConstraints(constraintsComboboxGeneralCameras,new Insets(1, 1, 1, 1), 0, 0);
 
 		JLabel select = new JLabel("Select general camera: ");
 		panelComboboxGeneralCameras.add(select);
@@ -85,10 +86,10 @@ public class GUI extends JPanel {
 		// #buttonsDroneCameras
 		JPanel panelButtonDroneCameras = new JPanel(new GridLayout(1,2));
 		constraintsButtonDroneCamera = new GridBagConstraints();
-		makeConstraints(constraintsButtonDroneCamera,new Insets(1, 1, 1, 1),0,1);
+		makeConstraints(constraintsButtonDroneCamera,new Insets(1, 1, 1, 1), 0, 1);
 
 		buttonsDroneCameras.add(new JButton("Left dronecamera"));
-		buttonsDroneCameras.add(new JButton("Right dronecamera"));
+		buttonsDroneCameras.add(new JButton("Third-person camera"));
 		buttonsDroneCameras.get(0).addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -102,7 +103,7 @@ public class GUI extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String nameButton = e.getActionCommand();
-				if(nameButton.equalsIgnoreCase("Right Dronecamera")){
+				if(nameButton.equalsIgnoreCase("Third-person camera")){
 					world.setCurrentCamera(world.getDroneCameras().get(2));
 				}
 			}
@@ -113,7 +114,7 @@ public class GUI extends JPanel {
 
 		// Speed
 		constraintsSpeed = new GridBagConstraints();
-		makeConstraints(constraintsSpeed, new Insets(1, 1, 1, 1), 0, 2, 3, 10, 1);
+		makeConstraints(constraintsSpeed, new Insets(1, 1, 1, 1), 0, 2, 3, 5);
 
 		Timer timerSpeed = new Timer(1000, new ActionListener(){
 			@Override
@@ -126,7 +127,7 @@ public class GUI extends JPanel {
 					currentSpeed = (float) Math.sqrt(Math.pow(velocity[0],2)+Math.pow(velocity[1],2)+Math.pow(velocity[2],2));
 					BigDecimal bigDecimalSpeed = new BigDecimal(currentSpeed);
 					BigDecimal roundOffSpeed = bigDecimalSpeed.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					speed.setText("Speed: " + roundOffSpeed);
+					speed.setText("Speed: " + roundOffSpeed + " m/s");
 					//System.out.println("simulatorspeed: "+currentSpeed);
 					//System.out.println("Speed");
 					add(speed, constraintsSpeed);
@@ -139,7 +140,7 @@ public class GUI extends JPanel {
 
 		// Position
 		constraintsPosition = new GridBagConstraints();
-		makeConstraints(constraintsPosition, new Insets(1, 1, 1, 1), 0, 3, 3, 10, 1);
+		makeConstraints(constraintsPosition, new Insets(1, 1, 1, 1), 0, 3, 3, 5);
 		Timer timerPosition = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -164,24 +165,20 @@ public class GUI extends JPanel {
 
 
 		//GrivatySlider
-		JPanel panelGravity = new JPanel(new GridLayout(1,2));
 		constraintsPanelGravity = new GridBagConstraints();
-		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 4);
-		int MAXGRAVITY = 2000 ;
+		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0.6);
+		JPanel panelGravity = new JPanel(new GridBagLayout());
 
-		panelGravity.add(new JLabel("Gravity: "));
-
-		JSlider gravitySlider = new JSlider(JSlider.HORIZONTAL, 0, MAXGRAVITY, 981);
-		gravitySlider.setMajorTickSpacing(200);
-		gravitySlider.setPaintTicks(true);
+		panelGravity.add(new JLabel("Gravity: "), constraintsPanelGravity);
 
 		//Create the label table
 		Hashtable labelTable = new Hashtable();
 		labelTable.put( new Integer( 0 ), new JLabel("0") );
 		labelTable.put( new Integer( 981 ), new JLabel("9.81") );
 		labelTable.put( new Integer( MAXGRAVITY ), new JLabel("20") );
-		gravitySlider.setLabelTable( labelTable );
-		gravitySlider.setPaintLabels(true);
+
+		JSlider gravitySlider = new JSlider(JSlider.HORIZONTAL, 0, MAXGRAVITY, 981);
+		createSlider(gravitySlider, 200, labelTable);
 
 		gravitySlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent evt) {
@@ -195,30 +192,29 @@ public class GUI extends JPanel {
 			}
 		});
 
-		panelGravity.add(gravitySlider);
+		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0.4);
+		panelGravity.add(gravitySlider, constraintsPanelGravity);
+		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 4);
 		add(panelGravity, constraintsPanelGravity);
 
-		System.out.print(world instanceof World11);
 		if((world instanceof World11)==false || world instanceof World12){
 			// Panel WindNams & Sliders
-
-			JPanel panelWindSlidersX = new JPanel(new GridLayout(1,2));
-			JPanel panelWindSlidersY = new JPanel(new GridLayout(1,2));
-			JPanel panelWindSlidersZ= new JPanel(new GridLayout(1,2));
 			GridBagConstraints constraintsPanelWindSlidersX = new GridBagConstraints();
-			this.makeConstraints(constraintsPanelWindSlidersX, new Insets(1, 1, 1, 1), 0, 5);
+			JPanel panelWindSlidersX = new JPanel(new GridBagLayout());
+			this.makeConstraints(constraintsPanelWindSlidersX, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0.6);
+
 			GridBagConstraints constraintsPanelWindSlidersY = new GridBagConstraints();
-			this.makeConstraints(constraintsPanelWindSlidersY, new Insets(1, 1, 1, 1), 0, 6);
+			JPanel panelWindSlidersY = new JPanel(new GridBagLayout());
+			this.makeConstraints(constraintsPanelWindSlidersY, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0.6);
+
 			GridBagConstraints constraintsPanelWindSlidersZ = new GridBagConstraints();
-			this.makeConstraints(constraintsPanelWindSlidersZ, new Insets(1, 1, 1, 1), 0, 7);
+			JPanel panelWindSlidersZ= new JPanel(new GridBagLayout());
+			this.makeConstraints(constraintsPanelWindSlidersZ, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0.6);
 
 			// Wind-sliders Names
-			windX = new JLabel("Wind x-richting: ");
-			windY = new JLabel("Wind y-richting: ");
-			windZ = new JLabel("Wind z-richting:");
-			panelWindSlidersX.add(windX);
-			panelWindSlidersY.add(windY);
-			panelWindSlidersZ.add(windZ);
+			panelWindSlidersX.add(new JLabel("Wind x-richting: "), constraintsPanelWindSlidersX);
+			panelWindSlidersY.add(new JLabel("Wind y-richting: "), constraintsPanelWindSlidersY);
+			panelWindSlidersZ.add(new JLabel("Wind z-richting: "), constraintsPanelWindSlidersZ);
 
 			// WindSliders 
 			int MAXWIND = 10;
@@ -231,19 +227,14 @@ public class GUI extends JPanel {
 
 			//WindX
 			JSlider windXSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
-			windXSlider.setMajorTickSpacing(1);
-			windXSlider.setPaintTicks(true);
-			windXSlider.setLabelTable( labelTableWind );
-			windXSlider.setPaintLabels(true);
+			createSlider(windXSlider, 1, labelTableWind);
 
 			windXSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent evt) {
 					JSlider slider = (JSlider) evt.getSource();
 					if (!slider.getValueIsAdjusting()) {
 						double value = slider.getValue();
-						((World12) world).setWindSpeedX((value-5)/10);
-						System.out.println("SLIDERX: " + value/10);
-
+						world.setWindSpeedX((value-5)/10);
 					}
 				}
 			});
@@ -251,19 +242,14 @@ public class GUI extends JPanel {
 
 			//WindY
 			JSlider windYSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
-			windYSlider.setMajorTickSpacing(1);
-			windYSlider.setPaintTicks(true);
-			windYSlider.setLabelTable( labelTableWind );
-			windYSlider.setPaintLabels(true);
+			createSlider(windYSlider, 1, labelTableWind);
 
 			windYSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent evt) {
 					JSlider slider = (JSlider) evt.getSource();
 					if (!slider.getValueIsAdjusting()) {
 						double value = slider.getValue();
-						((World12) world).setWindSpeedY((value-5)/10);
-						//System.out.println("SLIDERY: " + (double)(value/10));
-
+						world.setWindSpeedY((value-5)/10);
 					}
 				}
 			});
@@ -271,32 +257,45 @@ public class GUI extends JPanel {
 
 			//WindZ
 			JSlider windZSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
-			windZSlider.setMajorTickSpacing(1);
-			windZSlider.setPaintTicks(true);
-			windZSlider.setLabelTable( labelTableWind );
-			windZSlider.setPaintLabels(true);
+			createSlider(windZSlider, 1, labelTableWind);
 
 			windZSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent evt) {
 					JSlider slider = (JSlider) evt.getSource();
 					if (!slider.getValueIsAdjusting()) {
 						double value = slider.getValue();
-						//VALUE moet gedeeld worden door 10 anders veel te groot.
-						((World12) world).setWindSpeedZ((value-5)/10);
-						//System.out.println("SLIDERZ: " + value/10);
-
+						world.setWindSpeedZ((value-5)/10);
 					}
 				}
 			});
 			windSlidersZ.add(windZSlider);
 
-			panelWindSlidersX.add(windSlidersX.get(0));
-			panelWindSlidersY.add(windSlidersY.get(0));
-			panelWindSlidersZ.add(windSlidersZ.get(0));
+			this.makeConstraints(constraintsPanelWindSlidersX, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0.4);
+			panelWindSlidersX.add(windSlidersX.get(0), constraintsPanelWindSlidersX);
+			this.makeConstraints(constraintsPanelWindSlidersY, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0.4);
+			panelWindSlidersY.add(windSlidersY.get(0), constraintsPanelWindSlidersY);
+			this.makeConstraints(constraintsPanelWindSlidersZ, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0.4);
+			panelWindSlidersZ.add(windSlidersZ.get(0), constraintsPanelWindSlidersZ);
+			this.makeConstraints(constraintsPanelWindSlidersX, new Insets(1, 1, 1, 1), 0, 5);
 			add(panelWindSlidersX, constraintsPanelWindSlidersX);
+			this.makeConstraints(constraintsPanelWindSlidersY, new Insets(1, 1, 1, 1), 0, 6);
 			add(panelWindSlidersY, constraintsPanelWindSlidersY);
+			this.makeConstraints(constraintsPanelWindSlidersZ, new Insets(1, 1, 1, 1), 0, 7);
 			add(panelWindSlidersZ, constraintsPanelWindSlidersZ);
 		}
+
+		//Add objects
+		JButton addButton = new JButton("Add extra sphere");
+		addButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame addSphere = new JFrame();
+				createAddSphere(addSphere);
+			}
+		});
+		constraintsAddButton = new GridBagConstraints();
+		this.makeConstraints(constraintsAddButton, new Insets(1, 1, 1, 1), 0, 8);
+		add(addButton, constraintsAddButton);
 
 		//resize
 		this.setPreferredSize(new Dimension(390, 768));
@@ -308,7 +307,15 @@ public class GUI extends JPanel {
 		name.gridy=gridy;
 	}
 
-	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy, int gridwidth, int ipady, int weightx){
+	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy, int gridwidth, int ipady){
+		name.insets=insets;
+		name.gridx=gridx;
+		name.gridy=gridy;
+		name.gridwidth=gridwidth;
+		name.ipady=ipady;
+	}
+
+	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy, int gridwidth, int ipady, double weightx){
 		name.insets=insets;
 		name.gridx=gridx;
 		name.gridy=gridy;
@@ -317,4 +324,67 @@ public class GUI extends JPanel {
 		name.weightx=weightx;
 	}
 
+	public void createSlider(JSlider windSlider,int majorTickSpacing, Hashtable labelTableWind){
+		windSlider.setMajorTickSpacing(majorTickSpacing);
+		windSlider.setPaintTicks(true);
+		windSlider.setLabelTable(labelTableWind);
+		windSlider.setPaintLabels(true);
+	}
+
+	public void createAddSphere(JFrame addSphere){
+		addSphere.setTitle("Add new sphere");
+		addSphere.setAlwaysOnTop(true);
+		addSphere.setBounds(100, 300, 400, 200);
+
+		GridBagConstraints constraintsAddSphere = new GridBagConstraints();
+		JPanel panelAddSphere = new JPanel(new GridBagLayout());
+
+
+		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 1);
+		panelAddSphere.add(new JLabel("x: "), constraintsAddSphere);
+		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 1);
+		JTextField userTextX = new JTextField(5);
+		panelAddSphere.add(userTextX, constraintsAddSphere);
+		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 3, 0, 1, 0, 1);
+		panelAddSphere.add(new JLabel("y: "), constraintsAddSphere);
+		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 4, 0, 1, 0, 1);
+		JTextField userTextY = new JTextField(5);
+		panelAddSphere.add(userTextY, constraintsAddSphere);
+		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 6, 0, 1, 0, 1);
+		panelAddSphere.add(new JLabel("z: "), constraintsAddSphere);
+		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 7, 0, 1, 0, 1);
+		JTextField userTextZ = new JTextField(5);
+		panelAddSphere.add(userTextZ, constraintsAddSphere);
+
+		//AddButton
+		JButton insideAddButton = new JButton("Add");
+		insideAddButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				double positionX = Double.parseDouble(userTextX.getText());
+				double positionY = Double.parseDouble(userTextY.getText());
+				double positionZ = Double.parseDouble(userTextZ.getText());
+				double[] position = {positionX, positionY, positionZ};
+				world.addSphereWithRandomColor(position);
+				addSphere.setVisible(false);
+			}
+		});
+		GridBagConstraints constraintsButton = new GridBagConstraints();
+		makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 1, 1, 0, 1);
+		panelAddSphere.add(insideAddButton, constraintsButton);
+
+		//CancelButton
+		JButton insideCancelButton = new JButton("Cancel");
+		insideCancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addSphere.setVisible(false);
+			}
+		});
+		makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 2, 1, 0, 1);
+		panelAddSphere.add(insideCancelButton, constraintsButton);
+
+		addSphere.add(panelAddSphere);
+		addSphere.setVisible(true);
+	}
 }
