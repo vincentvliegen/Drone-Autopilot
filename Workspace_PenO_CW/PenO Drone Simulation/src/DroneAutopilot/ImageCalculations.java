@@ -6,7 +6,7 @@ import exceptions.EmptyPositionListException;
 import exceptions.SmallCircleException;
 import p_en_o_cw_2016.Camera;
 
-public class ImageCalculations_new {
+public class ImageCalculations{
 
 	// kleur in int
 	public final static int red = 255;

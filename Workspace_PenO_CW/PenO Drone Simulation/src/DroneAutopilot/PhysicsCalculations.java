@@ -2,7 +2,7 @@ package DroneAutopilot;
 
 import p_en_o_cw_2016.Drone;
 
-public class PhysicsCalculations_new {
+public class PhysicsCalculations{
 
 	private Drone drone;
 	private float speed;
@@ -14,7 +14,7 @@ public class PhysicsCalculations_new {
 	private float previousPitchRate;
 
 
-	public PhysicsCalculations_new(Drone drone){
+	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
 		setSpeed(0);
 		setAcceleration(0);

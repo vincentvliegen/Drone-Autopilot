@@ -1,5 +1,7 @@
 package simulator.objects;
 
+import p_en_o_cw_2016.Autopilot;
+import p_en_o_cw_2016.AutopilotFactory;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
@@ -8,12 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import DroneAutopilot.DroneAutopilotFactory_new;
-import DroneAutopilot.DroneAutopilot_new;
-
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES3;
 
+import DroneAutopilot.DroneAutopilotFactory;
 import simulator.camera.DroneCamera;
 import simulator.camera.DroneCameraPlace;
 import simulator.physics.Movement;
@@ -29,7 +29,7 @@ public class SimulationDrone implements Drone, WorldObject{
 	private float pitchRate = 0;
 	private float rollRate = 0;
 	private float yawRate = 0;
-	private DroneAutopilot_new autopilot;
+	private Autopilot autopilot;
 	private float gravityConstant = -9.81f;
 	public DroneCamera leftCamera;
 	public DroneCamera rightCamera;
@@ -57,7 +57,8 @@ public class SimulationDrone implements Drone, WorldObject{
 		this.world = world;
 		this.movement = new Movement(this);
 		generateDroneCameras();
-		DroneAutopilotFactory_new ap = new DroneAutopilotFactory_new();
+		//TODO Moet via interface! => AutopilotFactory
+		DroneAutopilotFactory ap = new DroneAutopilotFactory();
 		this.autopilot = ap.create(this);
 		this.radius = (float) Math.sqrt(Math.pow(height/2, 2) + Math.pow(width/2, 2) + Math.pow(depth/2, 2));
 	}
@@ -160,34 +161,34 @@ public class SimulationDrone implements Drone, WorldObject{
 	}
 
 	public void timeHasPassed(float timePassed) {
-		/*
-		double yawPass = this.yawRate * timePassed;
-		createInverseRotate();
-		this.pitch += yawPass
-				* new BigDecimal(inverseRotateMatrix.get(1)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.yaw += yawPass
-				* new BigDecimal(inverseRotateMatrix.get(4)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.roll += yawPass
-				* new BigDecimal(inverseRotateMatrix.get(7)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-
-		double rollPass = this.rollRate * timePassed;
-		createInverseRotate();
-		this.pitch += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(2)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.yaw += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(5)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.roll += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(8)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-
-		double pitchPass = this.pitchRate * timePassed;
-		createInverseRotate();
-		this.pitch += pitchPass
-				* new BigDecimal(inverseRotateMatrix.get(0)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.yaw += pitchPass
-				* new BigDecimal(inverseRotateMatrix.get(3)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.roll += pitchPass
-				* new BigDecimal(inverseRotateMatrix.get(6)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-	*/
+		
+//		double yawPass = this.yawRate * timePassed;
+//		createInverseRotate();
+//		this.pitch += yawPass
+//				* new BigDecimal(inverseRotateMatrix.get(1)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+//		this.yaw += yawPass
+//				* new BigDecimal(inverseRotateMatrix.get(4)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+//		this.roll += yawPass
+//				* new BigDecimal(inverseRotateMatrix.get(7)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+//
+//		double rollPass = this.rollRate * timePassed;
+//		createInverseRotate();
+//		this.pitch += rollPass
+//				* new BigDecimal(inverseRotateMatrix.get(2)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+//		this.yaw += rollPass
+//				* new BigDecimal(inverseRotateMatrix.get(5)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+//		this.roll += rollPass
+//				* new BigDecimal(inverseRotateMatrix.get(8)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+//
+//		double pitchPass = this.pitchRate * timePassed;
+//		createInverseRotate();
+//		this.pitch += pitchPass
+//				* new BigDecimal(inverseRotateMatrix.get(0)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+//		this.yaw += pitchPass
+//				* new BigDecimal(inverseRotateMatrix.get(3)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+//		this.roll += pitchPass
+//				* new BigDecimal(inverseRotateMatrix.get(6)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+	
 		this.yaw += yawRate*timePassed;
 		this.roll += rollRate*timePassed;
 		this.pitch += pitchRate*timePassed*Math.cos(Math.toRadians(roll));

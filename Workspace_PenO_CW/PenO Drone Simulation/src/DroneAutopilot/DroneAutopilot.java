@@ -3,7 +3,7 @@ package DroneAutopilot;
 import p_en_o_cw_2016.Autopilot;
 import p_en_o_cw_2016.Drone;
 
-public class DroneAutopilot_new implements Autopilot{
+public class DroneAutopilot implements Autopilot{
 	
 	/**
 	 * Variable registering the drone linked to the Autopilot.
@@ -13,12 +13,12 @@ public class DroneAutopilot_new implements Autopilot{
 	/**
 	 * An object of the class MoveToTarget.
 	 */
-	private final MoveToTarget_new moveToTarget;
+	private final MoveToTarget moveToTarget;
 	
 	
-	public DroneAutopilot_new(Drone drone){
+	public DroneAutopilot(Drone drone){
 		this.setDrone(drone);
-		this.moveToTarget = new MoveToTarget_new(drone);
+		this.moveToTarget = new MoveToTarget(drone);
 	}
 	
 	
@@ -58,7 +58,7 @@ public class DroneAutopilot_new implements Autopilot{
 	/**
 	 * Return an object of the class MoveToTarget, which will execute the movements of the drone.
 	 */
-	public final MoveToTarget_new getMoveToTarget(){
+	public final MoveToTarget getMoveToTarget(){
 		return this.moveToTarget;
 	}
 	
