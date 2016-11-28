@@ -19,8 +19,8 @@ public class DroneAutopilotFactory implements AutopilotFactory{
 		DroneAutopilot autopilot = new DroneAutopilot(drone);
 		GUI gui = new GUI();
 		autopilot.getMoveToTarget().setGUI(gui);
-		GraphPI graphPI = new GraphPI();
-		autopilot.getMoveToTarget().setGraphPI(graphPI);
+		//GraphPI graphPI = new GraphPI();
+		//autopilot.getMoveToTarget().setGraphPI(graphPI);
 		drone.setThrust(Math.abs(drone.getGravity()*drone.getWeight()));
 		drone.setPitchRate(0);
 		drone.setYawRate(0);
