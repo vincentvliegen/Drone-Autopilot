@@ -44,7 +44,7 @@ public class MoveToTarget{
 		this.rollPI = new RollController(1,0);
 		this.pitchPI = new PitchController(1,0);
 		this.heightPI = new HeightController(3,0);
-		this.distancePI = new DistanceController(1,0);
+		this.distancePI = new DistanceController(0.8,0);
 	}
 
 	public void execute(int color){
@@ -178,10 +178,12 @@ public class MoveToTarget{
 		}
 		if (this.getDrone().getPitch() > 0.1) {
 			float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
+			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
 			this.getDrone().setPitchRate(Math.max(output,-this.getDrone().getMaxPitchRate()));
 		} else if (this.getDrone().getPitch() < -0.1) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
 			float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
+			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
 			this.getDrone().setPitchRate(Math.min(output,this.getDrone().getMaxPitchRate()));
 		} else {
 			this.getDrone().setPitchRate(0);
@@ -230,6 +232,7 @@ public class MoveToTarget{
 				this.setPitchStarted(true);
 			}else{
 				float output = -this.getDistancePI().calculateRate(this.getPhysicsCalculations().getDistance(cogL, cogR), this.getDrone().getCurrentTime());
+				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDistance(cogL, cogR))*10);
 				this.getDrone().setPitchRate(output);
 				if(output<0){
 					this.setPitchStarted(false);
