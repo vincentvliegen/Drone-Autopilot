@@ -133,7 +133,7 @@ public class World11 extends World {
 
 		double[] translateDrone = { 0, 0, 0 };
 		float[] colorDrone = { 0f, 0f, 1f };
-		SimulationDrone drone1 = new SimulationDrone(gl, .03f, .175f, .175f, colorDrone, translateDrone, this);
+		SimulationDrone drone1 = new SimulationDrone(gl, .06f, .35f, .35f, colorDrone, translateDrone, this);
 		addSimulationDrone(drone1);
 		drone1.draw();
 
