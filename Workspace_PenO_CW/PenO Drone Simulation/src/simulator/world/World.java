@@ -13,6 +13,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.movement.KeyboardMovement;
+import simulator.objects.ObstacleSphere;
 import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
 import simulator.objects.WorldObject;
@@ -21,30 +22,31 @@ import simulator.physics.Physics;
 
 @SuppressWarnings("serial")
 public abstract class World extends GLCanvas implements GLEventListener {
-	
+
 	/*
 	 * Superklasse voor alle werelden aan te maken werelden
 	 */
-	
 
-		
+
+
 	private List<GeneralCamera> generalCameras = new ArrayList<>();
 	private List<DroneCamera> droneCameras = new ArrayList<>();
 	private List<SimulationDrone> drones = new ArrayList<>();
 	private List<Sphere> spheres = new ArrayList<>();
+	private List<ObstacleSphere> obstacleSpheres = new ArrayList<>();
 	private long startTime;
 	private long lastTime;
 	private double timePassed = 0;
 	private double currentTime = 0;
 	private GLU glu;
-	
+
 	//TODO verplaatsen
 	private Parser parser = new Parser(this);
 	public Parser getParser() {
 		return parser;
 	}
-	
-	
+
+
 	private int[] framebufferRight = new int[1];
 	private int[] framebufferLeft = new int[1];
 	//TODO meegeven in constructor?
@@ -89,21 +91,65 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	public void addSphere(Sphere sphere){
 		worldObjectsList.add(sphere);
-		spheres.add(sphere);		
+		spheres.add(sphere);
+		getColors().add(sphere.getColor());
+		System.out.println(getColors());
 	}
+	
+	public void removeSphere(Sphere sphere) {
+		worldObjectsList.remove(sphere);
+		spheres.remove(sphere);
+		getColors().remove(sphere.getColor());
+	}
+
+	
+	private ArrayList<float[]> colors = new ArrayList<>();
+	
+	private ArrayList<float[]> getColors() {
+		return colors;
+	}
+	
+	
+
+	public void addSphereWithRandomColor(double[] position) {
+		Random rand = new Random();
+		float r = 0, g=0,b=0;
+		float[] color = {r,g,b};
+		while((r == g && r == b) || getColors().contains(color)) {
+			r = rand.nextFloat();
+			g = rand.nextFloat();
+			b = rand.nextFloat();
+			color[0] = r;
+			color[1] = g;
+			color[2] = b;
+		}
+		addSphere(new Sphere(getGL().getGL2(), color, position));
+		
+		
+		}
+
+
+
+
+	public void addObstacleSphere(ObstacleSphere sphere){
+		worldObjectsList.add(sphere);
+		obstacleSpheres.add(sphere);		
+	}
+
+
 
 	public double checkTimePassed() {
 		return (System.nanoTime() - getLastTime())*Math.pow(10, -9);
 	}
-	
+
 	public void updateTimePassed() {
 		this.timePassed += (System.nanoTime() - getLastTime())*Math.pow(10, -9);
 	}
-	
+
 	protected abstract void setup();
 	protected abstract void handleCollision(WorldObject object, SimulationDrone drone);
 	protected abstract void draw();
-	
+
 	@Override
 	public abstract void display(GLAutoDrawable drawable);
 
@@ -123,7 +169,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.physics = new Physics(this);
 		final GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(gl);
-		
+
 		// Enable z- (depth) buffer for hidden surface removal.
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL.GL_LEQUAL);
@@ -140,9 +186,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		// Create GLU.
 		glu = new GLU();
 
-		
+
 		//FBO voor links
-		
+
 		gl.glGenFramebuffers(1, framebufferLeft, 0);
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, framebufferLeft[0]);
 
@@ -158,9 +204,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		gl.glGenTextures(1, textureLeft, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureLeft[0]);
-		
+
 		//FBO voor rechts
-		
+
 		gl.glGenFramebuffers(1, framebufferRight, 0);
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, framebufferRight[0]);
 
@@ -176,15 +222,15 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		gl.glGenTextures(1, textureRight, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureRight[0]);
-		
-			
-		
+
+
+
 		//set to default buffer
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
 		//TODO op de juiste plaats?
 		setup();
-		
+
 		// Start animator.
 		gl.setSwapInterval(1);
 		animator = new FPSAnimator(this, fps);
@@ -219,6 +265,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	public List<Sphere> getSpheres() {
 		return spheres;
+	}
+
+	public List<ObstacleSphere> getObstacleSpheres() {
+		return obstacleSpheres;
 	}
 
 	public GeneralCamera getCurrentCamera(){
@@ -264,59 +314,59 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public FPSAnimator getAnimator() {
 		return animator;
 	}
-	
+
 	public List<WorldObject> getWorldObjectList() {
 		return this.worldObjectsList;
 	}
-	
+
 	public int getWindRotationX() {
 		return xWindRotation;
 	}
-	
+
 	public int getWindRotationY() {
 		return yWindRotation;
 	}
-	
+
 	public int getWindRotationZ() {
 		return zWindRotation;
 	}
-	
+
 	public void setWindRotationX(int value) {
 		xWindRotation = value;
 	}
-	
+
 	public void setWindRotationY(int value) {
 		yWindRotation = value;
 	}
-	
+
 	public void setWindRotationZ(int value) {
 		zWindRotation = value;
 	}
-	
+
 	public int getWindSpeedX() {
 		return xWindSpeed;
 	}
-	
+
 	public int getWindSpeedY() {
 		return yWindSpeed;
 	}
-	
+
 	public int getWindSpeedZ() {
 		return zWindSpeed;
 	}
-	
+
 	public void setWindSpeedX(int value) {
 		xWindSpeed = value;
 	}
-	
+
 	public void setWindSpeedY(int value) {
 		yWindSpeed = value;
 	}
-	
+
 	public void setWindSpeedZ(int value) {
 		zWindSpeed = value;
 	}
-	
+
 	public void checkCollision(SimulationDrone drone) {
 		List<WorldObject> copyList = new ArrayList();
 		copyList.addAll(getWorldObjectList());
