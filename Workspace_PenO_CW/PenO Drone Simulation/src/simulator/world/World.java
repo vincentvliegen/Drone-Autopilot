@@ -323,8 +323,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		for (WorldObject currentObject: copyList) {
 			if (currentObject == drone)
 				continue;
-			double[] objectPos = currentObject.getTranslate();
-			double[] dronePos = drone.getTranslate();
+			double[] objectPos = currentObject.getPosition();
+			double[] dronePos = drone.getPosition();
 			double distance = Math.sqrt(Math.pow(objectPos[0] - dronePos[0], 2) + Math.pow(objectPos[1] - dronePos[1], 2) + Math.pow(objectPos[2] - dronePos[2], 2));
 			if (distance <= (currentObject.getRadius() + drone.getRadius()))
 				handleCollision(currentObject, drone);

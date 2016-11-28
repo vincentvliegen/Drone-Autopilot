@@ -162,7 +162,7 @@ public class Parser {
 					b = rand.nextFloat();
 				}
 				float[] color = {r, g, b};
-				targetBalls.add(new Sphere(getWorld().getGL().getGL2(), vasteRadius, vasteSlices, vasteStacks, color , position));
+				targetBalls.add(new Sphere(getWorld().getGL().getGL2(), vasteRadius, color , position));
 
 			}
 
@@ -171,7 +171,7 @@ public class Parser {
 			else if(splitArray[0] == "obstacle_ball") {
 				b = rand.nextFloat();
 				float[] color = {b, b, b};
-				obstacleBalls.add(new Sphere(getWorld().getGL().getGL2(), vasteRadius, vasteSlices, vasteStacks, color , position));
+				obstacleBalls.add(new Sphere(getWorld().getGL().getGL2(), vasteRadius, color , position));
 
 			}
 
