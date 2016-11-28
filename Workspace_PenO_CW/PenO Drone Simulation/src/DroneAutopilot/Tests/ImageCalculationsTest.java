@@ -1,5 +1,6 @@
 package DroneAutopilot.Tests;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.IOException;
@@ -134,16 +135,6 @@ public class ImageCalculationsTest{
 	public void cOGOfEmptyList() throws EmptyPositionListException {
 		calc.getCOG(pixellist1);
 	}
-    
-	@Test
-	public void checkAllRedTest(){
-		assertFalse(calc.checkIfAllRed(camera1));
-		assertFalse(calc.checkIfAllRed(camera2));
-		assertFalse(calc.checkIfAllRed(camera3));
-		assertFalse(calc.checkIfAllRed(camera4));
-		assertFalse(calc.checkIfAllRed(camera5));
-		assertTrue(calc.checkIfAllRed(camera6));
-	}
 	
 	@Test
 	public void indexToCoordinatesTest(){
@@ -168,8 +159,8 @@ public class ImageCalculationsTest{
 	
 	@Test
 	public void centerOfCircleTest() throws SmallCircleException, EmptyPositionListException{
-		ArrayList<int[]> list1 = calc.getRedPixels(bigCamera1);
-		ArrayList<int[]> list2 = calc.getRedPixels(bigCamera2);		
+		ArrayList<int[]> list1 = calc.getPixelsOfColor(bigCamera1, 255);
+		ArrayList<int[]> list2 = calc.getPixelsOfColor(bigCamera2, 255);		
 		assertArrayEquals(new float[] {1024,1024}, calc.centerOfCircle(list1, bigCamera1) ,(float) 50);//verschil: {32.xxx,37.xxx}; volledig zichtbaar
 		assertArrayEquals(new float[] {2250,150}, calc.centerOfCircle(list2, bigCamera2) ,(float) 200);//verschil: {190.xxx,81.xxx}; niet volledig zichtbaar
 	}

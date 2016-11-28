@@ -73,11 +73,6 @@ public class PhysicsCalculationsTest {
 	}
 	
 	@Test
-	public void visPitchTest(){
-		assertEquals(verticalAngleOfView/2*PhysicsCalculations.getVisibilityFactor(),calc.getVisiblePitch(depthXY1,depthXY2),0.00001);
-	}
-	
-	@Test
 	public void thrustTest(){
 		assertEquals(8.623982,calc.getThrust(depthXY1),0.00001);
 	}
