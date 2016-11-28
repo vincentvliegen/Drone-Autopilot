@@ -56,10 +56,12 @@ public class SimulationDrone implements Drone, WorldObject{
 		this.translate = translate;
 		this.world = world;
 		this.movement = new Movement(this);
+		this.cameraSeperation = width;
 		generateDroneCameras();
 		AutopilotFactory factory = new DroneAutopilotFactory();
 		this.autopilot = factory.create(this);
 		this.radius = (float) Math.sqrt(Math.pow(height/2, 2) + Math.pow(width/2, 2) + Math.pow(depth/2, 2));
+		
 	}
 
 	// TODO afmetingen (voor collision detection)
@@ -193,7 +195,7 @@ public class SimulationDrone implements Drone, WorldObject{
 		this.roll += world.getWindRotationX()*timePassed;
 		this.pitch += world.getWindRotationZ()*timePassed;
 		
-		
+		/*
 		 System.out.println("global pitch " + this.pitch);
 		 System.out.println("global yaw " + this.yaw);
 		 System.out.println("global roll " + this.roll);
@@ -202,7 +204,7 @@ public class SimulationDrone implements Drone, WorldObject{
 		 System.out.println("pitchRate " + this.pitchRate);
 		 System.out.println("yawRate " + this.yawRate);
 		 System.out.println("rollRate " + this.rollRate);
-		 
+		 */
 
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
@@ -238,13 +240,13 @@ public class SimulationDrone implements Drone, WorldObject{
 		float commonY = 0;
 
 		// left
-		float leftX = getDroneWidth() / 2;
+		float leftX = getCameraSeparation() / 2;
 		float leftZ = -getDroneDepth() / 2;
 		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX+100, commonY, leftZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.LEFT);
 
 		// right
-		float rightX = getDroneWidth() / 2;
+		float rightX = getCameraSeparation() / 2;
 		float rightZ = getDroneDepth() / 2;
 		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX+100, commonY, rightZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.RIGHT);
@@ -252,7 +254,6 @@ public class SimulationDrone implements Drone, WorldObject{
 		// add to list in world
 		getWorld().addDroneCamera(leftCamera);
 		getWorld().addDroneCamera(rightCamera);
-		cameraSeperation = getDroneWidth();
 	}
 
 	public void addRandomRotation() {

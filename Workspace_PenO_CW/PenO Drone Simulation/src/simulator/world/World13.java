@@ -28,7 +28,7 @@ public class World13 extends World {
 		addSphere(sphere1);
 		
 		double[] translateSphere2 = { 20f, 5f, 0f };
-		float[] colorSphere2 = { 1f, 1f, 0f };
+		float[] colorSphere2 = { 0f, 0f, 1f };
 		Sphere sphere2 = new Sphere(gl, .5f, colorSphere2, translateSphere2);
 		sphere2.draw();
 		addSphere(sphere2);
