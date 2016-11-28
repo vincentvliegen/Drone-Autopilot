@@ -17,7 +17,10 @@ public abstract class PIController {
 	public void resetSetpoint(float setpoint){
 		this.setpoint = setpoint;
 		this.integraal = 0;
-		
+	}
+	
+	public float getSetpoint(){
+		return this.setpoint;
 	}
 	
 	public float calculateRate(float value, float currentTime){
