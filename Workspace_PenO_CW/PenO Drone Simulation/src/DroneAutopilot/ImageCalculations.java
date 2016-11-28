@@ -16,8 +16,9 @@ public class ImageCalculations{
 	public final static int black = 0;
 
 	// Aantal punten om cirkel te berekenen.
-	public static final int minimalSizeCircumferenceCircle = 20;
+	public final static int minimalSizeCircumferenceCircle = 20;
 
+	private HashMap<Integer,  ArrayList<int[]>> pixelsOfEachColor;
 
 	//[i] -> (x,y)
 	public int[] indexToCoordinates(int index, Camera camera){
@@ -41,7 +42,7 @@ public class ImageCalculations{
 
 
 	// Geeft en hashmap weer met als key: color (int) en arraylist van coordinaten.
-	public HashMap<Integer,  ArrayList<int[]>> getPixelsOfEachColor(Camera camera){
+	public void calculatePixelsOfEachColor(Camera camera){
 		int[] image = camera.takeImage();
 		HashMap<Integer,  ArrayList<int[]>> hashMapDifferentColors  = new HashMap<Integer,  ArrayList<int[]>>();
 		for(int i = 0; i < image.length; i++){
@@ -58,7 +59,7 @@ public class ImageCalculations{
 				}
 			}
 		}
-		return hashMapDifferentColors;	
+		this.setPixelsOfEachColor(hashMapDifferentColors);	
 	}
 	
 
@@ -178,12 +179,22 @@ public class ImageCalculations{
 		return AllCPoints;
 	}
 	
+	public HashMap<Integer, ArrayList<int[]>> getPixelsOfEachColor() {
+		return pixelsOfEachColor;
+	}
+
+	public void setPixelsOfEachColor(HashMap<Integer, ArrayList<int[]>> allPixelsAllColors) {
+		this.pixelsOfEachColor = pixelsOfEachColor;
+	}
+	
+	
 	//conversie int color naar leesbaar (R,G,B) formaat
 //	public int[] colorIntToRGB(int color){
 //		int [] RGB = {0,0,0};
-//		/*R*/RGB[0] = color % 256;
+//		/*R*/RGB[2] = color % 256;
 //		/*G*/RGB[1] = (color / 256) % 256;
-//		/*B*/RGB[2] = color / (256*256);
+//		/*B*/RGB[0] = color / (256*256);
 //		return RGB;
 //	}
+	
 }

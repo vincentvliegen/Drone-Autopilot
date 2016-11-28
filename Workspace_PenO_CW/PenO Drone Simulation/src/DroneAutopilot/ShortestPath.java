@@ -34,8 +34,13 @@ public class ShortestPath {
 	//Left en Right hashmap parameters maken
 	public int[] getBiggestOrbs() {
 		System.out.println("getBiggestOrb");
-		Iterator it = this.getMoveToTarget().getImageCalculations().getPixelsOfEachColor(this.getMoveToTarget().getDrone().getLeftCamera()).entrySet().iterator();
-	    while (it.hasNext()) {
+		//left
+		this.getMoveToTarget().getImageCalculations().calculatePixelsOfEachColor(this.getMoveToTarget().getDrone().getLeftCamera());
+		Iterator it = this.getMoveToTarget().getImageCalculations().getPixelsOfEachColor().entrySet().iterator();
+	    //TODO right
+		
+		
+		while (it.hasNext()) {
 	        Map.Entry pair = (Map.Entry)it.next();
 	        System.out.println(pair.getKey() + " = " + pair.getValue());
 	        it.remove(); // avoids a ConcurrentModificationException
@@ -43,8 +48,8 @@ public class ShortestPath {
 	    return colorList;
 	}
 	
-	public void calculateFirstOrb() {
-		//TODO set color closest orb
+	public void calculateFirstOrb(listOfColors) {
+		for(int i; i<)
 	}
 	
 	public void calculateSecondOrb() {
