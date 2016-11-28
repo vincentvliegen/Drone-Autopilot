@@ -103,7 +103,7 @@ public class GUI extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String nameButton = e.getActionCommand();
 				if(nameButton.equalsIgnoreCase("Right Dronecamera")){
-					world.setCurrentCamera(world.getDroneCameras().get(1));
+					world.setCurrentCamera(world.getDroneCameras().get(2));
 				}
 			}
 		});

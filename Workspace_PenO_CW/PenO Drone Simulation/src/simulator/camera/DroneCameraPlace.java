@@ -6,7 +6,7 @@ package simulator.camera;
  *  right and left.
  */
 public enum DroneCameraPlace {
-	RIGHT, LEFT;
+	RIGHT, LEFT, MIDDLE;
 	
 	@Override
 	public String toString() {

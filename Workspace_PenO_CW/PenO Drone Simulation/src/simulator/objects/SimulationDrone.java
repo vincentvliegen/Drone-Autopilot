@@ -33,6 +33,7 @@ public class SimulationDrone implements Drone, WorldObject{
 	private float gravityConstant = -9.81f;
 	public DroneCamera leftCamera;
 	public DroneCamera rightCamera;
+	public DroneCamera middleCamera;
 	GL2 gl;
 	float height;
 	float width;
@@ -208,6 +209,7 @@ public class SimulationDrone implements Drone, WorldObject{
 
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
+		getMiddleCamera().updateDroneCamera();
 		
 		this.autopilot.timeHasPassed();
 	}
@@ -250,10 +252,14 @@ public class SimulationDrone implements Drone, WorldObject{
 		float rightZ = getDroneDepth() / 2;
 		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX+100, commonY, rightZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.RIGHT);
+		
+		// middle
+		middleCamera = new DroneCamera(-2, 0.5f, 0, -1+100, 0, 0, 0, 1, 0, getWorld(), this, DroneCameraPlace.MIDDLE);
 
 		// add to list in world
 		getWorld().addDroneCamera(leftCamera);
 		getWorld().addDroneCamera(rightCamera);
+		getWorld().addDroneCamera(middleCamera);
 	}
 
 	public void addRandomRotation() {
@@ -433,5 +439,9 @@ public class SimulationDrone implements Drone, WorldObject{
 	
 	public float getRadius() {
 		return this.radius;
+	}
+	
+	public DroneCamera getMiddleCamera() {
+		return middleCamera;
 	}
 }
