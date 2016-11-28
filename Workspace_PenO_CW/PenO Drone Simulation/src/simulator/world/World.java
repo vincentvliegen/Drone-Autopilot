@@ -93,7 +93,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		worldObjectsList.add(sphere);
 		spheres.add(sphere);
 		getColors().add(sphere.getColor());
-		System.out.println(getColors());
 	}
 	
 	public void removeSphere(Sphere sphere) {
