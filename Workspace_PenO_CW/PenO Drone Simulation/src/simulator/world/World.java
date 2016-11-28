@@ -41,7 +41,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private GLU glu;
 
 	//TODO verplaatsen
-	private Parser parser = new Parser(this);
+	private Parser parser;
 	public Parser getParser() {
 		return parser;
 	}
@@ -65,12 +65,12 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	Physics physics;
 	private List<WorldObject> worldObjectsList = new ArrayList<>();
 	public static KeyboardMovement movement = new KeyboardMovement();
-	private int xWindRotation = 0;
-	private int yWindRotation = 0;
-	private int zWindRotation = 0;
-	private int xWindSpeed = 0;
-	private int yWindSpeed = 0;
-	private int zWindSpeed = 0;
+	private double xWindRotation = 0;
+	private double yWindRotation = 0;
+	private double zWindRotation = 0;
+	private double xWindSpeed = 0;
+	private double yWindSpeed = 0;
+	private double zWindSpeed = 0;
 
 	public World() {
 		addGLEventListener(this);
@@ -318,52 +318,56 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return this.worldObjectsList;
 	}
 
-	public int getWindRotationX() {
+	public double getWindRotationX() {
 		return xWindRotation;
 	}
 
-	public int getWindRotationY() {
+	public double getWindRotationY() {
 		return yWindRotation;
 	}
 
-	public int getWindRotationZ() {
+	public double getWindRotationZ() {
 		return zWindRotation;
 	}
 
-	public void setWindRotationX(int value) {
+	public void setWindRotationX(double value) {
 		xWindRotation = value;
 	}
 
-	public void setWindRotationY(int value) {
+	public void setWindRotationY(double value) {
 		yWindRotation = value;
 	}
 
-	public void setWindRotationZ(int value) {
+	public void setWindRotationZ(double value) {
 		zWindRotation = value;
 	}
 
-	public int getWindSpeedX() {
+	public double getWindSpeedX() {
 		return xWindSpeed;
 	}
 
-	public int getWindSpeedY() {
+	public double getWindSpeedY() {
 		return yWindSpeed;
 	}
 
-	public int getWindSpeedZ() {
+	public double getWindSpeedZ() {
 		return zWindSpeed;
 	}
 
-	public void setWindSpeedX(int value) {
+	public void setWindSpeedX(double value) {
 		xWindSpeed = value;
 	}
 
-	public void setWindSpeedY(int value) {
+	public void setWindSpeedY(double value) {
 		yWindSpeed = value;
 	}
 
-	public void setWindSpeedZ(int value) {
+	public void setWindSpeedZ(double value) {
 		zWindSpeed = value;
+	}
+	
+	public void setParser(Parser parser) {
+		this.parser = parser;
 	}
 
 	public void checkCollision(SimulationDrone drone) {

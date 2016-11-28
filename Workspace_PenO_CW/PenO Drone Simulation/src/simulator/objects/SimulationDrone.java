@@ -163,7 +163,7 @@ public class SimulationDrone implements Drone, WorldObject{
 	}
 
 	public void timeHasPassed(float timePassed) {
-		
+		//TODO Put caps on pitch, yaw, roll
 		double yawPass = this.yawRate * timePassed;
 		createInverseRotate();
 		this.pitch += yawPass
