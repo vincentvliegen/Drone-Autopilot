@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 public class GUI {
 
 	private JFrame frame;
+	private boolean reached;
 
 	/**
 	 * Launch the application.
@@ -57,11 +58,11 @@ public class GUI {
 		Font font = new Font("Tahoma", Font.PLAIN, 18);
 		JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JPanel panel = new JPanel(new GridLayout(2,2));
-		
+
 		JLabel select = new JLabel("Select mission: ");
 		select.setFont(font);
 		panel.add(select);
-		
+
 		String[] list = { " ", "Fly to red orb" };
 		JComboBox menu = new JComboBox(list);
 		menu.setPreferredSize(new Dimension(250,30));
@@ -84,7 +85,7 @@ public class GUI {
 
 		JLabel progress = new JLabel("Progress: ");
 		progress.setFont(font);
-//		progress.setPreferredSize(new Dimension(80, 30));
+		//		progress.setPreferredSize(new Dimension(80, 30));
 		panel.add(progress);
 
 		this.progressBar.setPreferredSize(new Dimension(250, 30));
@@ -102,16 +103,24 @@ public class GUI {
 
 	public void update(float dist) {
 		int distance = (int) (dist*100);
-		if (distance > this.maxValue) {
-			this.maxValue = distance;
-			this.progressBar.setMaximum(distance);
-		} else {
-			this.progressBar.setValue(this.maxValue - distance);
-		}
-		if (this.maxValue > 0){
-			this.progressBar.setString((Math.round(((this.maxValue - distance)*100) / (float)this.maxValue)) + "%");			
-		} else {
+		if(reached){
 			this.progressBar.setString("100%");
+		}else{
+			if (distance > this.maxValue) {
+				this.maxValue = distance;
+				this.progressBar.setMaximum(distance);
+			} else {
+				this.progressBar.setValue(this.maxValue - distance);
+			}
+			if (this.maxValue > 0){
+				this.progressBar.setString((Math.round(((this.maxValue - distance)*100) / (float)this.maxValue)) + "%");
+				if((Math.round(((this.maxValue - distance)*100) / (float)this.maxValue))==100){
+					reached = true;
+				}
+			} else {
+				this.progressBar.setString("100%");
+				reached = true;
+			}
 		}
 	}
 
