@@ -2,7 +2,7 @@ package simulator.objects;
 
 public interface WorldObject {
 	abstract void draw();
-	abstract double[] getTranslate();
+	abstract double[] getPosition();
 	abstract float getRadius();
 
 }

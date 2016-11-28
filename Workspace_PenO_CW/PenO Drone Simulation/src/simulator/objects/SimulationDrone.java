@@ -76,7 +76,7 @@ public class SimulationDrone implements Drone, WorldObject{
 							// rotation
 		// System.out.println(getTranslate()[0] + " " + getTranslate()[1] + " "
 		// + getTranslate()[2]);
-		translateDrone(getTranslate());
+		translateDrone(getPosition());
 		rotateDrone(-getYaw(), -getGlobalRoll(), -getGlobalPitch());
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glBegin(GL2ES3.GL_QUADS);
@@ -406,7 +406,7 @@ public class SimulationDrone implements Drone, WorldObject{
 		return rotateMatrix;
 	}
 
-	public double[] getTranslate() {
+	public double[] getPosition() {
 		return this.translate;
 	}
 

@@ -13,7 +13,7 @@ public class Movement {
 	}
 
 	public void calculateMovement(float timePassed, float[] acceleration) {
-		double[] currentPos = drone.getTranslate();
+		double[] currentPos = drone.getPosition();
 		currentPos[0] += (velocity[0] * timePassed + acceleration[0]* timePassed* timePassed/ 2);
 		currentPos[1] += (velocity[1] * timePassed + acceleration[1]* timePassed* timePassed/ 2);
 		currentPos[2] += (velocity[2] * timePassed + acceleration[2]* timePassed* timePassed/ 2);

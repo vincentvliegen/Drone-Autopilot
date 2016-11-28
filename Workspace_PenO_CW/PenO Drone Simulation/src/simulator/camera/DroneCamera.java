@@ -87,20 +87,20 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		}
 		*/
 		setEyeX((float) (getStartEyeX() * drone.getRotateMatrix().get(0)
-				+ getStartEyeY() * drone.getRotateMatrix().get(1) + getStartEyeZ() * drone.getRotateMatrix().get(2) + drone.getTranslate()[0]));
+				+ getStartEyeY() * drone.getRotateMatrix().get(1) + getStartEyeZ() * drone.getRotateMatrix().get(2) + drone.getPosition()[0]));
 		setEyeY((float) (getStartEyeX() * drone.getRotateMatrix().get(3)
-				+ getStartEyeY() * drone.getRotateMatrix().get(4) + getStartEyeZ() * drone.getRotateMatrix().get(5) + drone.getTranslate()[1]));
+				+ getStartEyeY() * drone.getRotateMatrix().get(4) + getStartEyeZ() * drone.getRotateMatrix().get(5) + drone.getPosition()[1]));
 		setEyeZ((float) (getStartEyeX() * drone.getRotateMatrix().get(6)
-				+ getStartEyeY() * drone.getRotateMatrix().get(7) + getStartEyeZ() * drone.getRotateMatrix().get(8) + drone.getTranslate()[2]));
+				+ getStartEyeY() * drone.getRotateMatrix().get(7) + getStartEyeZ() * drone.getRotateMatrix().get(8) + drone.getPosition()[2]));
 		setLookAtX((float) (getStartLookAtX() * drone.getRotateMatrix().get(0)
 				+ getStartLookAtY() * drone.getRotateMatrix().get(1)
-				+ getStartLookAtZ() * drone.getRotateMatrix().get(2) + drone.getTranslate()[0]));
+				+ getStartLookAtZ() * drone.getRotateMatrix().get(2) + drone.getPosition()[0]));
 		setLookAtY((float) (getStartLookAtX() * drone.getRotateMatrix().get(3)
 				+ getStartLookAtY() * drone.getRotateMatrix().get(4)
-				+ getStartLookAtZ() * drone.getRotateMatrix().get(5) + drone.getTranslate()[1]));
+				+ getStartLookAtZ() * drone.getRotateMatrix().get(5) + drone.getPosition()[1]));
 		setLookAtZ((float) (getStartLookAtX() * drone.getRotateMatrix().get(6)
 				+ getStartLookAtY() * drone.getRotateMatrix().get(7)
-				+ getStartLookAtZ() * drone.getRotateMatrix().get(8) + drone.getTranslate()[2]));
+				+ getStartLookAtZ() * drone.getRotateMatrix().get(8) + drone.getPosition()[2]));
 		setUpX((float) (drone.getRotateMatrix().get(1) * 1));
 		setUpY((float) (drone.getRotateMatrix().get(4) * 1));
 		setUpZ((float) (drone.getRotateMatrix().get(7) * 1));
