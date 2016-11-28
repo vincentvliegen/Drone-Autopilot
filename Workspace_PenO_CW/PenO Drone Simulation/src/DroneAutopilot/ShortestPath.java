@@ -14,7 +14,7 @@ public class ShortestPath {
 	private int colorSecondOrb;
 	private HashMap<Integer,  ArrayList<int[]>> allPixelsLeftImage;
 	private HashMap<Integer,  ArrayList<int[]>> allPixelsRightImage;
-	private HashMap<Integer, int[][]> closestOrbs;//<color,[[cogL],[cogr]]>
+	private HashMap<Integer, float[][]> closestOrbs;//<color,[[cogL],[cogr]]>
 
 	public ShortestPath(MoveToTarget moveToTarget){
 		this.moveToTarget = moveToTarget;
@@ -52,22 +52,18 @@ public class ShortestPath {
 	}
 	
 	//geeft kleur terug van dichtstbijzijnde
-	public void calculateFirstOrb(int[] listOfColors) {
-		int closestOrb;
-		float[] distances = new float[getNumberoforbsconsidered()];
-		for(int i = 0; i < listOfColors.length; i++){
-			int color = listOfColors[i];
-			//linkerkant zwaartepunt
-			ArrayList<int[]> leftPixels = this.getAllPixelsLeftImage().get(color);
-			float[] leftCOG = this.moveToTarget.findBestCenterOfGravity(leftPixels, this.getMoveToTarget().getDrone().getLeftCamera());
-			//rechterkant zwaartepunt
-			ArrayList<int[]> rightPixels = this.allPixelsRightImage.get(color);
-			float[] rightCOG = this.moveToTarget.findBestCenterOfGravity(rightPixels, this.getMoveToTarget().getDrone().getLeftCamera());
-			//afstand
-			distances[i] = this.getMoveToTarget().getPhysicsCalculations().getDistance(leftCOG, rightCOG);
+	public void calculateFirstOrb() {
+		int size = getClosestOrbs().size();
+		float[] distances = new float[size];
+		int[] keys = new int[size];
+		int i = 0;
+		for(int key : getClosestOrbs().keySet()){
+			distances[i] = this.getMoveToTarget().getPhysicsCalculations().getDistance(getClosestOrbs().get(key)[0], getClosestOrbs().get(key)[1]);
+			keys[i] = key;
+			i++;
 		}
-		closestOrb = this.indexMinValueArray(distances);
-		this.setColorFirstOrb(closestOrb);
+		int index = this.indexMinValueArray(distances);
+		this.setColorFirstOrb(keys[index]);
 	}
 	
 	public int indexMinValueArray(float[] array){
@@ -81,15 +77,41 @@ public class ShortestPath {
 	}
 	
 	//kleur bol dichtst bij bol 1
-	//TODO verander listOfColors variable ipv parameter
 	public void calculateSecondOrb(int[] listOfColors) {
-		for(int i = 0; i < listOfColors.length; i++){
-			
+		int size = getClosestOrbs().size()-1;
+		float[] distances = new float[size];
+		int[] keys = new int[size];
+		int i = 0;
+		for(int key : getClosestOrbs().keySet()){
+			if(key != this.getColorFirstOrb()){
+				distances[i] = getDistanceBetweenOrbs(getClosestOrbs().get(key)[0], getClosestOrbs().get(key)[1], getClosestOrbs().get(getColorFirstOrb())[0], getClosestOrbs().get(getColorFirstOrb())[1]);
+				keys[i] = key;
+				i++;	
+			}
 		}
-		this.setColorSecondOrb(0);
+		int index = this.indexMinValueArray(distances);
+		this.setColorSecondOrb(keys[index]);
 	}
 	
-	public MoveToTarget getMoveToTarget() {
+	public float getDistanceBetweenOrbs(float[] cogL1, float[] cogR1, float[] cogL2, float[] cogR2){
+		float depth1 = this.getMoveToTarget().getPhysicsCalculations().getDepth(cogL1, cogR1);
+		float depth2 = this.getMoveToTarget().getPhysicsCalculations().getDepth(cogL2, cogR2);
+		float alpha1 = this.getMoveToTarget().getPhysicsCalculations().horizontalAngleDeviation(cogL1, cogR1);
+		float alpha2 = this.getMoveToTarget().getPhysicsCalculations().horizontalAngleDeviation(cogL2, cogR2);
+		float beta1 = this.getMoveToTarget().getPhysicsCalculations().verticalAngleDeviation(cogL1);
+		float beta2 = this.getMoveToTarget().getPhysicsCalculations().verticalAngleDeviation(cogL2);
+		//distance = sqrt( (x1-x2)^2 + (y1-y2)^2 + (z1-z2)^2 )
+		float x1 = (float) (depth1*Math.tan(alpha1));
+		float x2 = (float) (depth1*Math.tan(alpha2));
+		float y1 = (float) (depth1*Math.tan(beta1));
+		float y2 = (float) (depth1*Math.tan(beta2));
+		float z1 = depth1;
+		float z2 = depth2;
+		float distance = (float) Math.sqrt(Math.pow((x1-x2),2)+Math.pow((y1-y2),2)+Math.pow((z1-z2),2));
+		return distance;
+	}
+	
+ 	public MoveToTarget getMoveToTarget() {
 		return moveToTarget;
 	}
 	
@@ -129,11 +151,11 @@ public class ShortestPath {
 		return numberOfOrbsConsidered;
 	}
 
-	public HashMap<Integer, int[][]> getClosestOrbs() {
+	public HashMap<Integer, float[][]> getClosestOrbs() {
 		return closestOrbs;
 	}
 
-	public void setClosestOrbs(HashMap<Integer, int[][]> closestOrbs) {
+	public void setClosestOrbs(HashMap<Integer, float[][]> closestOrbs) {
 		this.closestOrbs = closestOrbs;
 	}
 
