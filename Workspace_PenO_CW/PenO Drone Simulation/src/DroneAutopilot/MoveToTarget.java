@@ -31,7 +31,6 @@ public class MoveToTarget{
 	private boolean yawStarted;
 	private boolean rollStarted;
 	private boolean pitchStarted;
-	private boolean heightStarted;
 
 	private static final float underBoundary = -0.2f;
 	private static final float upperBoundary = 0.2f;
@@ -328,12 +327,5 @@ public class MoveToTarget{
 
 	public boolean getPitchStarted(){
 		return this.pitchStarted;
-	}
-	public void setHeightStarted(boolean isStarted){
-		this.heightStarted = isStarted;
-	}
-
-	public boolean getHeightStarted(){
-		return this.heightStarted;
 	}
 }
