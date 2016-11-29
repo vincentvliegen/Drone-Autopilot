@@ -92,10 +92,11 @@ public class GUI {
 					test = true;
 					System.out.println("test: " +test);
 				}
-				else if(selected.toString().equals(" "))
+				else if(selected.toString().equals(" ")){
 					lastOrbEnabled = false;
 					flyShortest = false;
 					test = false;
+				}
 			}
 		});
 

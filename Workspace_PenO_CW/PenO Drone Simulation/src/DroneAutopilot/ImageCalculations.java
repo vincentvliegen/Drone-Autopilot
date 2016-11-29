@@ -183,7 +183,7 @@ public class ImageCalculations{
 		return pixelsOfEachColor;
 	}
 
-	public void setPixelsOfEachColor(HashMap<Integer, ArrayList<int[]>> allPixelsAllColors) {
+	public void setPixelsOfEachColor(HashMap<Integer, ArrayList<int[]>> pixelsOfEachColor) {
 		this.pixelsOfEachColor = pixelsOfEachColor;
 	}
 	
