@@ -3,9 +3,7 @@ package simulator.parser;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import simulator.objects.ObstacleSphere;
-import simulator.objects.Sphere;
 import simulator.world.World;
 
 /**
@@ -52,16 +50,7 @@ public class Parser {
 	float[] windRotationZValues;
 	float[] windRotationZTimes;
 
-	ArrayList<Sphere> obstacleBalls = new ArrayList<Sphere>();
-	ArrayList<Sphere> targetBalls = new ArrayList<Sphere>();
 
-
-
-
-	//TODO aanpassen
-
-	int vasteSlices = 64;
-	int vasteStacks = 64;
 
 
 	/*
@@ -78,15 +67,11 @@ public class Parser {
 	 * 9	"obstacle_ball" x y z // zero or more lines; not applicable to Milestones 1.3 and 1.4
 	 */
 
-	public void parse() throws IOException{
+	public void parse() throws IOException {
 
+		// print working dir
+		// System.out.println(System.getProperty("user.dir"));
 
-		
-//		print working dir
-//		System.out.println(System.getProperty("user.dir"));
-	
-		
-		
 		FileReader input = new FileReader("inputFile.txt");
 		BufferedReader bufRead = new BufferedReader(input);
 		String myLine = null;
@@ -107,7 +92,6 @@ public class Parser {
 		maxRollRate = Double.parseDouble(splitArray[10]);
 		maxYawRate = Double.parseDouble(splitArray[11]);
 
-
 		// line 2
 		myLine = bufRead.readLine();
 		arrayXValues = readInTimesAndValues(myLine, false);
@@ -123,210 +107,158 @@ public class Parser {
 		arrayZValues = readInTimesAndValues(myLine, false);
 		arrayZTimes = readInTimesAndValues(myLine, true);
 
-
 		// line 5
 		myLine = bufRead.readLine();
-		windRotationXTimes= readInTimesAndValues(myLine, true);
+		windRotationXTimes = readInTimesAndValues(myLine, true);
 		windRotationXValues = readInTimesAndValues(myLine, false);
 
 		// line 6
 		myLine = bufRead.readLine();
-		windRotationYValues  = readInTimesAndValues(myLine, false);
+		windRotationYValues = readInTimesAndValues(myLine, false);
 		windRotationYTimes = readInTimesAndValues(myLine, true);
 
 		// line 7
 		myLine = bufRead.readLine();
 		windRotationZValues = readInTimesAndValues(myLine, false);
-		windRotationZTimes = readInTimesAndValues(myLine, true);				
+		windRotationZTimes = readInTimesAndValues(myLine, true);
 
+		while ((myLine = bufRead.readLine()) != null) {
 
-		while ( (myLine = bufRead.readLine()) != null)
-		{
-			
 			splitArray = myLine.split(" ");
-			double[] position = {Double.parseDouble(splitArray[1]), Double.parseDouble(splitArray[2]), Double.parseDouble(splitArray[3])};
-	
-			
-			//target_balls
-			
-			if(splitArray[0].equals("target_ball")) {
-				
+			double[] position = { Double.parseDouble(splitArray[1]), Double.parseDouble(splitArray[2]),
+					Double.parseDouble(splitArray[3]) };
+
+			// target_balls
+
+			if (splitArray[0].equals("target_ball")) {
+
 				getWorld().addSphereWithRandomColor(position);
 
 			}
 
-			//obstacle_balls
+			// obstacle_balls
 
-			else if(splitArray[0].equals("obstacle_ball")) {
+			else if (splitArray[0].equals("obstacle_ball")) {
 				getWorld().addObstacleSphere(new ObstacleSphere(getWorld().getGL().getGL2(), position));
 			}
 
 		}
-		
+
 		bufRead.close();
 
 	}
-	
-	
+
 	private float[] readInTimesAndValues(String myLine, boolean time) {
 		String[] splitArray = myLine.split(" ");
 		int splitArrayLength = splitArray.length;
-		float[] returnArray = new float[splitArrayLength/2];
-		for(int i = 0; i < splitArrayLength; i++) {
-			if(time) {
-				if(i % 2 == 0){
-					returnArray[i/2]=Float.parseFloat(splitArray[i]);
+		float[] returnArray = new float[splitArrayLength / 2];
+		for (int i = 0; i < splitArrayLength; i++) {
+			if (time) {
+				if (i % 2 == 0) {
+					returnArray[i / 2] = Float.parseFloat(splitArray[i]);
 				}
-			}
-			else{
-				if(i % 2 != 0)
-					returnArray[(i-1)/2]=Float.parseFloat(splitArray[i]);
+			} else {
+				if (i % 2 != 0)
+					returnArray[(i - 1) / 2] = Float.parseFloat(splitArray[i]);
 			}
 		}
 		return returnArray;
 	}
-	
-	
-	
-
 
 	public double getHorizontalAngleOfView() {
 		return horizontalAngleOfView;
 	}
 
-
 	public double getVerticalAngleOfView() {
 		return verticalAngleOfView;
 	}
-
 
 	public int getImageWidth() {
 		return imageWidth;
 	}
 
-
 	public int getImageHeight() {
 		return imageHeight;
 	}
-
 
 	public double getCameraSeparation() {
 		return cameraSeparation;
 	}
 
-
 	public double getWeight() {
 		return weight;
 	}
-
 
 	public double getGravity() {
 		return gravity;
 	}
 
-
 	public double getDrag() {
 		return drag;
 	}
-
 
 	public double getMaxThrust() {
 		return maxThrust;
 	}
 
-
 	public double getMaxPitchRate() {
 		return maxPitchRate;
 	}
-
 
 	public double getMaxRollRate() {
 		return maxRollRate;
 	}
 
-
 	public double getMaxYawRate() {
 		return maxYawRate;
 	}
-
 
 	public float[] getArrayXValues() {
 		return arrayXValues;
 	}
 
-
 	public float[] getArrayXTimes() {
 		return arrayXTimes;
 	}
-
 
 	public float[] getArrayYValues() {
 		return arrayYValues;
 	}
 
-
 	public float[] getArrayYTimes() {
 		return arrayYTimes;
 	}
-
 
 	public float[] getArrayZValues() {
 		return arrayZValues;
 	}
 
-
 	public float[] getArrayZTimes() {
 		return arrayZTimes;
 	}
-
 
 	public float[] getWindRotationXValues() {
 		return windRotationXValues;
 	}
 
-
 	public float[] getWindRotationXTimes() {
 		return windRotationXTimes;
 	}
-
 
 	public float[] getWindRotationYValues() {
 		return windRotationYValues;
 	}
 
-
 	public float[] getWindRotationYTimes() {
 		return windRotationYTimes;
 	}
-
 
 	public float[] getWindRotationZValues() {
 		return windRotationZValues;
 	}
 
-
 	public float[] getWindRotationZTimes() {
 		return windRotationZTimes;
-	}
-
-
-	public ArrayList<Sphere> getObstacleBalls() {
-		return obstacleBalls;
-	}
-
-
-	public ArrayList<Sphere> getTargetBalls() {
-		return targetBalls;
-	}
-
-
-	public int getVasteSlices() {
-		return vasteSlices;
-	}
-
-
-	public int getVasteStacks() {
-		return vasteStacks;
 	}
 
 }
