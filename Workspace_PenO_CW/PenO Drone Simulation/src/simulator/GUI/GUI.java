@@ -84,9 +84,8 @@ public class GUI extends JPanel {
 
 
 		// #buttonsDroneCameras
-		JPanel panelButtonDroneCameras = new JPanel(new GridLayout(1,2));
 		constraintsButtonDroneCamera = new GridBagConstraints();
-		makeConstraints(constraintsButtonDroneCamera,new Insets(1, 1, 1, 1), 0, 1);
+		JPanel panelButtonDroneCameras = new JPanel(new GridBagLayout());
 
 		buttonsDroneCameras.add(new JButton("Left dronecamera"));
 		buttonsDroneCameras.add(new JButton("Third-person camera"));
@@ -108,13 +107,16 @@ public class GUI extends JPanel {
 				}
 			}
 		});
-		panelButtonDroneCameras.add(buttonsDroneCameras.get(0));
-		panelButtonDroneCameras.add(buttonsDroneCameras.get(1));
+		this.makeConstraints(constraintsButtonDroneCamera, new Insets(1, 1, 1, 1), 0, 0, 1, 5, 0, 1);
+		panelButtonDroneCameras.add(buttonsDroneCameras.get(0), constraintsButtonDroneCamera);
+		this.makeConstraints(constraintsButtonDroneCamera, new Insets(1, 1, 1, 1), 1, 0, 1, 5, 0, 1);
+		panelButtonDroneCameras.add(buttonsDroneCameras.get(1), constraintsButtonDroneCamera);
+		this.makeConstraints(constraintsButtonDroneCamera,new Insets(1, 1, 1, 1), 0, 1);
 		add(panelButtonDroneCameras, constraintsButtonDroneCamera);
 
 		// Speed
 		constraintsSpeed = new GridBagConstraints();
-		makeConstraints(constraintsSpeed, new Insets(1, 1, 1, 1), 0, 2, 3, 5);
+		this.makeConstraints(constraintsSpeed, new Insets(1, 1, 1, 1), 0, 2, 1, 5);
 
 		Timer timerSpeed = new Timer(1000, new ActionListener(){
 			@Override
@@ -140,7 +142,7 @@ public class GUI extends JPanel {
 
 		// Position
 		constraintsPosition = new GridBagConstraints();
-		makeConstraints(constraintsPosition, new Insets(1, 1, 1, 1), 0, 3, 3, 5);
+		this.makeConstraints(constraintsPosition, new Insets(1, 1, 1, 1), 0, 3, 1, 5);
 		Timer timerPosition = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -166,10 +168,10 @@ public class GUI extends JPanel {
 
 		//GrivatySlider
 		constraintsPanelGravity = new GridBagConstraints();
-		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0.6);
+		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0, 0.6);
 		JPanel panelGravity = new JPanel(new GridBagLayout());
 
-		panelGravity.add(new JLabel("Gravity: "), constraintsPanelGravity);
+		panelGravity.add(new JLabel("Gravity:               "), constraintsPanelGravity);
 
 		//Create the label table
 		Hashtable labelTable = new Hashtable();
@@ -178,8 +180,8 @@ public class GUI extends JPanel {
 		labelTable.put( new Integer( MAXGRAVITY ), new JLabel("20") );
 
 		JSlider gravitySlider = new JSlider(JSlider.HORIZONTAL, 0, MAXGRAVITY, 981);
-		createSlider(gravitySlider, 200, labelTable);
-
+		this.createSlider(gravitySlider, 200, labelTable);
+		
 		gravitySlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent evt) {
 				JSlider slider = (JSlider) evt.getSource();
@@ -192,7 +194,7 @@ public class GUI extends JPanel {
 			}
 		});
 
-		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0.4);
+		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0, 0.4);
 		panelGravity.add(gravitySlider, constraintsPanelGravity);
 		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 4);
 		add(panelGravity, constraintsPanelGravity);
@@ -201,15 +203,15 @@ public class GUI extends JPanel {
 			// Panel WindNams & Sliders
 			GridBagConstraints constraintsPanelWindSlidersX = new GridBagConstraints();
 			JPanel panelWindSlidersX = new JPanel(new GridBagLayout());
-			this.makeConstraints(constraintsPanelWindSlidersX, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0.6);
+			this.makeConstraints(constraintsPanelWindSlidersX, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0, 0.6);
 
 			GridBagConstraints constraintsPanelWindSlidersY = new GridBagConstraints();
 			JPanel panelWindSlidersY = new JPanel(new GridBagLayout());
-			this.makeConstraints(constraintsPanelWindSlidersY, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0.6);
+			this.makeConstraints(constraintsPanelWindSlidersY, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0, 0.6);
 
 			GridBagConstraints constraintsPanelWindSlidersZ = new GridBagConstraints();
 			JPanel panelWindSlidersZ= new JPanel(new GridBagLayout());
-			this.makeConstraints(constraintsPanelWindSlidersZ, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0.6);
+			this.makeConstraints(constraintsPanelWindSlidersZ, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0, 0.6);
 
 			// Wind-sliders Names
 			panelWindSlidersX.add(new JLabel("Wind x-richting: "), constraintsPanelWindSlidersX);
@@ -227,7 +229,7 @@ public class GUI extends JPanel {
 
 			//WindX
 			JSlider windXSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
-			createSlider(windXSlider, 1, labelTableWind);
+			this.createSlider(windXSlider, 1, labelTableWind);
 
 			windXSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent evt) {
@@ -242,7 +244,7 @@ public class GUI extends JPanel {
 
 			//WindY
 			JSlider windYSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
-			createSlider(windYSlider, 1, labelTableWind);
+			this.createSlider(windYSlider, 1, labelTableWind);
 
 			windYSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent evt) {
@@ -257,7 +259,7 @@ public class GUI extends JPanel {
 
 			//WindZ
 			JSlider windZSlider = new JSlider(JSlider.HORIZONTAL, 0, MAXWIND, 5);
-			createSlider(windZSlider, 1, labelTableWind);
+			this.createSlider(windZSlider, 1, labelTableWind);
 
 			windZSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent evt) {
@@ -270,11 +272,11 @@ public class GUI extends JPanel {
 			});
 			windSlidersZ.add(windZSlider);
 
-			this.makeConstraints(constraintsPanelWindSlidersX, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0.4);
+			this.makeConstraints(constraintsPanelWindSlidersX, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0, 0.4);
 			panelWindSlidersX.add(windSlidersX.get(0), constraintsPanelWindSlidersX);
-			this.makeConstraints(constraintsPanelWindSlidersY, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0.4);
+			this.makeConstraints(constraintsPanelWindSlidersY, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0, 0.4);
 			panelWindSlidersY.add(windSlidersY.get(0), constraintsPanelWindSlidersY);
-			this.makeConstraints(constraintsPanelWindSlidersZ, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0.4);
+			this.makeConstraints(constraintsPanelWindSlidersZ, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0, 0.4);
 			panelWindSlidersZ.add(windSlidersZ.get(0), constraintsPanelWindSlidersZ);
 			this.makeConstraints(constraintsPanelWindSlidersX, new Insets(1, 1, 1, 1), 0, 5);
 			add(panelWindSlidersX, constraintsPanelWindSlidersX);
@@ -301,29 +303,6 @@ public class GUI extends JPanel {
 		this.setPreferredSize(new Dimension(390, 768));
 	}
 
-	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy){
-		name.insets=insets;
-		name.gridx=gridx;
-		name.gridy=gridy;
-	}
-
-	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy, int gridwidth, int ipady){
-		name.insets=insets;
-		name.gridx=gridx;
-		name.gridy=gridy;
-		name.gridwidth=gridwidth;
-		name.ipady=ipady;
-	}
-
-	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy, int gridwidth, int ipady, double weightx){
-		name.insets=insets;
-		name.gridx=gridx;
-		name.gridy=gridy;
-		name.gridwidth=gridwidth;
-		name.ipady=ipady;
-		name.weightx=weightx;
-	}
-
 	public void createSlider(JSlider windSlider,int majorTickSpacing, Hashtable labelTableWind){
 		windSlider.setMajorTickSpacing(majorTickSpacing);
 		windSlider.setPaintTicks(true);
@@ -340,19 +319,19 @@ public class GUI extends JPanel {
 		JPanel panelAddSphere = new JPanel(new GridBagLayout());
 
 
-		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0, 1);
 		panelAddSphere.add(new JLabel("x: "), constraintsAddSphere);
-		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0, 1);
 		JTextField userTextX = new JTextField(5);
 		panelAddSphere.add(userTextX, constraintsAddSphere);
-		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 3, 0, 1, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 3, 0, 1, 0, 0, 1);
 		panelAddSphere.add(new JLabel("y: "), constraintsAddSphere);
-		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 4, 0, 1, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 4, 0, 1, 0, 0, 1);
 		JTextField userTextY = new JTextField(5);
 		panelAddSphere.add(userTextY, constraintsAddSphere);
-		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 6, 0, 1, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 6, 0, 1, 0, 0, 1);
 		panelAddSphere.add(new JLabel("z: "), constraintsAddSphere);
-		makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 7, 0, 1, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 7, 0, 1, 0, 0, 1);
 		JTextField userTextZ = new JTextField(5);
 		panelAddSphere.add(userTextZ, constraintsAddSphere);
 
@@ -370,7 +349,7 @@ public class GUI extends JPanel {
 			}
 		});
 		GridBagConstraints constraintsButton = new GridBagConstraints();
-		makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 1, 1, 0, 1);
+		this.makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 1, 1, 0, 0, 1);
 		panelAddSphere.add(insideAddButton, constraintsButton);
 
 		//CancelButton
@@ -381,10 +360,34 @@ public class GUI extends JPanel {
 				addSphere.setVisible(false);
 			}
 		});
-		makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 2, 1, 0, 1);
+		this.makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 2, 1, 0, 0, 1);
 		panelAddSphere.add(insideCancelButton, constraintsButton);
 
 		addSphere.add(panelAddSphere);
 		addSphere.setVisible(true);
+	}
+	
+	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy){
+		name.insets=insets;
+		name.gridx=gridx;
+		name.gridy=gridy;
+	}
+
+	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy, int gridwidth, int ipady){
+		name.insets=insets;
+		name.gridx=gridx;
+		name.gridy=gridy;
+		name.gridwidth=gridwidth;
+		name.ipady=ipady;
+	}
+
+	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy, int gridwidth,int ipadx, int ipady, double weightx){
+		name.insets=insets;
+		name.gridx=gridx;
+		name.gridy=gridy;
+		name.gridwidth=gridwidth;
+		name.ipadx=ipadx;
+		name.ipady=ipady;
+		name.weightx=weightx;
 	}
 }
