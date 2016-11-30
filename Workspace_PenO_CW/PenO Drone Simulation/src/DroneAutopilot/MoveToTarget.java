@@ -187,6 +187,7 @@ public class MoveToTarget{
 		} else {
 			this.getDrone().setPitchRate(0);
 			this.setHoverStarted(false);
+			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight());
 		}
 	}
 
@@ -264,12 +265,6 @@ public class MoveToTarget{
 		}else{
 			this.getDrone().setPitchRate(0);
 		}
-	}
-
-	public void worldScan(){
-		// Draai 360°, bekijk bollen, vlieg nr dichtsbijzijnde
-		//PRBLM 1: wind => ???
-		//PRBLM 2: geen bol in zicht (enkel boven of onder..) => wat vooruit of achteruitvliegen tot die in het zicht is? 
 	}
 
 	public final PhysicsCalculations getPhysicsCalculations() {
