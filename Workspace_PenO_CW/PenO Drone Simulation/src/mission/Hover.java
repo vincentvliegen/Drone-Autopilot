@@ -1,11 +1,12 @@
 package mission;
 
+import DroneAutopilot.MoveToTarget;
 import p_en_o_cw_2016.Drone;
 
 public class Hover extends Mission{
 	
-	public Hover(Drone drone){
-		super(drone);
+	public Hover(MoveToTarget moveToTarget, Drone drone){
+		super(moveToTarget, drone);
 	}
 
 	@Override

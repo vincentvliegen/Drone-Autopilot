@@ -8,9 +8,9 @@ public abstract class Mission {
 	private Drone drone;
 
 	
-	public Mission(Drone drone){
+	public Mission(MoveToTarget moveToTarget, Drone drone){
 		this.setDrone(drone);
-		moveToTarget = new MoveToTarget(drone);
+		this.setMoveToTarget(moveToTarget);
 	}
 
 	public abstract void execute();
@@ -20,12 +20,16 @@ public abstract class Mission {
 	public void setDrone(Drone drone) {
 		this.drone = drone;
 	}
+	
+	public Drone getDrone() {
+		return this.drone;
+	}
+	
+	public void setMoveToTarget(MoveToTarget moveToTarget) {
+		this.moveToTarget = moveToTarget;
+	}
 
 	public MoveToTarget getMoveToTarget() {
 		return moveToTarget;
-	}
-
-	public Drone getDrone() {
-		return this.drone;
 	}
 }

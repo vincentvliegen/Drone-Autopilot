@@ -38,15 +38,15 @@ public class DroneAutopilot implements Autopilot{
 	public void timeHasPassed() {
 		Mission mission;
 		if (this.getMoveToTarget().getGUI().lastOrbEnabled){
-			mission = new OneSphere(this.getDrone());
+			mission = new OneSphere(this.getMoveToTarget(), this.getDrone());
 			mission.execute();
 		} else if (this.getMoveToTarget().getGUI().flyShortest) {
-			mission = new SeveralSpheres(this.getDrone());
+			mission = new SeveralSpheres(this.getMoveToTarget(), this.getDrone());
 			mission.execute();
 		} else if (this.getMoveToTarget().getGUI().test) {
 			System.out.println("test");
 		} else {
-			mission = new Hover(this.getDrone());
+			mission = new Hover(this.getMoveToTarget(), this.getDrone());
 			mission.execute();
 		}
 	}
