@@ -18,6 +18,7 @@ public class MoveToTarget{
 
 	private final PhysicsCalculations physicsCalculations;
 	private final ImageCalculations imageCalculations;
+	private final WorldScan worldScan;
 	private final YawController yawPI;
 	private final RollController rollPI;
 	private final PitchController pitchPI;
@@ -27,7 +28,6 @@ public class MoveToTarget{
 	private Drone drone;
 	private GUI gui;
 	private GraphPI graphPI;
-	private boolean deceleration;
 	private boolean yawStarted;
 	private boolean rollStarted;
 	private boolean pitchStarted;
@@ -40,6 +40,7 @@ public class MoveToTarget{
 		this.setDrone(drone);
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations(drone);
+		this.worldScan = new WorldScan(drone);
 		this.yawPI = new YawController(30,2);
 		this.rollPI = new RollController(1,0);
 		this.pitchPI = new PitchController(1,0);
@@ -50,33 +51,11 @@ public class MoveToTarget{
 	public void execute(int color){
 		ArrayList<int[]> leftCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getLeftCamera(), color);
 		ArrayList<int[]> rightCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getRightCamera(), color);
-		this.checkcasespixelsfound(leftCameraList, rightCameraList);
-	}
-
-	public void checkcasespixelsfound(ArrayList<int[]> leftcamera,
-			ArrayList<int[]> rightcamera) {
-		this.correctRoll();
-		if (leftcamera.isEmpty() && rightcamera.isEmpty())
-			noTargetFound();
-		else if (!leftcamera.isEmpty() && rightcamera.isEmpty())
-			leftCameraFoundTarget();
-		else if (leftcamera.isEmpty() && !rightcamera.isEmpty())
-			rightCameraFoundTarget();
-		else if (!leftcamera.isEmpty() && !rightcamera.isEmpty()) {
-			targetVisible(leftcamera, rightcamera);
+		
+		correctRoll();
+		if(this.getWorldScan().Scan(leftCameraList, rightCameraList, color) == true){
+			this.targetVisible(leftCameraList, rightCameraList, color);
 		}
-	}
-
-	public void noTargetFound() {
-		this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
-	}
-
-	public void leftCameraFoundTarget() {
-		this.getDrone().setYawRate(-this.getDrone().getMaxYawRate()/2);
-	}
-
-	public void rightCameraFoundTarget() {
-		this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
 	}
 
 	public void correctRoll() {
@@ -106,11 +85,10 @@ public class MoveToTarget{
 		}
 	}
 
-	public void targetVisible(ArrayList<int[]> leftCamera,
-			ArrayList<int[]> rightCamera) {
-		float[] cogLeft = this.findBestCenterOfGravity(leftCamera, this
+	public void targetVisible(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList, int color) {
+		float[] cogLeft = this.findBestCenterOfGravity(leftCameraList, this
 				.getDrone().getLeftCamera());
-		float[] cogRight = this.findBestCenterOfGravity(rightCamera, this
+		float[] cogRight = this.findBestCenterOfGravity(rightCameraList, this
 				.getDrone().getRightCamera());
 		updateGUI(cogLeft, cogRight);
 		this.flyTowardsTarget(cogLeft, cogRight);
@@ -349,5 +327,9 @@ public class MoveToTarget{
 
 	public boolean getHoverStarted(){
 		return this.hoverStarted;
+	}
+	
+	public WorldScan getWorldScan() {
+		return worldScan;
 	}
 }
