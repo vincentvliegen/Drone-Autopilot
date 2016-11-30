@@ -155,12 +155,12 @@ public class MoveToTarget{
 		}
 		if (this.getDrone().getPitch() > 0.1) {
 			float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
-			this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
+			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
 			this.getDrone().setPitchRate(Math.max(output,-this.getDrone().getMaxPitchRate()));
 		} else if (this.getDrone().getPitch() < -0.1) {
 			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
 			float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
-			this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
+			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
 			this.getDrone().setPitchRate(Math.min(output,this.getDrone().getMaxPitchRate()));
 		} else {
 			this.getDrone().setPitchRate(0);
