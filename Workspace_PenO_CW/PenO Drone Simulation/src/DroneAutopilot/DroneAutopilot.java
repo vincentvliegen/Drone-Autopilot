@@ -8,6 +8,7 @@ import p_en_o_cw_2016.Autopilot;
 import p_en_o_cw_2016.Drone;
 
 public class DroneAutopilot implements Autopilot{
+	private final int RED = 16711680;
 	
 	/**
 	 * Variable registering the drone linked to the Autopilot.
@@ -38,7 +39,7 @@ public class DroneAutopilot implements Autopilot{
 	public void timeHasPassed() {
 		Mission mission;
 		if (this.getMoveToTarget().getGUI().lastOrbEnabled){
-			mission = new OneSphere(this.getMoveToTarget(), this.getDrone());
+			mission = new OneSphere(this.getMoveToTarget(), this.getDrone(), RED); //Possibility to adapt color!
 			mission.execute();
 		} else if (this.getMoveToTarget().getGUI().flyShortest) {
 			mission = new SeveralSpheres(this.getMoveToTarget(), this.getDrone());
