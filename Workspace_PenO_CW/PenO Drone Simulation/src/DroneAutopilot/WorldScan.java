@@ -34,7 +34,6 @@ public class WorldScan {
 		}else if(targetFound.get(0)==true && targetFound.get(1)==false){
 			this.leftCameraFoundTarget();
 		}else if(targetFound.get(0)==true && targetFound.get(1)==true){
-			System.out.println("start");
 			canStartFly = true;
 		}else if(targetFound.get(0)==false && targetFound.get(1)==false){
 			this.noTargetFound();

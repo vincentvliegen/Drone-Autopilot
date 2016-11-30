@@ -54,7 +54,6 @@ public class MoveToTarget{
 
 		correctRoll();
 		if(this.getWorldScan().scan(leftCameraList, rightCameraList, color) == true){
-			System.out.println("True");
 			this.targetVisible(leftCameraList, rightCameraList);
 		}
 	}
@@ -89,11 +88,9 @@ public class MoveToTarget{
 	public void targetVisible(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList) {
 		float[] cogLeft = this.findBestCenterOfGravity(leftCameraList, this
 				.getDrone().getLeftCamera());
-		System.out.println(cogLeft);
 		float[] cogRight = this.findBestCenterOfGravity(rightCameraList, this
 				.getDrone().getRightCamera());
-		System.out.println(cogRight);
-		updateGUI(cogLeft, cogRight);
+		this.updateGUI(cogLeft, cogRight);
 		this.flyTowardsTarget(cogLeft, cogRight);
 	}
 
