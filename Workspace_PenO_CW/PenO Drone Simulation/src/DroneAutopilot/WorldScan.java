@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import p_en_o_cw_2016.Drone;
 
 public class WorldScan {
-
-	private boolean targetFoundLeft;
-	private boolean targetFoundRight;
 	private Drone drone;
 
 	
@@ -36,6 +33,7 @@ public class WorldScan {
 		}else if(targetFound.get(0)==true && targetFound.get(1)==false){
 			this.leftCameraFoundTarget();
 		}else if(targetFound.get(0)==true && targetFound.get(1)==true){
+			System.out.println("start");
 			canStartFly = true;
 		}else if(targetFound.get(0)==false && targetFound.get(1)==false){
 			this.noTargetFound();
@@ -49,26 +47,18 @@ public class WorldScan {
 		targetFound.add(false);
 		targetFound.add(false);
 		if (!leftcamera.isEmpty() && rightcamera.isEmpty()){
-			this.setTargetFoundLeft(false);
-			this.setTargetFoundRight(true);
-			targetFound.set(0, false);
-			targetFound.set(1, true);
-			return targetFound;
-		}else if (leftcamera.isEmpty() && !rightcamera.isEmpty()){
-			this.setTargetFoundLeft(true);
-			this.setTargetFoundRight(false);
 			targetFound.set(0, true);
 			targetFound.set(1, false);
 			return targetFound;
+		}else if (leftcamera.isEmpty() && !rightcamera.isEmpty()){
+			targetFound.set(0, false);
+			targetFound.set(1, true);
+			return targetFound;
 		}else if (!leftcamera.isEmpty() && !rightcamera.isEmpty()) {
-			this.setTargetFoundLeft(true);
-			this.setTargetFoundRight(true);
 			targetFound.set(0, true);
 			targetFound.set(1, true);
 			return targetFound;
 		}else{
-			this.setTargetFoundLeft(false);
-			this.setTargetFoundRight(false);
 			targetFound.set(0, false);
 			targetFound.set(1, false);
 			return targetFound;
@@ -85,18 +75,5 @@ public class WorldScan {
 
 	public void rightCameraFoundTarget() {
 		this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
-	}
-	
-	public boolean isTargetFoundLeft() {
-		return targetFoundLeft;
-	}
-	public void setTargetFoundLeft(boolean targetFoundLeft) {
-		this.targetFoundLeft = targetFoundLeft;
-	}
-	public boolean isTargetFoundRight() {
-		return targetFoundRight;
-	}
-	public void setTargetFoundRight(boolean targetFoundRight) {
-		this.targetFoundRight = targetFoundRight;
 	}
 }
