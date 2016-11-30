@@ -51,10 +51,11 @@ public class MoveToTarget{
 	public void execute(int color){
 		ArrayList<int[]> leftCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getLeftCamera(), color);
 		ArrayList<int[]> rightCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getRightCamera(), color);
-		
+
 		correctRoll();
 		if(this.getWorldScan().Scan(leftCameraList, rightCameraList, color) == true){
-			this.targetVisible(leftCameraList, rightCameraList, color);
+			System.out.println("True");
+			this.targetVisible(leftCameraList, rightCameraList);
 		}
 	}
 
@@ -85,11 +86,13 @@ public class MoveToTarget{
 		}
 	}
 
-	public void targetVisible(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList, int color) {
+	public void targetVisible(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList) {
 		float[] cogLeft = this.findBestCenterOfGravity(leftCameraList, this
 				.getDrone().getLeftCamera());
+		System.out.println(cogLeft);
 		float[] cogRight = this.findBestCenterOfGravity(rightCameraList, this
 				.getDrone().getRightCamera());
+		System.out.println(cogRight);
 		updateGUI(cogLeft, cogRight);
 		this.flyTowardsTarget(cogLeft, cogRight);
 	}
@@ -220,18 +223,18 @@ public class MoveToTarget{
 		//System.out.println("distance: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
 
 		//if-statement die deceleration uitschakelt als 1.1 of 1.2 niet
-//		if(this.getGUI().lastOrbEnabled){
-//			if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().getDecelerationDistance()) {
-//				this.startDeceleration(cogL,cogR);
-//				deceleration = true;
-//			}
-//
-//			if(Math.abs(this.getPhysicsCalculations().getSpeed())<=0.3 && deceleration){
-//				this.hover();
-//			}
-//			else if(deceleration){
-//				this.startDeceleration(cogL, cogR);
-//			}}
+		//		if(this.getGUI().lastOrbEnabled){
+		//			if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().getDecelerationDistance()) {
+		//				this.startDeceleration(cogL,cogR);
+		//				deceleration = true;
+		//			}
+		//
+		//			if(Math.abs(this.getPhysicsCalculations().getSpeed())<=0.3 && deceleration){
+		//				this.hover();
+		//			}
+		//			else if(deceleration){
+		//				this.startDeceleration(cogL, cogR);
+		//			}}
 
 	}
 
@@ -320,7 +323,7 @@ public class MoveToTarget{
 	public boolean getPitchStarted(){
 		return this.pitchStarted;
 	}
-	
+
 	public void setHoverStarted(boolean isStarted){
 		this.hoverStarted = isStarted;
 	}
@@ -328,7 +331,7 @@ public class MoveToTarget{
 	public boolean getHoverStarted(){
 		return this.hoverStarted;
 	}
-	
+
 	public WorldScan getWorldScan() {
 		return worldScan;
 	}
