@@ -20,13 +20,14 @@ public class WorldScan {
 		//PRBLM 1: wind => ???
 		//PRBLM 2: geen bol in zicht (enkel boven of onder..) => wat vooruit of achteruitvliegen tot die in het zicht is? 
 	}
-	public void Scan(Drone drone, ImageCalculations imageCalculations){
 
+	public void scan(Drone drone, ImageCalculations imageCalculations){
+		//TODO
 	}
 
-	public boolean Scan(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList, int color){
+	public boolean scan(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList, int color){
 		boolean canStartFly = false;
-		ArrayList<Boolean> targetFound = this.checkcasespixelsfound(leftCameraList, rightCameraList);
+		ArrayList<Boolean> targetFound = this.checkCasesPixelsFound(leftCameraList, rightCameraList);
 	
 		if(targetFound.get(0)==false && targetFound.get(1)==true){
 			this.rightCameraFoundTarget();
@@ -41,7 +42,7 @@ public class WorldScan {
 		return canStartFly;
 	}
 	
-	public ArrayList<Boolean> checkcasespixelsfound(ArrayList<int[]> leftcamera,
+	public ArrayList<Boolean> checkCasesPixelsFound(ArrayList<int[]> leftcamera,
 			ArrayList<int[]> rightcamera) {
 		ArrayList<Boolean> targetFound = new ArrayList<Boolean>();
 		targetFound.add(false);

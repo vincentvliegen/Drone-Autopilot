@@ -53,7 +53,7 @@ public class MoveToTarget{
 		ArrayList<int[]> rightCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getRightCamera(), color);
 
 		correctRoll();
-		if(this.getWorldScan().Scan(leftCameraList, rightCameraList, color) == true){
+		if(this.getWorldScan().scan(leftCameraList, rightCameraList, color) == true){
 			System.out.println("True");
 			this.targetVisible(leftCameraList, rightCameraList);
 		}
