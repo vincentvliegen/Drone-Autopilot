@@ -1,5 +1,9 @@
 package DroneAutopilot;
 
+import mission.Hover;
+import mission.Mission;
+import mission.OneSphere;
+import mission.SeveralSpheres;
 import p_en_o_cw_2016.Autopilot;
 import p_en_o_cw_2016.Drone;
 
@@ -32,16 +36,18 @@ public class DroneAutopilot implements Autopilot{
     */
 	@Override
 	public void timeHasPassed() {
-		if (this.getMoveToTarget().getGUI().lastOrbEnabled) {
-			this.getMoveToTarget().execute(16711680);
+		Mission mission;
+		if (this.getMoveToTarget().getGUI().lastOrbEnabled){
+			mission = new OneSphere(this.getMoveToTarget(), this.getDrone());
+			mission.execute();
 		} else if (this.getMoveToTarget().getGUI().flyShortest) {
-			this.getShortestPath().execute();
+			mission = new SeveralSpheres(this.getMoveToTarget(), this.getDrone());
+			mission.execute();
 		} else if (this.getMoveToTarget().getGUI().test) {
-			System.out.println("thp");
-			this.getShortestPath().getBiggestOrbs();
+			System.out.println("test");
 		} else {
-			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity() * this.getDrone().getWeight()));
-
+			mission = new Hover(this.getMoveToTarget(), this.getDrone());
+			mission.execute();
 		}
 	}
 	
@@ -69,11 +75,7 @@ public class DroneAutopilot implements Autopilot{
 		return this.moveToTarget;
 	}
 
-
 	public ShortestPath getShortestPath() {
 		return shortestPath;
 	}
-	
-	
-
 }
