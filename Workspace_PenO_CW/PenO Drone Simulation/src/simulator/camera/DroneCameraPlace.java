@@ -12,16 +12,20 @@ public enum DroneCameraPlace {
 	public String toString() {
 		if (this.equals(LEFT)) {
 			return "Left";
-		} else {
+		} else if (this.equals(RIGHT)){
 			return "Right";
+		} else{
+			return "Middle";
 		}
 	}
 
 	public int getIndicator() {
 		if (this.equals(LEFT)) {
 			return -1;
-		} else {
+		} else if(this.equals(RIGHT)){
 			return 1;
+		} else{
+			return 0;
 		}
 	}
 }
