@@ -195,7 +195,7 @@ public class MoveToTarget{
 		if(this.getPhysicsCalculations().getDistance(cogL, cogR)==0){
 			this.hover();
 		}else{
-			if(this.getPhysicsCalculations().getDistance(cogL, cogR)-this.getDistancePI().getSetpoint()>0.2f){
+			if(Math.abs(this.getPhysicsCalculations().getDistance(cogL, cogR)-this.getDistancePI().getSetpoint())>0.2f){
 				this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(cogL, cogR)-0.1f);
 			}
 			if(this.getDrone().getPitch()>0 && !this.getPitchStarted()){
@@ -211,6 +211,7 @@ public class MoveToTarget{
 				float output = -this.getDistancePI().calculateRate(this.getPhysicsCalculations().getDistance(cogL, cogR), this.getDrone().getCurrentTime());
 				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDistance(cogL, cogR))*10);
 				this.getDrone().setPitchRate(output);
+				//TODO als snelheid meerdere bollen oploopt, dit aanpassen naar this.getDrone().getPitch()<0.1
 				if(output<0){
 					this.setPitchStarted(false);
 				}
