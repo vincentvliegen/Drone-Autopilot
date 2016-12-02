@@ -159,11 +159,11 @@ public class MoveToTarget{
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
 			this.getDrone().setPitchRate(Math.max(output,-this.getDrone().getMaxPitchRate()));
 		} else if (this.getDrone().getPitch() < -0.1) {
-			this.getDrone().setPitchRate(this.getDrone().getMaxPitchRate());
 			float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
 			this.getDrone().setPitchRate(Math.min(output,this.getDrone().getMaxPitchRate()));
 		} else {
+			//System.out.println("hover recht");
 			this.getDrone().setPitchRate(0);
 			this.setHoverStarted(false);
 			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight());
@@ -192,16 +192,22 @@ public class MoveToTarget{
 		this.correctYaw(cogL, cogR);
 		this.correctHeight(cogL, cogR);
 		this.getPhysicsCalculations().updateAccSpeed(cogL);
-		if(this.getPhysicsCalculations().getDistance(cogL, cogR)==0){
+		if(this.getPhysicsCalculations().getDistance(cogL, cogR)<=2){
 			this.hover();
 		}else{
+			//System.out.println("dist" + this.getPhysicsCalculations().getDistance(cogL, cogR));
+			//System.out.println("setpoitn" + this.getDistancePI().getSetpoint());
 			if(Math.abs(this.getPhysicsCalculations().getDistance(cogL, cogR)-this.getDistancePI().getSetpoint())>0.2f){
 				this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(cogL, cogR)-0.1f);
+				//System.out.println("to far from target");
+				this.getDrone().setPitchRate(0);
+				this.setPitchStarted(true);
 			}
 			if(this.getDrone().getPitch()>0 && !this.getPitchStarted()){
 				float newTarget = this.getPhysicsCalculations().getDistance(cogL, cogR)-0.1f;
-				if(newTarget<2){
-					this.getDistancePI().resetSetpoint(2);
+				if(newTarget<1){
+					//System.out.println("closer than 1");
+					this.getDistancePI().resetSetpoint(1f);
 				}else{
 					this.getDistancePI().resetSetpoint(newTarget);
 				}
