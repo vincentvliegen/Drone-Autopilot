@@ -62,6 +62,24 @@ public class ImageCalculations{
 		this.setPixelsOfEachColor(hashMapDifferentColors);	
 	}
 	
+	//circlefit,zolang genoeg randpunten te zien zijn, anders zwaartepunt
+	public float[] findBestCenterOfGravity(ArrayList<int[]> pixelsFound,
+			Camera camera) {
+		float[] cog = { 0, 0 };
+		try {
+			cog = this.centerOfCircle(pixelsFound,
+					camera);
+		} catch (SmallCircleException e) {
+			try {
+				cog = this.getCOG(pixelsFound);
+			} catch (EmptyPositionListException e1) {
+				e1.printStackTrace();
+			}
+		} catch (EmptyPositionListException e) {
+			e.printStackTrace();
+		}
+		return cog;
+	}
 
 	// Zwaartepunt van gekleurde pixels bepalen.
 	// Als er geen rode pixels zijn, exception

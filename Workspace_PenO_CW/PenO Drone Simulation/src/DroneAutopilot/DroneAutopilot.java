@@ -24,7 +24,7 @@ public class DroneAutopilot implements Autopilot{
 	public DroneAutopilot(Drone drone){
 		this.setDrone(drone);
 		this.moveToTarget = new MoveToTarget(drone);
-		this.shortestPath = new ShortestPath(this.getMoveToTarget());
+		this.shortestPath = new ShortestPath(drone);
 	}
 	
 	

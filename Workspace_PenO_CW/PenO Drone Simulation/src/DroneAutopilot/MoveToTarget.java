@@ -87,9 +87,9 @@ public class MoveToTarget{
 	}
 
 	public void targetVisible(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList) {
-		float[] cogLeft = this.findBestCenterOfGravity(leftCameraList, this
+		float[] cogLeft = this.getImageCalculations().findBestCenterOfGravity(leftCameraList, this
 				.getDrone().getLeftCamera());
-		float[] cogRight = this.findBestCenterOfGravity(rightCameraList, this
+		float[] cogRight = this.getImageCalculations().findBestCenterOfGravity(rightCameraList, this
 				.getDrone().getRightCamera());
 		this.updateGUI(cogLeft, cogRight);
 		this.flyTowardsTarget(cogLeft, cogRight);
@@ -129,24 +129,6 @@ public class MoveToTarget{
 
 	public void updategraphPI(int x, int y){
 		this.getGraphPI().update(x,y);
-	}
-
-	public float[] findBestCenterOfGravity(ArrayList<int[]> pixelsFound,
-			Camera camera) {
-		float[] cog = { 0, 0 };
-		try {
-			cog = this.getImageCalculations().centerOfCircle(pixelsFound,
-					camera);
-		} catch (SmallCircleException e) {
-			try {
-				cog = this.getImageCalculations().getCOG(pixelsFound);
-			} catch (EmptyPositionListException e1) {
-				e1.printStackTrace();
-			}
-		} catch (EmptyPositionListException e) {
-			e.printStackTrace();
-		}
-		return cog;
 	}
 
 	public void hover() {

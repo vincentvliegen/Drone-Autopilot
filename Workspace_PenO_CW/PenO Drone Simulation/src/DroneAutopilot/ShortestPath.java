@@ -1,71 +1,57 @@
 package DroneAutopilot;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import p_en_o_cw_2016.Camera;
+import p_en_o_cw_2016.Drone;
 
 public class ShortestPath {
 
-	private final MoveToTarget moveToTarget;
+	private final Drone drone;
+	private final ImageCalculations imageCalculations;
+	private final PhysicsCalculations physicsCalculations;
 	private final static int numberOfOrbsConsidered = 5;
 	private int colorFirstOrb;
 	private int colorSecondOrb;
-//	private HashMap<Integer, ArrayList<int[]>> allPixelsLeftImage;
-//	private HashMap<Integer, ArrayList<int[]>> allPixelsRightImage;
 	private HashMap<Integer, ArrayList<int[]>> allPixelsImage;
 	private HashMap<Integer, float[][]> closestOrbs;// <color,[[cogL],[cogr]]>
-	public boolean firstTime; // TODO terug aanzetten wanneer opdracht opnieuw
-								// geselcteerd wordt
-
-	public ShortestPath(MoveToTarget moveToTarget) {
-		this.moveToTarget = moveToTarget;
+	
+	
+	
+	public ShortestPath(Drone drone) {
+		this.drone = drone;
+		this.imageCalculations = new ImageCalculations();//TODO moeten deze dezelfde zijn als in MoveToTarget?
+		this.physicsCalculations = new PhysicsCalculations(drone);//TODO moeten deze dezelfde zijn als in MoveToTarget?
 
 	}
 
-	public void execute() {
-		int color = null;
-		if (scanning){ //TODO echte scanboolean
-			color = scanresultaat; //TODO echt scanresultaat
-			if (color != null)
-				scanning = false;
-		} else {
-//		if (this.firstTime) {
-//			// TODO eerste keer lijst van alle kleuren
-//			this.firstTime = false;
-//		}
-		if (dichtgenoeg) { //TODO boolean van movetotarget
-			// TODO tweede bol is eerste bol
-			// TODO bereken nieuwe tweede bol
-		}
-		//TODO check of bol in beld die dichter licht dan huidig doel
-		this.moveToTarget.execute(colorFirstOrb);
-	}}
-
 	public void determineClosestOrbs() {
-		HashMap<Integer,Float>closestOrbsListLeft = this.getBiggestOrbs(this.getMoveToTarget().getDrone().getLeftCamera());
-		HashMap<Integer,Float>closestOrbsListRight = this.getBiggestOrbs(this.getMoveToTarget().getDrone().getRightCamera());
-		//TODO lijst uit getBiggestOrbs van linkse en rechtse camera combineren tot closestOrbsList
 		HashMap<Integer, float[][]> closestOrbsList = new HashMap<Integer, float[][]>();
+		HashMap<Integer,float[]>closestOrbsListLeft = this.getBiggestOrbs(this.getDrone().getLeftCamera());
+		HashMap<Integer,float[]>closestOrbsListRight = this.getBiggestOrbs(this.getDrone().getRightCamera());
+		for (int colorLeft : closestOrbsListLeft.keySet()){
+			for(int colorRight : closestOrbsListRight.keySet()){
+				if(colorLeft == colorRight){
+					float[][] cogs = {closestOrbsListLeft.get(colorLeft),closestOrbsListRight.get(colorLeft)};
+					closestOrbsList.put(colorLeft,cogs);
+					break;					
+				}
+			}
+		}
 		this.setClosestOrbs(closestOrbsList);
 	}
 	
 	//Geeft n grootste bollen op beeld van opgegeven camera
-	public HashMap<Integer,Float> getBiggestOrbs(Camera camera) {
-		// both
-		List<int[]> colorAndSizeList = new ArrayList<int[]>();
-		this.getMoveToTarget().getImageCalculations().calculatePixelsOfEachColor(camera);
-		this.setAllPixelsImage(this.getMoveToTarget().getImageCalculations().getPixelsOfEachColor());
-
+	public HashMap<Integer,float[]> getBiggestOrbs(Camera camera) {
+		ArrayList<int[]> colorAndSizeList = new ArrayList<int[]>();
+		this.getImageCalculations().calculatePixelsOfEachColor(camera);
+		this.setAllPixelsImage(this.getImageCalculations().getPixelsOfEachColor());
 		int minPixels = Integer.MAX_VALUE;
 		for (int color : this.getAllPixelsImage().keySet()) {
 			int size = this.getAllPixelsImage().get(color).size();
 			int[] colorAndSize = { color, size };
-			if (colorAndSizeList.size() < this.getNumberoforbsconsidered()) {
+			if (colorAndSizeList.size() < getNumberoforbsconsidered()) {
 
 				colorAndSizeList.add(colorAndSize);
 				minPixels = Math.min(minPixels, size);
@@ -75,7 +61,7 @@ public class ShortestPath {
 				colorAndSizeList.add(colorAndSize);
 
 				int i = 0;
-				while (colorAndSizeList.size() > this.getNumberoforbsconsidered()) {
+				while (colorAndSizeList.size() > getNumberoforbsconsidered()) {
 					if (colorAndSizeList.get(i)[1] <= minPixels) {
 						colorAndSizeList.remove(i);
 						int newSmallest = Integer.MAX_VALUE;
@@ -88,12 +74,12 @@ public class ShortestPath {
 				}
 			}
 		}
-		//TODO cog toevoegen per kleur (colorList moet wrs hashmap worden dan)
-//		List<Integer>colorList = new ArrayList<>();
-		HashMap<Integer,Float> colorList = new HashMap<>();
-		for (int i = 0; i < colorAndSizeList.size(); i++)
-//			colorList.add(colorAndSizeList.get(i)[0]);
+		//zwaartepunt berekenen
+		HashMap<Integer,float[]> colorList = new HashMap<Integer,float[]>();
+		for (int i = 0; i < colorAndSizeList.size(); i++){
+			float[] cog = this.getImageCalculations().findBestCenterOfGravity(getAllPixelsImage().get(colorAndSizeList.get(i)), camera);
 			colorList.put(colorAndSizeList.get(i)[0],cog);
+		}
 		return colorList;
 	}
 
@@ -103,9 +89,9 @@ public class ShortestPath {
 //	public List<Integer> getBiggestOrbs() {
 //		// left
 //		List<int[]> colorAndSizeListLeft = new ArrayList<int[]>();
-//		this.getMoveToTarget().getImageCalculations()
-//				.calculatePixelsOfEachColor(this.getMoveToTarget().getDrone().getLeftCamera());
-//		this.setAllPixelsLeftImage(this.getMoveToTarget().getImageCalculations().getPixelsOfEachColor());
+//		this.getImageCalculations()
+//				.calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
+//		this.setAllPixelsLeftImage(this.getImageCalculations().getPixelsOfEachColor());
 //
 //		int minLeftPixels = Integer.MAX_VALUE;
 //		for (int color : this.getAllPixelsLeftImage().keySet()) {
@@ -136,9 +122,9 @@ public class ShortestPath {
 //		}
 //		// right
 //		List<int[]> colorAndSizeListRight = new ArrayList<int[]>();
-//		this.getMoveToTarget().getImageCalculations()
-//				.calculatePixelsOfEachColor(this.getMoveToTarget().getDrone().getRightCamera());
-//		this.setAllPixelsRightImage(this.getMoveToTarget().getImageCalculations().getPixelsOfEachColor());
+//		this.getImageCalculations()
+//				.calculatePixelsOfEachColor(this.getDrone().getRightCamera());
+//		this.setAllPixelsRightImage(this.getImageCalculations().getPixelsOfEachColor());
 //
 //		int minRightPixels = Integer.MAX_VALUE;
 //		for (int color : this.getAllPixelsRightImage().keySet()) {
@@ -169,20 +155,7 @@ public class ShortestPath {
 //		}
 //
 //		// compare left and right list
-//		List<Integer> colorListLeft = new ArrayList<>();
-//		for (int i = 0; i < colorAndSizeListLeft.size(); i++)
-//			colorListLeft.add(colorAndSizeListLeft.get(i)[0]);
-//		List<Integer> colorListRight = new ArrayList<>();
-//		for (int i = 0; i < colorAndSizeListRight.size(); i++)
-//			colorListRight.add(colorAndSizeListRight.get(i)[0]);
-//		if (!colorListLeft.containsAll(colorListRight)) {
-//			for (int i = 0; i < colorListLeft.size(); i++) {
-//				if (!colorListRight.contains(colorListLeft.get(i))) {
-//					colorListLeft.remove(i);
-//				}
-//
-//			}
-//		}
+//		
 //		return colorListLeft;
 //	}
 
@@ -193,7 +166,7 @@ public class ShortestPath {
 		int[] keys = new int[size];
 		int i = 0;
 		for (int key : getClosestOrbs().keySet()) {
-			distances[i] = this.getMoveToTarget().getPhysicsCalculations().getDistance(getClosestOrbs().get(key)[0],
+			distances[i] = this.getPhysicsCalculations().getDistance(getClosestOrbs().get(key)[0],
 					getClosestOrbs().get(key)[1]);
 			keys[i] = key;
 			i++;
@@ -231,12 +204,12 @@ public class ShortestPath {
 	}
 
 	public float getDistanceBetweenOrbs(float[] cogL1, float[] cogR1, float[] cogL2, float[] cogR2) {
-		float depth1 = this.getMoveToTarget().getPhysicsCalculations().getDepth(cogL1, cogR1);
-		float depth2 = this.getMoveToTarget().getPhysicsCalculations().getDepth(cogL2, cogR2);
-		float alpha1 = this.getMoveToTarget().getPhysicsCalculations().horizontalAngleDeviation(cogL1, cogR1);
-		float alpha2 = this.getMoveToTarget().getPhysicsCalculations().horizontalAngleDeviation(cogL2, cogR2);
-		float beta1 = this.getMoveToTarget().getPhysicsCalculations().verticalAngleDeviation(cogL1);
-		float beta2 = this.getMoveToTarget().getPhysicsCalculations().verticalAngleDeviation(cogL2);
+		float depth1 = this.getPhysicsCalculations().getDepth(cogL1, cogR1);
+		float depth2 = this.getPhysicsCalculations().getDepth(cogL2, cogR2);
+		float alpha1 = this.getPhysicsCalculations().horizontalAngleDeviation(cogL1, cogR1);
+		float alpha2 = this.getPhysicsCalculations().horizontalAngleDeviation(cogL2, cogR2);
+		float beta1 = this.getPhysicsCalculations().verticalAngleDeviation(cogL1);
+		float beta2 = this.getPhysicsCalculations().verticalAngleDeviation(cogL2);
 		// distance = sqrt( (x1-x2)^2 + (y1-y2)^2 + (z1-z2)^2 )
 		float x1 = (float) (depth1 * Math.tan(alpha1));
 		float x2 = (float) (depth1 * Math.tan(alpha2));
@@ -248,24 +221,8 @@ public class ShortestPath {
 		return distance;
 	}
 
-	public MoveToTarget getMoveToTarget() {
-		return moveToTarget;
-	}
-
-	public HashMap<Integer, ArrayList<int[]>> getAllPixelsLeftImage() {
-		return allPixelsLeftImage;
-	}
-
-	public void setAllPixelsLeftImage(HashMap<Integer, ArrayList<int[]>> allPixelsLeftImage) {
-		this.allPixelsLeftImage = allPixelsLeftImage;
-	}
-
-	public HashMap<Integer, ArrayList<int[]>> getAllPixelsRightImage() {
-		return allPixelsRightImage;
-	}
-
-	public void setAllPixelsRightImage(HashMap<Integer, ArrayList<int[]>> allPixelsRightImage) {
-		this.allPixelsRightImage = allPixelsRightImage;
+	public ImageCalculations getImageCalculations() {
+		return imageCalculations;
 	}
 
 	public HashMap<Integer, ArrayList<int[]>> getAllPixelsImage() {
@@ -304,4 +261,14 @@ public class ShortestPath {
 		this.closestOrbs = closestOrbs;
 	}
 
+	/**
+	 * @return the physicsCalculations
+	 */
+	public PhysicsCalculations getPhysicsCalculations() {
+		return physicsCalculations;
+	}
+
+	public Drone getDrone() {
+		return drone;
+	}
 }
