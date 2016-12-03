@@ -16,6 +16,15 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 
 public class WorldParser extends World{
+	
+	private int windSpeedXI = 0;
+	private int windSpeedYI = 0;
+	private int windSpeedZI = 0;
+	private int windRotationXI = 0;
+	private int windRotationYI = 0;
+	private int windRotationZI = 0;
+	private boolean crash;
+	
 	public WorldParser(){
 		super();
 		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 0, 0, 1, 0, this));
@@ -90,7 +99,7 @@ public class WorldParser extends World{
 	protected void handleCollision(WorldObject object, SimulationDrone drone) {
 		if (object instanceof ObstacleSphere) {
 			System.out.println("You crashed into an obstacleSphere.");
-			//System.exit(0);
+			crash = true;
 		} else if (object instanceof Sphere) {
 			removeSphere((Sphere)object);			
 			getWorldObjectList().remove(object);
@@ -117,14 +126,19 @@ public class WorldParser extends World{
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
+		if (crash) {
+			GL2 gl = getGL().getGL2();
+			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+			gl.glClearColor(1, 0, 0, 0);
+		} else {
 		super.updateTimePassed();
 		super.getPhysics().run((float) checkTimePassed());
 
 		for (SimulationDrone drone : getDrones()) {
 			drone.timeHasPassed((float) checkTimePassed());
 		}
-
 		super.setLastTime(System.nanoTime());
+		checkWindChange();
 
 		// TODO plaats van dit?
 		if (!super.getAnimator().isAnimating()) {
@@ -174,6 +188,72 @@ public class WorldParser extends World{
 		 i++;
 		 }
 		 */
+		}
 	}
+	
+	private void checkWindChange() {
+		/*
+		System.out.println("---------");
+		System.out.println("Time: " + getCurrentTime());
+		System.out.println("WindSpeedX: " + getWindSpeedX());
+		System.out.println("WindSpeedY: " + getWindSpeedY());
+		System.out.println("WindSpeedZ: " + getWindSpeedZ());
+		System.out.println("WindRotationX: " + getWindRotationX());
+		System.out.println("WindRotationY: " + getWindRotationY());
+		System.out.println("WindRotationZ: " + getWindRotationZ());
+		System.out.println("---------");
+		*/
+		
+		//WINDSPEED
+		if (getCurrentTime()%getParser().getArrayXTimes()[getParser().getArrayXTimes().length-1] > getParser().getArrayXTimes()[windSpeedXI]) {
+			setWindSpeedX(getParser().getArrayXValues()[windSpeedXI]);
+			windSpeedXI++;
+		} else if ((getCurrentTime()%getParser().getArrayXTimes()[getParser().getArrayXTimes().length-1] < getParser().getArrayXTimes()[0]) && (getCurrentTime() > getParser().getArrayXTimes()[0])) {
+			setWindSpeedX(getParser().getArrayXValues()[getParser().getArrayXTimes().length-1]);
+			windSpeedXI = 0;
+		}
+		
+		if (getCurrentTime()%getParser().getArrayYTimes()[getParser().getArrayYTimes().length-1] > getParser().getArrayYTimes()[windSpeedYI]) {
+			setWindSpeedY(getParser().getArrayYValues()[windSpeedYI]);
+			windSpeedYI++;
+		} else if ((getCurrentTime()%getParser().getArrayYTimes()[getParser().getArrayYTimes().length-1] < getParser().getArrayYTimes()[0]) && (getCurrentTime() > getParser().getArrayYTimes()[0])) {
+			setWindSpeedY(getParser().getArrayYValues()[getParser().getArrayYTimes().length-1]);
+			windSpeedYI = 0;
+		}
+		
+		if (getCurrentTime()%getParser().getArrayZTimes()[getParser().getArrayZTimes().length-1] > getParser().getArrayZTimes()[windSpeedZI]) {
+			setWindSpeedZ(getParser().getArrayZValues()[windSpeedZI]);
+			windSpeedZI++;
+		} else if ((getCurrentTime()%getParser().getArrayZTimes()[getParser().getArrayZTimes().length-1] < getParser().getArrayZTimes()[0]) && (getCurrentTime() > getParser().getArrayZTimes()[0])) {
+			setWindSpeedZ(getParser().getArrayZValues()[getParser().getArrayZTimes().length-1]);
+			windSpeedZI = 0;
+		}
+		
+		//WINDROTATION
+		if (getCurrentTime()%getParser().getWindRotationXTimes()[getParser().getWindRotationXTimes().length-1] > getParser().getWindRotationXTimes()[windRotationXI]) {
+			setWindRotationX(getParser().getWindRotationXValues()[windRotationXI]);
+			windRotationXI++;
+		} else if ((getCurrentTime()%getParser().getWindRotationXTimes()[getParser().getWindRotationXTimes().length-1] < getParser().getWindRotationXTimes()[0]) && (getCurrentTime() > getParser().getWindRotationXTimes()[0])) {
+			setWindRotationX(getParser().getWindRotationXValues()[getParser().getWindRotationXTimes().length-1]);
+			windRotationXI = 0;
+		}
+		
+		if (getCurrentTime()%getParser().getWindRotationYTimes()[getParser().getWindRotationYTimes().length-1] > getParser().getWindRotationYTimes()[windRotationYI]) {
+			setWindRotationY(getParser().getWindRotationYValues()[windRotationYI]);
+			windRotationYI++;
+		} else if ((getCurrentTime()%getParser().getWindRotationYTimes()[getParser().getWindRotationYTimes().length-1] < getParser().getWindRotationYTimes()[0]) && (getCurrentTime() > getParser().getWindRotationYTimes()[0])) {
+			setWindRotationY(getParser().getWindRotationYValues()[getParser().getWindRotationYTimes().length-1]);
+			windRotationYI = 0;
+		}
+		
+		if (getCurrentTime()%getParser().getWindRotationZTimes()[getParser().getWindRotationZTimes().length-1] > getParser().getWindRotationZTimes()[windRotationZI]) {
+			setWindRotationZ(getParser().getWindRotationZValues()[windRotationZI]);
+			windRotationZI++;
+		} else if ((getCurrentTime()%getParser().getWindRotationZTimes()[getParser().getWindRotationZTimes().length-1] < getParser().getWindRotationZTimes()[0]) && (getCurrentTime() > getParser().getWindRotationZTimes()[0])) {
+			setWindRotationZ(getParser().getWindRotationZValues()[getParser().getWindRotationZTimes().length-1]);
+			windRotationZI = 0;
+		}
+	}
+	
 
 }

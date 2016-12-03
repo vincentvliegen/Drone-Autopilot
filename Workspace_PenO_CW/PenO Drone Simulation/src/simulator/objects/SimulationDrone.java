@@ -193,22 +193,20 @@ public class SimulationDrone implements Drone, WorldObject{
 				* new BigDecimal(inverseRotateMatrix.get(6)).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
 	
 		//Wind rotation stuff
-		this.yaw += world.getWindRotationY()*timePassed;
+		this.yaw -= world.getWindRotationY()*timePassed;
 		this.roll += world.getWindRotationX()*timePassed;
-		this.pitch += world.getWindRotationZ()*timePassed;
+		this.pitch -= world.getWindRotationZ()*timePassed;
 		
 		/*
 		 System.out.println("--------------");
 		 System.out.println("global pitch " + this.pitch);
 		 System.out.println("global yaw " + this.yaw);
 		 System.out.println("global roll " + this.roll);
-		 System.out.println("current pitch " + getPitch());
-		 System.out.println("current roll " + getRoll());
 		 System.out.println("pitchRate " + this.pitchRate);
 		 System.out.println("yawRate " + this.yawRate);
 		 System.out.println("rollRate " + this.rollRate);
 		 System.out.println("--------------");
-		 */
+		*/
 		 
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
