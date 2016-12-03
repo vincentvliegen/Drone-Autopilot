@@ -56,7 +56,7 @@ public class MoveToTarget{
 		if(this.getWorldScan().scan(leftCameraList, rightCameraList, color) == true){
 			this.targetVisible(leftCameraList, rightCameraList);
 		}
-		//this.getWorldScan().scan(this.getDrone(), this.getImageCalculations()); @Jef dit uncomment en de if erboven comment
+		//this.getWorldScan().scan(this.getDrone(), this.getImageCalculations()); 
 	}
 
 	public void correctRoll() {
