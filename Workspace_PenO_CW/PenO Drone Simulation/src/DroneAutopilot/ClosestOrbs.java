@@ -18,11 +18,10 @@ public class ClosestOrbs {
 	private HashMap<Integer, float[][]> closestOrbs;// <color,[[cogL],[cogr]]>
 	
 	
-	
 	public ClosestOrbs(Drone drone) {
 		this.drone = drone;
-		this.imageCalculations = new ImageCalculations();//TODO moeten deze dezelfde zijn als in MoveToTarget?
-		this.physicsCalculations = new PhysicsCalculations(drone);//TODO moeten deze dezelfde zijn als in MoveToTarget?
+		this.imageCalculations = new ImageCalculations();
+		this.physicsCalculations = new PhysicsCalculations(drone);
 
 	}
 
@@ -160,19 +159,23 @@ public class ClosestOrbs {
 //	}
 
 	// geeft kleur terug van dichtstbijzijnde
-	public void calculateFirstOrb() {
+	public void calculateFirstOrb() throws NullPointerException {
 		int size = getClosestOrbs().size();
-		float[] distances = new float[size];
-		int[] keys = new int[size];
-		int i = 0;
-		for (int key : getClosestOrbs().keySet()) {
-			distances[i] = this.getPhysicsCalculations().getDistance(getClosestOrbs().get(key)[0],
-					getClosestOrbs().get(key)[1]);
-			keys[i] = key;
-			i++;
+		if(size != 0){
+			float[] distances = new float[size];
+			int[] keys = new int[size];
+			int i = 0;
+			for (int key : getClosestOrbs().keySet()) {
+				distances[i] = this.getPhysicsCalculations().getDistance(getClosestOrbs().get(key)[0],
+						getClosestOrbs().get(key)[1]);
+				keys[i] = key;
+				i++;
+			}
+			int index = this.indexMinValueArray(distances);
+			this.setColorFirstOrb(keys[index]);
+		} else{
+			throw new NullPointerException();
 		}
-		int index = this.indexMinValueArray(distances);
-		this.setColorFirstOrb(keys[index]);
 	}
 
 	public int indexMinValueArray(float[] array) {
@@ -188,19 +191,23 @@ public class ClosestOrbs {
 	// kleur bol dichtst bij bol 1
 	public void calculateSecondOrb() {
 		int size = getClosestOrbs().size() - 1;
-		float[] distances = new float[size];
-		int[] keys = new int[size];
-		int i = 0;
-		for (int key : getClosestOrbs().keySet()) {
-			if (key != this.getColorFirstOrb()) {
-				distances[i] = getDistanceBetweenOrbs(getClosestOrbs().get(key)[0], getClosestOrbs().get(key)[1],
-						getClosestOrbs().get(getColorFirstOrb())[0], getClosestOrbs().get(getColorFirstOrb())[1]);
-				keys[i] = key;
-				i++;
+		if(size != 0){
+			float[] distances = new float[size];
+			int[] keys = new int[size];
+			int i = 0;
+			for (int key : getClosestOrbs().keySet()) {
+				if (key != this.getColorFirstOrb()) {
+					distances[i] = getDistanceBetweenOrbs(getClosestOrbs().get(key)[0], getClosestOrbs().get(key)[1],
+							getClosestOrbs().get(getColorFirstOrb())[0], getClosestOrbs().get(getColorFirstOrb())[1]);
+					keys[i] = key;
+					i++;
+				}
 			}
+			int index = this.indexMinValueArray(distances);
+			this.setColorSecondOrb(keys[index]);
+		} else{
+			throw new NullPointerException();
 		}
-		int index = this.indexMinValueArray(distances);
-		this.setColorSecondOrb(keys[index]);
 	}
 
 	public float getDistanceBetweenOrbs(float[] cogL1, float[] cogR1, float[] cogL2, float[] cogR2) {
@@ -221,6 +228,10 @@ public class ClosestOrbs {
 		return distance;
 	}
 
+	
+	
+	
+	
 	public ImageCalculations getImageCalculations() {
 		return imageCalculations;
 	}
@@ -271,4 +282,5 @@ public class ClosestOrbs {
 	public Drone getDrone() {
 		return drone;
 	}
+
 }

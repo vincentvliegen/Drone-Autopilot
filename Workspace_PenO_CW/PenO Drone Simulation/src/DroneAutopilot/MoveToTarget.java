@@ -24,6 +24,8 @@ public class MoveToTarget{
 	private Drone drone;
 	private GUI gui;
 	private boolean pitchStarted;
+	private float[] cogL;
+	private float[] cogR;
 
 
 	public MoveToTarget(Drone drone) {
@@ -52,33 +54,35 @@ public class MoveToTarget{
 	public void targetVisible(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList) {
 		float[] cogLeft = this.getImageCalculations().findBestCenterOfGravity(leftCameraList, this
 				.getDrone().getLeftCamera());
+		this.setCogL(cogLeft);
 		float[] cogRight = this.getImageCalculations().findBestCenterOfGravity(rightCameraList, this
 				.getDrone().getRightCamera());
-		this.updateGUI(cogLeft, cogRight);
-		this.flyTowardsTarget(cogLeft, cogRight);
+		this.setCogR(cogRight);
+		this.updateGUI();
+		this.flyTowardsTarget();
 	}
 
-	public void updateGUI(float[] centerOfGravityL, float[] centerOfGravityR) {
-		this.getGUI().update(this.getPhysicsCalculations().getDistance(centerOfGravityL, centerOfGravityR));
+	public void updateGUI() {
+		this.getGUI().update(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()));
 	}
 
-	public void flyTowardsTarget(float[] cogL, float[] cogR) { 
-		this.getYawCorrector().correctYaw(cogL, cogR);
-		this.getHeightCorrector().correctHeight(cogL, cogR);
-		this.getPhysicsCalculations().updateAccSpeed(cogL);
-		if(this.getPhysicsCalculations().getDistance(cogL, cogR)<=2){
+	public void flyTowardsTarget() { 
+		this.getYawCorrector().correctYaw(this.getCogL(), this.getCogR());
+		this.getHeightCorrector().correctHeight(this.getCogL(), this.getCogR());
+		this.getPhysicsCalculations().updateAccSpeed(this.getCogL());
+		if(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())<=2){
 			this.getPitchCorrector().hover();
 		}else{
 			//System.out.println("dist" + this.getPhysicsCalculations().getDistance(cogL, cogR));
 			//System.out.println("setpoitn" + this.getDistancePI().getSetpoint());
-			if(Math.abs(this.getPhysicsCalculations().getDistance(cogL, cogR)-this.getDistancePI().getSetpoint())>0.2f){
-				this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(cogL, cogR)-0.1f);
+			if(Math.abs(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())-this.getDistancePI().getSetpoint())>0.2f){
+				this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())-0.1f);
 				//System.out.println("to far from target");
 				this.getDrone().setPitchRate(0);
 				this.setPitchStarted(true);
 			}
 			if(this.getDrone().getPitch()>0 && !this.getPitchStarted()){
-				float newTarget = this.getPhysicsCalculations().getDistance(cogL, cogR)-0.1f;
+				float newTarget = this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())-0.1f;
 				if(newTarget<1){
 					//System.out.println("closer than 1");
 					this.getDistancePI().resetSetpoint(1f);
@@ -88,7 +92,7 @@ public class MoveToTarget{
 				this.getDrone().setPitchRate(0);
 				this.setPitchStarted(true);
 			}else{
-				float output = -this.getDistancePI().calculateRate(this.getPhysicsCalculations().getDistance(cogL, cogR), this.getDrone().getCurrentTime());
+				float output = -this.getDistancePI().calculateRate(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()), this.getDrone().getCurrentTime());
 				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDistance(cogL, cogR))*10);
 				this.getDrone().setPitchRate(output);
 				//TODO als snelheid meerdere bollen oploopt, dit aanpassen naar this.getDrone().getPitch()<0.1
@@ -117,7 +121,7 @@ public class MoveToTarget{
 
 	}
 
-	public void startDeceleration(float[] cogL, float[] cogR) {
+	public void startDeceleration() {
 		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/20;
 		if(this.getDrone().getPitch()>-partAngleView){
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
@@ -184,5 +188,33 @@ public class MoveToTarget{
 
 	public CorrectPitch getPitchCorrector() {
 		return pitchCorrector;
+	}
+
+	/**
+	 * @return the cogL
+	 */
+	public float[] getCogL() {
+		return cogL;
+	}
+
+	/**
+	 * @param cogL the cogL to set
+	 */
+	public void setCogL(float[] cogL) {
+		this.cogL = cogL;
+	}
+
+	/**
+	 * @return the cogR
+	 */
+	public float[] getCogR() {
+		return cogR;
+	}
+
+	/**
+	 * @param cogR the cogR to set
+	 */
+	public void setCogR(float[] cogR) {
+		this.cogR = cogR;
 	}
 }
