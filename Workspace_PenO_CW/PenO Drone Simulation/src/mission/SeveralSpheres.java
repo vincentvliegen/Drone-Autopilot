@@ -1,37 +1,53 @@
 package mission;
 
 import DroneAutopilot.MoveToTarget;
+import DroneAutopilot.ClosestOrbs;
 import p_en_o_cw_2016.Drone;
 
-public class SeveralSpheres extends Mission{
-	
-	public boolean firstTime; // TODO terug aanzetten wanneer opdracht opnieuw geselecteerd wordt
+public class SeveralSpheres extends Mission {
 
-	
-	public SeveralSpheres(MoveToTarget moveToTarget, Drone drone){
+	private final ClosestOrbs closestOrbs = new ClosestOrbs(this.getDrone());
+	private boolean firstTime;
+
+	public boolean isFirstTime() {
+		return firstTime;
+	}
+
+	public void setFirstTime(boolean firstTime) {
+		this.firstTime = firstTime;
+	}
+
+	public ClosestOrbs getClosestOrbs() {
+		return closestOrbs;
+	}
+
+	public SeveralSpheres(MoveToTarget moveToTarget, Drone drone) {
 		super(moveToTarget, drone);
 	}
 
 	@Override
 	public void execute() {
-		//TODO implementation.
-		System.out.println("EXSevSph");	
-		//TODO execute moet naar several orbs missie
-		int color = null;
-		if (scanning){ //TODO echte scanboolean
-			color = scanresultaat; //TODO echt scanresultaat
-			if (color != null)
-				scanning = false;
+		System.out.println("EXSevSph");
+		if (!this.getMoveToTarget().getWorldScan().getFinished()) {
+			this.getMoveToTarget().getWorldScan().scan(this.getDrone(), this.getMoveToTarget().getImageCalculations());
+			this.setFirstTime(true);
 		} else {
-			//			if (this.firstTime) {
-			//				// TODO eerste keer lijst van alle kleuren
-			//				this.firstTime = false;
-			//			}
-			if (dichtgenoeg) { //TODO boolean van movetotarget
-				// TODO tweede bol is eerste bol
-				// TODO bereken nieuwe tweede bol
+			try {
+				if (this.isFirstTime()) {
+					this.getClosestOrbs().determineClosestOrbs();
+					this.getClosestOrbs().calculateFirstOrb();
+					this.getClosestOrbs().calculateSecondOrb();
+					this.setFirstTime(false);
+//				} else if (dichtgenoeg) { // TODO boolean van movetotarget
+//					this.getClosestOrbs().setColorFirstOrb(this.getClosestOrbs().getColorSecondOrb());
+//					this.getClosestOrbs().calculateSecondOrb();
+				}
+			} catch (NullPointerException e) {
+				this.getMoveToTarget().getWorldScan().scan(this.getDrone(),
+						this.getMoveToTarget().getImageCalculations());
 			}
-			//TODO check of bol in beld die dichter licht dan huidig doel
-			this.moveToTarget.execute(colorFirstOrb);
-		}}
+			// TODO check of bol in beeld die dichter licht dan huidig doel
+			this.getMoveToTarget().execute(this.getClosestOrbs().getColorFirstOrb());
+		}
+	}
 }

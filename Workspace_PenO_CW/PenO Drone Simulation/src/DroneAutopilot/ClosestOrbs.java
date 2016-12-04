@@ -6,7 +6,7 @@ import java.util.HashMap;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
-public class ShortestPath {
+public class ClosestOrbs {
 
 	private final Drone drone;
 	private final ImageCalculations imageCalculations;
@@ -19,7 +19,7 @@ public class ShortestPath {
 	
 	
 	
-	public ShortestPath(Drone drone) {
+	public ClosestOrbs(Drone drone) {
 		this.drone = drone;
 		this.imageCalculations = new ImageCalculations();//TODO moeten deze dezelfde zijn als in MoveToTarget?
 		this.physicsCalculations = new PhysicsCalculations(drone);//TODO moeten deze dezelfde zijn als in MoveToTarget?
@@ -77,7 +77,7 @@ public class ShortestPath {
 		//zwaartepunt berekenen
 		HashMap<Integer,float[]> colorList = new HashMap<Integer,float[]>();
 		for (int i = 0; i < colorAndSizeList.size(); i++){
-			float[] cog = this.getImageCalculations().findBestCenterOfGravity(getAllPixelsImage().get(colorAndSizeList.get(i)), camera);
+			float[] cog = this.getImageCalculations().findBestCenterOfGravity(getAllPixelsImage().get(colorAndSizeList.get(i)[0]), camera);
 			colorList.put(colorAndSizeList.get(i)[0],cog);
 		}
 		return colorList;
@@ -186,7 +186,7 @@ public class ShortestPath {
 	}
 
 	// kleur bol dichtst bij bol 1
-	public void calculateSecondOrb(int[] listOfColors) {
+	public void calculateSecondOrb() {
 		int size = getClosestOrbs().size() - 1;
 		float[] distances = new float[size];
 		int[] keys = new int[size];
