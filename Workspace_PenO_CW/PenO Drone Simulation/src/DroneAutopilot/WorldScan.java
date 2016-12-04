@@ -54,7 +54,7 @@ public class WorldScan {
 				degreesTurned += this.getDrone().getMaxYawRate()/2 * (this.getDrone().getCurrentTime() - this.getPreviousTime());
 				this.setPreviousTime(this.getDrone().getCurrentTime());
 				//System.out.println("degrees " + degreesTurned);
-				if(degreesTurned >= 180){
+				if(degreesTurned >= 540){
 					this.getDrone().setYawRate(0);
 					this.getDrone().setPitchRate(-1);
 					//berekening thrust om horizontaal achterwaarts te vliegen afhankelijk van pitch.
