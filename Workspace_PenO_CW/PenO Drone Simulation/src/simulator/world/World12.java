@@ -1,9 +1,6 @@
 package simulator.world;
 
-import com.jogamp.opengl.GLAutoDrawable;
-import simulator.camera.GeneralCamera;
 import simulator.movement.KeyboardMovement;
-import simulator.physics.Force;
 
 public class World12 extends World11 {
 
@@ -19,8 +16,4 @@ public class World12 extends World11 {
 		return movement;
 	}
 
-	@Override
-	protected void setup() {
-		super.setup();
-	}
 }

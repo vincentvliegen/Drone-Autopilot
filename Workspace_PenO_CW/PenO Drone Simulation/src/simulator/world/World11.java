@@ -1,13 +1,8 @@
 
 package simulator.world;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
-
-import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
-import simulator.movement.KeyboardMovement;
 import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
 import simulator.objects.WorldObject;

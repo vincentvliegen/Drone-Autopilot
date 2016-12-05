@@ -39,13 +39,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private double timePassed = 0;
 	private GLU glu;
 
-	//TODO verplaatsen
 	private Parser parser = new Parser(this);
-	public Parser getParser() {
-		return parser;
-	}
-
-
 	private int[] framebufferRight = new int[1];
 	private int[] framebufferLeft = new int[1];
 	//TODO meegeven in constructor?
@@ -93,21 +87,15 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		spheres.add(sphere);
 		getColors().add(sphere.getColor());
 	}
-	
+
 	public void removeSphere(Sphere sphere) {
 		worldObjectsList.remove(sphere);
 		spheres.remove(sphere);
 		getColors().remove(sphere.getColor());
 	}
 
-	
+
 	private ArrayList<float[]> colors = new ArrayList<>();
-	
-	private ArrayList<float[]> getColors() {
-		return colors;
-	}
-	
-	
 
 	public void addSphereWithRandomColor(double[] position) {
 		Random rand = new Random();
@@ -122,9 +110,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 			color[2] = b;
 		}
 		addSphere(new Sphere(getGL().getGL2(), color, position));
-		
-		
-		}
+
+
+	}
 
 
 
@@ -146,7 +134,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	protected abstract void setup();
 	protected abstract void handleCollision(WorldObject object, SimulationDrone drone);
-	
+
 	protected void draw() {
 		GL2 gl = getGL().getGL2();
 
@@ -158,7 +146,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 			gl.glRotated(movement.getRotateY(), 0, 1, 0);
 			gl.glRotated(movement.getRotateZ(), 0, 0, 1);
 		}
-		
+
 		for (WorldObject object: getWorldObjectList()){
 			object.draw();
 		}
@@ -229,8 +217,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	/**
 	 * Sets up the screen.
-	 * 
-	 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
 	 */
 	public void init(GLAutoDrawable drawable) {
 		this.drawable = drawable;
@@ -307,18 +293,28 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		animator.start();
 	}
 
+	public void checkCollision(SimulationDrone drone) {
+		List<WorldObject> copyList = new ArrayList<WorldObject>();
+		copyList.addAll(getWorldObjectList());
+		for (WorldObject currentObject: copyList) {
+			if (currentObject == drone)
+				continue;
+			double[] objectPos = currentObject.getPosition();
+			double[] dronePos = drone.getPosition();
+			double distance = Math.sqrt(Math.pow(objectPos[0] - dronePos[0], 2) + Math.pow(objectPos[1] - dronePos[1], 2) + Math.pow(objectPos[2] - dronePos[2], 2));
+			if (distance <= (currentObject.getRadius() + drone.getRadius()))
+				handleCollision(currentObject, drone);
+		}
+	}
+
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
 	}
 
-	public void setLastTime(long value) {
-		this.lastTime = value;
-	}
-
-	public void setCurrentCamera(GeneralCamera camera){
-		this.currentCamera = camera;
+	private ArrayList<float[]> getColors() {
+		return colors;
 	}
 
 	public long getLastTime() {
@@ -377,6 +373,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return animator.getFPS();
 	}
 
+	public Parser getParser() {
+		return parser;
+	}
+
 	public GLAutoDrawable getDrawable() {
 		return drawable;
 	}
@@ -401,18 +401,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return zWindRotation;
 	}
 
-	public void setWindRotationX(double value) {
-		xWindRotation = value;
-	}
-
-	public void setWindRotationY(double value) {
-		yWindRotation = value;
-	}
-
-	public void setWindRotationZ(double value) {
-		zWindRotation = value;
-	}
-
 	public double getWindSpeedX() {
 		return xWindSpeed;
 	}
@@ -425,6 +413,30 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return zWindSpeed;
 	}
 
+	public void setCurrentCamera(GeneralCamera camera){
+		this.currentCamera = camera;
+	}
+
+	public void setLastTime(long value) {
+		this.lastTime = value;
+	}
+
+	public void setParser(Parser parser) {
+		this.parser = parser;
+	}
+
+	public void setWindRotationX(double value) {
+		xWindRotation = value;
+	}
+
+	public void setWindRotationY(double value) {
+		yWindRotation = value;
+	}
+
+	public void setWindRotationZ(double value) {
+		zWindRotation = value;
+	}
+
 	public void setWindSpeedX(double value) {
 		xWindSpeed = value;
 	}
@@ -435,23 +447,5 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	public void setWindSpeedZ(double value) {
 		zWindSpeed = value;
-	}
-	
-	public void setParser(Parser parser) {
-		this.parser = parser;
-	}
-
-	public void checkCollision(SimulationDrone drone) {
-		List<WorldObject> copyList = new ArrayList<WorldObject>();
-		copyList.addAll(getWorldObjectList());
-		for (WorldObject currentObject: copyList) {
-			if (currentObject == drone)
-				continue;
-			double[] objectPos = currentObject.getPosition();
-			double[] dronePos = drone.getPosition();
-			double distance = Math.sqrt(Math.pow(objectPos[0] - dronePos[0], 2) + Math.pow(objectPos[1] - dronePos[1], 2) + Math.pow(objectPos[2] - dronePos[2], 2));
-			if (distance <= (currentObject.getRadius() + drone.getRadius()))
-				handleCollision(currentObject, drone);
-		}
 	}
 }
