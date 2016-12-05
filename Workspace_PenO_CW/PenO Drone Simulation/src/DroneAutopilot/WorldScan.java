@@ -15,7 +15,8 @@ public class WorldScan {
 	private boolean firstTime;
 	private float previousTime;
 	private float degreesTurned;
-	private float timePassed;
+	private float timePassed = 0;
+	private ImageCalculations imageCalculations;
 
 	private static final float underBoundary = -0.2f;
 	private static final float upperBoundary = 0.2f;
@@ -24,25 +25,29 @@ public class WorldScan {
 	public WorldScan(Drone drone){
 		this.setDrone(drone);
 		this.rollPI = new RollController(1,0);
+		this.imageCalculations = new ImageCalculations();
 	}
 
-	public Set<Integer> scan(Drone drone, ImageCalculations imageCalculations){
+	public Set<Integer> scan(Drone drone){
 		this.setFinished(false);
 		this.correctRoll();
-		imageCalculations.calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
-		HashMap<Integer, ArrayList<int[]>> hashMapOfColors = imageCalculations.getPixelsOfEachColor();
-//		System.out.println("length " + hashMapOfColors.size());
-			if(hashMapOfColors.keySet().size()>=1){
-				//System.out.println("iets gevonden");
-				this.getDrone().setYawRate(0);
-				this.setFinished(true);
-				firstTime = false;
-				degreesTurned = 0;
-				timePassed = 0;
-				return hashMapOfColors.keySet();
-			}
-			//System.out.println("hier kan ie niet in");
-			
+		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
+//		imageCalculations.calculatePixelsOfEachColor(this.getDrone().getRightCamera());
+		
+		HashMap<Integer, ArrayList<int[]>> hashMapOfColors = this.getImageCalculations().getPixelsOfEachColor();
+		//		System.out.println("length " + hashMapOfColors.size());
+		if(hashMapOfColors.size()>=1){
+			//System.out.println("iets gevonden");
+			System.out.println("JEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEJ");
+			this.getDrone().setYawRate(0);
+			this.setFinished(true);
+			firstTime = false;
+			degreesTurned = 0;
+			timePassed = 0;
+			return hashMapOfColors.keySet();
+		}
+		//System.out.println("hier kan ie niet in");
+
 		else{
 			if(!firstTime){
 				//System.out.println("firsttime");
@@ -50,20 +55,23 @@ public class WorldScan {
 				this.setPreviousTime(this.getDrone().getCurrentTime());
 			}else{
 				//System.out.println("yaw");
-				this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
-				degreesTurned += this.getDrone().getMaxYawRate()/2 * (this.getDrone().getCurrentTime() - this.getPreviousTime());
-				this.setPreviousTime(this.getDrone().getCurrentTime());
-//				System.out.println("degrees " + degreesTurned);
-				if(degreesTurned >= 540){
+				if(degreesTurned < 540){
+					this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
+					degreesTurned += this.getDrone().getMaxYawRate()/2 * (this.getDrone().getCurrentTime() - this.getPreviousTime());
+					this.setPreviousTime(this.getDrone().getCurrentTime());
+				}else{
 					this.getDrone().setYawRate(0);
-					this.getDrone().setPitchRate(-1);
-					//berekening thrust om horizontaal achterwaarts te vliegen afhankelijk van pitch.
-					float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
-					this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
-					timePassed += this.getDrone().getCurrentTime() - this.getPreviousTime();
-					if(timePassed >= 1){
-						this.getDrone().setPitchRate(1);
-						if(this.getDrone().getPitch()>= -0.01){
+					System.out.println("time passed" + timePassed);
+					if(timePassed <12){
+						this.getDrone().setPitchRate(-3);
+						//berekening thrust om horizontaal achterwaarts te vliegen afhankelijk van pitch.
+						float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+						this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
+						timePassed += (this.getDrone().getCurrentTime() - this.getPreviousTime());
+					}else{
+						if(this.getDrone().getPitch()<= -0.01){
+							this.getDrone().setPitchRate(1);
+						}else{
 							this.getDrone().setPitchRate(0);
 						}
 					}
@@ -163,11 +171,11 @@ public class WorldScan {
 	public boolean getRollStarted(){
 		return this.rollStarted;
 	}
-	
+
 	public void setPreviousTime(float time){
 		this.previousTime = time;
 	}
-	
+
 	public float getPreviousTime(){
 		return this.previousTime;
 	}
@@ -185,5 +193,13 @@ public class WorldScan {
 	}
 	public void setDrone(Drone drone) {
 		this.drone = drone;
+	}
+	
+	public ImageCalculations getImageCalculations() {
+		return imageCalculations;
+	}
+	
+	public void setImageCalculations(ImageCalculations imageCalculations) {
+		this.imageCalculations = imageCalculations;
 	}
 }
