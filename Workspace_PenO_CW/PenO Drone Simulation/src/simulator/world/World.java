@@ -37,7 +37,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private long startTime;
 	private long lastTime;
 	private double timePassed = 0;
-	private double currentTime = 0;
 	private GLU glu;
 
 	//TODO verplaatsen
@@ -443,7 +442,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	}
 
 	public void checkCollision(SimulationDrone drone) {
-		List<WorldObject> copyList = new ArrayList();
+		List<WorldObject> copyList = new ArrayList<WorldObject>();
 		copyList.addAll(getWorldObjectList());
 		for (WorldObject currentObject: copyList) {
 			if (currentObject == drone)

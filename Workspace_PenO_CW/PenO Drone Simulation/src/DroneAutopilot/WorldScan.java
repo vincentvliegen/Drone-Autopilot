@@ -31,7 +31,7 @@ public class WorldScan {
 		this.correctRoll();
 		imageCalculations.calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
 		HashMap<Integer, ArrayList<int[]>> hashMapOfColors = imageCalculations.getPixelsOfEachColor();
-		System.out.println("length " + hashMapOfColors.size());
+//		System.out.println("length " + hashMapOfColors.size());
 			if(hashMapOfColors.keySet().size()>=1){
 				//System.out.println("iets gevonden");
 				this.getDrone().setYawRate(0);
