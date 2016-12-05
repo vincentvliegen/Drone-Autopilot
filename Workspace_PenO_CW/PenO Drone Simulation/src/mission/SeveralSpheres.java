@@ -13,7 +13,7 @@ public class SeveralSpheres extends Mission {
 	private boolean firstTime;
 	private boolean firstOrbAcquired;
 	private boolean secondOrbAcquired;
-	private final static float distanceToArrival = 1.05f;//TODO afstellen
+	private final static float distanceToArrival = 0.8f;//TODO afstellen
 	
 	public SeveralSpheres(MoveToTarget moveToTarget, Drone drone) {
 		super(moveToTarget, drone);
@@ -65,13 +65,11 @@ public class SeveralSpheres extends Mission {
 						//bereken 2de orb
 						this.getClosestOrbs().determineClosestOrbs();
 						this.getClosestOrbs().getClosestOrbs().remove(previousFirstOrb);//verwijdert de oorspronkelijke eerste als deze nog zichtbaar is
-						if(this.getClosestOrbs().getClosestOrbs().size() < 1){
+						if(this.getClosestOrbs().getClosestOrbs().size() > 1){
 							try{
 								this.getClosestOrbs().calculateSecondOrb();//bepaal nieuwe tweede 
 								this.setSecondOrbAcquired(true);
-							} catch (NullPointerException e){
-								this.setSecondOrbAcquired(false);
-							} catch (FirstOrbNotVisibleException e){
+							} catch (NullPointerException|FirstOrbNotVisibleException e){
 								this.setSecondOrbAcquired(false);
 							}
 						}else{
@@ -82,6 +80,8 @@ public class SeveralSpheres extends Mission {
 					}
 				}
 			}
+			System.out.println("firstOrb " + this.getClosestOrbs().getColorFirstOrb());
+			
 			
 			//BEWEGING
 			if(isFirstOrbAcquired()){
