@@ -83,7 +83,7 @@ public class SimulationDrone implements Drone, WorldObject {
 		// System.out.println(getTranslate()[0] + " " + getTranslate()[1] + " "
 		// + getTranslate()[2]);
 		translateDrone(getPosition());
-		rotateDrone(-getYaw(), -getGlobalRoll(), -getGlobalPitch());
+		rotateDrone(-getYaw(), getGlobalRoll(), -getGlobalPitch());
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glBegin(GL2ES3.GL_QUADS);
 
@@ -155,37 +155,17 @@ public class SimulationDrone implements Drone, WorldObject {
 
 	public void createRotateMatrix() {
 		rotateMatrix.clear();
-		rotateMatrix.add(Math.cos(Math.toRadians(-yaw))
-				* Math.cos(Math.toRadians(-pitch)));
-		rotateMatrix.add(-Math.cos(Math.toRadians(-yaw))
-				* Math.sin(Math.toRadians(-pitch))
-				* Math.cos(Math.toRadians(roll))
-				+ Math.sin(Math.toRadians(-yaw))
-				* Math.sin(Math.toRadians(roll)));
-		rotateMatrix.add(Math.cos(Math.toRadians(-yaw))
-				* Math.sin(Math.toRadians(-pitch))
-				* Math.sin(Math.toRadians(roll))
-				+ Math.sin(Math.toRadians(-yaw))
-				* Math.cos(Math.toRadians(roll)));
-
-		rotateMatrix.add(Math.sin(Math.toRadians(-pitch)));
-		rotateMatrix.add(Math.cos(Math.toRadians(-pitch))
-				* Math.cos(Math.toRadians(roll)));
-		rotateMatrix.add(-Math.cos(Math.toRadians(-pitch))
-				* Math.sin(Math.toRadians(roll)));
-
-		rotateMatrix.add(-Math.sin(Math.toRadians(-yaw))
-				* Math.cos(Math.toRadians(-pitch)));
-		rotateMatrix.add(Math.sin(Math.toRadians(-yaw))
-				* Math.sin(Math.toRadians(-pitch))
-				* Math.cos(Math.toRadians(roll))
-				+ Math.cos(Math.toRadians(-yaw))
-				* Math.sin(Math.toRadians(roll)));
-		rotateMatrix.add(-Math.sin(Math.toRadians(-yaw))
-				* Math.sin(Math.toRadians(-pitch))
-				* Math.sin(Math.toRadians(roll))
-				+ Math.cos(Math.toRadians(-yaw))
-				* Math.cos(Math.toRadians(roll)));
+		rotateMatrix.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw)) - Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rotateMatrix.add(Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch)));
+		rotateMatrix.add(-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)) - Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
+		
+		rotateMatrix.add(-Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)) - Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rotateMatrix.add(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
+		rotateMatrix.add(Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)) - Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll)));
+		
+		rotateMatrix.add(Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		rotateMatrix.add(Math.sin(Math.toRadians(roll)));
+		rotateMatrix.add(Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw)));
 	}
 
 	// TODO afmetingen (voor collision detection)
@@ -245,17 +225,18 @@ public class SimulationDrone implements Drone, WorldObject {
 		this.yaw += world.getWindRotationY() * timePassed;
 		this.roll += world.getWindRotationX() * timePassed;
 		this.pitch += world.getWindRotationZ() * timePassed;
-
 		/*
 		System.out.println("--------------");
 		System.out.println("global pitch " + this.pitch);
 		System.out.println("global yaw " + this.yaw);
 		System.out.println("global roll " + this.roll);
+		System.out.println("current pitch " + getPitch());
+		System.out.println("current roll " + getRoll());
 		System.out.println("pitchRate " + this.pitchRate);
 		System.out.println("yawRate " + this.yawRate);
 		System.out.println("rollRate " + this.rollRate);
 		System.out.println("--------------");
-		 */
+		*/
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
 		getMiddleCamera().updateDroneCamera();
@@ -514,11 +495,11 @@ public class SimulationDrone implements Drone, WorldObject {
 	}
 
 	public float getPitch() {
-		return this.pitch;
+		return (float) (this.pitch*Math.cos(Math.toRadians(yaw)) - this.roll*Math.sin(Math.toRadians(yaw)));
 	}
 
 	public float getRoll() {
-		return this.roll;
+		return (float) (this.roll*Math.cos(Math.toRadians(yaw)) + this.pitch*Math.sin(Math.toRadians(yaw)));
 	}
 
 	public float getYaw() {
