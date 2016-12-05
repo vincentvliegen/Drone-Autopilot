@@ -495,11 +495,11 @@ public class SimulationDrone implements Drone, WorldObject {
 	}
 
 	public float getPitch() {
-		return (float) (this.pitch*Math.cos(Math.toRadians(yaw)) - this.roll*Math.sin(Math.toRadians(yaw)));
+		return (float) (this.pitch*Math.cos(Math.toRadians(yaw)) + this.roll*Math.sin(Math.toRadians(yaw)));
 	}
 
 	public float getRoll() {
-		return (float) (this.roll*Math.cos(Math.toRadians(yaw)) + this.pitch*Math.sin(Math.toRadians(yaw)));
+		return (float) (this.roll*Math.cos(Math.toRadians(yaw)) - this.pitch*Math.sin(Math.toRadians(yaw)));
 	}
 
 	public float getYaw() {
