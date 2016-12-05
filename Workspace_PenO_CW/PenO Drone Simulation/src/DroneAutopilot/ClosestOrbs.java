@@ -3,6 +3,9 @@ package DroneAutopilot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.parsers.FactoryConfigurationError;
+
+import exceptions.FirstOrbNotVisibleException;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
@@ -189,24 +192,28 @@ public class ClosestOrbs {
 	}
 
 	// kleur bol dichtst bij bol 1
-	public void calculateSecondOrb() {
-		int size = getClosestOrbs().size() - 1;
-		if(size != 0){
-			float[] distances = new float[size];
-			int[] keys = new int[size];
-			int i = 0;
-			for (int key : getClosestOrbs().keySet()) {
-				if (key != this.getColorFirstOrb()) {
-					distances[i] = getDistanceBetweenOrbs(getClosestOrbs().get(key)[0], getClosestOrbs().get(key)[1],
-							getClosestOrbs().get(getColorFirstOrb())[0], getClosestOrbs().get(getColorFirstOrb())[1]);
-					keys[i] = key;
-					i++;
+	public void calculateSecondOrb() throws NullPointerException,FirstOrbNotVisibleException {
+		if(this.getClosestOrbs().containsKey(this.getColorFirstOrb())){
+			int size = getClosestOrbs().size() - 1;
+			if(size != 0){
+				float[] distances = new float[size];
+				int[] keys = new int[size];
+				int i = 0;
+				for (int key : getClosestOrbs().keySet()) {
+					if (key != this.getColorFirstOrb()) {
+						distances[i] = getDistanceBetweenOrbs(getClosestOrbs().get(key)[0], getClosestOrbs().get(key)[1],
+								getClosestOrbs().get(getColorFirstOrb())[0], getClosestOrbs().get(getColorFirstOrb())[1]);
+						keys[i] = key;
+						i++;
+					}
 				}
+				int index = this.indexMinValueArray(distances);
+				this.setColorSecondOrb(keys[index]);
+			} else{
+				throw new NullPointerException();
 			}
-			int index = this.indexMinValueArray(distances);
-			this.setColorSecondOrb(keys[index]);
-		} else{
-			throw new NullPointerException();
+		} else {
+			throw new FirstOrbNotVisibleException(getColorFirstOrb());
 		}
 	}
 
