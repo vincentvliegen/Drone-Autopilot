@@ -17,6 +17,7 @@ public class ClosestOrbs {
 	private final static int numberOfOrbsConsidered = 5;
 	private int colorFirstOrb;
 	private int colorSecondOrb;
+	private float distanceSecondOrb;
 	private HashMap<Integer, ArrayList<int[]>> allPixelsImage;
 	private HashMap<Integer, float[][]> closestOrbs;// <color,[[cogL],[cogr]]>
 	
@@ -209,6 +210,7 @@ public class ClosestOrbs {
 				}
 				int index = this.indexMinValueArray(distances);
 				this.setColorSecondOrb(keys[index]);
+				this.setDistanceSecondOrb(distances[index]);
 			} else{
 				throw new NullPointerException();
 			}
@@ -265,6 +267,15 @@ public class ClosestOrbs {
 
 	public void setColorSecondOrb(int colorSecondOrb) {
 		this.colorSecondOrb = colorSecondOrb;
+	}
+
+
+	public float getDistanceSecondOrb() {
+		return distanceSecondOrb;
+	}
+
+	public void setDistanceSecondOrb(float distanceSecondOrb) {
+		this.distanceSecondOrb = distanceSecondOrb;
 	}
 
 	public static int getNumberoforbsconsidered() {

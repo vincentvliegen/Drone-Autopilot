@@ -27,14 +27,24 @@ public class SeveralSpheres extends Mission {
 		System.out.println("EXSevSph");
 
 		System.out.println("is scan gedaan? " + this.getMoveToTarget().getWorldScan().getFinished());
-		if (!this.getMoveToTarget().getWorldScan().getFinished()) {// als de scanner nog geen bol heeft gevonden, blijf zoeken
+		if (!this.getMoveToTarget().getWorldScan().getFinished()) {// als de
+																	// scanner
+																	// nog geen
+																	// bol heeft
+																	// gevonden,
+																	// blijf
+																	// zoeken
 			this.getMoveToTarget().getWorldScan().scan(this.getDrone(), this.getClosestOrbs().getImageCalculations());
 			this.setFirstTime(true);
+			this.setRefreshCounter(0);
 		} else { // als de scanner gedaan is met zoeken:
 
 			// BEREKENING NAAR WAAR TE BEWEGEN
-			if (isFirstTime()) {// eerste keer: bepaal 1ste en tweede bol TODO refresh
-				this.getClosestOrbs().determineClosestOrbs(); // bepaal alle bollen in zicht
+			if (isFirstTime()) {// eerste keer: bepaal 1ste en tweede bol TODO
+								// refresh
+				this.getClosestOrbs().determineClosestOrbs(); // bepaal alle
+																// bollen in
+																// zicht
 				try {
 					this.getClosestOrbs().calculateFirstOrb(); // bepaal eerste
 																// bol
@@ -53,6 +63,44 @@ public class SeveralSpheres extends Mission {
 					this.setSecondOrbAcquired(false);
 				}
 				this.setFirstTime(false);
+			} else if (!this.getMoveToTarget().isScanning() && this.getRefreshCounter() >= getTimeToRefresh()) {
+				this.setRefreshCounter(0);
+				this.getClosestOrbs().determineClosestOrbs();
+				try {
+					int previousFirst = this.getClosestOrbs().getColorFirstOrb();
+					this.getClosestOrbs().calculateFirstOrb();
+					if (this.getClosestOrbs().getColorFirstOrb() == previousFirst) {
+						if (isSecondOrbAcquired()) {
+							int previousSecond = this.getClosestOrbs().getColorSecondOrb();
+							float previousDistance = this.getClosestOrbs().getDistanceSecondOrb();
+							try {
+								this.getClosestOrbs().calculateSecondOrb();
+							} catch (NullPointerException | FirstOrbNotVisibleException e) {
+							}
+							if(this.getClosestOrbs().getColorSecondOrb() != previousSecond) {
+								if (previousDistance <= this.getClosestOrbs().getDistanceSecondOrb()) {
+									this.getClosestOrbs().setColorSecondOrb(previousSecond);
+									this.getClosestOrbs().setDistanceSecondOrb(previousDistance);
+								}
+							}
+						} else {
+							try {
+								this.getClosestOrbs().calculateSecondOrb();
+								this.setSecondOrbAcquired(true);
+							} catch (NullPointerException | FirstOrbNotVisibleException e) {
+							this.setSecondOrbAcquired(false);}
+						}
+					} else {
+						try {
+							this.getClosestOrbs().calculateSecondOrb();
+							this.setSecondOrbAcquired(true);
+						} catch (NullPointerException | FirstOrbNotVisibleException e) {
+						this.setSecondOrbAcquired(false);}
+					}
+
+				} catch (NullPointerException e) {// geen eerste bol
+					
+				}
 			} else {// elke keer behalve de eerste
 				float[] cogL = this.getMoveToTarget().getCogL(); // van vorige
 																	// cyclus
@@ -62,8 +110,14 @@ public class SeveralSpheres extends Mission {
 				System.out.println("distance = " + distance);
 				// wanneer de eerste bol gepasseerd is, ga verder naar de tweede
 				if (distance <= getDistancetoarrival()
-						|| this.getClosestOrbs().getImageCalculations().checkImageFilled(this.getDrone().getLeftCamera(), this.getClosestOrbs().getColorFirstOrb())
-						|| this.getClosestOrbs().getImageCalculations().checkImageFilled(this.getDrone().getRightCamera(), this.getClosestOrbs().getColorFirstOrb())) {// wanneer de bol bereikt wordt
+						|| this.getClosestOrbs().getImageCalculations().checkImageFilled(
+								this.getDrone().getLeftCamera(), this.getClosestOrbs().getColorFirstOrb())
+						|| this.getClosestOrbs().getImageCalculations().checkImageFilled(
+								this.getDrone().getRightCamera(), this.getClosestOrbs().getColorFirstOrb())) {// wanneer
+																												// de
+																												// bol
+																												// bereikt
+																												// wordt
 					if (isSecondOrbAcquired()) {
 						// verander 2de in eerste orb
 						int previousFirstOrb = this.getClosestOrbs().getColorFirstOrb();
@@ -72,10 +126,20 @@ public class SeveralSpheres extends Mission {
 
 						// bereken 2de orb
 						this.getClosestOrbs().determineClosestOrbs();
-						this.getClosestOrbs().getClosestOrbs().remove(previousFirstOrb);// verwijdert de oorspronnkelijke eerste als deze nog zichtbaar is
+						this.getClosestOrbs().getClosestOrbs().remove(previousFirstOrb);// verwijdert
+																						// de
+																						// oorspronnkelijke
+																						// eerste
+																						// als
+																						// deze
+																						// nog
+																						// zichtbaar
+																						// is
 						if (this.getClosestOrbs().getClosestOrbs().size() > 1) {
 							try {
-								this.getClosestOrbs().calculateSecondOrb();// bepaal nieuwe tweede
+								this.getClosestOrbs().calculateSecondOrb();// bepaal
+																			// nieuwe
+																			// tweede
 								this.setSecondOrbAcquired(true);
 							} catch (NullPointerException | FirstOrbNotVisibleException e) {
 								this.setSecondOrbAcquired(false);
@@ -92,7 +156,8 @@ public class SeveralSpheres extends Mission {
 
 			// BEWEGING
 			if (isFirstOrbAcquired()) {
-				this.getMoveToTarget().execute(this.getClosestOrbs().getColorFirstOrb()); // vlieg nar first orb
+				this.getMoveToTarget().execute(this.getClosestOrbs().getColorFirstOrb()); 
+				this.setRefreshCounter(this.getRefreshCounter() + 1);
 			} else {// begin opnieuw te zoeken
 				System.out.println("herstart scan");
 				this.getMoveToTarget().getWorldScan().scan(this.getDrone(),

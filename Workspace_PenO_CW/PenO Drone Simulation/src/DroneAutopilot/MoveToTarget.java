@@ -10,7 +10,7 @@ import DroneAutopilot.correct.CorrectRoll;
 import DroneAutopilot.correct.CorrectYaw;
 import p_en_o_cw_2016.Drone;
 
-public class MoveToTarget{
+public class MoveToTarget {
 
 	private final PhysicsCalculations physicsCalculations;
 	private final ImageCalculations imageCalculations;
@@ -27,6 +27,7 @@ public class MoveToTarget{
 	private float[] cogL;
 	private float[] cogR;
 
+	private boolean scanning;
 
 	public MoveToTarget(Drone drone) {
 		this.setDrone(drone);
@@ -37,26 +38,33 @@ public class MoveToTarget{
 		this.heightCorrector = new CorrectHeight(drone);
 		this.rollCorrector = new CorrectRoll(drone);
 		this.yawCorrector = new CorrectYaw(drone);
-		this.distancePI = new DistanceController(0.8,0);
+		this.distancePI = new DistanceController(0.8, 0);
 	}
 
-	public void execute(int color){
-		ArrayList<int[]> leftCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getLeftCamera(), color);
-		ArrayList<int[]> rightCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getRightCamera(), color);
+	public void execute(int color) {
+		ArrayList<int[]> leftCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getLeftCamera(),
+				color);
+		ArrayList<int[]> rightCameraList = this.getImageCalculations()
+				.getPixelsOfColor(this.getDrone().getRightCamera(), color);
 
 		this.getRollCorrector().correctRoll();
-		if(this.getWorldScan().scan(leftCameraList, rightCameraList, color) == true){
+		if (this.getWorldScan().scan(leftCameraList, rightCameraList, color) == true) {
+			this.setScanning(false);
 			this.targetVisible(leftCameraList, rightCameraList);
+		} else {
+			this.setScanning(true);
 		}
-		//this.getWorldScan().scan(this.getDrone(), this.getImageCalculations()); @Jef dit uncomment en de if erboven comment
+		// this.getWorldScan().scan(this.getDrone(),
+		// this.getImageCalculations()); @Jef dit uncomment en de if erboven
+		// comment
 	}
 
 	public void targetVisible(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList) {
-		float[] cogLeft = this.getImageCalculations().findBestCenterOfGravity(leftCameraList, this
-				.getDrone().getLeftCamera());
+		float[] cogLeft = this.getImageCalculations().findBestCenterOfGravity(leftCameraList,
+				this.getDrone().getLeftCamera());
 		this.setCogL(cogLeft);
-		float[] cogRight = this.getImageCalculations().findBestCenterOfGravity(rightCameraList, this
-				.getDrone().getRightCamera());
+		float[] cogRight = this.getImageCalculations().findBestCenterOfGravity(rightCameraList,
+				this.getDrone().getRightCamera());
 		this.setCogR(cogRight);
 		this.updateGUI();
 		this.flyTowardsTarget();
@@ -66,73 +74,85 @@ public class MoveToTarget{
 		this.getGUI().update(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()));
 	}
 
-	public void flyTowardsTarget() { 
+	public void flyTowardsTarget() {
 		this.getYawCorrector().correctYaw(this.getCogL(), this.getCogR());
 		this.getHeightCorrector().correctHeight(this.getCogL(), this.getCogR());
 		this.getPhysicsCalculations().updateAccSpeed(this.getCogL());
-		if(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())<=2){
+		if (this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) <= 2) {
 			this.getPitchCorrector().hover();
-		}else{
-			//System.out.println("dist" + this.getPhysicsCalculations().getDistance(cogL, cogR));
-			//System.out.println("setpoitn" + this.getDistancePI().getSetpoint());
-			if(Math.abs(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())-this.getDistancePI().getSetpoint())>0.2f){
-				this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())-0.1f);
-				//System.out.println("to far from target");
+		} else {
+			// System.out.println("dist" +
+			// this.getPhysicsCalculations().getDistance(cogL, cogR));
+			// System.out.println("setpoitn" +
+			// this.getDistancePI().getSetpoint());
+			if (Math.abs(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())
+					- this.getDistancePI().getSetpoint()) > 0.2f) {
+				this.getDistancePI().resetSetpoint(
+						this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.1f);
+				// System.out.println("to far from target");
 				this.getDrone().setPitchRate(0);
 				this.setPitchStarted(true);
 			}
-			if(this.getDrone().getPitch()>0 && !this.getPitchStarted()){
-				float newTarget = this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())-0.1f;
-				if(newTarget<1){
-					//System.out.println("closer than 1");
+			if (this.getDrone().getPitch() > 0 && !this.getPitchStarted()) {
+				float newTarget = this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.1f;
+				if (newTarget < 1) {
+					// System.out.println("closer than 1");
 					this.getDistancePI().resetSetpoint(1f);
-				}else{
+				} else {
 					this.getDistancePI().resetSetpoint(newTarget);
 				}
 				this.getDrone().setPitchRate(0);
 				this.setPitchStarted(true);
-			}else{
-				float output = -this.getDistancePI().calculateRate(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()), this.getDrone().getCurrentTime());
-				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDistance(cogL, cogR))*10);
+			} else {
+				float output = -this.getDistancePI().calculateRate(
+						this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()),
+						this.getDrone().getCurrentTime());
+				// this.updategraphPI((int) (this.getDrone().getCurrentTime()),
+				// (int) (this.getPhysicsCalculations().getDistance(cogL,
+				// cogR))*10);
 				this.getDrone().setPitchRate(output);
-				//TODO als snelheid meerdere bollen oploopt, dit aanpassen naar this.getDrone().getPitch()<0.1
-				if(output<0){
+				// TODO als snelheid meerdere bollen oploopt, dit aanpassen naar
+				// this.getDrone().getPitch()<0.1
+				if (output < 0) {
 					this.setPitchStarted(false);
 				}
 			}
 		}
 
-		//System.out.println("remafstand: " + this.getPhysicsCalculations().getDecelerationDistance());
-		//System.out.println("distance: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
+		// System.out.println("remafstand: " +
+		// this.getPhysicsCalculations().getDecelerationDistance());
+		// System.out.println("distance: " +
+		// this.getPhysicsCalculations().getDistance(cogL, cogR));
 
-		//if-statement die deceleration uitschakelt als 1.1 of 1.2 niet
-		//		if(this.getGUI().lastOrbEnabled){
-		//			if (this.getPhysicsCalculations().getDistance(cogL, cogR) <= this.getPhysicsCalculations().getDecelerationDistance()) {
-		//				this.startDeceleration(cogL,cogR);
-		//				deceleration = true;
-		//			}
+		// if-statement die deceleration uitschakelt als 1.1 of 1.2 niet
+		// if(this.getGUI().lastOrbEnabled){
+		// if (this.getPhysicsCalculations().getDistance(cogL, cogR) <=
+		// this.getPhysicsCalculations().getDecelerationDistance()) {
+		// this.startDeceleration(cogL,cogR);
+		// deceleration = true;
+		// }
 		//
-		//			if(Math.abs(this.getPhysicsCalculations().getSpeed())<=0.3 && deceleration){
-		//				this.hover();
-		//			}
-		//			else if(deceleration){
-		//				this.startDeceleration(cogL, cogR);
-		//			}}
+		// if(Math.abs(this.getPhysicsCalculations().getSpeed())<=0.3 &&
+		// deceleration){
+		// this.hover();
+		// }
+		// else if(deceleration){
+		// this.startDeceleration(cogL, cogR);
+		// }}
 
 	}
 
 	public void startDeceleration() {
-		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView()/20;
-		if(this.getDrone().getPitch()>-partAngleView){
+		float partAngleView = this.getDrone().getLeftCamera().getVerticalAngleOfView() / 20;
+		if (this.getDrone().getPitch() > -partAngleView) {
 			this.getDrone().setPitchRate(-this.getDrone().getMaxPitchRate());
 			System.out.println("TRGPITCHEN");
-		}else{
+		} else {
 			this.getDrone().setPitchRate(0);
 		}
 	}
 
-
-	//////////Getters & Setters//////////
+	////////// Getters & Setters//////////
 
 	public final PhysicsCalculations getPhysicsCalculations() {
 		return this.physicsCalculations;
@@ -162,11 +182,11 @@ public class MoveToTarget{
 		return this.gui;
 	}
 
-	public void setPitchStarted(boolean isStarted){
+	public void setPitchStarted(boolean isStarted) {
 		this.pitchStarted = isStarted;
 	}
 
-	public boolean getPitchStarted(){
+	public boolean getPitchStarted() {
 		return this.pitchStarted;
 	}
 
@@ -198,7 +218,8 @@ public class MoveToTarget{
 	}
 
 	/**
-	 * @param cogL the cogL to set
+	 * @param cogL
+	 *            the cogL to set
 	 */
 	public void setCogL(float[] cogL) {
 		this.cogL = cogL;
@@ -212,9 +233,18 @@ public class MoveToTarget{
 	}
 
 	/**
-	 * @param cogR the cogR to set
+	 * @param cogR
+	 *            the cogR to set
 	 */
 	public void setCogR(float[] cogR) {
 		this.cogR = cogR;
+	}
+
+	public boolean isScanning() {
+		return scanning;
+	}
+
+	public void setScanning(boolean scanning) {
+		this.scanning = scanning;
 	}
 }
