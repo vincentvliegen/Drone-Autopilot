@@ -19,11 +19,6 @@ public class World12 extends World11 {
 		return movement;
 	}
 
-	public void display(GLAutoDrawable drawable) {
-		super.display(drawable);
-
-	}
-
 	@Override
 	protected void setup() {
 		super.setup();

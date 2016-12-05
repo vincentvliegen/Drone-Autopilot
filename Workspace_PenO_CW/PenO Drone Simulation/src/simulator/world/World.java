@@ -41,7 +41,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private GLU glu;
 
 	//TODO verplaatsen
-	private Parser parser;
+	private Parser parser = new Parser(this);
 	public Parser getParser() {
 		return parser;
 	}
@@ -147,10 +147,82 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	protected abstract void setup();
 	protected abstract void handleCollision(WorldObject object, SimulationDrone drone);
-	protected abstract void draw();
+	
+	protected void draw() {
+		GL2 gl = getGL().getGL2();
 
-	@Override
-	public abstract void display(GLAutoDrawable drawable);
+		// translate camera.
+		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
+			movement.update((float)checkTimePassed());
+			gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
+			gl.glRotated(movement.getRotateX(), 1, 0, 0);
+			gl.glRotated(movement.getRotateY(), 0, 1, 0);
+			gl.glRotated(movement.getRotateZ(), 0, 0, 1);
+		}
+		
+		for (WorldObject object: getWorldObjectList()){
+			object.draw();
+		}
+	}
+
+	public void display(GLAutoDrawable drawable) {
+		updateTimePassed();
+		getPhysics().run((float) checkTimePassed());
+
+		for (SimulationDrone drone : getDrones()) {
+			drone.timeHasPassed((float) checkTimePassed());
+
+		}
+
+		setLastTime(System.nanoTime());
+
+		// TODO plaats van dit?
+		if (!super.getAnimator().isAnimating()) {
+			return;
+		}
+		GL2 gl = getGL().getGL2();
+
+		// voor scherm
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+		getCurrentCamera().setCamera(gl, getGlu());
+		draw();
+
+		/*
+		 * TODO Moet slimmer aangepakt worden, wat als er nu meerdere drones
+		 * zijn? Dan moeten er voor elke drone (manueel) 2 buffers aangemaakt
+		 * worden (een voor linker en een voor rechter camera); dus vermijden..!
+		 * --> idee: ipv telkens een nieuwe int[] te maken, gewoon een grotere
+		 * te gebruiken en de offset aan te passen?
+		 */
+
+		// voor takeimage linkerCamera
+		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferLeft()[0]);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+		getDrones().get(0).getLeftDroneCamera().setCamera(gl, getGlu());
+		draw();
+		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+
+		// voor takeimage rechterCamera
+		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferRight()[0]);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
+		draw();
+		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+		// voor uitschrijven van bestand
+		// if(getDrones().size() != 0){
+		// if(i == 100){
+		// getDrones().get(0).getLeftDroneCamera().writeTakeImageToFile();
+		// getDrones().get(0).getRightDroneCamera().writeTakeImageToFile();
+		// i++;
+		// }
+		// else
+		// i++;
+		//
+		// }
+	}
 
 	@Override
 	public void dispose(GLAutoDrawable drawable){
