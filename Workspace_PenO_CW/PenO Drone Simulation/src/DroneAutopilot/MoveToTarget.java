@@ -80,6 +80,7 @@ public class MoveToTarget {
 		this.getPhysicsCalculations().updateAccSpeed(this.getCogL());
 		if (this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) <= 2) {
 			this.getPitchCorrector().hover();
+            this.setPitchStarted(false);
 		} else {
 			// System.out.println("dist" +
 			// this.getPhysicsCalculations().getDistance(cogL, cogR));

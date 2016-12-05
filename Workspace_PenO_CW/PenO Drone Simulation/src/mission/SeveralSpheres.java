@@ -24,9 +24,9 @@ public class SeveralSpheres extends Mission {
 
 	@Override
 	public void execute() {
-		System.out.println("EXSevSph");
+		//System.out.println("EXSevSph");
 
-		System.out.println("is scan gedaan? " + this.getMoveToTarget().getWorldScan().getFinished());
+		//System.out.println("is scan gedaan? " + this.getMoveToTarget().getWorldScan().getFinished());
 		if (!this.getMoveToTarget().getWorldScan().getFinished()) {// als de
 																	// scanner
 																	// nog geen
@@ -34,7 +34,7 @@ public class SeveralSpheres extends Mission {
 																	// gevonden,
 																	// blijf
 																	// zoeken
-			this.getMoveToTarget().getWorldScan().scan(this.getDrone(), this.getClosestOrbs().getImageCalculations());
+			this.getMoveToTarget().getWorldScan().scan(this.getDrone());
 			this.setFirstTime(true);
 			this.setRefreshCounter(0);
 		} else { // als de scanner gedaan is met zoeken:
@@ -107,7 +107,7 @@ public class SeveralSpheres extends Mission {
 				float[] cogR = this.getMoveToTarget().getCogR(); // van vorige
 																	// cyclus
 				float distance = this.getClosestOrbs().getPhysicsCalculations().getDistance(cogL, cogR);
-				System.out.println("distance = " + distance);
+				//System.out.println("distance = " + distance);
 				// wanneer de eerste bol gepasseerd is, ga verder naar de tweede
 				if (distance <= getDistancetoarrival()
 						|| this.getClosestOrbs().getImageCalculations().checkImageFilled(
@@ -152,16 +152,15 @@ public class SeveralSpheres extends Mission {
 					}
 				}
 			}
-			System.out.println("firstOrb " + this.getClosestOrbs().getColorFirstOrb());
+			//System.out.println("firstOrb " + this.getClosestOrbs().getColorFirstOrb());
 
 			// BEWEGING
 			if (isFirstOrbAcquired()) {
 				this.getMoveToTarget().execute(this.getClosestOrbs().getColorFirstOrb()); 
 				this.setRefreshCounter(this.getRefreshCounter() + 1);
 			} else {// begin opnieuw te zoeken
-				System.out.println("herstart scan");
-				this.getMoveToTarget().getWorldScan().scan(this.getDrone(),
-						this.getClosestOrbs().getImageCalculations());
+				//System.out.println("herstart scan");
+				this.getMoveToTarget().getWorldScan().scan(this.getDrone());
 				setFirstTime(true);
 			}
 		}
