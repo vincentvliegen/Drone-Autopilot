@@ -31,6 +31,7 @@ public class ImageCalculations{
 	
 	public ArrayList<int[]> getPixelsOfColor(Camera camera, int givenColor){
 		int[] image = camera.takeImage();
+		this.setImage(image);
 		ArrayList<int[]> coloredPositions = new ArrayList<int[]>();
 		for(int i = 0; image.length > i; i++){
 			if(image[i] == givenColor){
@@ -38,6 +39,26 @@ public class ImageCalculations{
 			}
 		}
 		return coloredPositions;	
+	}
+	
+	public int[] getImage() {
+		return image;
+	}
+	
+	public void setImage(int[] image) {
+		this.image = image;
+	}
+
+	private int[] image;
+	
+	private final static float percentageFilled = 0.99f;
+
+	public static float getPercentagefilled() {
+		return percentageFilled;
+	}
+
+	public boolean checkImageFilled(Camera camera, int color) {
+		return this.getPixelsOfColor(camera, color).size() >= this.getImage().length * getPercentagefilled();
 	}
 
 
