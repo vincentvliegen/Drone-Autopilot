@@ -7,7 +7,6 @@ public class PhysicsCalculations{
 	private Drone drone;
 	private float speed;
 	private float acceleration;
-	private float firstDistance;
 	private float previousTime;
 	private float decelerationDistance;
 	private float previousPitch;
@@ -67,7 +66,7 @@ public class PhysicsCalculations{
 		return (float) Math.toDegrees(Math.atan(this.getY(centerOfGravity) / this.getfocalDistance()));
 	}
 
-	
+
 	public void updateAccSpeed(float[] cog){
 		float v0 = getSpeed();
 		float weight = this.getDrone().getWeight();
@@ -83,7 +82,7 @@ public class PhysicsCalculations{
 		//System.out.println("acc"+acc);
 		//System.out.println("accdif" + (this.getAcceleration()-acc));
 		this.setAcceleration(acc);
-		
+
 		//wanneer versnelling afhankelijk is van de tijd varieert de snelheid //pitch = p0 + pitchrate*(t-t0)
 		float speed =0;
 		if (getPreviousPitchRate() == 0){
@@ -103,7 +102,7 @@ public class PhysicsCalculations{
 		this.setPreviousPitch(pitch);
 		//TODO elke keer dat de pitchrate wordt ingesteld moet this.setPreviousPitchRate worden aangepast (wanneer target = visible)
 	}
-		
+
 	public void calculateDecelerationDistance(float timeDev,float[] cog){
 		//TODO parameter voor maxPitch (hoogte/2*1/10) in MoveToTarget of hier
 		float pitch = this.getDrone().getPitch();
@@ -144,6 +143,9 @@ public class PhysicsCalculations{
 		return height;
 	}
 
+
+	//////////Getters & Setters//////////
+
 	public void setDrone(Drone drone){
 		this.drone = drone;
 	}
@@ -175,15 +177,15 @@ public class PhysicsCalculations{
 	public void setPreviousTime(float previousTime) {
 		this.previousTime = previousTime;
 	}
-	
+
 	public void setDecelerationDistance(float distance){
 		this.decelerationDistance = distance;
 	}
-	
+
 	public float getDecelerationDistance(){
 		return this.decelerationDistance;
 	}
-	
+
 	public float getPreviousPitch() {
 		return previousPitch;
 	}
@@ -191,7 +193,7 @@ public class PhysicsCalculations{
 	public void setPreviousPitch(float previousPitch) {
 		this.previousPitch = previousPitch;
 	}
-	
+
 	public float getPreviousPitchRate() {
 		return previousPitchRate;
 	}
