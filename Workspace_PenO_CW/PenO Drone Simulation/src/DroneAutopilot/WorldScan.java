@@ -29,9 +29,9 @@ public class WorldScan {
 	public Set<Integer> scan(Drone drone, ImageCalculations imageCalculations){
 		this.setFinished(false);
 		this.correctRoll();
-		try{
 		imageCalculations.calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
 		HashMap<Integer, ArrayList<int[]>> hashMapOfColors = imageCalculations.getPixelsOfEachColor();
+		System.out.println("length " + hashMapOfColors.size());
 			if(hashMapOfColors.keySet().size()>=1){
 				//System.out.println("iets gevonden");
 				this.getDrone().setYawRate(0);
@@ -42,8 +42,8 @@ public class WorldScan {
 				return hashMapOfColors.keySet();
 			}
 			//System.out.println("hier kan ie niet in");
-			return null;
-		}catch(NullPointerException e){
+			
+		else{
 			if(!firstTime){
 				//System.out.println("firsttime");
 				firstTime = true;
@@ -53,7 +53,7 @@ public class WorldScan {
 				this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
 				degreesTurned += this.getDrone().getMaxYawRate()/2 * (this.getDrone().getCurrentTime() - this.getPreviousTime());
 				this.setPreviousTime(this.getDrone().getCurrentTime());
-				//System.out.println("degrees " + degreesTurned);
+//				System.out.println("degrees " + degreesTurned);
 				if(degreesTurned >= 540){
 					this.getDrone().setYawRate(0);
 					this.getDrone().setPitchRate(-1);
