@@ -52,7 +52,10 @@ public class SeveralSpheres extends Mission {
 					ArrivedAtTarget();
 				}
 			}
-
+			this.setFirstTime(false);// hierna is het niet meer de eerste keer
+			//System.out.println("firstOrb " + this.getClosestOrbs().getColorFirstOrb());
+			//System.out.println("secondOrb " + this.getClosestOrbs().getColorSecondOrb());
+			
 			// BEWEGING
 			if (isFirstOrbAcquired()) {//vlieg naar de eerste bol als we deze weten
 				this.getMoveToTarget().execute(this.getClosestOrbs().getColorFirstOrb()); 
@@ -81,7 +84,6 @@ public class SeveralSpheres extends Mission {
 			this.setFirstOrbAcquired(false);
 			this.setSecondOrbAcquired(false);
 		}
-		this.setFirstTime(false);// hierna is het niet meer de eerste keer
 	}
 	
 	public void refreshWhenFlying(){
