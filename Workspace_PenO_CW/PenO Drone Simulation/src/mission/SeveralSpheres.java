@@ -1,6 +1,7 @@
 package mission;
 
 import DroneAutopilot.MoveToTarget;
+import DroneAutopilot.WorldScan;
 import exceptions.FirstOrbNotVisibleException;
 import DroneAutopilot.ClosestOrbs;
 import p_en_o_cw_2016.Drone;
@@ -14,10 +15,12 @@ public class SeveralSpheres extends Mission {
 	private boolean firstOrbAcquired;
 	private boolean secondOrbAcquired;
 	private final static float distanceToArrival = 0.8f;// TODO afstellen, straal is 0.5
-
+	private WorldScan worldScan;
+	
 	public SeveralSpheres(MoveToTarget moveToTarget, Drone drone) {
 		super(moveToTarget, drone);
 		closestOrbs = new ClosestOrbs(this.getDrone());
+		setWorldScan(new WorldScan(drone));
 		setRefreshCounter(0);
 		setFirstTime(true);
 	}
@@ -27,7 +30,7 @@ public class SeveralSpheres extends Mission {
 		//System.out.println("EXSevSph");
 		//System.out.println("is scan gedaan? " + this.getMoveToTarget().getWorldScan().getFinished());
 		if (!this.getMoveToTarget().getWorldScan().getFinished()) {// als de scanner nog geen bol heeft gevonden, blijf zoeken
-			this.getMoveToTarget().getWorldScan().scan(this.getDrone());
+			this.getWorldScan().scan(this.getDrone());
 			this.setFirstTime(true);
 			this.setRefreshCounter(0);
 		} else { // als de scanner gedaan is met zoeken:
@@ -53,8 +56,6 @@ public class SeveralSpheres extends Mission {
 				}
 			}
 			this.setFirstTime(false);// hierna is het niet meer de eerste keer
-			//System.out.println("firstOrb " + this.getClosestOrbs().getColorFirstOrb());
-			//System.out.println("secondOrb " + this.getClosestOrbs().getColorSecondOrb());
 			
 			// BEWEGING
 			if (isFirstOrbAcquired()) {//vlieg naar de eerste bol als we deze weten
@@ -62,8 +63,16 @@ public class SeveralSpheres extends Mission {
 				this.setRefreshCounter(this.getRefreshCounter() + 1);
 			} else {// begin opnieuw te zoeken naar eerste bol
 				//System.out.println("herstart scan");
-				this.getMoveToTarget().getWorldScan().scan(this.getDrone());
+				setWorldScan(new WorldScan(this.getDrone()));
+				this.getWorldScan().scan(this.getDrone());
 				setFirstTime(true);
+			}
+			
+			if(isFirstOrbAcquired()){
+				System.out.println("firstOrb " + this.getClosestOrbs().getColorFirstOrb());
+			}
+			if(isSecondOrbAcquired()){
+				System.out.println("secondOrb " + this.getClosestOrbs().getColorSecondOrb());
 			}
 		}
 	}
@@ -224,5 +233,19 @@ public class SeveralSpheres extends Mission {
 	 */
 	public void setSecondOrbAcquired(boolean secondOrbAcquired) {
 		this.secondOrbAcquired = secondOrbAcquired;
+	}
+
+	/**
+	 * @return the worldScan
+	 */
+	public WorldScan getWorldScan() {
+		return worldScan;
+	}
+
+	/**
+	 * @param worldScan the worldScan to set
+	 */
+	public void setWorldScan(WorldScan worldScan) {
+		this.worldScan = worldScan;
 	}
 }
