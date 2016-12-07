@@ -177,8 +177,8 @@ public class SimulationDrone implements Drone, WorldObject {
 
 	public void rotateDrone(float yaw, float roll, float pitch) {
 		gl.glRotated(yaw, 0, 1, 0);
-		gl.glRotated(roll, 0, 0, 1);
-		gl.glRotated(pitch, 1, 0, 0);
+		gl.glRotated(roll, 1, 0, 0);
+		gl.glRotated(pitch, 0, 0, 1);
 	}
 
 	public void timeHasPassed(float timePassed) {

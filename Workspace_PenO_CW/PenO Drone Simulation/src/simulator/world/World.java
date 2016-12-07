@@ -42,7 +42,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private Parser parser = new Parser(this);
 	private int[] framebufferRight = new int[1];
 	private int[] framebufferLeft = new int[1];
-	//TODO meegeven in constructor?
+	
 	/** The frames per second setting. */
 	private int fps = 60;
 	/** The OpenGL animator. */
@@ -163,7 +163,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		setLastTime(System.nanoTime());
 
-		// TODO plaats van dit?
 		if (!super.getAnimator().isAnimating()) {
 			return;
 		}
@@ -284,7 +283,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		//set to default buffer
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
-		//TODO op de juiste plaats?
 		setup();
 
 		// Start animator.
