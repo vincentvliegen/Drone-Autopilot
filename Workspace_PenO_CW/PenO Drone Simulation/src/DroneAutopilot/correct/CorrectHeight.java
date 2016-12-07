@@ -26,7 +26,7 @@ public class CorrectHeight extends Correct{
 		}else if ((this.getDrone().getPitch() > 0 && tanVA < 0.8*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA < 1.2*tanPitch)) {
 			this.getHeightPI().resetSetpoint(tanVA);
 			float output = this.getHeightPI().calculateRate((float) Math.tan(Math.toRadians(this.getDrone().getPitch())), this.getDrone().getCurrentTime());
-			this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (output*10));
+			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (output*10));
 			//System.out.println("output: " + 10*output);
 			//System.out.println("time: " + this.getDrone().getCurrentTime());
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
@@ -36,7 +36,7 @@ public class CorrectHeight extends Correct{
 		}else if ((this.getDrone().getPitch() > 0 && tanVA > 1.2*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA > 0.8*tanPitch)){
 			this.getHeightPI().resetSetpoint(tanVA);
 			float output = this.getHeightPI().calculateRate((float) Math.tan(Math.toRadians(this.getDrone().getPitch())), this.getDrone().getCurrentTime());
-			this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (output*10));
+			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (output*10));
 			//System.out.println("output: " + 10*output);
 			//System.out.println("time: " + this.getDrone().getCurrentTime());
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
