@@ -27,16 +27,28 @@ public class WorldScan {
 		this.rollPI = new RollController(1,0);
 		this.imageCalculations = new ImageCalculations();
 	}
+	
+	public boolean foundOrb(Drone drone){
+		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
+		HashMap<Integer, ArrayList<int[]>> hashMapOfColors = this.getImageCalculations().getPixelsOfEachColor();
+		//System.out.println("length " + hashMapOfColors.size());
+		if(hashMapOfColors.size()>=1){
+			return true;
+		}
+		return false;
+	}
+	
+	public Set<Integer> getKeySetOfColors(Drone drone){
+		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
+		HashMap<Integer, ArrayList<int[]>> hashMapOfColors = this.getImageCalculations().getPixelsOfEachColor();
+		return hashMapOfColors.keySet();
+	}
 
 	public Set<Integer> scan(Drone drone){
 		this.setFinished(false);
 		this.correctRoll();
-		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
-//		imageCalculations.calculatePixelsOfEachColor(this.getDrone().getRightCamera());
-		
-		HashMap<Integer, ArrayList<int[]>> hashMapOfColors = this.getImageCalculations().getPixelsOfEachColor();
 		//		System.out.println("length " + hashMapOfColors.size());
-		if(hashMapOfColors.size()>=1){
+		if(this.foundOrb(drone)){
 			//System.out.println("iets gevonden");
 			System.out.println("JEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEJ");
 			this.getDrone().setYawRate(0);
@@ -44,7 +56,7 @@ public class WorldScan {
 			firstTime = false;
 			degreesTurned = 0;
 			timePassed = 0;
-			return hashMapOfColors.keySet();
+			return this.getKeySetOfColors(drone);
 		}
 		//System.out.println("hier kan ie niet in");
 
@@ -61,18 +73,25 @@ public class WorldScan {
 					this.setPreviousTime(this.getDrone().getCurrentTime());
 				}else{
 					this.getDrone().setYawRate(0);
-					System.out.println("time passed" + timePassed);
-					if(timePassed <12){
-						this.getDrone().setPitchRate(-3);
+					//System.out.println("time passed" + timePassed);
+					if(timePassed <30){
+						this.getDrone().setPitchRate(-4);
 						//berekening thrust om horizontaal achterwaarts te vliegen afhankelijk van pitch.
 						float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 						this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 						timePassed += (this.getDrone().getCurrentTime() - this.getPreviousTime());
 					}else{
 						if(this.getDrone().getPitch()<= -0.01){
+							float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+							this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 							this.getDrone().setPitchRate(1);
 						}else{
+							float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+							this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 							this.getDrone().setPitchRate(0);
+							if(!this.foundOrb(drone)){
+								this.setFinished(true);
+							}
 						}
 					}
 				}
