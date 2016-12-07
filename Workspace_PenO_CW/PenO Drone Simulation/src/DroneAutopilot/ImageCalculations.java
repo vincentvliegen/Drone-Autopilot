@@ -51,7 +51,7 @@ public class ImageCalculations{
 
 	private int[] image;
 	
-	private final static float percentageFilled = 0.99f;
+	private final static float percentageFilled = 0.999f;
 
 	public static float getPercentagefilled() {
 		return percentageFilled;
