@@ -9,24 +9,40 @@ public class CorrectHeight extends Correct{
 
 	public CorrectHeight(Drone drone) {
 		super(drone);
-		this.heightPI = new HeightController(3,0);
+		this.heightPI = new HeightController(1,0);
 	}
 
 	public void correctHeight(float[] cogL, float[] cogR){
 		float tanVA = (float) Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)));
 		float tanPitch = (float) Math.tan(Math.toRadians(this.getDrone().getPitch()));
-		if((this.getDrone().getPitch() > 0 && tanVA <= 1.1*tanPitch && tanVA >= 0.9*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA >= 1.1*tanPitch && tanVA <= 0.9*tanPitch)){
-			this.getDrone().setThrust(this.getPhysicsCalculations().getThrust(cogL));
-		}else if ((this.getDrone().getPitch() > 0 && tanVA < 0.9*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA < 1.1*tanPitch)) {
-			this.getHeightPI().resetSetpoint(tanPitch);
-			float output = -this.getHeightPI().calculateRate((float)(Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))), this.getDrone().getCurrentTime());
+		//System.out.println("tanPitch: " + tanPitch);
+		//System.out.println("tanVA: " + tanVA);
+		if((this.getDrone().getPitch() > 0 && tanVA <= 1.2*tanPitch && tanVA >= 0.8*tanPitch)){
+			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*0.9));
+			System.out.println(this.getPhysicsCalculations().getThrust(cogL)*0.9);
+		}else if( (this.getDrone().getPitch() < 0 && tanVA >= 1.2*tanPitch && tanVA <= 0.8*tanPitch)){
+			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*1.1));
+			System.out.println(this.getPhysicsCalculations().getThrust(cogL)*1.1);
+		}else if ((this.getDrone().getPitch() > 0 && tanVA < 0.8*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA < 1.2*tanPitch)) {
+			this.getHeightPI().resetSetpoint(tanVA);
+			float output = this.getHeightPI().calculateRate((float) Math.tan(Math.toRadians(this.getDrone().getPitch())), this.getDrone().getCurrentTime());
+			this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (output*10));
+			//System.out.println("output: " + 10*output);
+			//System.out.println("time: " + this.getDrone().getCurrentTime());
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
-			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight() + Math.max(output, -this.getDrone().getMaxThrust()));
-		}else if ((this.getDrone().getPitch() > 0 && tanVA > 1.1*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA > 0.9*tanPitch)){
-			this.getHeightPI().resetSetpoint(tanPitch);
-			float output = -this.getHeightPI().calculateRate((float)(Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))), this.getDrone().getCurrentTime());
+			//System.out.println("error: " + (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))));
+			this.getDrone().setThrust(Math.max(this.getPhysicsCalculations().getThrust(cogL) + output, -this.getDrone().getMaxThrust()));
+			System.out.println((this.getPhysicsCalculations().getThrust(cogL) + output));
+		}else if ((this.getDrone().getPitch() > 0 && tanVA > 1.2*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA > 0.8*tanPitch)){
+			this.getHeightPI().resetSetpoint(tanVA);
+			float output = this.getHeightPI().calculateRate((float) Math.tan(Math.toRadians(this.getDrone().getPitch())), this.getDrone().getCurrentTime());
+			this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (output*10));
+			//System.out.println("output: " + 10*output);
+			//System.out.println("time: " + this.getDrone().getCurrentTime());
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
-			this.getDrone().setThrust(Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight()+Math.min(output, this.getDrone().getMaxThrust()));
+			//System.out.println("error: " + (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))));
+			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL) + output, this.getDrone().getMaxThrust()));
+			System.out.println((this.getPhysicsCalculations().getThrust(cogL) + output));
 		}	
 	}
 
