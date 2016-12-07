@@ -15,12 +15,12 @@ public class SeveralSpheres extends Mission {
 	private boolean firstOrbAcquired;
 	private boolean secondOrbAcquired;
 	private final static float distanceToArrival = 0.8f;// TODO afstellen, straal is 0.5
-	private WorldScan worldScan;
+	private final WorldScan worldScan;
 	
 	public SeveralSpheres(MoveToTarget moveToTarget, Drone drone) {
 		super(moveToTarget, drone);
 		closestOrbs = new ClosestOrbs(this.getDrone());
-		setWorldScan(new WorldScan(drone));
+		this.worldScan = new WorldScan(drone);
 		setRefreshCounter(0);
 		setFirstTime(true);
 	}
@@ -29,7 +29,7 @@ public class SeveralSpheres extends Mission {
 	public void execute() {
 		//System.out.println("EXSevSph");
 		//System.out.println("is scan gedaan? " + this.getMoveToTarget().getWorldScan().getFinished());
-		if (!this.getMoveToTarget().getWorldScan().getFinished()) {// als de scanner nog geen bol heeft gevonden, blijf zoeken
+		if (!this.getWorldScan().getFinished()) {// als de scanner nog geen bol heeft gevonden, blijf zoeken
 			this.getWorldScan().scan(this.getDrone());
 			this.setFirstTime(true);
 			this.setRefreshCounter(0);
@@ -63,7 +63,6 @@ public class SeveralSpheres extends Mission {
 				this.setRefreshCounter(this.getRefreshCounter() + 1);
 			} else {// begin opnieuw te zoeken naar eerste bol
 				//System.out.println("herstart scan");
-				setWorldScan(new WorldScan(this.getDrone()));
 				this.getWorldScan().scan(this.getDrone());
 				setFirstTime(true);
 			}
@@ -238,14 +237,9 @@ public class SeveralSpheres extends Mission {
 	/**
 	 * @return the worldScan
 	 */
-	public WorldScan getWorldScan() {
+	public final WorldScan getWorldScan() {
 		return worldScan;
 	}
 
-	/**
-	 * @param worldScan the worldScan to set
-	 */
-	public void setWorldScan(WorldScan worldScan) {
-		this.worldScan = worldScan;
-	}
+
 }
