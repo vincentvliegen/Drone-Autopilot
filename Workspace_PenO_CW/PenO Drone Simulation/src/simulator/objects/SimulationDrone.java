@@ -20,7 +20,7 @@ import simulator.physics.Movement;
 import simulator.world.World;
 import simulator.world.WorldParser;
 
-public class SimulationDrone implements Drone, WorldObject {
+public class SimulationDrone extends WorldObject implements Drone{
 	private float pitch = 0;
 	private float roll = 0;
 	private float thrust = 0;
@@ -42,7 +42,6 @@ public class SimulationDrone implements Drone, WorldObject {
 	float[] color = new float[3];
 	double[] translate = new double[3];
 	static double[] standardTranslate = { 0, 0, 0 };
-	World world;
 	List<Double> rotateMatrix = new ArrayList<>();
 	List<Double> inverseRotateMatrix = new ArrayList<>();
 	private float cameraSeperation = 0;
@@ -50,13 +49,13 @@ public class SimulationDrone implements Drone, WorldObject {
 
 	public SimulationDrone(GL2 gl, float height, float width, float depth,
 			float[] color, double[] translate, World world) {
+		super(world);
 		this.height = height;
 		this.width = width;
 		this.depth = depth;
 		this.gl = gl;
 		this.color = color;
 		this.translate = translate;
-		this.world = world;
 		this.movement = new Movement(this);
 		this.cameraSeperation = width;
 		generateDroneCameras();
@@ -222,9 +221,9 @@ public class SimulationDrone implements Drone, WorldObject {
 		checkYawPitchRoll();
 
 		// Wind rotation stuff
-		this.yaw += world.getWindRotationY() * timePassed;
-		this.roll += world.getWindRotationX() * timePassed;
-		this.pitch += world.getWindRotationZ() * timePassed;
+		this.yaw += getWorld().getWindRotationY() * timePassed;
+		this.roll += getWorld().getWindRotationX() * timePassed;
+		this.pitch += getWorld().getWindRotationZ() * timePassed;
 		/*
 		System.out.println("--------------");
 		System.out.println("global pitch " + this.pitch);
@@ -391,10 +390,6 @@ public class SimulationDrone implements Drone, WorldObject {
 		return height;
 	}
 
-	public World getWorld() {
-		return this.world;
-	}
-
 	public Movement getMovement() {
 		return this.movement;
 	}
@@ -410,7 +405,7 @@ public class SimulationDrone implements Drone, WorldObject {
 	@Override
 	public float getCameraSeparation() {
 		if (getWorld() instanceof WorldParser)
-			return (float) world.getParser().getCameraSeparation();
+			return (float) getWorld().getParser().getCameraSeparation();
 		return cameraSeperation;
 	}
 
@@ -475,7 +470,7 @@ public class SimulationDrone implements Drone, WorldObject {
 
 	@Override
 	public float getCurrentTime() {
-		return world.getCurrentTime();
+		return getWorld().getCurrentTime();
 	}
 
 	public List<Double> getRotateMatrix() {

@@ -3,7 +3,9 @@ package simulator.objects;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-public class Sphere implements WorldObject{
+import simulator.world.World;
+
+public class Sphere extends WorldObject{
 	
 	GL2 gl;
 	static float radius = 0.5f;
@@ -14,7 +16,8 @@ public class Sphere implements WorldObject{
 	static double[] standardTranslate = {0,0,0};
 	
 	
-	public Sphere(GL2 gl, float[] color, double[] translate){
+	public Sphere(GL2 gl, float[] color, double[] translate, World world){
+		super(world);
 		this.gl = gl;
 		this.color = color;
 		this.position = translate;

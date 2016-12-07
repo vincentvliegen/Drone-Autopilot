@@ -85,23 +85,25 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public void addSphere(Sphere sphere){
 		worldObjectsList.add(sphere);
 		spheres.add(sphere);
-		getColors().add(sphere.getColor());
+		getTargetColors().add(sphere.getColor());
 	}
 
 	public void removeSphere(Sphere sphere) {
 		worldObjectsList.remove(sphere);
 		spheres.remove(sphere);
-		getColors().remove(sphere.getColor());
+		getTargetColors().remove(sphere.getColor());
 	}
 
 
-	private ArrayList<float[]> colors = new ArrayList<>();
+	private ArrayList<float[]> targetColors = new ArrayList<>();
+	private ArrayList<float[]> obstacleColors = new ArrayList<>();
+
 
 	public void addSphereWithRandomColor(double[] position) {
 		Random rand = new Random();
 		float r = 0, g=0,b=0;
 		float[] color = {r,g,b};
-		while((r == g && r == b) || getColors().contains(color)) {
+		while((r == g && r == b) || getTargetColors().contains(color)) {
 			r = rand.nextFloat();
 			g = rand.nextFloat();
 			b = rand.nextFloat();
@@ -109,9 +111,24 @@ public abstract class World extends GLCanvas implements GLEventListener {
 			color[1] = g;
 			color[2] = b;
 		}
-		addSphere(new Sphere(getGL().getGL2(), color, position));
+		addSphere(new Sphere(getGL().getGL2(), color, position, this));
 
 
+	}
+
+	
+	public void addObstacleSphereWithRandomColor(double[] position) {
+		Random rand = new Random();
+		float value = rand.nextFloat();
+		float[] color = {value, value, value};
+		while((getObstacleColors().contains(color))) {
+			value = 
+			color[0] = value;
+			color[1] = value;
+			color[2] = value;
+		
+		}
+		addObstacleSphere(new ObstacleSphere(getGL().getGL2(), color, position, this));
 	}
 
 
@@ -119,7 +136,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	public void addObstacleSphere(ObstacleSphere sphere){
 		worldObjectsList.add(sphere);
-		obstacleSpheres.add(sphere);		
+		obstacleSpheres.add(sphere);
+		obstacleColors.add(sphere.getColor());
 	}
 
 
@@ -311,9 +329,14 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glViewport(0, 0, width, height);
 	}
 
-	private ArrayList<float[]> getColors() {
-		return colors;
+	private ArrayList<float[]> getTargetColors() {
+		return targetColors;
 	}
+	
+	public ArrayList<float[]> getObstacleColors() {
+		return obstacleColors;
+	}
+
 
 	public long getLastTime() {
 		return this.lastTime;

@@ -72,7 +72,7 @@ public class Parser {
 		// print working dir
 		// System.out.println(System.getProperty("user.dir"));
 
-		FileReader input = new FileReader("inputFiles/inputFile140.txt");
+		FileReader input = new FileReader("inputFiles/inputFile130.txt");
 		BufferedReader bufRead = new BufferedReader(input);
 		String myLine = null;
 
@@ -139,7 +139,7 @@ public class Parser {
 			// obstacle_balls
 
 			else if (splitArray[0].equals("obstacle_ball")) {
-				getWorld().addObstacleSphere(new ObstacleSphere(getWorld().getGL().getGL2(), position));
+				getWorld().addObstacleSphereWithRandomColor(position);
 			}
 
 		}
