@@ -203,7 +203,7 @@ public class WorldParser extends World{
 		// voor takeimage linkerCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferLeft()[0]);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+		gl.glViewport(0, 0, getParser().getImageWidth(), getParser().getImageHeight());
 		getDrones().get(0).getLeftDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
@@ -211,7 +211,7 @@ public class WorldParser extends World{
 		// voor takeimage rechterCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferRight()[0]);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+		gl.glViewport(0, 0, getParser().getImageWidth(), getParser().getImageHeight());
 		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
