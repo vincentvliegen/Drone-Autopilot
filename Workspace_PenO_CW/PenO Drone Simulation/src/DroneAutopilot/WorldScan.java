@@ -90,6 +90,9 @@ public class WorldScan {
 							this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 							this.getDrone().setPitchRate(0);
 							if(!this.foundOrb(drone)){
+								degreesTurned = 0;
+								timePassed = 0;
+								firstTime = false;
 								this.setFinished(true);
 							}
 						}
