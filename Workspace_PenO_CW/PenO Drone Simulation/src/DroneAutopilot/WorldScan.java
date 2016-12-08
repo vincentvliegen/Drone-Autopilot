@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import DroneAutopilot.controllers.RollController;
+import DroneAutopilot.correct.CorrectRoll;
 import p_en_o_cw_2016.Drone;
 
 public class WorldScan {
@@ -17,17 +18,14 @@ public class WorldScan {
 	private float degreesTurned;
 	private float timePassed = 0;
 	private ImageCalculations imageCalculations;
-
-	private static final float underBoundary = -0.2f;
-	private static final float upperBoundary = 0.2f;
-
+	private final CorrectRoll rollCorrector;
 
 	public WorldScan(Drone drone){
 		this.setDrone(drone);
-		this.rollPI = new RollController(1,0);
 		this.imageCalculations = new ImageCalculations();
+		this.rollCorrector = new CorrectRoll(drone);
 	}
-	
+
 	public boolean foundOrb(Drone drone){
 		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
 		HashMap<Integer, ArrayList<int[]>> hashMapOfColors = this.getImageCalculations().getPixelsOfEachColor();
@@ -37,7 +35,7 @@ public class WorldScan {
 		}
 		return false;
 	}
-	
+
 	public Set<Integer> getKeySetOfColors(Drone drone){
 		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
 		HashMap<Integer, ArrayList<int[]>> hashMapOfColors = this.getImageCalculations().getPixelsOfEachColor();
@@ -46,7 +44,7 @@ public class WorldScan {
 
 	public Set<Integer> scan(Drone drone){
 		this.setFinished(false);
-		this.correctRoll();
+		this.getRollCorrector().correctRoll();
 		//		System.out.println("length " + hashMapOfColors.size());
 		if(this.foundOrb(drone)){
 			//System.out.println("iets gevonden");
@@ -75,7 +73,7 @@ public class WorldScan {
 					this.getDrone().setYawRate(0);
 					//System.out.println("time passed" + timePassed);
 					if(timePassed <30){
-						this.getDrone().setPitchRate(-4);
+						this.getDrone().setPitchRate(-3);
 						//berekening thrust om horizontaal achterwaarts te vliegen afhankelijk van pitch.
 						float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 						this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
@@ -155,32 +153,8 @@ public class WorldScan {
 		this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
 	}
 
-	public void correctRoll() {
-		if (this.getDrone().getRoll() <= upperBoundary && this.getDrone().getRoll() >= underBoundary) {
-			this.getDrone().setRollRate(0);
-			this.setRollStarted(false);
-		}
-		else if (this.getDrone().getRoll() > upperBoundary){
-			if(!this.getRollStarted()){
-				this.getRollPI().resetSetpoint(0);
-				this.setRollStarted(true);
-			}else{
-				float output = this.getRollPI().calculateRate(this.getDrone().getRoll(), this.getDrone().getCurrentTime());
-				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) this.getDrone().getRoll()*10);
-				this.getDrone().setRollRate(Math.max(output, -this.getDrone().getMaxYawRate()));
-			}
-		}
-		else if (this.getDrone().getRoll() < underBoundary){
-			if(!this.getRollStarted()){
-				this.getRollPI().resetSetpoint(0);
-				this.setRollStarted(true);
-			}else{
-				float output = this.getRollPI().calculateRate(this.getDrone().getRoll(), this.getDrone().getCurrentTime());
-				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) this.getDrone().getRoll()*10);
-				this.getDrone().setRollRate(Math.min(output, this.getDrone().getMaxYawRate()));
-			}
-		}
-	}
+	
+	//////////Getters & Setters//////////
 
 	public final RollController getRollPI() {
 		return this.rollPI;
@@ -216,12 +190,16 @@ public class WorldScan {
 	public void setDrone(Drone drone) {
 		this.drone = drone;
 	}
-	
+
 	public ImageCalculations getImageCalculations() {
 		return imageCalculations;
 	}
-	
+
 	public void setImageCalculations(ImageCalculations imageCalculations) {
 		this.imageCalculations = imageCalculations;
+	}
+
+	public CorrectRoll getRollCorrector() {
+		return rollCorrector;
 	}
 }
