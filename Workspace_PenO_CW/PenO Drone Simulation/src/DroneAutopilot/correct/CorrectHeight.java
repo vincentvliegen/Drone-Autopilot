@@ -17,10 +17,13 @@ public class CorrectHeight extends Correct{
 		float tanPitch = (float) Math.tan(Math.toRadians(this.getDrone().getPitch()));
 		//System.out.println("tanPitch: " + tanPitch);
 		//System.out.println("tanVA: " + tanVA);
-		if((this.getDrone().getPitch() > 0 && tanVA <= 1.2*tanPitch && tanVA >= 0.8*tanPitch)){
+		if(tanVA==tanPitch){
+			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)));
+		}
+		if((this.getDrone().getPitch() > 0 && tanVA <= 1.2*tanPitch && tanVA >= 0.8*tanPitch && tanVA!=tanPitch)){
 			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*0.9));
 			//System.out.println(this.getPhysicsCalculations().getThrust(cogL)*0.9);
-		}else if( (this.getDrone().getPitch() < 0 && tanVA >= 1.2*tanPitch && tanVA <= 0.8*tanPitch)){
+		}else if( (this.getDrone().getPitch() < 0 && tanVA >= 1.2*tanPitch && tanVA <= 0.8*tanPitch && tanVA!=tanPitch)){
 			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*1.1));
 			//System.out.println(this.getPhysicsCalculations().getThrust(cogL)*1.1);
 		}else if ((this.getDrone().getPitch() > 0 && tanVA < 0.8*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA < 1.2*tanPitch)) {
