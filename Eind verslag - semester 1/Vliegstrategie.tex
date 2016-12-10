@@ -52,7 +52,7 @@ Tenslotte bepalen we ook de fout op de verticale hoek, $\beta$. Dit is de afwijk
 	\end{minipage}%
 \end{figure}
 \\
-Nadat de drone zijn positie bepaald heeft, kan hij zijn fouten (horizontale en verticale hoek en eventuele roll) bijsturen a.d.h.v. PI controllers die beslissen over respectievelijk yaw, thrust en roll bewegingen. Meer info over de werking van de controllers wordt gegeven in subsectie \ref{subsec: PI Controllers}.
+Nadat de drone zijn positie bepaald heeft, kan hij zijn fouten (horizontale en verticale hoek en eventuele roll) bijsturen a.d.h.v. PI controllers die beslissen over respectievelijk yaw, thrust en roll bewegingen. Meer info over de werking van de controllers wordt gegeven in subsectie \ref{subsec: PI Controllers}. Deze bijsturing gebeurt tijdens het vliegen naar het doel. 
 \\
 \\
 Nu rest er ons enkel nog de pitch te bepalen zodat we onder een ingestelde thrust voorwaarts richting de bol kunnen bewegen. Het eerste idee was om dit op basis van een soort van snelheidscontroller te doen, aangezien de snelheid afhankelijk is van de pitch en dat we hierdoor ook de snelheid konden controlleren en laag houden. De snelheid is echter niet te bepalen door de onbekende windkrachten of door de numeriek wiskundige beperkingen op afgeleiden berekenen. Bijgevolg zijn we overgegaan op het tweede plan. Dit plan houdt in dat de drone pitcht met een rate op basis van een afstandscontroller, zodat hij een kleine afstand overbrugt, terug recht komt wat de snelheid een klein beetje afbouwt en dan weer opnieuw pitcht om verder te gaan. Wanneer er tegenwind is, zal de afstandscontroller de drone toelaten om verder te pitchen om toch op zijn doel te raken.
