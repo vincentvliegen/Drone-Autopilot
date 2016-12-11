@@ -1,1 +1,15 @@
-\noindent {\em Auteur: Arne Vlietinck}
+\noindent {\em Auteurs: Arne Vlietinck}
+\\
+\\
+In het Virtual Testbed wordt een panel van vaste grootte voorzien waarin de \textit{GUI} vervat zit. In tegenstelling tot de Autopilot wordt hier gebruik gemaakt van een iets uitgebreidere lay-outvorm namelijk de \textit{GridBagLayout}\footnote{\textit{GridBagLayout}: https://docs.oracle.com/javase/7/docs/api/java/awt/GridBagLayout.html}. Dit zorgt voor een op maat gemaakte lay-out, die noodzakelijk was voor het uitlijnen van de verschillende functies. 
+\\
+\\
+De centrale functie van deze \textit{GUI} is het selecteren van verschillende camerastandpunten. Dit kan door middel van de \textit{JButtons}. Naargelang de hoeveelheid camerastandpunten zullen er automatisch extra buttons gegenereerd worden. De basiscamera's bestaan uit de verschillende wereldcamera's, de linkerdronecamera en een \textit{third-personcamera}.
+\\
+\\
+Naast de mogelijkheid om de camera's te kiezen, worden er ook \textit{JSliders} voorzien die het mogelijk maken de wind (in \(x\)-, \(y\)- en \(z\)-richting) en gravitatieconstante aan te passen naar behoeven. Zo kan ten allen tijde de invloed van respectievelijk de wind en zwaartekracht onderzocht worden. 
+\\
+Ook wordt de snelheid en de positie van de drone weergegeven. Deze wordt continu opnieuw opgevraagd en ge\"{u}pdatet in de \textit{GUI}. 
+\\
+\\
+Tot slot wordt er nog een laatste button voorzien waarmee mogelijk is om een nieuwe bol toe te voegen. Door de button te gebruiken opent er een nieuw frame waarin de gewilde co\"ordinaten ingegeven kunnen worden. 
