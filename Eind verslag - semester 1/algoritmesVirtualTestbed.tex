@@ -3,7 +3,7 @@
 Het relatief assenstelsel heeft als oorsprong het centrum van de drone en is zo georiënteerd dat de drone kijkt in de richting van de positieve X-as, met de Y-as naar boven en de Z-as naar rechts gericht. Het assenstelsel ondergaat dezelfde translaties en rotaties als de drone.
 \\
 \\
-De drone kan drie bewegingen uitvoeren: yaw, roll en pitch. De yaw is een negatieve rotatie rond de Y-as, de roll is een positieve rotatie rond de X'-as \footnote{X-as van  het relatieve assenstelsel na yaw beweging} en de pitch is een negatieve rotatie rond de Z''-as \footnote{Z-as van het relatieve assenstelsel na yaw en roll beweging}. Er bestaat een verschil tussen de huidige roll en pitch die de drone heeft op een gegeven moment en de yaw, roll en pitch die hij moet uitvoeren om in die positie te geraken.  
+De drone kan drie bewegingen uitvoeren: yaw \(Y\), roll \(R\) en pitch \(P\). De yaw is een negatieve rotatie rond de Y-as, de roll is een positieve rotatie rond de X'-as \footnote{X-as van  het relatieve assenstelsel na yaw beweging} en de pitch is een negatieve rotatie rond de Z''-as \footnote{Z-as van het relatieve assenstelsel na yaw en roll beweging}. Er bestaat een verschil tussen de huidige roll en pitch die de drone heeft op een gegeven moment en de yaw, roll en pitch die hij moet uitvoeren om in die positie te geraken.  
 \\
 \\
 Door de volgorde van de drie rotaties onstaat er een specifieke rotatiematrix. Met behulp van deze rotatiematrix kunnen de posities van de camera's van de drone bepaald worden. Ook kunnen we hiermee de veranderingen van yaw, roll en pitch berekenen. De verandering van de pitch is immers afhankelijk van de roll: hoe groter de roll, hoe trager de pitch zal veranderen.
@@ -47,7 +47,7 @@ T \sin(R)
 \end{Bmatrix} \label{thrustkracht}
 \end{equation*}
 \\
-Een derde kracht die kan voorkomen, is de drag \(D\). Deze kracht is afhankelijk van de snelheid van de drone en de a\"erodynamische coëfficiënt \(d\). De constante wordt als positief beschouwd.
+Een derde kracht die kan voorkomen, is de drag \(D\). Deze kracht is afhankelijk van de snelheid \(v\) van de drone en de a\"erodynamische coëfficiënt \(d\). De constante wordt als positief beschouwd.
 \begin{equation*}
 \vec{D} =
 \begin{Bmatrix}
@@ -57,7 +57,7 @@ Een derde kracht die kan voorkomen, is de drag \(D\). Deze kracht is afhankelijk
 \end{Bmatrix} \label{dragkracht}
 \end{equation*}
 \\
-De windkracht \(W\) is een kracht met een veranderlijke richting en snelheid. Op voorbepaalde tijdstippen verandert de kracht van snelheid en van richting. De tijdstippen worden, net als de groottes van deze twee variabelen, bij het aanmaken van de simulator bepaald. De snelheid, vermenigvuldigd met de a\"erodynamische coëfficiënt \(d\), geeft ons de kracht in Newton. 
+De windkracht \(W\) is een kracht met een veranderlijke richting en snelheid. Op voorbepaalde tijdstippen verandert de kracht van snelheid en van richting. De tijdstippen worden, net als de groottes van deze twee variabelen, bij het aanmaken van de simulator bepaald. De snelheid \(W\), vermenigvuldigd met de a\"erodynamische coëfficiënt \(d\), geeft ons de kracht in Newton. 
 \begin{equation*}
 \vec{W} = 
 \begin{Bmatrix}
@@ -67,7 +67,7 @@ W\textsubscript{z} \cdot d
 \end{Bmatrix} \label{windkracht}
 \end{equation*}
 \\
-Alle vectorkrachten die inwerken op de drone op een bepaald moment, worden bij elkaar opgeteld. De bekomen vector, gedeeld door de massa van de drone, geeft de versnelling van de drone op dat bepaald tijdstip, via de formule:
+Alle vectorkrachten die inwerken op de drone op een bepaald moment, worden bij elkaar opgeteld. De bekomen vector, gedeeld door de massa \(m\) van de drone, geeft de versnelling \(a\) van de drone op dat bepaald tijdstip, via de formule:
 \\
 \begin{equation*}
 \sum_{1}^{n} \vec{F} = m \cdot \vec{a} \label{krachtenevenwicht}
