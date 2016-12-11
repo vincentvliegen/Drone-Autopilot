@@ -1,0 +1,13 @@
+\noindent
+Wanneer de drone een traject moet afleggen tussen meerdere bollen, is het noodzakelijk om een kortste pad algoritme ter beschikking te hebben dat er voor zorgt dat dit in zekere mate effici\"ent gebeurt. De autopilot zal op voorhand bepalen welke weg het zal verderzetten nadat het het huidige doel heeft bereikt. Hoe meer stappen het algoritme op voorhand bepaald hoe sneller de drone zijn pad kan vervolledigen. Echter, meerdere stappen uitwerken voor een grote groep bollen zorgt voor vertraging omwille van het aantal berekeningen. Daarom bepaald de autopilot ten alle tijden maximaal de twee eerste bollen.
+\\
+\\
+Het algoritme bestaat uit drie grote onderdelen: het zoeken naar bollen, het berekenen van de eerste twee bollen en het herberekenen van deze bollen
+\\
+Wanneer er geen bollen in beeld zijn, zal de autopilot de omgeving laten scannen. Dit zal het net zo lang doen als er geen bol in beeld is.
+\\
+Wanneer er voor de eerste keer een bol in beeld komt, stelt de autopilot een lijst op van alle pixels per kleur op. Hiervan bewaart het de n grootste groepen pixels, waarvan het voor elk van deze bollen de afstand berekent. De dichtstbijzijnde bol wordt hierbij ingesteld als eerste doel. Vervolgens bepaalt de autopilot de afstanden tussen deze eerste bol en de overige n-1 bollen. Hier uit haalt het de tweede bol. Indien er slechts \'e\'en bol in zicht is berekent de autopilot voorlopig geen tweede.
+\\
+Wanneer de drone aan het vliegen is richting de eerste bol, herberekent de autopilot op regelmatige tijdstippen de eerste en tweede bol. Indien er een bol dichter bij ligt dan de huidige eerste bol, zal deze de nieuwe eerste bol worden en wordt de overeenkomstige tweede bol berekend. Als er een bol dichter ligt bij eerste bol dan de huidige tweede, zal ook die deze vervangen.
+\\
+Op voorwaarde dat de drone de eerste bol gaat bereiken, wordt de huidige tweede bol ingesteld als nieuw doel en wordt er een nieuwe tweede bol berekend. Als er geen tweede bol was ingesteld, zal de drone opnieuw beginnen scannen.
