@@ -57,7 +57,7 @@ Een derde kracht die kan voorkomen, is de drag \(D\). Deze kracht is afhankelijk
 \end{Bmatrix} \label{dragkracht}
 \end{equation*}
 \\
-De windkracht \(W\) is een kracht met een veranderlijke richting en snelheid. Op voorbepaalde tijdstippen verandert de kracht van snelheid en van richting. De tijdstippen worden, net als de groottes van deze twee variabelen, bij het aanmaken van de simulator bepaald. De snelheid \(W\), vermenigvuldigd met de a\"erodynamische coëfficiënt \(d\), geeft ons de kracht in Newton. 
+De windkracht \(W\) is een kracht met een veranderlijke richting en snelheid. Op voorbepaalde tijdstippen verandert de kracht van snelheid en van richting. De tijdstippen worden, net als de groottes van deze twee variabelen, bij het aanmaken van de simulator bepaald. De snelheden \(W_x, W_y\) en \(W_z\), vermenigvuldigd met de a\"erodynamische coëfficiënt \(d\), geeft ons de kracht in Newton. 
 \begin{equation*}
 \vec{W} = 
 \begin{Bmatrix}
@@ -72,7 +72,7 @@ Alle vectorkrachten die inwerken op de drone op een bepaald moment, worden bij e
 \begin{equation*}
 \sum_{1}^{n} \vec{F} = m \cdot \vec{a} \label{krachtenevenwicht}
 \end{equation*}
-Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Merk wel op dat er geen constante versnelling is en de vergelijkingen dus telkens opnieuw opgemaakt moeten worden. De delta is hier de tijdsverandering ten opzichte van de vorige positie- en snelheidsverandering.
+Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Merk wel op dat er geen constante versnelling is en de vergelijkingen dus telkens opnieuw opgemaakt moeten worden. De \(\delta\) is hier de tijdsverandering ten opzichte van de vorige positie- en snelheidsverandering.
 \\
 \begin{equation*}
 x\textsubscript{n} = (a\textsubscript{n-1} \cdot \delta\textsuperscript{2})/2 + v\textsubscript{n-1} \cdot \delta + x\textsubscript{n-1} \label{positie}
@@ -84,7 +84,7 @@ v\textsubscript{n} = a\textsubscript{n-1} \cdot \delta + v\textsubscript{n-1} \l
 \\
 Twee objecten A en B botsen met elkaar indien de afstand tussen hun zwaartepuntscentra kleiner is dan de som van hun twee radii. Dit wordt gecontroleerd met behulp van de volgende formule:
 \begin{equation*}
-\sqrt{(x\textsubscript{A}-x\textsubscript{B})\textsuperscript{2} + (y\textsubscript{A} - y\textsubscript{B})\textsuperscript{2} + (z\textsubscript{A} - z\textsubscript{B})\textsuperscript{2}}  \ge r\textsubscript{A} + r\textsubscript{B} \Rightarrow Botsing
+\sqrt{(x\textsubscript{A}-x\textsubscript{B})\textsuperscript{2} + (y\textsubscript{A} - y\textsubscript{B})\textsuperscript{2} + (z\textsubscript{A} - z\textsubscript{B})\textsuperscript{2}}  \le r\textsubscript{A} + r\textsubscript{B} \Rightarrow Botsing
 \end{equation*}
 \\
 \\
