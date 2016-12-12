@@ -10,7 +10,7 @@ public class CorrectYaw extends Correct{
 
 	public CorrectYaw(Drone drone) {
 		super(drone);
-		this.yawPI = new YawController(1,0);
+		this.yawPI = new YawController(5,0);
 	}
 
 	public void correctYaw(float[] cogLeft, float[] cogRight){
