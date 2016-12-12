@@ -159,10 +159,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		// translate camera.
 		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
 			movement.update((float)checkTimePassed());
-			gl.glTranslated(movement.getX(), movement.getY(), movement.getZ());
-			gl.glRotated(movement.getRotateX(), 1, 0, 0);
-			gl.glRotated(movement.getRotateY(), 0, 1, 0);
-			gl.glRotated(movement.getRotateZ(), 0, 0, 1);
+			getCurrentCamera().setEyeX((float)movement.getX()); 
+			getCurrentCamera().setEyeY((float)movement.getY()); 
+			getCurrentCamera().setEyeZ((float)movement.getZ());
 		}
 
 		for (WorldObject object: getWorldObjectList()){
