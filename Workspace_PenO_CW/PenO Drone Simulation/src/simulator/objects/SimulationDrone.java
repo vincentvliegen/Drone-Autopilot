@@ -184,39 +184,39 @@ public class SimulationDrone extends WorldObject implements Drone{
 		double yawPass = this.yawRate * timePassed;
 		createInverseRotate();
 		this.pitch += yawPass
-				* new BigDecimal(inverseRotateMatrix.get(1)).setScale(2,
+				* new BigDecimal(inverseRotateMatrix.get(7)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		this.yaw += yawPass
 				* new BigDecimal(inverseRotateMatrix.get(4)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		this.roll += yawPass
-				* new BigDecimal(inverseRotateMatrix.get(7)).setScale(2,
+				* new BigDecimal(inverseRotateMatrix.get(1)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		checkYawPitchRoll();
 
 		double rollPass = this.rollRate * timePassed;
 		createInverseRotate();
 		this.pitch += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(2)).setScale(2,
+				* new BigDecimal(inverseRotateMatrix.get(6)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		this.yaw += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(5)).setScale(2,
+				* new BigDecimal(inverseRotateMatrix.get(3)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		this.roll += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(8)).setScale(2,
+				* new BigDecimal(inverseRotateMatrix.get(0)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		checkYawPitchRoll();
 
 		double pitchPass = this.pitchRate * timePassed;
 		createInverseRotate();
 		this.pitch += pitchPass
-				* new BigDecimal(inverseRotateMatrix.get(0)).setScale(2,
+				* new BigDecimal(inverseRotateMatrix.get(8)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		this.yaw += pitchPass
-				* new BigDecimal(inverseRotateMatrix.get(3)).setScale(2,
+				* new BigDecimal(inverseRotateMatrix.get(5)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		this.roll += pitchPass
-				* new BigDecimal(inverseRotateMatrix.get(6)).setScale(2,
+				* new BigDecimal(inverseRotateMatrix.get(2)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		checkYawPitchRoll();
 
