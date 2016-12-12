@@ -28,6 +28,7 @@ public class MoveToTarget {
 	private float[] cogR;
 
 	private boolean scanning;
+	private int color;
 
 	public MoveToTarget(Drone drone) {
 		this.setDrone(drone);
@@ -42,6 +43,7 @@ public class MoveToTarget {
 	}
 
 	public void execute(int color) {
+		this.setColor(color);
 		ArrayList<int[]> leftCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getLeftCamera(),
 				color);
 		ArrayList<int[]> rightCameraList = this.getImageCalculations()
@@ -71,7 +73,7 @@ public class MoveToTarget {
 	}
 
 	public void updateGUI() {
-		this.getGUI().update(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()));
+		this.getGUI().update(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()),this.getColor());
 	}
 
 	public void flyTowardsTarget() {
@@ -247,5 +249,13 @@ public class MoveToTarget {
 
 	public void setScanning(boolean scanning) {
 		this.scanning = scanning;
+	}
+
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
 	}
 }

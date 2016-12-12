@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JComboBox;
@@ -16,8 +17,6 @@ import javax.swing.JPanel;
 
 public class GUI {
 
-	private JFrame frame;
-	private boolean reached;
 
 	/**
 	 * Launch the application.
@@ -48,12 +47,12 @@ public class GUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setTitle("AUTOPILOT GUI");
-		frame.setAlwaysOnTop(true);
-		frame.setBounds(100, 100, 530, 115);
-		frame.setMinimumSize(new Dimension(530,115));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame = new JFrame();
+		this.getFrame().setTitle("AUTOPILOT GUI");
+		this.getFrame().setAlwaysOnTop(true);
+		this.getFrame().setBounds(100, 100, 530, 115);
+		this.getFrame().setMinimumSize(new Dimension(530,115));
+		this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Font font = new Font("Tahoma", Font.PLAIN, 18);
 		JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -63,7 +62,7 @@ public class GUI {
 		select.setFont(font);
 		panel.add(select);
 
-		String[] list = { " ", "Fly to red orb","Fly shortest path","TEST" };
+		String[] list = { " ------ Select Mission ------ ", "Fly to red sphere","Fly shortest path"};
 		JComboBox menu = new JComboBox(list);
 		menu.setPreferredSize(new Dimension(250,30));
 		panel.add(menu);
@@ -75,75 +74,123 @@ public class GUI {
 				JComboBox menu = (JComboBox) e.getSource();
 
 				Object selected = menu.getSelectedItem();
-				if (selected.toString().equals("Fly to red orb")){
-					lastOrbEnabled = true;
-					flyShortest = false;
-					test = false;
+				if (selected.toString().equals("Fly to red sphere")){
+					setLastOrbEnabled(true);
+					setFlyShortest(false);
+//					test = false;
 				}
 				else if (selected.toString().equals("Fly shortest path")){
-					flyShortest = true;
-					lastOrbEnabled = false;
-					test = false;
+					setFlyShortest(true);
+					setLastOrbEnabled(false);
+//					test = false;
 				}
-				else if (selected.toString().equals("TEST")){
-					System.out.println("test");
-					lastOrbEnabled = false;
-					flyShortest = false;
-					test = true;
-					System.out.println("test: " +test);
-				}
+//				else if (selected.toString().equals("TEST")){
+//					System.out.println("test");
+//					lastOrbEnabled = false;
+//					flyShortest = false;
+//					test = true;
+//					System.out.println("test: " +test);
+//				}
 				else if(selected.toString().equals(" ")){
-					lastOrbEnabled = false;
-					flyShortest = false;
-					test = false;
+					setLastOrbEnabled(false);
+					setFlyShortest(false);
+//					test = false;
 				}
 			}
 		});
 
-		JLabel progress = new JLabel("Progress: ");
+		JLabel progress = new JLabel("Progress to next sphere: ");
 		progress.setFont(font);
 		//		progress.setPreferredSize(new Dimension(80, 30));
 		panel.add(progress);
 
-		this.progressBar.setPreferredSize(new Dimension(250, 30));
-		this.progressBar.setStringPainted(true);
-		this.progressBar.setString("0%");
-		this.progressBar.setFont(font);
+		this.getProgressBar().setPreferredSize(new Dimension(250, 30));
+		this.getProgressBar().setStringPainted(true);
+		this.getProgressBar().setString("0%");
+		this.getProgressBar().setFont(font);
 
-		panel.add(this.progressBar);
+		panel.add(this.getProgressBar());
 
 		panel2.add(panel);
-		frame.getContentPane().add(panel2);
-		frame.setVisible(true);
+		this.getFrame().getContentPane().add(panel2);
+		this.getFrame().setVisible(true);
 
 	}
 
-	public void update(float dist) {
+	public void update(float dist,int colorint) {
+		Color color = new Color(colorint);
+		this.getProgressBar().setForeground(color);
 		int distance = (int) (dist*100);
-		if(reached){
-			this.progressBar.setString("100%");
+		if(this.isReached()){
+			this.getProgressBar().setString("100%");
 		}else{
-			if (distance > this.maxValue) {
-				this.maxValue = distance;
-				this.progressBar.setMaximum(distance);
+			if (distance > this.getMaxValue()) {
+				this.setMaxValue(distance);
+				this.getProgressBar().setMaximum(distance);
 			} else {
-				this.progressBar.setValue(this.maxValue - distance);
+				this.getProgressBar().setValue(this.getMaxValue() - distance);
 			}
-			if (this.maxValue > 0){
-				this.progressBar.setString((Math.round(((this.maxValue - distance)*100) / (float)this.maxValue)) + "%");
-				if((Math.round(((this.maxValue - distance)*100) / (float)this.maxValue))==100){
-					reached = true;
+			if (this.getMaxValue() > 0){
+				this.getProgressBar().setString((Math.round(((this.getMaxValue() - distance)*100) / (float)this.getMaxValue())) + "%");
+				if((Math.round(((this.getMaxValue() - distance)*100) / (float)this.getMaxValue()))==100){
+					this.setReached(true);
 				}
 			} else {
-				this.progressBar.setString("100%");
-				reached = true;
+				this.getProgressBar().setString("100%");
+				this.setReached(true);
 			}
 		}
 	}
 
+	public boolean isReached() {
+		return reached;
+	}
+
+	public void setReached(boolean reached) {
+		this.reached = reached;
+	}
+
+	public JProgressBar getProgressBar() {
+		return progressBar;
+	}
+
+	public int getMaxValue() {
+		return maxValue;
+	}
+
+	public void setMaxValue(int maxValue) {
+		this.maxValue = maxValue;
+	}
+
+	public boolean isLastOrbEnabled() {
+		return lastOrbEnabled;
+	}
+
+	public void setLastOrbEnabled(boolean lastOrbEnabled) {
+		this.lastOrbEnabled = lastOrbEnabled;
+	}
+
+	public boolean isFlyShortest() {
+		return flyShortest;
+	}
+
+	public void setFlyShortest(boolean flyShortest) {
+		this.flyShortest = flyShortest;
+	}
+	
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+	
 	private final JProgressBar progressBar;
 	public int maxValue;
 	public boolean lastOrbEnabled;
 	public boolean flyShortest;
 	public boolean test;
+	private JFrame frame;
+	private boolean reached;
 }
