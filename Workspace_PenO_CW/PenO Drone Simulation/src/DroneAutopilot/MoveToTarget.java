@@ -80,10 +80,14 @@ public class MoveToTarget {
 		this.getYawCorrector().correctYaw(this.getCogL(), this.getCogR());
 		this.getHeightCorrector().correctHeight(this.getCogL(), this.getCogR());
 		this.getPhysicsCalculations().updateAccSpeed(this.getCogL());
-		//System.out.println("dist: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
-		//System.out.println("setpoint1: " + this.getDistancePI().getSetpoint());
-		if ( !this.getPitchStarted()) {
-			this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.4f);
+//		System.out.println("dist: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
+//		System.out.println("setpoint1: " + this.getDistancePI().getSetpoint());
+//		System.out.println("distance: " + this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()));
+		if (this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) <= 1) {
+			this.getPitchCorrector().hover();
+            this.setPitchStarted(false);
+		}else if ( Math.abs(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - this.getDistancePI().getSetpoint())>0.4f || !this.getPitchStarted()) {
+			this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.2f);
 			this.getDrone().setPitchRate(0);
 			this.setPitchStarted(true);
 		} else {
