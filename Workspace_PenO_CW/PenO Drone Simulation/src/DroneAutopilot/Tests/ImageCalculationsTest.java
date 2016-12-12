@@ -140,7 +140,7 @@ public class ImageCalculationsTest{
 	
 	public void generateBigCameras() throws IOException{
 		bigBImageCenter = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/center1024x1024.bmp"));
-		bigBImageTopRight = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/topright2250x150.jpg"));
+		bigBImageTopRight = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/topright2200x200.bmp"));
 
 		bigImageCenter = convertImageToIntArray(bigBImageCenter);
 		bigImageTopRight = convertImageToIntArray(bigBImageTopRight);
@@ -247,8 +247,8 @@ public class ImageCalculationsTest{
 		generateBigCameras();
 		ArrayList<int[]> list1 = calc.getPixelsOfColor(bigCamera1, 255);
 		ArrayList<int[]> list2 = calc.getPixelsOfColor(bigCamera2, 255);		
-		assertArrayEquals(new float[] {1024,1024}, calc.centerOfCircle(list1, bigCamera1) ,(float) 5);//berekende positie: {1023.5178,1028.3037}, verschil: {-0.48217773,4.303711}, straal:    ;volledig zichtbaar
-//		assertArrayEquals(new float[] {2250,150}, calc.centerOfCircle(list2, bigCamera2) ,(float) 200);//verschil: {190.xxx,81.xxx}; niet volledig zichtbaar
+		assertArrayEquals(new float[] {1024,1024}, calc.centerOfCircle(list1, bigCamera1) ,(float) 2);//berekende positie: {1023.5,1023.5}, straal: 299.0693 ; volledig zichtbaar
+		assertArrayEquals(new float[] {2200,200}, calc.centerOfCircle(list2, bigCamera2) ,(float) 2);//berekende positie: {2200.0193,199.51358}, straal: 599.48206; niet volledig zichtbaar
 	}
 	
 	@Test(expected = EmptyPositionListException.class)
