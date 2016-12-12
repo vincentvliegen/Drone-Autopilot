@@ -22,16 +22,16 @@ public class CorrectHeight extends Correct{
 		}
 		else if((this.getDrone().getPitch() > 0 && tanVA <= 1.2*tanPitch && tanVA >= tanPitch && tanVA!=tanPitch)){
 			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*0.9));
-			System.out.println("Lagere thurst");
+			//System.out.println("Lagere thurst");
 		}else if((this.getDrone().getPitch() > 0 && tanVA <= tanPitch && tanVA >= 0.8*tanPitch && tanVA!=tanPitch)){
 			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*1.1));
-			System.out.println("Hogere thurst");
+			//System.out.println("Hogere thurst");
 		}else if( (this.getDrone().getPitch() < 0 && tanVA >= 1.2*tanPitch && tanVA <= tanPitch && tanVA!=tanPitch)){
 			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*1.1));
-			System.out.println("Hogere thurst negatief");
+			//System.out.println("Hogere thurst negatief");
 		}else if( (this.getDrone().getPitch() < 0 && tanVA >= tanPitch && tanVA <= 0.8*tanPitch && tanVA!=tanPitch)){
 			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*0.9));
-			System.out.println("Lagere thurst negatief");
+			//System.out.println("Lagere thurst negatief");
 		}else if ((this.getDrone().getPitch() > 0 && tanVA < 0.8*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA < 1.2*tanPitch)) {
 			this.getHeightPI().resetSetpoint(tanVA);
 			float output = this.getHeightPI().calculateRate((float) Math.tan(Math.toRadians(this.getDrone().getPitch())), this.getDrone().getCurrentTime());

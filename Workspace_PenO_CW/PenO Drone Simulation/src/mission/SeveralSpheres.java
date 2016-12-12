@@ -68,10 +68,10 @@ public class SeveralSpheres extends Mission {
 			}
 			
 			if(isFirstOrbAcquired()){
-				System.out.println("firstOrb " + this.getClosestOrbs().getColorFirstOrb());
+				//System.out.println("firstOrb " + this.getClosestOrbs().getColorFirstOrb());
 			}
 			if(isSecondOrbAcquired()){
-				System.out.println("secondOrb " + this.getClosestOrbs().getColorSecondOrb());
+				//System.out.println("secondOrb " + this.getClosestOrbs().getColorSecondOrb());
 			}
 		}
 	}
