@@ -80,9 +80,9 @@ public class AvoidObstacles {
 	public HashMap<Integer, ArrayList<ArrayList<int[]>>> obstacleCoordinates(){
 		HashMap<Integer, ArrayList<ArrayList<int[]>>> hashMapOfColorsBoth = new HashMap<Integer, ArrayList<ArrayList<int[]>>>();
 		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
-		HashMap<Integer, ArrayList<int[]>> hashMapOfColorsLeft = this.getImageCalculations().getPixelsOfEachColor();
+		HashMap<Integer, ArrayList<int[]>> hashMapOfColorsLeft = this.getImageCalculations().getGreyPixels();
 		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getRightCamera());
-		HashMap<Integer, ArrayList<int[]>> hashMapOfColorsRight = this.getImageCalculations().getPixelsOfEachColor();
+		HashMap<Integer, ArrayList<int[]>> hashMapOfColorsRight = this.getImageCalculations().getGreyPixels();
 		
 		//samenvoegen L en R coordinaten van zelfde obstakels
 		for(int color: hashMapOfColorsLeft.keySet()){
@@ -93,26 +93,8 @@ public class AvoidObstacles {
 				hashMapOfColorsBoth.put(color, both);
 			}
 		}
-		
-		for(int color : hashMapOfColorsBoth.keySet()){
-			int[] RGB = this.colorIntToRGB(color);
-			if (!(RGB[0] == RGB[1] && RGB[1] == RGB[2])){
-				hashMapOfColorsBoth.remove(color,hashMapOfColorsBoth.get(color));
-			}
-		}
 		return hashMapOfColorsBoth;
-	}
-	
-	
-	//conversie int color naar leesbaar (R,G,B) formaat
-	public int[] colorIntToRGB(int color){
-		int [] RGB = {0,0,0};
-		/*B*/RGB[2] = color % 256;
-		/*G*/RGB[1] = (color / 256) % 256;
-		/*R*/RGB[0] = color / (256*256);
-		return RGB;
-	}
-	
+	}	
 	
 	//////////Getters & Setters//////////
  	
