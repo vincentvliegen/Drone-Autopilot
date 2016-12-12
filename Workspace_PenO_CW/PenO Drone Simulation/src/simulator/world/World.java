@@ -159,9 +159,12 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		// translate camera.
 		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
 			movement.update((float)checkTimePassed());
-			getCurrentCamera().setEyeX((float)movement.getX()); 
-			getCurrentCamera().setEyeY((float)movement.getY()); 
-			getCurrentCamera().setEyeZ((float)movement.getZ());
+			this.getCurrentCamera().setEyeX((float)movement.getX() + this.getCurrentCamera().getStartEyeX()); 
+			this.getCurrentCamera().setEyeY((float)movement.getY() + this.getCurrentCamera().getStartEyeY()); 
+			this.getCurrentCamera().setEyeZ((float)movement.getZ() + this.getCurrentCamera().getStartEyeZ());
+			this.getCurrentCamera().setLookAtX((float)movement.getX() + this.getCurrentCamera().getStartLookAtX());
+			this.getCurrentCamera().setLookAtY((float)movement.getY() + this.getCurrentCamera().getStartLookAtY());
+			this.getCurrentCamera().setLookAtZ((float)movement.getZ() + this.getCurrentCamera().getStartLookAtZ());
 		}
 
 		for (WorldObject object: getWorldObjectList()){
@@ -467,5 +470,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	public void setWindSpeedZ(double value) {
 		zWindSpeed = value;
+	}
+	
+	public static KeyboardMovement getMovement() {
+		return movement;
 	}
 }

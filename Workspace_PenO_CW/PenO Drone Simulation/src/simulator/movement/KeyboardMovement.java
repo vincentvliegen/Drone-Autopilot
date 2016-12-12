@@ -76,22 +76,22 @@ public class KeyboardMovement implements KeyListener{
 	
 	public void update(float dt){
 		if(right){
-			z -= 1*dt;
-		}
-		if(left){
 			z += 1*dt;
 		}
-		if(up){
-			y -= 1*dt;
+		if(left){
+			z -= 1*dt;
 		}
-		if(down){
+		if(up){
 			y += 1*dt;
 		}
+		if(down){
+			y -= 1*dt;
+		}
 		if(front){
-			x -= 1*dt;
+			x += 1*dt;
 		}
 		if(back){
-			x += 1*dt;
+			x -= 1*dt;
 		}
 		if(rotateUp){
 			 rotateX -=10*dt;
