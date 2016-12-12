@@ -161,8 +161,8 @@ public class ImageCalculations {
 		float xavg = 0;
 		float yavg = 0;
 		for (int i = 0; i < AllPoints.size(); i++) {
-			xavg += listOfPixelCoordinates.get(i)[0];
-			yavg += listOfPixelCoordinates.get(i)[1];
+            xavg += AllPoints.get(i)[0];
+            yavg += AllPoints.get(i)[1];
 		}
 		xavg = xavg / N;
 		yavg = yavg / N;
