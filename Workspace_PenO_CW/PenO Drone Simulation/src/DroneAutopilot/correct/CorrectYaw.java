@@ -19,7 +19,7 @@ public class CorrectYaw extends Correct{
 			this.setYawStarted(false);
 			this.getDrone().setYawRate(0);
 		}
-		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) < Correct.getUpperboundary()) {
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) < Correct.getUnderboundary()) {
 			if(!this.isYawStarted()){
 				this.getYawPI().resetSetpoint(0);
 				this.setYawStarted(true);
