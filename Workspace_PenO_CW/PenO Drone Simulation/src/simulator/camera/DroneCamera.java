@@ -71,22 +71,22 @@ public class DroneCamera extends GeneralCamera implements Camera {
 	public void updateDroneCamera() {
 		drone.createRotateMatrix();
 		
-		if (this.place.equals(DroneCameraPlace.MIDDLE)) {
-			System.out.println("--------------------");
-			System.out.println("EyeX " + getEyeX());
-			System.out.println("EyeY " + getEyeY());
-			System.out.println("EyeZ " + getEyeZ());
-			System.out.println("LookX " + getLookAtX());
-			System.out.println("LookY " + getLookAtY());
-			System.out.println("LookZ " + getLookAtZ());
-			System.out.println("UpX " + getUpX());
-			System.out.println("UpY " + getUpY());
-			System.out.println("UpZ " + getUpZ());
-			System.out.println("StartX " + drone.getRotateMatrix().get(3)*getStartEyeX());
-			System.out.println("StartY " + drone.getRotateMatrix().get(4)*getStartEyeY());
-			System.out.println("StartZ " + drone.getRotateMatrix().get(5)*getStartEyeZ());
-			System.out.println("---------------------");
-		}
+//		if (this.place.equals(DroneCameraPlace.MIDDLE)) {
+//			System.out.println("--------------------");
+//			System.out.println("EyeX " + getEyeX());
+//			System.out.println("EyeY " + getEyeY());
+//			System.out.println("EyeZ " + getEyeZ());
+//			System.out.println("LookX " + getLookAtX());
+//			System.out.println("LookY " + getLookAtY());
+//			System.out.println("LookZ " + getLookAtZ());
+//			System.out.println("UpX " + getUpX());
+//			System.out.println("UpY " + getUpY());
+//			System.out.println("UpZ " + getUpZ());
+//			System.out.println("StartX " + drone.getRotateMatrix().get(3)*getStartEyeX());
+//			System.out.println("StartY " + drone.getRotateMatrix().get(4)*getStartEyeY());
+//			System.out.println("StartZ " + drone.getRotateMatrix().get(5)*getStartEyeZ());
+//			System.out.println("---------------------");
+//		}
 		
 		setEyeX((float) (getStartEyeX() * drone.getRotateMatrix().get(0)
 				+ getStartEyeY() * drone.getRotateMatrix().get(1) + getStartEyeZ() * drone.getRotateMatrix().get(2) + drone.getPosition()[0]));
