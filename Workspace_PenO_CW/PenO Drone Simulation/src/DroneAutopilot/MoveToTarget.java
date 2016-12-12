@@ -80,69 +80,26 @@ public class MoveToTarget {
 		this.getYawCorrector().correctYaw(this.getCogL(), this.getCogR());
 		this.getHeightCorrector().correctHeight(this.getCogL(), this.getCogR());
 		this.getPhysicsCalculations().updateAccSpeed(this.getCogL());
-		if (this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) <= 2) {
-			this.getPitchCorrector().hover();
-            this.setPitchStarted(false);
+		//System.out.println("dist: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
+		//System.out.println("setpoint1: " + this.getDistancePI().getSetpoint());
+		if ( !this.getPitchStarted()) {
+			this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.4f);
+			this.getDrone().setPitchRate(0);
+			this.setPitchStarted(true);
 		} else {
-			// System.out.println("dist" +
-			// this.getPhysicsCalculations().getDistance(cogL, cogR));
-			// System.out.println("setpoitn" +
-			// this.getDistancePI().getSetpoint());
-			if (Math.abs(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR())
-					- this.getDistancePI().getSetpoint()) > 0.2f) {
-				this.getDistancePI().resetSetpoint(
-						this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.1f);
-				// System.out.println("to far from target");
-				this.getDrone().setPitchRate(0);
-				this.setPitchStarted(true);
-			}
-			if (this.getDrone().getPitch() > 0 && !this.getPitchStarted()) {
-				float newTarget = this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.1f;
-				if (newTarget < 1) {
-					// System.out.println("closer than 1");
-					this.getDistancePI().resetSetpoint(1f);
-				} else {
-					this.getDistancePI().resetSetpoint(newTarget);
-				}
-				this.getDrone().setPitchRate(0);
-				this.setPitchStarted(true);
-			} else {
-				float output = -this.getDistancePI().calculateRate(
-						this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()),
-						this.getDrone().getCurrentTime());
-				// this.updategraphPI((int) (this.getDrone().getCurrentTime()),
-				// (int) (this.getPhysicsCalculations().getDistance(cogL,
-				// cogR))*10);
-				this.getDrone().setPitchRate(output);
-				// TODO als snelheid meerdere bollen oploopt, dit aanpassen naar
-				// this.getDrone().getPitch()<0.1
-				if (output < 0) {
-					this.setPitchStarted(false);
-				}
+			float output = -this.getDistancePI().calculateRate(
+					this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()),
+					this.getDrone().getCurrentTime());
+			// this.updategraphPI((int) (this.getDrone().getCurrentTime()),
+			// (int) (this.getPhysicsCalculations().getDistance(cogL,
+			// cogR))*10);
+			this.getDrone().setPitchRate(output);
+			//System.out.println("Pitch: " + this.getDrone().getPitch());
+			if (this.getDrone().getPitch()<0) {
+				this.setPitchStarted(false);
 			}
 		}
-
-		// System.out.println("remafstand: " +
-		// this.getPhysicsCalculations().getDecelerationDistance());
-		// System.out.println("distance: " +
-		// this.getPhysicsCalculations().getDistance(cogL, cogR));
-
-		// if-statement die deceleration uitschakelt als 1.1 of 1.2 niet
-		// if(this.getGUI().lastOrbEnabled){
-		// if (this.getPhysicsCalculations().getDistance(cogL, cogR) <=
-		// this.getPhysicsCalculations().getDecelerationDistance()) {
-		// this.startDeceleration(cogL,cogR);
-		// deceleration = true;
-		// }
-		//
-		// if(Math.abs(this.getPhysicsCalculations().getSpeed())<=0.3 &&
-		// deceleration){
-		// this.hover();
-		// }
-		// else if(deceleration){
-		// this.startDeceleration(cogL, cogR);
-		// }}
-
+		
 	}
 
 	public void startDeceleration() {
