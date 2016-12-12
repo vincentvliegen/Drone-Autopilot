@@ -451,21 +451,21 @@ public class SimulationDrone extends WorldObject implements Drone{
 	public float getMaxPitchRate() {
 		if (getWorld() instanceof WorldParser)
 			return (float) getWorld().getParser().getMaxPitchRate();
-		return 90f;
+		return 720f;
 	}
 
 	@Override
 	public float getMaxRollRate() {
 		if (getWorld() instanceof WorldParser)
 			return (float) getWorld().getParser().getMaxRollRate();
-		return 90f;
+		return 720f;
 	}
 
 	@Override
 	public float getMaxYawRate() {
 		if (getWorld() instanceof WorldParser)
 			return (float) getWorld().getParser().getMaxYawRate();
-		return 90f;
+		return 720f;
 	}
 
 	@Override
