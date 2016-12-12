@@ -56,4 +56,10 @@ public class Sphere extends WorldObject{
 		return color;
 	}
 	
+	public void setPosition(float[] pos) {
+		position[0] = pos[0];
+		position[1] = pos[1];
+		position[2] = pos[2];
+	}
+	
 }
