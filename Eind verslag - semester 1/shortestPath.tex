@@ -1,12 +1,12 @@
 \noindent
-Wanneer de drone een traject moet afleggen tussen meerdere bollen, maken we gebruik van een algortime dat het kortste pad bepaalt, zodat dit effici\"ent kan gebeuren. Om een zo goed mogelijke benadering te maken van het kortste pad, is het het beste om al vanaf het begin zoveel mogelijk bollen in het algoritme op te nemen. Echter, bij een grote groep bollen zal dit voor extra vertraging zorgen door de vele berekeningen. Daarom gaat het algoritme altijd maar maximaal de twee dichtste bollen berekenen.
+Wanneer de drone een traject moet afleggen tussen meerdere bollen, bepaalt een algortime het kortste pad, zodat het afleggen ervan effici\"ent kan gebeuren. Om een zo goed mogelijke benadering te maken van het kortste pad, is het het beste om al vanaf het begin zoveel mogelijk bollen in het algoritme op te nemen. Echter, bij een grote groep bollen zal dit voor extra vertraging zorgen door de vele berekeningen. Daarom gaat het algoritme altijd maar maximaal de twee dichtste bollen berekenen.
 \\
 \\
-Het algoritme bestaat uit drie grote onderdelen: het zoeken naar bollen, het berekenen van de eerste twee bollen en het herberekenen van deze bollen.
+Het algoritme bestaat uit twee grote onderdelen: het berekenen van de eerste twee bollen en het herberekenen van deze bollen.
 \\
-Wanneer er geen bollen in beeld zijn, zal de Autopilot de omgeving laten scannen. Dit zal hij doen zolang er geen bol in beeld is.
+Om het algoritme te kunnen starten, moeten er gekleurde bollen in beeld zijn. Zolang dit niet het geval is, zal de drone de wereld afscannen.
 \\
-Wanneer er voor de eerste keer een bol in beeld komt, stelt de Autopilot een lijst op van alle pixels per kleur. Hieruit bewaart het algoritme de n grootste groepen pixels en berekent het voor elk van deze geselecteerde bollen de afstand. De dichtstbijzijnde bol wordt hierbij ingesteld als eerste doel. Vervolgens bepaalt de Autopilot de afstanden tussen deze eerste bol en de overige n-1 bollen. Hieruit kan de tweede bol worden afgeleid. Indien er slechts \'e\'en bol in zicht is, gaat de Autopilot niet op zoek naar een tweede. Hij vliegt eerst naar de gevonden bol, vooraleer hij andere bollen gaat zoeken.
+Wanneer er voor de eerste keer een bol in beeld komt, stelt de Autopilot een lijst op van alle pixels per kleur. Hiervan bewaart het algoritme de n grootste groepen pixels en berekent het voor elk van deze geselecteerde bollen de afstand. De dichtstbijzijnde bol wordt hierbij ingesteld als eerste doel. Vervolgens bepaalt de Autopilot de afstanden tussen deze eerste bol en de overige n-1 bollen. Hieruit kan de tweede bol worden afgeleid. Indien er slechts \'e\'en bol in zicht is, gaat de Autopilot niet op zoek naar een tweede. Hij vliegt eerst naar de gevonden bol, vooraleer hij andere bollen gaat zoeken.
 \\
 Wanneer de drone aan het vliegen is, richting de eerste bol, herberekent de Autopilot op regelmatige tijdstippen de eerste en tweede bol. Indien er een bol dichterbij ligt dan de huidige eerste bol, zal deze de nieuwe eerste bol worden en wordt de overeenkomstige tweede bol ook opnieuw berekend. Indien er een bol dichter ligt bij de eerste bol dan de huidige tweede, zal die ook de huidige vervangen.
 \\
