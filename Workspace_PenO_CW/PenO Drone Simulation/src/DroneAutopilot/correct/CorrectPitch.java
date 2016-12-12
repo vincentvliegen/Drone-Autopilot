@@ -22,14 +22,12 @@ public class CorrectPitch extends Correct{
 			float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
 			this.getDrone().setPitchRate(Math.max(output,-this.getDrone().getMaxPitchRate()));
-			System.out.println("output hover: " + output);
 			float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 			this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 		} else if (this.getDrone().getPitch() < -0.1) {
 			float output = this.getPitchPI().calculateRate(this.getDrone().getPitch(), this.getDrone().getCurrentTime());
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getDrone().getPitch())*10);
 			this.getDrone().setPitchRate(Math.min(output,this.getDrone().getMaxPitchRate()));
-			System.out.println("output hover2: " + output);
 		} else {
 			//System.out.println("hover recht");
 			this.getDrone().setPitchRate(0);
