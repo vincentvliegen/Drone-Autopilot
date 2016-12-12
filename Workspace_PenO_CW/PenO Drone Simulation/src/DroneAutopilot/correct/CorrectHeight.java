@@ -20,12 +20,18 @@ public class CorrectHeight extends Correct{
 		if(tanVA==tanPitch){
 			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)));
 		}
-		if((this.getDrone().getPitch() > 0 && tanVA <= 1.2*tanPitch && tanVA >= 0.8*tanPitch && tanVA!=tanPitch)){
-			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*0.9));
-			//System.out.println(this.getPhysicsCalculations().getThrust(cogL)*0.9);
-		}else if( (this.getDrone().getPitch() < 0 && tanVA >= 1.2*tanPitch && tanVA <= 0.8*tanPitch && tanVA!=tanPitch)){
-			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*1.1));
-			//System.out.println(this.getPhysicsCalculations().getThrust(cogL)*1.1);
+		else if((this.getDrone().getPitch() > 0 && tanVA <= 1.2*tanPitch && tanVA >= tanPitch && tanVA!=tanPitch)){
+			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*0.8));
+			//System.out.println("Lagere thurst");
+		}else if((this.getDrone().getPitch() > 0 && tanVA <= tanPitch && tanVA >= 0.8*tanPitch && tanVA!=tanPitch)){
+			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*1.2));
+			//System.out.println("Hogere thurst");
+		}else if( (this.getDrone().getPitch() < 0 && tanVA >= 1.2*tanPitch && tanVA <= tanPitch && tanVA!=tanPitch)){
+			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*0.8));
+			//System.out.println("Lagere thurst");
+		}else if( (this.getDrone().getPitch() < 0 && tanVA >= tanPitch && tanVA <= 0.8*tanPitch && tanVA!=tanPitch)){
+			this.getDrone().setThrust((float) (this.getPhysicsCalculations().getThrust(cogL)*1.2));
+			//System.out.println("Hogere thurst");
 		}else if ((this.getDrone().getPitch() > 0 && tanVA < 0.8*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA < 1.2*tanPitch)) {
 			this.getHeightPI().resetSetpoint(tanVA);
 			float output = this.getHeightPI().calculateRate((float) Math.tan(Math.toRadians(this.getDrone().getPitch())), this.getDrone().getCurrentTime());
@@ -35,7 +41,7 @@ public class CorrectHeight extends Correct{
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
 			//System.out.println("error: " + (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))));
 			this.getDrone().setThrust(Math.max(this.getPhysicsCalculations().getThrust(cogL) + output, -this.getDrone().getMaxThrust()));
-			System.out.println((this.getPhysicsCalculations().getThrust(cogL) + output));
+			//System.out.println((this.getPhysicsCalculations().getThrust(cogL) + output));
 		}else if ((this.getDrone().getPitch() > 0 && tanVA > 1.2*tanPitch) || (this.getDrone().getPitch() < 0 && tanVA > 0.8*tanPitch)){
 			this.getHeightPI().resetSetpoint(tanVA);
 			float output = this.getHeightPI().calculateRate((float) Math.tan(Math.toRadians(this.getDrone().getPitch())), this.getDrone().getCurrentTime());
@@ -45,7 +51,7 @@ public class CorrectHeight extends Correct{
 			//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))*10));
 			//System.out.println("error: " + (this.getPhysicsCalculations().getDepth(cogL,cogR)*Math.tan(Math.toRadians(this.getPhysicsCalculations().verticalAngleDeviation(cogL)))));
 			this.getDrone().setThrust(Math.min(this.getPhysicsCalculations().getThrust(cogL) + output, this.getDrone().getMaxThrust()));
-			System.out.println((this.getPhysicsCalculations().getThrust(cogL) + output));
+			//System.out.println((this.getPhysicsCalculations().getThrust(cogL) + output));
 		}	
 	}
 
