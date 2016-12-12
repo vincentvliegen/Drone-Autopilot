@@ -1,90 +1,12 @@
 \noindent {\em Auteur: Jef Versyck}\\
-\\
-Het relatief assenstelsel heeft als oorsprong het centrum van de drone en is zo georiënteerd dat de drone kijkt in de richting van de positieve X-as, met de Y-as naar boven en de Z-as naar rechts gericht. Het assenstelsel ondergaat dezelfde translaties en rotaties als de drone.
-\\
-\\
-De drone kan drie bewegingen uitvoeren: yaw \(Y\), roll \(R\) en pitch \(P\). De yaw is een negatieve rotatie rond de Y-as, de roll is een positieve rotatie rond de X'-as \footnote{X-as van  het relatieve assenstelsel na yaw beweging} en de pitch is een negatieve rotatie rond de Z''-as \footnote{Z-as van het relatieve assenstelsel na yaw en roll beweging}. Er bestaat een verschil tussen de huidige roll en pitch die de drone heeft op een gegeven moment en de yaw, roll en pitch die hij moet uitvoeren om in die positie te geraken.  
-\\
-\\
-Door de volgorde van de drie rotaties onstaat er een specifieke rotatiematrix. Met behulp van deze rotatiematrix kunnen de posities van de camera's van de drone bepaald worden. Ook kunnen we hiermee de veranderingen van yaw, roll en pitch berekenen. De verandering van de pitch is immers afhankelijk van de roll: hoe groter de roll, hoe trager de pitch zal veranderen.
-\\
-De bekomen rotatiematrix: 
-\begin{equation*}
-R = 
-\begin{bmatrix}
-\cos(Y)\cos(P) -\sin(Y)\sin(R)\sin(P) & \sin(P)\cos(R) & -\sin(Y)\cos(P) - \cos(Y)\sin(P)\sin(R)\\
--\cos(Y)\sin(P) - \cos(P)\sin(R)\sin(Y) & \cos(R)\cos(P) & \sin(Y)\sin(P) - \cos(P)\cos(Y)\sin(R) \\ 
-\sin(Y)\cos(R) & \sin(R) & \cos(R)\cos(Y)\\
-\end{bmatrix} \label{rotatiematrix}
-\end{equation*}
-\\
-\\
-De veranderingen van yaw, roll en pitch steunen op het volgende principe:
-\begin{equation*}
-R\textsuperscript{-1} \cdot R \cdot x = x \label{rotatieBewegingVergelijking}
-\end{equation*}
-met \(R\) de transformatiematrix, \(R\textsuperscript{-1}\) de inverse van de transformatiematrix en \(x\) de algemene beweging. Beschouw \(R \cdot x\) als een relatieve beweging, zoals de verandering van de pitch. De relatieve beweging vermenigvuldigd met de inverse van de transformatiematrix geeft de algemene beweging die de drone moet uitvoeren voor zijn pitchverandering.
-\\
-\\
-Op elke drone werken er minstens twee krachten in: de zwaartekracht en de thrust van de drone. De zwaartekracht \(G\) is gedefiniëerd als een kracht volgens de negatieve Y-richting gelijk aan de massa van de drone maal de gravitatieconstante. De gravitatieconstante wordt als negatief beschouwd.
-\begin{equation*}
-\vec{G} = 
-\begin{Bmatrix}
-0 \\
-m \cdot g \\
-0
-\end{Bmatrix} \label{zwaartekracht}
-\end{equation*}
-\\
-De thrust \(T\) daarentegen is een kracht afhankelijk van de huidige rotaties van de drone. Daarom zal deze vermenigvuldigd worden met de rotatiematrix. Oorspronkelijk staat deze kracht enkel volgens de positieve Y-richting. 
-\\
-\begin{equation*}
-\vec{T} =
-\begin{Bmatrix}
-T \cos(R) \sin(P) \\
-T \cos(R)\cos(P)\\
-T \sin(R)
-\end{Bmatrix} \label{thrustkracht}
-\end{equation*}
-\\
-Een derde kracht die kan voorkomen, is de drag \(D\). Deze kracht is afhankelijk van de snelheid \(v\) van de drone en de a\"erodynamische coëfficiënt \(d\). De constante wordt als positief beschouwd.
-\begin{equation*}
-\vec{D} =
-\begin{Bmatrix}
--v\textsubscript{x} \cdot d \\
--v\textsubscript{y} \cdot d \\
--v\textsubscript{z} \cdot d 
-\end{Bmatrix} \label{dragkracht}
-\end{equation*}
-\\
-De windkracht \(W\) is een kracht met een veranderlijke richting en snelheid. Op voorbepaalde tijdstippen verandert de kracht van snelheid en van richting. De tijdstippen worden, net als de groottes van deze twee variabelen, bij het aanmaken van de simulator bepaald. De snelheden \(W_x, W_y\) en \(W_z\), vermenigvuldigd met de a\"erodynamische coëfficiënt \(d\), geeft ons de kracht in Newton. 
-\begin{equation*}
-\vec{W} = 
-\begin{Bmatrix}
-W\textsubscript{x} \cdot d \\
-W\textsubscript{y} \cdot d \\
-W\textsubscript{z} \cdot d 
-\end{Bmatrix} \label{windkracht}
-\end{equation*}
-\\
-Alle vectorkrachten die inwerken op de drone op een bepaald moment, worden bij elkaar opgeteld. De bekomen vector, gedeeld door de massa \(m\) van de drone, geeft de versnelling \(a\) van de drone op dat bepaald tijdstip, via de formule:
-\\
-\begin{equation*}
-\sum_{1}^{n} \vec{F} = m \cdot \vec{a} \label{krachtenevenwicht}
-\end{equation*}
-Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Merk wel op dat er geen constante versnelling is en de vergelijkingen dus telkens opnieuw opgemaakt moeten worden. De \(\delta\) is hier de tijdsverandering ten opzichte van de vorige positie- en snelheidsverandering.
-\\
-\begin{equation*}
-x\textsubscript{n} = (a\textsubscript{n-1} \cdot \delta\textsuperscript{2})/2 + v\textsubscript{n-1} \cdot \delta + x\textsubscript{n-1} \label{positie}
-\end{equation*}
-\begin{equation*}
-v\textsubscript{n} = a\textsubscript{n-1} \cdot \delta + v\textsubscript{n-1} \label{snelheid}
-\end{equation*}
-\\
-\\
-Twee objecten A en B botsen met elkaar indien de afstand tussen hun zwaartepuntscentra kleiner is dan de som van hun twee radii. Dit wordt gecontroleerd met behulp van de volgende formule:
-\begin{equation*}
-\sqrt{(x\textsubscript{A}-x\textsubscript{B})\textsuperscript{2} + (y\textsubscript{A} - y\textsubscript{B})\textsuperscript{2} + (z\textsubscript{A} - z\textsubscript{B})\textsuperscript{2}}  \le r\textsubscript{A} + r\textsubscript{B} \Rightarrow Botsing
-\end{equation*}
-\\
-\\
+\subsubsection{Assenstelsels}
+\label{subsec: Assenstelsels}
+\input{Assenstelsels.tex}
+
+\subsubsection{Krachten}
+\label{subsec: Krachten}
+\input{Krachten.tex}
+
+\subsubsection{Collision detection}
+\label{subsec: Collision detection}
+\input{CollisionDetection.tex}

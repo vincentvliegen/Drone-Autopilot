@@ -1,0 +1,55 @@
+\noindent
+Op elke drone werken er minstens twee krachten in: de zwaartekracht en de thrust van de drone. De zwaartekracht \(G\) is gedefiniëerd als een kracht volgens de negatieve Y-richting gelijk aan de massa van de drone maal de gravitatieconstante. De gravitatieconstante wordt als negatief beschouwd.
+\begin{equation*}
+\vec{G} = 
+\begin{Bmatrix}
+0 \\
+m \cdot g \\
+0
+\end{Bmatrix} \label{zwaartekracht}
+\end{equation*}
+\\
+De thrust \(T\) daarentegen is een kracht afhankelijk van de huidige rotaties van de drone. Daarom zal deze vermenigvuldigd worden met de rotatiematrix. Hieronder staat het resultaat van deze vermenigvuldiging. Oorspronkelijk staat deze kracht enkel volgens de positieve Y-richting. 
+\\
+\begin{equation*}
+\vec{T} =
+\begin{Bmatrix}
+T \cos(R) \sin(P) \\
+T \cos(R)\cos(P)\\
+T \sin(R)
+\end{Bmatrix} \label{thrustkracht}
+\end{equation*}
+\\
+Een derde kracht die kan voorkomen, is de drag \(D\). Deze kracht is afhankelijk van de snelheid \(v\) van de drone en de a\"erodynamische coëfficiënt \(d\). De constante wordt als positief beschouwd.
+\begin{equation*}
+\vec{D} =
+\begin{Bmatrix}
+-v\textsubscript{x} \cdot d \\
+-v\textsubscript{y} \cdot d \\
+-v\textsubscript{z} \cdot d 
+\end{Bmatrix} \label{dragkracht}
+\end{equation*}
+\\
+De windkracht \(W\) is een kracht met een veranderlijke richting en snelheid. Op voorbepaalde tijdstippen verandert de kracht van richting en  van snelheid. De tijdstippen worden, net als de grootte van deze twee variabelen, bij het aanmaken van de simulator bepaald. De snelheden \(W_x, W_y\) en \(W_z\), vermenigvuldigd met de a\"erodynamische coëfficiënt \(d\), geeft ons de kracht in Newton. 
+\begin{equation*}
+\vec{W} = 
+\begin{Bmatrix}
+W\textsubscript{x} \cdot d \\
+W\textsubscript{y} \cdot d \\
+W\textsubscript{z} \cdot d 
+\end{Bmatrix} \label{windkracht}
+\end{equation*}
+\\
+Alle vectorkrachten die inwerken op de drone op een bepaald moment, worden bij elkaar opgeteld. De bekomen vector, gedeeld door de massa \(m\) van de drone, geeft de versnelling \(a\) van de drone op dat bepaald tijdstip, via de formule:
+\\
+\begin{equation*}
+\sum_{1}^{n} \vec{F} = m \cdot \vec{a} \label{krachtenevenwicht}
+\end{equation*}
+Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Merk wel op dat er geen constante versnelling is en de vergelijkingen dus telkens opnieuw opgestelt moeten worden. De \(\delta\) is hier de tijdsverandering ten opzichte van de vorige positie- en snelheidsverandering.
+\\
+\begin{equation*}
+x\textsubscript{n} = (a\textsubscript{n-1} \cdot \delta\textsuperscript{2})/2 + v\textsubscript{n-1} \cdot \delta + x\textsubscript{n-1} \label{positie}
+\end{equation*}
+\begin{equation*}
+v\textsubscript{n} = a\textsubscript{n-1} \cdot \delta + v\textsubscript{n-1} \label{snelheid}
+\end{equation*}
