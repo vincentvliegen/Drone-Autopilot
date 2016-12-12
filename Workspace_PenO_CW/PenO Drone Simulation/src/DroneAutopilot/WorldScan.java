@@ -48,7 +48,6 @@ public class WorldScan {
 		//		System.out.println("length " + hashMapOfColors.size());
 		if(this.foundOrb(drone)){
 			//System.out.println("iets gevonden");
-			System.out.println("JEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEJ");
 			this.getDrone().setYawRate(0);
 			this.setFinished(true);
 			firstTime = false;
