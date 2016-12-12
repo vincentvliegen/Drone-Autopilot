@@ -221,9 +221,9 @@ public class SimulationDrone extends WorldObject implements Drone{
 		checkYawPitchRoll();
 
 		// Wind rotation stuff
-		this.yaw += getWorld().getWindRotationY() * timePassed;
+		this.yaw -= getWorld().getWindRotationY() * timePassed;
 		this.roll += getWorld().getWindRotationX() * timePassed;
-		this.pitch += getWorld().getWindRotationZ() * timePassed;
+		this.pitch -= getWorld().getWindRotationZ() * timePassed;
 		/*
 		System.out.println("--------------");
 		System.out.println("global pitch " + this.pitch);
