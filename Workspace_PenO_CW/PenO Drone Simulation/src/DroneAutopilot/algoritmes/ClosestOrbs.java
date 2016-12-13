@@ -1,10 +1,12 @@
-package DroneAutopilot;
+package DroneAutopilot.algoritmes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.parsers.FactoryConfigurationError;
 
+import DroneAutopilot.calculations.ImageCalculations;
+import DroneAutopilot.calculations.PhysicsCalculations;
 import exceptions.FirstOrbNotVisibleException;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;

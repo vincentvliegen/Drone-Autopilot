@@ -1,4 +1,4 @@
-package DroneAutopilot;
+package DroneAutopilot.calculations;
 
 import java.util.*;
 

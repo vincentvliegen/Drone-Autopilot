@@ -3,6 +3,9 @@ package DroneAutopilot;
 import java.util.ArrayList;
 
 import DroneAutopilot.GUI.GUI;
+import DroneAutopilot.algoritmes.WorldScan;
+import DroneAutopilot.calculations.ImageCalculations;
+import DroneAutopilot.calculations.PhysicsCalculations;
 import DroneAutopilot.controllers.DistanceController;
 import DroneAutopilot.correct.CorrectHeight;
 import DroneAutopilot.correct.CorrectPitch;

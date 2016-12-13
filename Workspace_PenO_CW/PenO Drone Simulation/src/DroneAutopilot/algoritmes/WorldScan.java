@@ -1,9 +1,10 @@
-package DroneAutopilot;
+package DroneAutopilot.algoritmes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import DroneAutopilot.calculations.ImageCalculations;
 import DroneAutopilot.controllers.RollController;
 import DroneAutopilot.correct.CorrectRoll;
 import p_en_o_cw_2016.Drone;

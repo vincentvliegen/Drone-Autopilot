@@ -1,11 +1,12 @@
 package DroneAutopilot.Tests;
 
-import DroneAutopilot.PhysicsCalculations;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import DroneAutopilot.calculations.PhysicsCalculations;
 
 public class PhysicsCalculationsTest {
 

@@ -1,7 +1,7 @@
 package DroneAutopilot.correct;
 
-import DroneAutopilot.PhysicsCalculations;
 import DroneAutopilot.GUI.GraphPI;
+import DroneAutopilot.calculations.PhysicsCalculations;
 import p_en_o_cw_2016.Drone;
 
 public abstract class Correct {

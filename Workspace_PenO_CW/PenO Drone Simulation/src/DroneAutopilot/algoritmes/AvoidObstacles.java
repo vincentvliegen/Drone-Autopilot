@@ -1,8 +1,10 @@
-package DroneAutopilot;
+package DroneAutopilot.algoritmes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import DroneAutopilot.calculations.ImageCalculations;
+import DroneAutopilot.calculations.PhysicsCalculations;
 import p_en_o_cw_2016.Drone;
 
 public class AvoidObstacles {

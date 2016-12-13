@@ -1,4 +1,4 @@
-package DroneAutopilot;
+package DroneAutopilot.calculations;
 
 import p_en_o_cw_2016.Drone;
 

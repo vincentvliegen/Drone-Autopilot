@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
-import DroneAutopilot.ImageCalculations;
 import exceptions.EmptyPositionListException;
 import exceptions.SmallCircleException;
 import p_en_o_cw_2016.Camera;
@@ -16,6 +15,8 @@ import p_en_o_cw_2016.Camera;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import DroneAutopilot.calculations.ImageCalculations;
 
 public class ImageCalculationsTest{
 

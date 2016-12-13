@@ -1,9 +1,9 @@
 package mission;
 
 import DroneAutopilot.MoveToTarget;
-import DroneAutopilot.WorldScan;
+import DroneAutopilot.algoritmes.ClosestOrbs;
+import DroneAutopilot.algoritmes.WorldScan;
 import exceptions.FirstOrbNotVisibleException;
-import DroneAutopilot.ClosestOrbs;
 import p_en_o_cw_2016.Drone;
 
 public class SeveralSpheres extends Mission {
