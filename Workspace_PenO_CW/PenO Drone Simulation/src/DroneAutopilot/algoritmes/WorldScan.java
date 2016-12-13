@@ -46,6 +46,8 @@ public class WorldScan {
 	}
 
 	public Set<Integer> scan(Drone drone){
+		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 		this.setFinished(false);
 		this.getRollCorrector().correctRoll();
 		//		System.out.println("length " + hashMapOfColors.size());
@@ -77,16 +79,16 @@ public class WorldScan {
 					if(timePassed <30){
 						this.getDrone().setPitchRate(-3);
 						//berekening thrust om horizontaal achterwaarts te vliegen afhankelijk van pitch.
-						float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+						gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 						this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 						timePassed += (this.getDrone().getCurrentTime() - this.getPreviousTime());
 					}else{
 						if(this.getDrone().getPitch()<= -0.01){
-							float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+							gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 							this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 							this.getDrone().setPitchRate(1);
 						}else{
-							float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+							gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 							this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 							this.getDrone().setPitchRate(0);
 							if(!this.foundOrb(drone)){
@@ -108,13 +110,13 @@ public class WorldScan {
 		ArrayList<Boolean> targetFound = this.checkCasesPixelsFound(leftCameraList, rightCameraList);
 
 		if(targetFound.get(0)==false && targetFound.get(1)==true){
-			this.rightCameraFoundTarget();
+			canStartFly = false;
 		}else if(targetFound.get(0)==true && targetFound.get(1)==false){
-			this.leftCameraFoundTarget();
+			canStartFly = false;
 		}else if(targetFound.get(0)==true && targetFound.get(1)==true){
 			canStartFly = true;
 		}else if(targetFound.get(0)==false && targetFound.get(1)==false){
-			this.noTargetFound();
+			canStartFly = false;
 		}
 		return canStartFly;
 	}
@@ -155,7 +157,7 @@ public class WorldScan {
 		this.getDrone().setYawRate(this.getYawrate());
 	}
 
-	
+
 	//////////Getters & Setters//////////
 
 	public final RollController getRollPI() {
