@@ -10,6 +10,8 @@ import javax.swing.event.ChangeListener;
 import simulator.world.World;
 import simulator.world.World11;
 import simulator.world.World12;
+import simulator.world.World13;
+import simulator.world.WorldParser;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -42,6 +44,10 @@ public class GUI extends JPanel {
 	private List<String> listNameButtons = new ArrayList<>();
 	private int MAXWIND = 10;
 	int MAXGRAVITY = 2000;
+	
+	private JLabel windX = new JLabel();
+	private JLabel windY = new JLabel();
+	private JLabel windZ = new JLabel();
 
 	/**
 	 * Create the panel.
@@ -199,7 +205,7 @@ public class GUI extends JPanel {
 		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 4);
 		add(panelGravity, constraintsPanelGravity);
 
-		if((world instanceof World11)==false || world instanceof World12){
+		if(world instanceof World13 || world instanceof World12){
 			// Panel WindNams & Sliders
 			GridBagConstraints constraintsPanelWindSlidersX = new GridBagConstraints();
 			JPanel panelWindSlidersX = new JPanel(new GridBagLayout());
@@ -284,6 +290,35 @@ public class GUI extends JPanel {
 			add(panelWindSlidersY, constraintsPanelWindSlidersY);
 			this.makeConstraints(constraintsPanelWindSlidersZ, new Insets(1, 1, 1, 1), 0, 7);
 			add(panelWindSlidersZ, constraintsPanelWindSlidersZ);
+		}
+		
+		if(world instanceof WorldParser) {
+			GridBagConstraints constraintsWindX = new GridBagConstraints();
+			GridBagConstraints constraintsWindY = new GridBagConstraints();
+			GridBagConstraints constraintsWindZ = new GridBagConstraints();
+			this.makeConstraints(constraintsWindX, new Insets(1, 1, 1, 1), 0, 5,1,5);
+			this.makeConstraints(constraintsWindY, new Insets(1, 1, 1, 1), 0, 6,1,5);
+			this.makeConstraints(constraintsWindZ, new Insets(1, 1, 1, 1), 0, 7,1,5);
+			Timer timerWind = new Timer(1000, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+
+						windX.setText("Wind speed X-axis: " + world.getWindSpeedX() );
+						windY.setText("Wind speed Y-axis: " + world.getWindSpeedY() );
+						windZ.setText("Wind speed Z-axis: " + world.getWindSpeedZ() );
+						add(windX, constraintsWindX);
+						add(windY, constraintsWindY);
+						add(windZ, constraintsWindZ);
+						windX.revalidate();
+						windX.repaint();
+						windY.revalidate();
+						windY.repaint();
+						windZ.revalidate();
+						windZ.repaint();
+					
+				}
+			});
+			timerWind.start(); 
 		}
 
 		//Add objects
