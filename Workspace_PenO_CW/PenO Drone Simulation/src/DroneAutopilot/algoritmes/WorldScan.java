@@ -66,8 +66,8 @@ public class WorldScan {
 			}else{
 				//System.out.println("yaw");
 				if(degreesTurned < 540){
-					this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
-					degreesTurned += this.getDrone().getMaxYawRate()/2 * (this.getDrone().getCurrentTime() - this.getPreviousTime());
+					this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/4);
+					degreesTurned += this.getDrone().getMaxYawRate()/4 * (this.getDrone().getCurrentTime() - this.getPreviousTime());
 					this.setPreviousTime(this.getDrone().getCurrentTime());
 				}else{
 					this.getDrone().setYawRate(0);
