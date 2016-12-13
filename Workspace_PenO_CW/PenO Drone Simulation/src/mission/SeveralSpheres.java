@@ -14,7 +14,7 @@ public class SeveralSpheres extends Mission {
 	private boolean firstTime;
 	private boolean firstOrbAcquired;
 	private boolean secondOrbAcquired;
-	private final static float distanceToArrival = 0.8f;// TODO afstellen, straal is 0.5
+	private final static float distanceToArrival = 0.6f;// TODO afstellen, straal is 0.5
 	private final WorldScan worldScan;
 	
 	public SeveralSpheres(MoveToTarget moveToTarget, Drone drone) {

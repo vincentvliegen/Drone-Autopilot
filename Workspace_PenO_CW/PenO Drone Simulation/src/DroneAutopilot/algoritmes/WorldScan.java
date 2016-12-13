@@ -65,7 +65,7 @@ public class WorldScan {
 				this.setPreviousTime(this.getDrone().getCurrentTime());
 			}else{
 				//System.out.println("yaw");
-				if(degreesTurned < 540){
+				if(degreesTurned < 630){
 					this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/4);
 					degreesTurned += this.getDrone().getMaxYawRate()/4 * (this.getDrone().getCurrentTime() - this.getPreviousTime());
 					this.setPreviousTime(this.getDrone().getCurrentTime());
