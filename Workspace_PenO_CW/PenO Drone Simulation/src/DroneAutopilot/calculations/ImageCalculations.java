@@ -17,6 +17,7 @@ public class ImageCalculations {
 
 	// Aantal punten om cirkel te berekenen.
 	public final static int minimalSizeCircumferenceCircle = 20;
+	public float radius;
 
 	private HashMap<Integer, ArrayList<int[]>> pixelsOfEachColor;
 	private HashMap<Integer, ArrayList<int[]>> greyPixels;
@@ -143,7 +144,7 @@ public class ImageCalculations {
 			sumY += listOfPixelCoordinates.get(i)[1];
 		}
 		cOG[0] = sumX / listOfPixelCoordinates.size();
-		cOG[1] = sumY / listOfPixelCoordinates.size();
+		cOG[1] = sumY / listOfPixelCoordinates.size();		
 		return cOG;
 	}
 
@@ -191,8 +192,8 @@ public class ImageCalculations {
 		vc = frac * (-Suv * (Suuu + Suvv) + Suu * (Svvv + Suuv));
 		float X = uc + xavg;
 		float Y = vc + yavg;
-		// float radius = (float) Math.sqrt(uc*uc+vc*vc+(Suu+Svv)/N);
-		// System.out.println(radius);
+		float radius = (float) Math.sqrt(uc*uc+vc*vc+(Suu+Svv)/N);
+		setRadius(radius);		
 		return new float[] { X, Y };
 	}
 
@@ -278,6 +279,15 @@ public class ImageCalculations {
 		this.greyPixels = greyPixels;
 	}
 
+	public float getRadius() {
+		return radius;
+	}
+
+	public void setRadius(float radius) {
+		this.radius = radius;
+	}
+
+	
 	// conversie int color naar leesbaar (R,G,B) formaat
 	// public int[] colorIntToRGB(int color){
 	// int [] RGB = {0,0,0};
