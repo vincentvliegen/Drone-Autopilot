@@ -20,11 +20,13 @@ public class WorldScan {
 	private float timePassed = 0;
 	private ImageCalculations imageCalculations;
 	private final CorrectRoll rollCorrector;
+	private final float yawrate;
 
 	public WorldScan(Drone drone){
 		this.setDrone(drone);
 		this.imageCalculations = new ImageCalculations();
 		this.rollCorrector = new CorrectRoll(drone);
+		this.yawrate = this.getDrone().getMaxYawRate()/4;
 	}
 
 	public boolean foundOrb(Drone drone){
@@ -66,8 +68,8 @@ public class WorldScan {
 			}else{
 				//System.out.println("yaw");
 				if(degreesTurned < 630){
-					this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/4);
-					degreesTurned += this.getDrone().getMaxYawRate()/4 * (this.getDrone().getCurrentTime() - this.getPreviousTime());
+					this.getDrone().setYawRate(this.getYawrate());
+					degreesTurned += this.getYawrate() * (this.getDrone().getCurrentTime() - this.getPreviousTime());
 					this.setPreviousTime(this.getDrone().getCurrentTime());
 				}else{
 					this.getDrone().setYawRate(0);
@@ -142,15 +144,15 @@ public class WorldScan {
 	}
 
 	public void noTargetFound() {
-		this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
+		this.getDrone().setYawRate(this.getYawrate());
 	}
 
 	public void leftCameraFoundTarget() {
-		this.getDrone().setYawRate(-this.getDrone().getMaxYawRate()/2);
+		this.getDrone().setYawRate(-this.getYawrate());
 	}
 
 	public void rightCameraFoundTarget() {
-		this.getDrone().setYawRate(this.getDrone().getMaxYawRate()/2);
+		this.getDrone().setYawRate(this.getYawrate());
 	}
 
 	
@@ -201,5 +203,9 @@ public class WorldScan {
 
 	public CorrectRoll getRollCorrector() {
 		return rollCorrector;
+	}
+
+	public float getYawrate() {
+		return yawrate;
 	}
 }
