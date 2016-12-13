@@ -1,5 +1,5 @@
 \noindent
-Op elke drone werken er minstens twee krachten in: de zwaartekracht en de thrust van de drone. De zwaartekracht \(G\) is gedefiniëerd als een kracht volgens de negatieve Y-richting gelijk aan de massa van de drone maal de gravitatieconstante. De gravitatieconstante wordt als negatief beschouwd.
+Op elke drone werken er minstens twee krachten in: de zwaartekracht en de thrust van de drone. De zwaartekracht \(G\) is gedefinieerd als een kracht volgens de negatieve Y-richting gelijk aan de massa van de drone maal de gravitatieconstante. De gravitatieconstante wordt als negatief beschouwd.
 \begin{equation*}
 \vec{G} = 
 \begin{Bmatrix}
@@ -20,7 +20,7 @@ T \sin(R)
 \end{Bmatrix} \label{thrustkracht}
 \end{equation*}
 \\
-Een derde kracht die kan voorkomen, is de drag \(D\). Deze kracht is afhankelijk van de snelheid \(v\) van de drone en de a\"erodynamische coëfficiënt \(d\). De constante wordt als positief beschouwd.
+Een derde kracht die kan voorkomen, is de drag \(D\). Deze kracht is afhankelijk van de snelheid \(v\) van de drone en de aerodynamische coëfficiënt \(d\). De constante wordt als positief beschouwd.
 \begin{equation*}
 \vec{D} =
 \begin{Bmatrix}
@@ -30,7 +30,7 @@ Een derde kracht die kan voorkomen, is de drag \(D\). Deze kracht is afhankelijk
 \end{Bmatrix} \label{dragkracht}
 \end{equation*}
 \\
-De windkracht \(W\) is een kracht met een veranderlijke richting en snelheid. Op voorbepaalde tijdstippen verandert de kracht van richting en  van snelheid. De tijdstippen worden, net als de grootte van deze twee variabelen, bij het aanmaken van de simulator bepaald. De snelheden \(W_x, W_y\) en \(W_z\), vermenigvuldigd met de a\"erodynamische coëfficiënt \(d\), geeft ons de kracht in Newton. 
+De windkracht \(W\) is een kracht met een veranderlijke richting en snelheid. Op bepaalde tijdstippen verandert de kracht van richting en  van snelheid. De tijdstippen worden, net als de grootte van deze twee variabelen, bij het aanmaken van de simulator bepaald. De snelheden \(W_x, W_y\) en \(W_z\), vermenigvuldigd met de aerodynamische coëfficiënt \(d\), geeft ons de kracht in Newton. 
 \begin{equation*}
 \vec{W} = 
 \begin{Bmatrix}
@@ -45,7 +45,7 @@ Alle vectorkrachten die inwerken op de drone op een bepaald moment, worden bij e
 \begin{equation*}
 \sum_{1}^{n} \vec{F} = m \cdot \vec{a} \label{krachtenevenwicht}
 \end{equation*}
-Ten slotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Merk wel op dat er geen constante versnelling is en de vergelijkingen dus telkens opnieuw opgestelt moeten worden. De \(\delta\) is hier de tijdsverandering ten opzichte van de vorige positie- en snelheidsverandering.
+Tenslotte kunnen via de snelheids- en positievergelijkingen de huidige snelheid en positie berekend worden. Merk wel op dat er geen constante versnelling is en de vergelijkingen dus telkens opnieuw opgesteld moeten worden. De \(\delta\) is hier de tijdsverandering ten opzichte van de vorige positie- en snelheidsverandering.
 \\
 \begin{equation*}
 x\textsubscript{n} = (a\textsubscript{n-1} \cdot \delta\textsuperscript{2})/2 + v\textsubscript{n-1} \cdot \delta + x\textsubscript{n-1} \label{positie}
