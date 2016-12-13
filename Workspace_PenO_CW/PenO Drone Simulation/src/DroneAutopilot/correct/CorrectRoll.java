@@ -7,11 +7,12 @@ public class CorrectRoll extends Correct{
 
 	private final RollController rollPI;
 	private boolean rollStarted;
+	private final float rollRate;
 
 	public CorrectRoll(Drone drone) {
 		super(drone);
 		this.rollPI = new RollController(1,1);
-		
+		this.rollRate = this.getDrone().getMaxRollRate();
 	}
 
 	public void correctRoll() {
@@ -26,7 +27,7 @@ public class CorrectRoll extends Correct{
 			}else{
 				float output = this.getRollPI().calculateRate(this.getDrone().getRoll(), this.getDrone().getCurrentTime());
 				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) this.getDrone().getRoll()*10);
-				this.getDrone().setRollRate(Math.max(output, -this.getDrone().getMaxYawRate()));
+				this.getDrone().setRollRate(Math.max(output, -this.getRollRate()));
 			}
 		}
 		else if (this.getDrone().getRoll() < Correct.getUnderboundary()){
@@ -36,7 +37,7 @@ public class CorrectRoll extends Correct{
 			}else{
 				float output = this.getRollPI().calculateRate(this.getDrone().getRoll(), this.getDrone().getCurrentTime());
 				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) this.getDrone().getRoll()*10);
-				this.getDrone().setRollRate(Math.min(output, this.getDrone().getMaxYawRate()));
+				this.getDrone().setRollRate(Math.min(output, this.getRollRate()));
 			}
 		}
 	}
@@ -54,5 +55,9 @@ public class CorrectRoll extends Correct{
 
 	public void setRollStarted(boolean rollStarted) {
 		this.rollStarted = rollStarted;
+	}
+
+	public float getRollRate() {
+		return rollRate;
 	}
 }
