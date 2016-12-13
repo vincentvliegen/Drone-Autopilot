@@ -10,7 +10,7 @@ public class CorrectRoll extends Correct{
 
 	public CorrectRoll(Drone drone) {
 		super(drone);
-		this.rollPI = new RollController(1,0);
+		this.rollPI = new RollController(1,1);
 		
 	}
 

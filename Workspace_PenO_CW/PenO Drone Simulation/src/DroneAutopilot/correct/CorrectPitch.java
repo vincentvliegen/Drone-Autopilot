@@ -10,7 +10,7 @@ public class CorrectPitch extends Correct{
 
 	public CorrectPitch(Drone drone) {
 		super(drone);
-		this.pitchPI = new PitchController(1,0);
+		this.pitchPI = new PitchController(1,1);
 	}
 
 	public void hover() {

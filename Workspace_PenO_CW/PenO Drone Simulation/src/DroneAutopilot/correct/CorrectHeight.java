@@ -9,7 +9,7 @@ public class CorrectHeight extends Correct{
 
 	public CorrectHeight(Drone drone) {
 		super(drone);
-		this.heightPI = new HeightController(1,0);
+		this.heightPI = new HeightController(1,1);
 	}
 
 	public void correctHeight(float[] cogL, float[] cogR){
