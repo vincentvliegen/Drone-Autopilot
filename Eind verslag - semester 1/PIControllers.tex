@@ -1,11 +1,11 @@
 \noindent
-Om een PI-controller te kunnen gebruiken, is het belangrijk om te weten wat het is en wat het doet. Zoals in \cite{website:PIDController} wordt aangegeven, fungeert de controller als een controlelus-feedback mechanisme. Dit systeem gaat proberen de fout op de meetwaarde te corrigeren. Het berekent namelijk continu de foutwaarde \(e(t)\) als het verschil tussen de correcte waarde en de gemeten waarde. Op basis van deze gegevens berekent de controller de nodige correctie.
+Om een PI-controller te kunnen gebruiken, is het belangrijk om te weten wat het is en wat het doet. Zoals in \cite{website:PIDController} wordt aangegeven, fungeert de controller als een controlelus-feedback mechanisme. Dit systeem gaat proberen de afwijking op de meetwaarde te corrigeren. Het berekent namelijk continu de foutwaarde \(e(t)\) als het verschil tussen de correcte waarde en de gemeten waarde. Op basis van deze gegevens berekent de controller de nodige correctie.
 \\
 \\
 Er is gekozen voor een PI-controller i.p.v. een PID-controller, aangezien die ook in de meeste re\"ele systemen gebruikt wordt. Bovendien is de term D (Derivative) heel gevoelig aan ruis en zou die een bijkomende moeilijkheid vormen om af te stellen.
 \\
 PI staat voor Proportional-Integral. Het P-deel zorgt ervoor dat het verschil in gewenste waarde en de gemeten waarde met een factor $K_p$ wordt versterkt. 
-I zorgt voor een constante sommatie van de fout en vergroot de correctiewaarde afhankelijk van hoelang er een fout bestaat tussen gemeten en gewenste waarde. Dit wordt met een factor $K_i$ versterkt. Deze constanten worden manueel bepaald door de reactie van de controller uit te plotten in grafieken en hun gedrag te optimaliseren door deze co\"effici\"enten aan te passen.
+I zorgt voor een constante sommatie van de afwijking en vergroot de correctiewaarde afhankelijk van hoelang er een afwijking bestaat tussen gemeten en gewenste waarde. Dit wordt met een factor $K_i$ versterkt. Deze constanten worden manueel bepaald door de reactie van de controller uit te plotten in grafieken en hun gedrag te optimaliseren door deze co\"effici\"enten aan te passen.
 \\
 \\
 De correctie kan berekend worden op basis van formule \ref{eq: PI}.
