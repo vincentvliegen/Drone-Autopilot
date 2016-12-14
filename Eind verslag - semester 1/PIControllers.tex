@@ -1,14 +1,14 @@
 \noindent
-Om een PI controller te kunnen gebruiken, is het belangrijk om te weten wat het is en wat het doet. Zoals in bron \cite{website:PIDController} wordt aangegeven, fungeert de controller als een controlelus-feedback mechanisme. Dit systeem gaat proberen de fout op de meetwaarde te corrigeren. Het berekent namelijk continu de foutwaarde \(e(t)\) als het verschil tussen de correcte waarde en de gemeten waarde. Op basis van deze gegevens berekent de controller de nodige correctie.
+Om een PI-controller te kunnen gebruiken, is het belangrijk om te weten wat het is en wat het doet. Zoals in \cite{website:PIDController} wordt aangegeven, fungeert de controller als een controlelus-feedback mechanisme. Dit systeem gaat proberen de fout op de meetwaarde te corrigeren. Het berekent namelijk continu de foutwaarde \(e(t)\) als het verschil tussen de correcte waarde en de gemeten waarde. Op basis van deze gegevens berekent de controller de nodige correctie.
 \\
 \\
-Er is gekozen voor een PI controller i.p.v. een PID controller, aangezien die ook in de meeste re\"ele systemen gebruikt wordt. Bovendien is de term D (Derivative) heel gevoelig aan ruis en zou die een bijkomende moeilijkheid vormen om af te stellen.
+Er is gekozen voor een PI-controller i.p.v. een PID-controller, aangezien die ook in de meeste re\"ele systemen gebruikt wordt. Bovendien is de term D (Derivative) heel gevoelig aan ruis en zou die een bijkomende moeilijkheid vormen om af te stellen.
 \\
-PI staat voor Proportional-Integral. Het P-deel zorgt ervoor dat het verschil in verlangde waarde en de gemeten waarde met een factor $K_p$ wordt versterkt. 
-I zorgt voor een constante sommatie van de fout en vergroot de correctiewaarde afhankelijk van hoelang er een fout bestaat tussen gemeten en verlangde waarde. Dit wordt met een factor $K_i$ versterkt. Deze constanten worden manueel bepaald door de reactie van de controller uit te plotten in grafieken en hun gedrag te optimaliseren door deze co\"effici\"enten aan te passen.
+PI staat voor Proportional-Integral. Het P-deel zorgt ervoor dat het verschil in gewenste waarde en de gemeten waarde met een factor $K_p$ wordt versterkt. 
+I zorgt voor een constante sommatie van de fout en vergroot de correctiewaarde afhankelijk van hoelang er een fout bestaat tussen gemeten en gewenste waarde. Dit wordt met een factor $K_i$ versterkt. Deze constanten worden manueel bepaald door de reactie van de controller uit te plotten in grafieken en hun gedrag te optimaliseren door deze co\"effici\"enten aan te passen.
 \\
 \\
-Tenslotte wordt de correctie dan op basis van formule \ref{eq: PI} berekend.
+De correctie kan berekend worden op basis van formule \ref{eq: PI}.
 \begin{equation} \label{eq: PI}
 	u(t) = K_p * e(t) + K_i * \int e(t) dt
 \end{equation}
@@ -17,12 +17,12 @@ Hier is \(u(t)\) de correctie, $K_p$ de proportional constante, $K_i$ de integra
 \\
 Voorgaande theorie wordt toegepast op dit project.
 \\
-Ten eerste bekijken we de roll controller. Hij heeft als doel de roll gelijk aan nul te houden. Dit is dan ook ineens de verlangde waarde. De controller begint slechts bij te sturen wanneer de gemeten roll waarde groter is dan \(0,2\degree\) in positieve of negatieve zin. Bijsturen gebeurt door de correctiewaarde als input te nemen voor de roll rate.
+Ten eerste wordt de roll-controller bekeken. Hij heeft als doel de roll gelijk aan nul te houden. Dit is dan ook ineens de gewenste waarde. De controller begint slechts bij te sturen wanneer de gemeten roll waarde groter is dan \(0.2\degree\) in positieve of negatieve zin. Bijsturen gebeurt door de correctiewaarde als input te nemen voor de rollrate.
 \\
-Vervolgens is er een yaw controller. Deze werkt enkel wanneer de doel bol in beeld is, aangezien hij een ori\"entatiepunt nodig heeft om de yaw te kunnen bepalen. De verlangde waarde is gelijk aan een horizontale afwijking $\alpha$ van nul graden. De controller gaat dit bijsturen op dezelfde manier als bij de roll controller.
+Vervolgens is er een yaw-controller. Deze werkt enkel wanneer het doel in beeld is, aangezien de drone een ori\"entatiepunt nodig heeft om de yaw te kunnen bepalen. De gewenste waarde is gelijk aan een horizontale afwijking $\alpha$ van nul graden. De controller gaat dit bijsturen op dezelfde manier als bij de roll-controller.
 \\
-De hoogte controller stelt de thrust waarde in en verschilt licht van de anderen doordat hij de correctiewaarde optelt bij de standaard waarde om de zwaartekracht tegen te gaan. Verder probeert hij de verticale afwijking naar nul te herleiden.
+De height-controller stelt de thrustwaarde in en verschilt licht van de anderen doordat hij de correctiewaarde optelt bij de standaard waarde om de zwaartekracht tegen te gaan. Verder probeert hij de verticale afwijking naar nul te herleiden.
 \\
-De pitch controller wordt gebruikt om zo snel mogelijk te kunnen hoveren en dus een pitch van nul te krijgen. Wederom op dezelfde manier als in voorgaande controllers.
+De pitch-controller wordt gebruikt om zo snel mogelijk te kunnen hoveren en dus een pitch van nul te krijgen. Dit gebeurt op dezelfde manier als voorgaande controllers.
 \\
-Tenslotte is er ook nog een afstandscontroller. Deze gaat proberen de afstand naar nul te reduceren met stappen van \(0.1\)m en helpt bij het voorwaarts vliegen om de pitchrate in te stellen, zoals eerder uitgelegd in sectie \ref{subsec: Vliegstrategie}.
+Ten slotte is er ook nog een distance-controller. Deze gaat proberen de afstand naar nul te reduceren met stappen van \(0.1\)m en helpt bij het voorwaarts vliegen om de pitchrate in te stellen, zoals uitgelegd in sectie \ref{subsec: Vliegstrategie}.
