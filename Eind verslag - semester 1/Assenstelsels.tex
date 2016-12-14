@@ -2,10 +2,10 @@
 Het relatief assenstelsel heeft het centrum van de drone als oorsprong en is zo georiënteerd dat de drone kijkt in de richting van de positieve X-as, met de Y-as naar boven en de Z-as naar rechts gericht. Het assenstelsel ondergaat dezelfde translaties en rotaties als de drone.
 \\
 \\
-De drone kan drie bewegingen uitvoeren: yaw \(Y\), roll \(R\) en pitch \(P\). De yaw is een negatieve rotatie rond de Y-as, de roll is een positieve rotatie rond de X'-as \footnote{X-as van  het relatieve assenstelsel na yaw beweging} en de pitch is een negatieve rotatie rond de Z''-as \footnote{Z-as van het relatieve assenstelsel na yaw en roll beweging}. Merk op dat er een verschil bestaat tussen de huidige roll en pitch die de drone heeft op een gegeven moment en de yaw, roll en pitch die hij moet uitvoeren om in die positie te geraken.  
+De drone kan drie bewegingen uitvoeren: yaw \(Y\), roll \(R\) en pitch \(P\). De yaw is een negatieve rotatie rond de Y-as, de roll is een positieve rotatie rond de X'-as \footnote{X-as van  het relatieve assenstelsel na yaw beweging} en de pitch is een negatieve rotatie rond de Z''-as \footnote{Z-as van het relatieve assenstelsel na yaw en roll beweging}. Merk op dat er een verschil bestaat tussen de huidige roll en pitch die de drone op een gegeven moment heeft, en de yaw, roll en pitch die hij moet uitvoeren, om in die positie te geraken.
 \\
 \\
-Door de volgorde van de drie rotaties onstaat er een specifieke rotatiematrix. Met behulp van deze rotatiematrix kunnen de posities van de camera's van de drone bepaald worden. Ook kunnen we hiermee de veranderingen van yaw, roll en pitch berekenen. De verandering van de pitch is immers afhankelijk van de roll: hoe groter de roll, hoe trager de pitch zal veranderen.
+Door de volgorde van de drie rotaties ontstaat er een specifieke rotatiematrix \cite{website:assenstelsel}. Met behulp van deze rotatiematrix kunnen de posities van de camera's van de drone bepaald worden. Ook kunnen we hiermee de veranderingen van yaw, roll en pitch berekenen. De verandering van de pitch is immers afhankelijk van de roll: hoe groter de roll, hoe trager de pitch zal veranderen.
 \\
 De bekomen rotatiematrix: 
 \begin{equation*}
@@ -22,4 +22,4 @@ De veranderingen van yaw, roll en pitch steunen op het volgende principe:
 \begin{equation*}
 M\textsuperscript{-1} \cdot M \cdot x = x \label{rotatieBewegingVergelijking}
 \end{equation*}
-met \(M\) de transformatiematrix, \(M\textsuperscript{-1}\) de inverse van de transformatiematrix en \(x\) de algemene beweging. Beschouw \(M \cdot x\) als een relatieve beweging, zoals de verandering van de pitch. De relatieve beweging vermenigvuldigd met de inverse van de transformatiematrix geeft de algemene beweging die de drone moet uitvoeren voor zijn pitchverandering.
+met \(M\) de rotatiematrix, \(M\textsuperscript{-1}\) de inverse van de rotatiematrix en \(x\) de algemene beweging. Beschouw \(M \cdot x\) als een relatieve beweging, zoals de verandering van de pitch. De relatieve beweging vermenigvuldigd met de inverse van de rotatiematrix geeft de algemene beweging die de drone moet uitvoeren voor zijn pitchverandering.
