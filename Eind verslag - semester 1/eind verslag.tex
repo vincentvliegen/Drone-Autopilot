@@ -18,6 +18,7 @@
 \usepackage{subcaption}
 \usepackage{amsmath,bm}
 \usepackage{gensymb}
+\usepackage{float}
 \usepackage[dutch]{babel}
 
 %%% PACKAGES %%%
@@ -127,6 +128,13 @@
 \subsection{Virtual Testbed}
 \input{testenVirtualTestbed.tex}
 
+
+% == Algemeen Resultaat == %
+\section{Algemeen Resultaat}
+\label{sec:AlgemeenResultaat}
+\input{AlgemeenResultaat.tex}
+
+
 % == BESLUIT == %
 \section*{Besluit}
 \label{sec:Besluit}
@@ -140,13 +148,20 @@
 % == APPENDICES == %
 \newpage\makeappendix
 
+\section{Klassendiagram}
+\label{App: AppendixKlassendiagram}
+\input{AppendixKlassendiagram.tex}
+\newpage
 \section{GUI}
-\label{App: AppendixA}
+\label{App: AppendixGUI}
 \input{AppendixGUI.tex}
 \newpage
 \section{Testen}
-\label{App: AppendixB}
+\label{App: AppendixTesten}
 \input{AppendixTesten.tex}
+\section{Planning}
+\label{App: AppendixPlanning}
+\input{AppendixPlanning.tex}
 %\section{MOET NOG WEG}
 %\input{finaleOpmerkingen.tex}
 

@@ -1,140 +1,222 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.9" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
   realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="DroneAutopilot.DroneAutopilotFactory" project="PenO Drone Simulation" 
-    file="/PenO Drone Simulation/src/DroneAutopilot/DroneAutopilotFactory.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="460" y="160"/>    
+  <class id="1" language="java" name="DroneAutopilot.algoritmes.AvoidObstacles" project="PenO Drone Simulation" 
+    file="/PenO Drone Simulation/src/DroneAutopilot/algoritmes/AvoidObstacles.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="675" y="23"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="DroneAutopilot.DroneAutopilot" project="PenO Drone Simulation" 
-    file="/PenO Drone Simulation/src/DroneAutopilot/DroneAutopilot.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="52" width="214" x="570" y="120"/>    
-    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="false" package="false" protected="false" private="false" static="true"/>    
-    </display>  
-  </class>  
-  <class id="3" language="java" name="DroneAutopilot.MoveToTarget" project="PenO Drone Simulation" 
-    file="/PenO Drone Simulation/src/DroneAutopilot/MoveToTarget.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="45" width="267" x="585" y="225"/>    
-    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" 
+  <class id="2" language="java" name="DroneAutopilot.algoritmes.WorldScan" project="PenO Drone Simulation" 
+    file="/PenO Drone Simulation/src/DroneAutopilot/algoritmes/WorldScan.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="569" y="290"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
-      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="DroneAutopilot.ImageCalculations" project="PenO Drone Simulation" 
+  <class id="3" language="java" name="DroneAutopilot.algoritmes.ClosestOrbs" project="PenO Drone Simulation" 
+    file="/PenO Drone Simulation/src/DroneAutopilot/algoritmes/ClosestOrbs.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="679" y="506"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="DroneAutopilot.calculations.ImageCalculations" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/DroneAutopilot/calculations/ImageCalculations.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="43" width="278" x="656" y="431"/>    
-    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" 
+    <position height="-1" width="-1" x="275" y="234"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="false" package="false" protected="false" private="false" static="false"/>      
-      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="DroneAutopilot.PhysicsCalculations" project="PenO Drone Simulation" 
+  <class id="5" language="java" name="DroneAutopilot.calculations.PhysicsCalculations" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/DroneAutopilot/calculations/PhysicsCalculations.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="40" width="238" x="449" y="341"/>    
-    <display autosize="false" stereotype="false" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="false" package="false" protected="false" private="false" static="true"/>    
-    </display>  
-  </class>  
-  <interface id="6" language="java" name="p_en_o_cw_2016.Autopilot" project="PenO Drone Simulation" 
-    file="/PenO Drone Simulation/src/p_en_o_cw_2016/Autopilot.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="915" y="181"/>    
+    <position height="-1" width="-1" x="1129" y="230"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
-  </interface>  
-  <interface id="7" language="java" name="p_en_o_cw_2016.AutopilotFactory" project="PenO Drone Simulation" 
+  </class>  
+  <class id="6" language="java" name="DroneAutopilot.DroneAutopilot" project="PenO Drone Simulation" 
+    file="/PenO Drone Simulation/src/DroneAutopilot/DroneAutopilot.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="737" y="290"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="DroneAutopilot.MoveToTarget" project="PenO Drone Simulation" 
+    file="/PenO Drone Simulation/src/DroneAutopilot/MoveToTarget.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="682" y="150"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="DroneAutopilot.DroneAutopilotFactory" project="PenO Drone Simulation" 
+    file="/PenO Drone Simulation/src/DroneAutopilot/DroneAutopilotFactory.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="282" y="58"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <interface id="9" language="java" name="p_en_o_cw_2016.AutopilotFactory" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/p_en_o_cw_2016/AutopilotFactory.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="463" y="255"/>    
+    <position height="-1" width="-1" x="283" y="133"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </interface>  
-  <class id="8" language="java" name="DroneAutopilot.GUI.GUI" project="PenO Drone Simulation" 
-    file="/PenO Drone Simulation/src/DroneAutopilot/GUI/GUI.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="850" y="337"/>    
+  <interface id="10" language="java" name="p_en_o_cw_2016.Autopilot" project="PenO Drone Simulation" 
+    file="/PenO Drone Simulation/src/p_en_o_cw_2016/Autopilot.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="874" y="292"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
-      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
-      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
-  </class>  
-  <association id="9">    
+  </interface>  
+  <association id="11">    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="10" name="gui">        
-        <position height="19" width="25" x="793" y="275"/>      
+      <attribute id="12" name="physicsCalculations">        
+        <position height="19" width="117" x="950" y="254"/>      
       </attribute>      
-      <multiplicity id="11" minimum="0" maximum="1">        
-        <position height="17" width="25" x="802" y="290"/>      
-      </multiplicity>    
+      <multiplicity id="13" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization id="12">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="7"/>  
-  </realization>  
-  <association id="13">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="14" name="imageCalculations">        
-        <position height="0" width="0" x="-115" y="155"/>      
+  <association id="14">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="15" name="imageCalculations">        
+        <position height="19" width="110" x="388" y="172"/>      
       </attribute>      
-      <multiplicity id="15" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-115" y="155"/>      
+      <multiplicity id="16" minimum="0" maximum="1">        
+        <position height="17" width="25" x="367" y="194"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="16">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="17" name="physicsCalculations">        
-        <position height="19" width="117" x="495" y="308"/>      
+  <association id="17">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="18" name="physicsCalculations">        
+        <position height="19" width="117" x="901" y="208"/>      
       </attribute>      
-      <multiplicity id="18" minimum="0" maximum="1">        
-        <position height="17" width="25" x="568" y="322"/>      
+      <multiplicity id="19" minimum="0" maximum="1">        
+        <position height="17" width="25" x="1018" y="219"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="19">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="20" name="moveToTarget">        
-        <position height="19" width="87" x="607" y="189"/>      
+  <association id="20">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="21" name="moveToTarget">        
+        <position height="19" width="87" x="710" y="193"/>      
       </attribute>      
-      <multiplicity id="21" minimum="0" maximum="1">        
-        <position height="17" width="25" x="667" y="207"/>      
+      <multiplicity id="22" minimum="0" maximum="1">        
+        <position height="17" width="25" x="704" y="180"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="23">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="24" name="closestOrbs">        
+        <position height="19" width="72" x="701" y="436"/>      
+      </attribute>      
+      <multiplicity id="25" minimum="0" maximum="1">        
+        <position height="17" width="25" x="701" y="454"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization id="22">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="6"/>  
+  <association id="26">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="27" name="imageCalculations">        
+        <position height="19" width="110" x="217" y="263"/>      
+      </attribute>      
+      <multiplicity id="28" minimum="0" maximum="1">        
+        <position height="17" width="25" x="310" y="279"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="29">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
   </realization>  
+  <association id="30">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="31" name="physicsCalculations">        
+        <position height="19" width="117" x="1028" y="165"/>      
+      </attribute>      
+      <multiplicity id="32" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="33">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="10"/>  
+  </realization>  
+  <association id="34">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="35" name="worldScan">        
+        <position height="19" width="66" x="532" y="241"/>      
+      </attribute>      
+      <multiplicity id="36" minimum="0" maximum="1">        
+        <position height="17" width="25" x="585" y="225"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="37">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="38" name="imageCalculations">        
+        <position height="19" width="110" x="246" y="172"/>      
+      </attribute>      
+      <multiplicity id="39" minimum="0" maximum="1">        
+        <position height="17" width="25" x="311" y="188"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="40">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="41" name="imageCalculations"/>      
+      <multiplicity id="42" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
-    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
-    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+    <attributes public="false" package="false" protected="false" private="false" static="false"/>    
+    <operations public="false" package="false" protected="false" private="false" static="false"/>  
   </classifier-display>  
   <association-display labels="true" multiplicity="true"/>
 </class-diagram>

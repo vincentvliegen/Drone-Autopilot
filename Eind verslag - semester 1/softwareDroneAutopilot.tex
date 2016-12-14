@@ -3,10 +3,10 @@
 \\
 De aanmaak van een Autopilot en bijhorende \textit{GUI} gebeurt in de \textit{DroneAutopilotFactory}-klasse, ge\"implementeerd met de interface \textit{AutopilotFactory}. Hierin worden ook de beginwaarden voor yaw, roll, pitch en thrust direct ingesteld. 
 \\
-Door \textit{DroneAutopilotFactory} wordt een nieuw object \textit{DroneAutopilot} aangemaakt die de interface \textit{Autopilot} implementeert. De \textit{DroneAutopilot}-klasse bestaat uit één functie, namelijk \texttt{timeHasPassed()} die continu door de simulator wordt uitgevoerd. Vanuit deze methode wordt verwezen naar een bepaalde \textit{mission}-klasse die verder de opdracht voor haar rekening neemt.
+Door \textit{DroneAutopilotFactory} wordt een nieuw object \textit{DroneAutopilot} aangemaakt die de interface \textit{Autopilot} implementeert. De \textit{DroneAutopilot}-klasse bestaat uit één functie, namelijk \texttt{timeHasPassed()} die continu door de simulator wordt uitgevoerd. Vanuit deze methode wordt verwezen naar een bepaalde \textit{Mission}-klasse die verder de opdracht voor haar rekening neemt.
 \\
 \\
-Er zijn twee missies die tot nu toe in de mijlpalen nodig zijn, namelijk \textit{OneSphere} en \textit{SeveralSpheres}. Hierdoor vliegt de drone respectievelijk naar een specifiek gekleurde bol of probeert hij alle bollen te bereiken. De keuze van de bepaalde missie wordt gemaakt in de \textit{GUI} door de gewenste missie te selecteren in het dropdownmenu. Om dit onderdeel aanpasbaar te maken, wordt een abstracte klasse \textit{Mission} ge\"implementeerd, deze voorziet de basiselementen van de verschillende missies. Hier is de \texttt{execute()}-methode van belang, deze kan naar wens ingevuld worden voor de verschillende missies. Hierin wordt in elke missie \textit{MoveToTarget} aangeroepen om de drone naar zijn beoogd doel te laten bewegen.
+Er zijn twee missies die tot nu toe in de mijlpalen nodig zijn, namelijk \textit{OneSphere} en \textit{SeveralSpheres}. Hierdoor vliegt de drone respectievelijk naar een specifiek gekleurde bol of probeert hij alle bollen te bereiken. De keuze van de bepaalde missie wordt gemaakt in de \textit{GUI} door de gewenste missie te selecteren in het dropdownmenu. Om dit onderdeel aanpasbaar te maken, wordt een abstracte klasse \textit{Mission} ge\"implementeerd. Deze klasse voorziet de basiselementen van de verschillende missies. Hier is de \texttt{execute()}-methode van belang en kan naar wens ingevuld worden voor de verschillende missies. Hierin wordt in elke missie \textit{MoveToTarget} aangeroepen om de drone naar zijn beoogd doel te laten bewegen.
 \\
 \\
 In \textit{MoveToTarget} worden de aansturing en bewegingen van de drone bepaald. Ook zullen de verschillende rates doorgegeven worden aan de simulator. Bovendien wordt hierin ook telkens de \textit{GUI} ge\"updatet wanneer een nieuwe waarde voor de diepte bepaald is.
@@ -16,8 +16,6 @@ Om de bewegingen te kunnen berekenen, wordt er gesteund op twee \textit{calculat
 In de klasse \textit{PhysicsCalculations} worden alle fysische berekening van hoeken en afstanden uitgevoerd.
 \\
 \\
-Om de fouten die gemaakt zijn in de calculation-klassen binnen de perken te houden, wordt zoals vermeld in sectie \ref{subsec: PI Controllers}, \textit{PI-controllers} voorzien. De algemene uitwerking van een controller wordt geïmplementeerd in een abstracte klasse \textit{PIController}. Voor elk te controleren waarde is er een specifieke controller. 
+Om de fouten die gemaakt zijn in de calculation-klassen binnen de perken te houden, worden zoals vermeld in sectie \ref{subsec: PI Controllers}, \textit{PI-controllers} voorzien. De algemene uitwerking van een controller wordt geïmplementeerd in een abstracte klasse \textit{PIController}. Voor elke te controleren waarde is er een specifieke controller. 
 \\
-Daarnaast wordt om de code van \textit{MoveToTarget} te verlichten \textit{Correctors} voorzien. In deze klassen wordt de methode gegeven hoe er moet omgegaan worden met de specifieke PI-controller. Opnieuw is er een abstracte klasse voorzien om latere uitbreidingen gemakkelijker te maken. 
-\\
-\\
+Daarnaast worden, om de code van \textit{MoveToTarget} te verlichten, \textit{Correctors} voorzien. In deze klassen wordt de methode gegeven hoe er moet omgegaan worden met de specifieke PI-controller. Opnieuw is er een abstracte klasse voorzien om latere uitbreidingen gemakkelijker te maken. 
