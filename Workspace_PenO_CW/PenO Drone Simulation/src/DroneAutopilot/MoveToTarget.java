@@ -82,10 +82,12 @@ public class MoveToTarget {
 	public void flyTowardsTarget() {
 		this.getYawCorrector().correctYaw(this.getCogL(), this.getCogR());
 		this.getHeightCorrector().correctHeight(this.getCogL(), this.getCogR());
-		this.getPhysicsCalculations().updateAccSpeed(this.getCogL());
+//		this.getPhysicsCalculations().calculateSpeed(this.getDrone().getCurrentTime(),this.getPhysicsCalculations().getDistance(getCogL(), getCogR()));
+//		System.out.println("speed: " + this.getPhysicsCalculations().getSpeed());
+		
 		//		System.out.println("dist: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
 		//		System.out.println("setpoint1: " + this.getDistancePI().getSetpoint());
-		//		System.out.println("distance: " + this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()));
+		//System.out.println("distance: " + this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()));
 		if (this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) <= 0.8 && !this.getYawCorrector().isYawStarted()) {
 			this.getPitchCorrector().hover();
 			this.setPitchStarted(false);
