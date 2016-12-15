@@ -118,9 +118,14 @@ public class GUI {
 	}
 
 	public void update(float dist,int colorint) {
-		Color color = new Color(colorint);
-		this.getProgressBar().setForeground(color);
 		int distance = (int) (dist*100);
+		Color color = new Color(colorint);
+		if (color.getRGB() != this.getProgressBar().getForeground().getRGB()){
+			this.setMaxValue(distance);
+			this.getProgressBar().setMaximum(distance);
+			this.setReached(false);
+		};
+		this.getProgressBar().setForeground(color);
 		if(this.isReached()){
 			this.getProgressBar().setString("100%");
 		}else{
@@ -185,7 +190,7 @@ public class GUI {
 	public void setFrame(JFrame frame) {
 		this.frame = frame;
 	}
-	
+
 	private final JProgressBar progressBar;
 	public int maxValue;
 	public boolean lastOrbEnabled;
