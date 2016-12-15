@@ -302,10 +302,10 @@ public class GUI extends JPanel {
 			Timer timerWind = new Timer(1000, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-
-						windX.setText("Wind speed X-axis: " + world.getWindSpeedX() );
-						windY.setText("Wind speed Y-axis: " + world.getWindSpeedY() );
-						windZ.setText("Wind speed Z-axis: " + world.getWindSpeedZ() );
+					
+						windX.setText("Wind force X-axis: " + Math.round(world.getWindSpeedX()*100)/100.00 + " N");
+						windY.setText("Wind force Y-axis: " + Math.round(world.getWindSpeedY()*100)/100.00 + " N" );
+						windZ.setText("Wind force Z-axis: " + Math.round(world.getWindSpeedZ()*100)/100.00 + " N");
 						add(windX, constraintsWindX);
 						add(windY, constraintsWindY);
 						add(windZ, constraintsWindZ);

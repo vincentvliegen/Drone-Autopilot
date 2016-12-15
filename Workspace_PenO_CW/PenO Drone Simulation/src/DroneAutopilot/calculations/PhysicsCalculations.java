@@ -29,6 +29,9 @@ public class PhysicsCalculations{
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
 		float distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
+		if(Float.isNaN(distance) || Float.isInfinite(distance)){
+			distance =0;
+		}
 		return distance;
 	}
 

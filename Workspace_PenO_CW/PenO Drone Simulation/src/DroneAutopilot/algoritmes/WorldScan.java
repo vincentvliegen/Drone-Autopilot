@@ -46,6 +46,7 @@ public class WorldScan {
 	}
 
 	public Set<Integer> scan(Drone drone){
+		//this.getDrone().setPitchRate(0);
 		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 		this.setFinished(false);
@@ -106,17 +107,21 @@ public class WorldScan {
 	}
 
 	public boolean scan(ArrayList<int[]> leftCameraList, ArrayList<int[]> rightCameraList, int color){
+		//System.out.println("scan move to");
 		boolean canStartFly = false;
 		ArrayList<Boolean> targetFound = this.checkCasesPixelsFound(leftCameraList, rightCameraList);
 
 		if(targetFound.get(0)==false && targetFound.get(1)==true){
 			canStartFly = false;
+			this.rightCameraFoundTarget();
 		}else if(targetFound.get(0)==true && targetFound.get(1)==false){
 			canStartFly = false;
+			this.leftCameraFoundTarget();
 		}else if(targetFound.get(0)==true && targetFound.get(1)==true){
 			canStartFly = true;
 		}else if(targetFound.get(0)==false && targetFound.get(1)==false){
 			canStartFly = false;
+			this.noTargetFound();
 		}
 		return canStartFly;
 	}
@@ -147,14 +152,20 @@ public class WorldScan {
 
 	public void noTargetFound() {
 		this.getDrone().setYawRate(this.getYawrate());
+		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 	}
 
 	public void leftCameraFoundTarget() {
 		this.getDrone().setYawRate(-this.getYawrate());
+		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 	}
 
 	public void rightCameraFoundTarget() {
 		this.getDrone().setYawRate(this.getYawrate());
+		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
+		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 	}
 
 

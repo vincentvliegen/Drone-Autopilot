@@ -11,7 +11,7 @@ public class CorrectYaw extends Correct{
 
 	public CorrectYaw(Drone drone) {
 		super(drone);
-		this.yawPI = new YawController(1,1);
+		this.yawPI = new YawController(3,1);
 		this.yawRate = this.getDrone().getMaxYawRate()/4;
 	}
 
