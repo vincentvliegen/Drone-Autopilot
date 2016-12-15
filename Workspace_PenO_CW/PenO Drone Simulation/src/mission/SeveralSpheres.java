@@ -14,7 +14,7 @@ public class SeveralSpheres extends Mission {
 	private boolean firstTime;
 	private boolean firstOrbAcquired;
 	private boolean secondOrbAcquired;
-	private final static float distanceToArrival = 0.6f;// TODO afstellen, straal is 0.5
+	private final static float distanceToArrival = 0.55f;// TODO afstellen, straal is 0.5
 	private final WorldScan worldScan;
 	
 	public SeveralSpheres(MoveToTarget moveToTarget, Drone drone) {
@@ -52,6 +52,7 @@ public class SeveralSpheres extends Mission {
 								this.getDrone().getLeftCamera(), this.getClosestOrbs().getColorFirstOrb())
 						|| this.getClosestOrbs().getImageCalculations().checkImageFilled(
 								this.getDrone().getRightCamera(), this.getClosestOrbs().getColorFirstOrb())) {
+					System.out.println("Reached");
 					ArrivedAtTarget();
 				}
 			}

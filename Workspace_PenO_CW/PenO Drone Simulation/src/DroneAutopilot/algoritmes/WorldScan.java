@@ -46,6 +46,7 @@ public class WorldScan {
 	}
 
 	public Set<Integer> scan(Drone drone){
+		//this.getDrone().setPitchRate(0);
 		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 		this.setFinished(false);
