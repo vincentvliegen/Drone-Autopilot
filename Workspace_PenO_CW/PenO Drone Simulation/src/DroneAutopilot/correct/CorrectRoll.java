@@ -7,6 +7,7 @@ public class CorrectRoll extends Correct{
 
 	private final RollController rollPI;
 	private boolean rollStarted;
+	private boolean rollStartedFlying;
 	private final float rollRate;
 
 	public CorrectRoll(Drone drone) {
@@ -41,6 +42,33 @@ public class CorrectRoll extends Correct{
 			}
 		}
 	}
+	
+	public void correctRollFlying(float[] cogL, float[] cogR) {
+		if (this.getDrone().getRoll() <= Correct.getUpperboundary() && this.getDrone().getRoll() >= Correct.getUnderboundary()) {
+			this.getDrone().setRollRate(0);
+			this.setRollStartedFlying(false);
+		}
+		else if (this.getDrone().getRoll() > Correct.getUpperboundary()){
+			if(!this.isRollStarted()){
+				this.getRollPI().resetSetpoint(0);
+				this.setRollStartedFlying(true);
+			}else{
+				float output = -this.getRollPI().calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogL, cogR), this.getDrone().getCurrentTime());
+				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) this.getDrone().getRoll()*10);
+				this.getDrone().setRollRate(Math.max(output, -this.getRollRate()));
+			}
+		}
+		else if (this.getDrone().getRoll() < Correct.getUnderboundary()){
+			if(!this.isRollStarted()){
+				this.getRollPI().resetSetpoint(0);
+				this.setRollStartedFlying(true);
+			}else{
+				float output = -this.getRollPI().calculateRate(this.getPhysicsCalculations().horizontalAngleDeviation(cogL, cogR), this.getDrone().getCurrentTime());
+				//this.updategraphPI((int) (this.getDrone().getCurrentTime()), (int) this.getDrone().getRoll()*10);
+				this.getDrone().setRollRate(Math.min(output, this.getRollRate()));
+			}
+		}
+	}
 
 	
 	//////////Getters & Setters//////////
@@ -59,5 +87,13 @@ public class CorrectRoll extends Correct{
 
 	public float getRollRate() {
 		return rollRate;
+	}
+
+	public boolean isRollStartedFlying() {
+		return rollStartedFlying;
+	}
+
+	public void setRollStartedFlying(boolean rollStartedFlying) {
+		this.rollStartedFlying = rollStartedFlying;
 	}
 }
