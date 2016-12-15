@@ -128,11 +128,11 @@ public class GUI extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent ev) {
 				if(world.getDrones().size() > 0){
-					float currentSpeed;
+					double currentSpeed;
 					float[] velocity = world.getDrones().get(0).getMovement().getVelocity();
 					float time = world.getCurrentTime(); //Insert the time of the drone 
 					//System.out.println(world.getCurrentTime());
-					currentSpeed = (float) Math.sqrt(Math.pow(velocity[0],2)+Math.pow(velocity[1],2)+Math.pow(velocity[2],2));
+					currentSpeed = Math.sqrt(Math.pow(velocity[0],2)+Math.pow(velocity[1],2)+Math.pow(velocity[2],2));
 					BigDecimal bigDecimalSpeed = new BigDecimal(currentSpeed);
 					BigDecimal roundOffSpeed = bigDecimalSpeed.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					speed.setText("Speed: " + roundOffSpeed + " m/s");
