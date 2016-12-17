@@ -81,7 +81,7 @@ public class SimulationDrone extends WorldObject implements Drone{
 		// System.out.println(getTranslate()[0] + " " + getTranslate()[1] + " "
 		// + getTranslate()[2]);
 		translateDrone(getPosition());
-		rotateDrone(-getYaw(), getRoll(), getPitch());
+		rotateDrone(-getYaw(), getGlobalRoll(), -getGlobalPitch());
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glBegin(GL2ES3.GL_QUADS);
 

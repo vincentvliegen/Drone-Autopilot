@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.GLU;
 
 import p_en_o_cw_2016.Camera;
 import simulator.objects.SimulationDrone;
@@ -190,4 +191,22 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		    ImageIO.write(image, format, file);
 		  } catch (IOException e) { e.printStackTrace(); }
 		}
+	
+	public void setCamera(GL2 gl, GLU glu) {
+		int height = getWorld().getDrawable().getSurfaceHeight();
+		int width = getWorld().getDrawable().getSurfaceWidth();
+		// Change to projection matrix.
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+	
+		// Perspective.
+		float widthHeightRatio = (float) width / (float) height;
+		glu.gluPerspective(fovy, widthHeightRatio, 0.01, 500);
+		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(),
+				getUpZ());
+	
+		// Change back to model view matrix.
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
+	}
 }
