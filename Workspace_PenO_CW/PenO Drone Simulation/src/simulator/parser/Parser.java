@@ -72,7 +72,7 @@ public class Parser {
 		// print working dir
 		// System.out.println(System.getProperty("user.dir"));
 
-		FileReader input = new FileReader("inputFiles/inputFile130.txt");
+		FileReader input = new FileReader("inputFiles/inputFileGenerator.txt");
 		BufferedReader bufRead = new BufferedReader(input);
 		String myLine = null;
 
