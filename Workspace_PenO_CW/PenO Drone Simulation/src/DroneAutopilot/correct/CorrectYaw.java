@@ -8,8 +8,8 @@ public class CorrectYaw extends Correct{
 	private final YawController yawPI;
 	private boolean yawStarted;
 	private final float yawRate;
-	private static final float underBoundary = -1f;
-	private static final float upperBoundary = 1f;
+	private static final float underBoundary = -2f;
+	private static final float upperBoundary = 2f;
 	//tan(hoek) = 0.5/dist
 
 	public CorrectYaw(Drone drone) {

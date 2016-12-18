@@ -12,7 +12,7 @@ public class CorrectRoll extends Correct{
 
 	public CorrectRoll(Drone drone) {
 		super(drone);
-		this.rollPI = new RollController(1,1);
+		this.rollPI = new RollController(4,1);
 		this.rollRate = this.getDrone().getMaxRollRate();
 	}
 
