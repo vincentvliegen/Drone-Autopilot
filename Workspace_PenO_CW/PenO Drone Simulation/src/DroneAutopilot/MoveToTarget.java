@@ -42,7 +42,7 @@ public class MoveToTarget {
 		this.heightCorrector = new CorrectHeight(drone);
 		this.rollCorrector = new CorrectRoll(drone);
 		this.yawCorrector = new CorrectYaw(drone);
-		this.distancePI = new DistanceController(0.8, 0);
+		this.distancePI = new DistanceController(0.5, 0.5);
 	}
 
 	public void execute(int color) {
@@ -91,11 +91,11 @@ public class MoveToTarget {
 		*/
 		//System.out.println("Horiz " + this.getPhysicsCalculations().horizontalAngleDeviation(getCogL(), getCogR()));
 		//		System.out.println("distance: " + this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()));
-		if (this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) <= 0.8 && !this.getYawCorrector().isYawStarted()) {
+		if (this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) <= 0.6 && !this.getYawCorrector().isYawStarted()) {
 			this.getPitchCorrector().hover();
 			this.setPitchStarted(false);
-		}else if ( Math.abs(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - this.getDistancePI().getSetpoint())>0.4f || !this.getPitchStarted()) {
-			this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.2f);
+		}else if ( Math.abs(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - this.getDistancePI().getSetpoint())>0.2f || !this.getPitchStarted()) {
+			this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.1f);
 			this.getDrone().setPitchRate(0);
 			this.setPitchStarted(true);
 		} else if (!this.getYawCorrector().isYawStarted()){
@@ -105,7 +105,7 @@ public class MoveToTarget {
 			// this.updategraphPI((int) (this.getDrone().getCurrentTime()),
 			// (int) (this.getPhysicsCalculations().getDistance(cogL,
 			// cogR))*10);
-			this.getDrone().setPitchRate(2*output);
+			this.getDrone().setPitchRate(output);
 			//System.out.println("Pitch: " + this.getDrone().getPitch());
 			if (this.getDrone().getPitch()<0) {
 				this.setPitchStarted(false);

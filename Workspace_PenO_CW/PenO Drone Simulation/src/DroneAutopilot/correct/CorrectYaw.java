@@ -8,20 +8,23 @@ public class CorrectYaw extends Correct{
 	private final YawController yawPI;
 	private boolean yawStarted;
 	private final float yawRate;
+	private static final float underBoundary = -1f;
+	private static final float upperBoundary = 1f;
+	//tan(hoek) = 0.5/dist
 
 	public CorrectYaw(Drone drone) {
 		super(drone);
-		this.yawPI = new YawController(3,1);
+		this.yawPI = new YawController(4,1);
 		this.yawRate = this.getDrone().getMaxYawRate()/4;
 	}
 
 	public void correctYaw(float[] cogLeft, float[] cogRight){
-		if(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) >= Correct.getUnderboundary() 
-				&& this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) <= Correct.getUpperboundary()){
+		if(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) >= this.getUnderboundary() 
+				&& this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) <= this.getUpperboundary()){
 			this.setYawStarted(false);
 			this.getDrone().setYawRate(0);
 		}
-		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) < Correct.getUnderboundary()) {
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) < this.getUnderboundary()) {
 			if(!this.isYawStarted()){
 				this.getYawPI().resetSetpoint(0);
 				this.setYawStarted(true);
@@ -31,7 +34,7 @@ public class CorrectYaw extends Correct{
 				this.getDrone().setYawRate(Math.max(output, -this.getYawRate()));
 			}
 		} 
-		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) > Correct.getUpperboundary()){
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) > this.getUpperboundary()){
 			if(!this.isYawStarted()){
 				this.getYawPI().resetSetpoint(0);
 				this.setYawStarted(true);
@@ -60,5 +63,13 @@ public class CorrectYaw extends Correct{
 	
 	public float getYawRate() {
 		return yawRate;
+	}
+	
+	public static float getUnderboundary() {
+		return underBoundary;
+	}
+
+	public static float getUpperboundary() {
+		return upperBoundary;
 	}
 }
