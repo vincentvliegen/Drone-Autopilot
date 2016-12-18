@@ -28,6 +28,8 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		this.setDrone(drone);
 		this.gl = getWorld().getGL().getGL2();
 		this.place = place;
+		if ((getWorld() instanceof WorldParser) && (place!=DroneCameraPlace.MIDDLE))
+			fovy = (float) getWorld().getParser().getVerticalAngleOfView();
 	}
 	
 	
