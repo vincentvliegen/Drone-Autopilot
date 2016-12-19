@@ -45,7 +45,7 @@ public class MoveToTarget {
 		this.heightCorrector = new CorrectHeight(drone);
 		this.rollCorrector = new CorrectRoll(drone);
 		this.yawCorrector = new CorrectYaw(drone);
-		this.distancePI = new DistanceController(0.5, 0.5);
+		this.distancePI = new DistanceController(0.8, 0);
 	}
 
 	public void execute(int color) {
@@ -88,29 +88,36 @@ public class MoveToTarget {
 		this.getYawCorrector().correctYaw(this.getCogL(), this.getCogR());
 		this.getHeightCorrector().correctHeight(this.getCogL(), this.getCogR());
 		//this.getPhysicsCalculations().calculateSpeed(this.getDrone().getCurrentTime(),this.getPhysicsCalculations().getDistance(getCogL(), getCogR()));
-		/*
+
 		System.out.println("-------------");
 		System.out.println("dist: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
 		System.out.println("setpoint1: " + this.getDistancePI().getSetpoint());
+		System.out.println("pitch: " + this.getDrone().getPitch());
 		System.out.println("-------------");
-		*/
+
 		//System.out.println("Horiz " + this.getPhysicsCalculations().horizontalAngleDeviation(getCogL(), getCogR()));
 		//		System.out.println("distance: " + this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()));
-		if (this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) <= 0.6 && !this.getYawCorrector().isYawStarted()) {
+		if (this.getDrone().getPitch()<0) {
+			this.getDrone().setYawRate(0);
+			this.getYawCorrector().setYawStarted(false);
+			this.setPitchStarted(false);
+		}
+		if (this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) <= 0.8 && !this.getYawCorrector().isYawStarted()) {
 			this.getPitchCorrector().hover();
 			this.setPitchStarted(false);
-		}else if ( Math.abs(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - this.getDistancePI().getSetpoint())>0.2f || !this.getPitchStarted()) {
-			this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.1f);
+		}else if ( Math.abs(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - this.getDistancePI().getSetpoint())>0.4f || !this.getPitchStarted()) {
+			this.getDistancePI().resetSetpoint(this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()) - 0.2f);
 			this.getDrone().setPitchRate(0);
 			this.setPitchStarted(true);
-		} else if (!this.getYawCorrector().isYawStarted()){
+		}
+		if (!this.getYawCorrector().isYawStarted()){
 			float output = -this.getDistancePI().calculateRate(
 					this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()),
 					this.getDrone().getCurrentTime());
 			// this.updategraphPI((int) (this.getDrone().getCurrentTime()),
 			// (int) (this.getPhysicsCalculations().getDistance(cogL,
 			// cogR))*10);
-			this.getDrone().setPitchRate(output);
+			this.getDrone().setPitchRate(2*output);
 			//System.out.println("Pitch: " + this.getDrone().getPitch());
 			if (this.getDrone().getPitch()<0) {
 				this.setPitchStarted(false);
@@ -232,7 +239,7 @@ public class MoveToTarget {
 	public void setColor(int color) {
 		this.color = color;
 	}
-	
+
 	public boolean isTargetLost() {
 		return targetLost;
 	}

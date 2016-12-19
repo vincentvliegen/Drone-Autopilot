@@ -5,27 +5,27 @@ import java.util.HashMap;
 import java.util.Set;
 
 import DroneAutopilot.calculations.ImageCalculations;
-import DroneAutopilot.controllers.RollController;
+import DroneAutopilot.correct.CorrectPitch;
 import DroneAutopilot.correct.CorrectRoll;
 import p_en_o_cw_2016.Drone;
 
 public class WorldScan {
 	private Drone drone;
 	private boolean finishedScan;
-	private RollController rollPI;
-	private boolean rollStarted;
 	private boolean firstTime;
 	private float previousTime;
 	private float degreesTurned;
 	private float timePassed = 0;
 	private ImageCalculations imageCalculations;
 	private final CorrectRoll rollCorrector;
+	private final CorrectPitch	pitchCorrector;
 	private final float yawrate;
 
 	public WorldScan(Drone drone){
 		this.setDrone(drone);
 		this.imageCalculations = new ImageCalculations();
 		this.rollCorrector = new CorrectRoll(drone);
+		this.pitchCorrector = new CorrectPitch(drone);
 		this.yawrate = this.getDrone().getMaxYawRate()/4;
 	}
 
@@ -46,7 +46,7 @@ public class WorldScan {
 	}
 
 	public Set<Integer> scan(Drone drone){
-		//this.getDrone().setPitchRate(0);
+		System.out.println("scan");
 		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 		this.setFinished(false);
@@ -55,14 +55,13 @@ public class WorldScan {
 		if(this.foundOrb(drone)){
 			//System.out.println("iets gevonden");
 			this.getDrone().setYawRate(0);
+			this.getDrone().setPitchRate(0);
 			this.setFinished(true);
 			firstTime = false;
 			degreesTurned = 0;
 			timePassed = 0;
 			return this.getKeySetOfColors(drone);
 		}
-		//System.out.println("hier kan ie niet in");
-
 		else{
 			if(!firstTime){
 				//System.out.println("firsttime");
@@ -71,9 +70,11 @@ public class WorldScan {
 			}else{
 				//System.out.println("yaw");
 				if(degreesTurned < 630){
+					this.getDrone().setPitchRate(0);
 					this.getDrone().setYawRate(this.getYawrate());
 					degreesTurned += this.getYawrate() * (this.getDrone().getCurrentTime() - this.getPreviousTime());
 					this.setPreviousTime(this.getDrone().getCurrentTime());
+
 				}else{
 					this.getDrone().setYawRate(0);
 					//System.out.println("time passed" + timePassed);
@@ -113,11 +114,12 @@ public class WorldScan {
 
 		if(targetFound.get(0)==false && targetFound.get(1)==true){
 			canStartFly = false;
-			this.rightCameraFoundTarget();
+			//this.rightCameraFoundTarget();
 		}else if(targetFound.get(0)==true && targetFound.get(1)==false){
 			canStartFly = false;
-			this.leftCameraFoundTarget();
+			//this.leftCameraFoundTarget();
 		}else if(targetFound.get(0)==true && targetFound.get(1)==true){
+			//this.getDrone().setYawRate(0);
 			canStartFly = true;
 		}else if(targetFound.get(0)==false && targetFound.get(1)==false){
 			canStartFly = false;
@@ -151,18 +153,29 @@ public class WorldScan {
 	}
 
 	public void noTargetFound() {
-		this.getDrone().setYawRate(this.getYawrate());
+		System.out.println("no target found");
+		System.out.println("roll " + this.getDrone().getRoll());
+		System.out.println("pitch " + this.getDrone().getPitch());
+		System.out.println("********");
+		//naar hover gaan!
 		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
+		this.pitchCorrector.hover();
+		if(!this.pitchCorrector.isHoverStarted()){
+			this.getDrone().setPitchRate(0);
+			this.getDrone().setYawRate(this.getYawrate());
+		}
 	}
 
 	public void leftCameraFoundTarget() {
+		this.getDrone().setPitchRate(0);
 		this.getDrone().setYawRate(-this.getYawrate());
 		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 	}
 
 	public void rightCameraFoundTarget() {
+		this.getDrone().setPitchRate(0);
 		this.getDrone().setYawRate(this.getYawrate());
 		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
@@ -170,19 +183,6 @@ public class WorldScan {
 
 
 	//////////Getters & Setters//////////
-
-	public final RollController getRollPI() {
-		return this.rollPI;
-	}
-
-	public void setRollStarted(boolean isStarted){
-		this.rollStarted = isStarted;
-	}
-
-	public boolean getRollStarted(){
-		return this.rollStarted;
-	}
-
 	public void setPreviousTime(float time){
 		this.previousTime = time;
 	}
@@ -216,6 +216,10 @@ public class WorldScan {
 
 	public CorrectRoll getRollCorrector() {
 		return rollCorrector;
+	}
+
+	public CorrectPitch getPitchCorrector() {
+		return pitchCorrector;
 	}
 
 	public float getYawrate() {

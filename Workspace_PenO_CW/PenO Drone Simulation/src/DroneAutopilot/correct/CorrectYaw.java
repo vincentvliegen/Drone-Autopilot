@@ -8,8 +8,8 @@ public class CorrectYaw extends Correct{
 	private final YawController yawPI;
 	private boolean yawStarted;
 	private final float yawRate;
-	private static final float underBoundary = -2f;
-	private static final float upperBoundary = 2f;
+	private static final float underBoundary = -0.5f;
+	private static final float upperBoundary = 0.5f;
 	//tan(hoek) = 0.5/dist
 
 	public CorrectYaw(Drone drone) {
@@ -19,12 +19,12 @@ public class CorrectYaw extends Correct{
 	}
 
 	public void correctYaw(float[] cogLeft, float[] cogRight){
-		if(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) >= this.getUnderboundary() 
-				&& this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) <= this.getUpperboundary()){
+		if(this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) >= getUnderboundary()
+				&& this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) <= getUpperboundary()){
 			this.setYawStarted(false);
 			this.getDrone().setYawRate(0);
 		}
-		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) < this.getUnderboundary()) {
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) < getUnderboundary()) {
 			if(!this.isYawStarted()){
 				this.getYawPI().resetSetpoint(0);
 				this.setYawStarted(true);
@@ -34,7 +34,7 @@ public class CorrectYaw extends Correct{
 				this.getDrone().setYawRate(Math.max(output, -this.getYawRate()));
 			}
 		} 
-		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) > this.getUpperboundary()){
+		else if (this.getPhysicsCalculations().horizontalAngleDeviation(cogLeft, cogRight) > getUpperboundary()){
 			if(!this.isYawStarted()){
 				this.getYawPI().resetSetpoint(0);
 				this.setYawStarted(true);

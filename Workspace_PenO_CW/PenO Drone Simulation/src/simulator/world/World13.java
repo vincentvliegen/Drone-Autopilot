@@ -21,19 +21,19 @@ public class World13 extends World {
 	protected void setup() {
 		GL2 gl = getGL().getGL2();
 		
-		double[] translateSphere = { 10f, 0, 0f };
+		double[] translateSphere = { 7f, 0, 0f };
 		float[] colorSphere = { 1f, 0f, 0f };
 		Sphere sphere1 = new Sphere(gl, colorSphere, translateSphere, this);
 		sphere1.draw();
 		addSphere(sphere1);
 		
-		double[] translateSphere2 = { 15f, 2f, 0f };
-		float[] colorSphere2 = { 0f, 0f, 1f };
+		double[] translateSphere2 = { 14f, 2f, 2f };
+		float[] colorSphere2 = { 0f, 2f, 1f };
 		Sphere sphere2 = new Sphere(gl, colorSphere2, translateSphere2, this);
 		sphere2.draw();
 		addSphere(sphere2);
 		
-		double[] translateSphere3 = { -5f, -2f, 1f };
+		double[] translateSphere3 = { -1f, -2f, 3f };
 		float[] colorSphere3 = { 0f, 1f, 0f };
 		Sphere sphere3 = new Sphere(gl, colorSphere3, translateSphere3, this);
 		sphere3.draw();
