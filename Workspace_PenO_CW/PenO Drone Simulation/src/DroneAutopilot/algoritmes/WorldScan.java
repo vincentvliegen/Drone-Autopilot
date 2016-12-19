@@ -74,7 +74,6 @@ public class WorldScan {
 					this.getDrone().setYawRate(this.getYawrate());
 					degreesTurned += this.getYawrate() * (this.getDrone().getCurrentTime() - this.getPreviousTime());
 					this.setPreviousTime(this.getDrone().getCurrentTime());
-
 				}else{
 					this.getDrone().setYawRate(0);
 					//System.out.println("time passed" + timePassed);
@@ -160,11 +159,8 @@ public class WorldScan {
 		//naar hover gaan!
 		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
-		this.pitchCorrector.hover();
-		if(!this.pitchCorrector.isHoverStarted()){
-			this.getDrone().setPitchRate(0);
-			this.getDrone().setYawRate(this.getYawrate());
-		}
+		this.getDrone().setPitchRate(0);
+		this.getDrone().setYawRate(this.getYawrate());
 	}
 
 	public void leftCameraFoundTarget() {
