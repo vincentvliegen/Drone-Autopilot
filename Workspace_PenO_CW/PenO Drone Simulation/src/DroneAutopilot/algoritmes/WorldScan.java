@@ -154,9 +154,9 @@ public class WorldScan {
 
 	public void noTargetFound() {
 		System.out.println("no target found");
-		System.out.println("roll " + this.getDrone().getRoll());
-		System.out.println("pitch " + this.getDrone().getPitch());
-		System.out.println("********");
+		//System.out.println("roll " + this.getDrone().getRoll());
+		//System.out.println("pitch " + this.getDrone().getPitch());
+		//System.out.println("********");
 		//naar hover gaan!
 		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
