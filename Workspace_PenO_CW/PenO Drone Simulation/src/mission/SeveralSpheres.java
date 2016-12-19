@@ -34,7 +34,9 @@ public class SeveralSpheres extends Mission {
 			this.setFirstTime(true);
 			this.setRefreshCounter(0);
 		} else { // als de scanner gedaan is met zoeken:
-
+			if (this.getMoveToTarget().isTargetLost()) {
+				this.setFirstOrbAcquired(false);
+			}
 			// BEREKENING BOLLEN
 			if (isFirstTime()) {// eerste keer nadat de scan gedaan is
 				firstTimeSinceScan();

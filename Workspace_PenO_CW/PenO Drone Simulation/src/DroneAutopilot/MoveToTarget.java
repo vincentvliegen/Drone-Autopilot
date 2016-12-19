@@ -32,6 +32,9 @@ public class MoveToTarget {
 
 	private boolean scanning;
 	private int color;
+	public boolean targetLost;
+
+
 
 	public MoveToTarget(Drone drone) {
 		this.setDrone(drone);
@@ -46,6 +49,7 @@ public class MoveToTarget {
 	}
 
 	public void execute(int color) {
+		this.setTargetLost(false);
 		this.setColor(color);
 		ArrayList<int[]> leftCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getLeftCamera(),
 				color);
@@ -57,6 +61,7 @@ public class MoveToTarget {
 			this.setScanning(false);
 			this.targetVisible(leftCameraList, rightCameraList);
 		} else {
+			this.setTargetLost(true);
 			this.setScanning(true);
 		}
 		// this.getWorldScan().scan(this.getDrone(),
@@ -226,5 +231,13 @@ public class MoveToTarget {
 
 	public void setColor(int color) {
 		this.color = color;
+	}
+	
+	public boolean isTargetLost() {
+		return targetLost;
+	}
+
+	public void setTargetLost(boolean targetLost) {
+		this.targetLost = targetLost;
 	}
 }
