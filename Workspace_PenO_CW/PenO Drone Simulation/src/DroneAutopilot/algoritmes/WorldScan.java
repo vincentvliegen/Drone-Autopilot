@@ -46,7 +46,7 @@ public class WorldScan {
 	}
 
 	public Set<Integer> scan(Drone drone){
-		System.out.println("scan");
+		//System.out.println("scan");
 		float gravity = Math.abs(this.getDrone().getGravity())*this.getDrone().getWeight();
 		this.getDrone().setThrust(gravity/ (float) Math.cos(Math.toRadians(this.getDrone().getPitch())));
 		this.setFinished(false);
@@ -152,7 +152,7 @@ public class WorldScan {
 	}
 
 	public void noTargetFound() {
-		System.out.println("no target found");
+		//System.out.println("no target found");
 		//System.out.println("roll " + this.getDrone().getRoll());
 		//System.out.println("pitch " + this.getDrone().getPitch());
 		//System.out.println("********");

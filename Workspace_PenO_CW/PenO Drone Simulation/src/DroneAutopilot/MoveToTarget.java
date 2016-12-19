@@ -88,13 +88,13 @@ public class MoveToTarget {
 		this.getYawCorrector().correctYaw(this.getCogL(), this.getCogR());
 		this.getHeightCorrector().correctHeight(this.getCogL(), this.getCogR());
 		//this.getPhysicsCalculations().calculateSpeed(this.getDrone().getCurrentTime(),this.getPhysicsCalculations().getDistance(getCogL(), getCogR()));
-		
+		/*
 		System.out.println("-------------");
 		System.out.println("dist: " + this.getPhysicsCalculations().getDistance(cogL, cogR));
 		System.out.println("setpoint1: " + this.getDistancePI().getSetpoint());
 		System.out.println("pitch: " + this.getDrone().getPitch());
 		System.out.println("-------------");
-		
+		*/
 		//System.out.println("Horiz " + this.getPhysicsCalculations().horizontalAngleDeviation(getCogL(), getCogR()));
 		//		System.out.println("distance: " + this.getPhysicsCalculations().getDistance(this.getCogL(), this.getCogR()));
 		if (this.getDrone().getPitch()<0) {
