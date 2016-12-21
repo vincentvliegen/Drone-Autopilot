@@ -1,0 +1,124 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                                                                     %%%
+%%%   LaTeX template voor het verslag van P&O: Computerwetenschappen.   %%%
+%%%                                                                     %%%
+%%%   Opties:                                                           %%%
+%%%     tt      Tussentijdsverslag                                      %%%
+%%%     eind    Eindverslag                                             %%%
+%%%                                                                     %%%
+%%%   3 oktober 2016                                   %%%
+%%%   Versie 1.4                                                        %%%
+%%%                                                                     %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[]{penoverslag}
+
+%%% PACKAGES %%%
+\usepackage{graphicx}
+
+
+\begin{document}
+
+% == TITELPAGINA == %
+\team{Zilver}
+\year{2016-2017}
+\members{Bram Vandendriessche (Co\"ordinator)\\
+	Arne Vlietinck (Secretaris)\\
+	Matthias Van der Heyden \\
+	Jef Versyck\\
+	Vincent Vliegen\\
+	Laura Vranken}
+\maketitlepage
+
+
+
+
+% == APPENDICES == %
+\newpage\makeappendix
+
+\section{Beschrijving van het proces}
+In de loop van het project zijn we op meerdere moeilijkheden gebotst. Dit zorgde voor onvoorziene vertraging. We bespreken enkele voorbeelden.
+\\
+Ten eerste liepen we al vertraging op aan de start van het project. We ontbraken aan achtergrondkennis over libraries zoals OpenGL. Hierdoor duurde het een tijd vooraleer we dit onder de knie kregen en werden er vele fouten gemaakt aan verkeerde interpretaties van de bijbehorende methodes.
+\\
+Bovendien verloren we met conceptuele problemem ook veel tijd. We hebben namelijk drie weken gezocht naar een manier om de snelheid te berekenen en die onder controle te houden. Dit was tevergeefs, aangezien die nooit gevonden is, ondanks de vele pogingen. Ook is de idee voor PI controllers pas laat, na de tussentijdse demo, naar boven gekomen.
+\\
+Als laatste voorbeeld halen we het zoeken naar fouten aan. Vaak stuitte de Autopilot op problemen van de Simulator, maar duurde het even voor het Autopilot team door had dat de fout niet aan hen lag.
+\\
+\\
+We hebben ook verschillende lessen getrokken i.v.m. de aanpak van het project. 
+Een belangrijk punt is het nog meer communiceren over de verschillende subteams heen. Dit zou het makkelijker maken om een extra handje bij te steken wanneer dat team problemen heeft of achter op schema zit. Het is echter niet mogelijk om dit zo ver door te trekken dat iedereen van alle details op de hoogte is, aangezien dat dan weer in tijdsverlies zou resulteren. Wel kan er voor gezorgd worden dat het hele team nog dynamischer in het teamoverleg betrokken wordt.
+\\
+\\
+Het werken als team ging over het algemeen redelijk vlot. Er werd goed naar elkaar geluisterd. Wanneer er bijvoorbeeld ontwerpsuggesties ge\"opperd werden, werd er geluisterd en nadien beargumenteerd waarom dit wel of niet een goed idee was totdat iedereen hiervan overtuigd was.
+\\ 
+Het enige aanmerkingspunt is het minder initiatief nemen en bereikbaar zijn van sommige teamleden. Dit is ook te zien in het verschil in gewerkte uren. Wel moet er gezegd worden dat als iets gevraagd werd te doen, het ook effectief gebeurde.
+\\
+Het team werd met succes geco\"ordineerd door onze CEO. Hij zorgde ervoor dat iedereen zijn werk deed, controlleerde dit en bleef hameren op structuur in het project. Ook hield hij een goede dynamiek en sfeer in het team.
+\\
+Tenslotte kunnen we ook zeggen dat de planning goed gevolgd werd. Deze was iets algemener opgesteld, maar gaf toch een goed beeld van wat week per week gedaan moest worden. De meer gedetailleerde uitwerking van de planning werd meestal aan het begin van de sessies mondeling besproken, aangezien anders te veel tijd in de uitwerking van de planning zou kruipen. De taken werden bovendien gelijkmatig verdeeld. Wanneer een subteam op onverwachte moeilijkheden stuitte, werd ook meer hulp geregeld.
+
+\section{Beschrijving van de werkverdeling}
+
+Hieronder volgt een opsomming per groepslid van de delen waaraan ze hebben meegewerkt.
+\\
+\\
+Bram heeft aan de Simulator gewerkt: 3D-werelden uitwerken en opstellen, structuur uittekenen en implementeren, keyboard movement, camera's, takeImage en de Parser. Hij heeft ook geholpen met een betere structuur opstellen voor de Autopilot en als CEO alles geco\"ordineerd.
+\\
+\\
+Arne heeft zowel aan de Simulator als de Autopilot gewerkt. Voor de Simulator: set-up, GUI en movement a.d.h.v. het toetsenbord. Voor de Autopilot: MoveToTarget, PI controllers, ScanWorld en het uitwerken van de structuur. Bovendien heeft hij ook de redactie van het verslag op zich genomen.
+\\
+\\
+Jef heeft aan de plaats- en rotatieberekeningen, collision detection en physics van de Simulator gewerkt. Hij heeft daarnaast ook vele bugs uit de Simulator gehaald en er testen voor geschreven.
+\\
+\\
+Matthias zat bij team Autopilot en heeft gewerkt aan het Shortest Path algoritme en de GUI.
+\\
+\\
+Vincent zorgde voor de beeldverwerking, het Shortest Path algoritme en het testen van de berekeningen van de Autopilot.
+\\
+\\
+Laura heeft gewerkt aan de fysische berekeningen van de Autopilot, MoveToTarget, PI controllers, ScanWorld, Obstacles.
+\\
+\\
+Om een beeld te schetsen van de gewerkte uren, geeft Tabel \ref{tabel: gewerkte uren} de uren per groepslid als ook het totaal van het semester weer.
+\\
+\\
+\begin{table}[h]
+\begin{tabular}{ l c c c c c c }
+	& Bram & Arne & Matthias &  Jef & Vincent & Laura\\
+	semesterweek 2: 3/10 - 9/10 & 9 & 7.5 & 6.5 & 4.5 & 7.5 & 10 \\	
+	semesterweek 3: 10/10 - 16/10 & 19 & 15 & 8.5 & 10 & 9.5 & 11 \\
+	semesterweek 4: 17/10 - 23/10 & 15 & 20 & 10.5 & 13 & 11.5 & 17.5\\
+	semesterweek 5: 24/10 - 30/10 & 17 & 16 & 7 & 15 & 16 & 12\\
+	semesterweek 6: 31/10 - 6/11 & 12 & 18.5 & 11 & 19 & 22.5 & 20\\
+	semesterweek 7: 7/11 - 13/11 & 17 & 19 & 9.5 & 20 & 19.5 & 24\\
+	semesterweek 8: 14/11 - 20/11 & 10 & 16.5 & 6 & 11 & 13 & 18.5\\
+	semesterweek 9: 21/11 - 27/11 & 11 & 10.5 & 12.5 & 9 & 13 & 15.5\\
+	semesterweek 10: 28/11 - 4/12 & 10 & 17 & 17.5 & 10 & 13 & 12\\
+	semesterweek 11: 5/12 - 11/12 & 11 & 11 & 8 & 10 & 15 & 17.5\\
+	semesterweek 12: 12/12 - 18/12  & 8.5 & 28 & 15 & 15 & 21 & 21\\
+	semesterweek 13: 19/12 - 25/12  & 5 & 5.5 & 6 & 5 & 5 & 8\\ \hline
+	Totaal: & 145.5u & 184.5u & 118u	& 136.5u & 145.5u & 186.5u
+\end{tabular}
+\caption{Gewerkte uren}
+\label{tabel: gewerkte uren}
+\end{table}
+\\
+\\
+Voor een meer gedetailleerd overzicht van de besteding van deze uren, verwijzen we naar onze Google Drive.
+
+
+\section{Kritische analyse}
+
+Wanneer we het project analyseren, kunnen we volgende sterke punten besluiten. Vooral de aanpasbaarheid van het programma is het sterkste punt. Hier is tijdens de hele uitwerking op gelet. Ook de team motivatie kan als sterkte gezien worden. Iedereen heeft meer uren gewerkt dan de verwachte 132u om het project tot een zo goed mogelijk einde te brengen.
+\\
+\\
+Een zwak punt was vooral het tijdsverlies aan de snelheidsberekening. Dit kan veralgemeend worden naar de werkeffici\"entie van het hele project. Er is veel tijd in het project gekropen ten opzichte van wat we uiteindelijk bereikt hebben.
+\\
+Ook zijn bijvoorbeeld elementaire 3D-simulatie complexe grafische features niet gebruikt wegens gebrek aan kennis. Dit is op minder effici\"ente manier zelf uitgewerkt, wat ook meerdere bugs met zich meebracht.
+\\
+\\
+Wat we anders zouden aanpakken, is vooral het zelfkritischer zijn. Bijvoorbeeld indien iets mis gaat bij het vliegen, moet ook de Simulator op zoek gaan naar een mogelijke fout bij hen en er niet van uit gaan dat dat sowieso aan de Autopilot ligt. 
+
+\end{document}
