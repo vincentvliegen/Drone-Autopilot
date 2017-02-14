@@ -34,9 +34,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private List<SimulationDrone> drones = new ArrayList<>();
 	private List<Sphere> spheres = new ArrayList<>();
 	private List<ObstacleSphere> obstacleSpheres = new ArrayList<>();
-	private long startTime;
-	private long lastTime;
-	private double timePassed = 0;
 	private GLU glu;
 
 	private Parser parser = new Parser(this);
@@ -64,6 +61,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private double xWindSpeed = 0;
 	private double yWindSpeed = 0;
 	private double zWindSpeed = 0;
+	private int frames = 0;
 
 	public World() {
 		addGLEventListener(this);
@@ -139,17 +137,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		obstacleSpheres.add(sphere);
 		obstacleColors.add(sphere.getColor());
 	}
-
-
-
-	public double checkTimePassed() {
-		return (System.nanoTime() - getLastTime())*Math.pow(10, -9);
-	}
-
-	public void updateTimePassed() {
-		this.timePassed += (System.nanoTime() - getLastTime())*Math.pow(10, -9);
-	}
-
+	
 	protected abstract void setup();
 	protected abstract void handleCollision(WorldObject object, SimulationDrone drone);
 
@@ -158,7 +146,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		// translate camera.
 		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
-			movement.update((float)checkTimePassed());
+			movement.update((float)1/60);
 			this.getCurrentCamera().setEyeX((float)movement.getX() + this.getCurrentCamera().getStartEyeX()); 
 			this.getCurrentCamera().setEyeY((float)movement.getY() + this.getCurrentCamera().getStartEyeY()); 
 			this.getCurrentCamera().setEyeZ((float)movement.getZ() + this.getCurrentCamera().getStartEyeZ());
@@ -173,15 +161,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	}
 
 	public void display(GLAutoDrawable drawable) {
-		updateTimePassed();
-		getPhysics().run((float) checkTimePassed());
+		updateFrames();
+		getPhysics().run((float) 1/60);
 
 		for (SimulationDrone drone : getDrones()) {
-			drone.timeHasPassed((float) checkTimePassed());
+			drone.timeHasPassed((float) 1/60);
 
 		}
-
-		setLastTime(System.nanoTime());
 
 		if (!super.getAnimator().isAnimating()) {
 			return;
@@ -239,8 +225,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	 */
 	public void init(GLAutoDrawable drawable) {
 		this.drawable = drawable;
-		this.startTime = System.nanoTime();
-		this.lastTime = startTime;
 		this.physics = new Physics(this);
 		final GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(gl);
@@ -339,11 +323,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return obstacleColors;
 	}
 
-
-	public long getLastTime() {
-		return this.lastTime;
-	}
-
 	public List<DroneCamera> getDroneCameras() {
 		return droneCameras;
 	}
@@ -372,10 +351,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return generalCameras;
 	}
 
-	public float getCurrentTime() {
-		return (float) timePassed;
-	}
-
 	public int[] getFramebufferLeft() {
 		return framebufferLeft;
 	}
@@ -386,10 +361,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	public Physics getPhysics() {
 		return this.physics;
-	}
-
-	public double getStartTime() {
-		return this.startTime;
 	}
 
 	public int getFps() {
@@ -440,10 +411,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.currentCamera = camera;
 	}
 
-	public void setLastTime(long value) {
-		this.lastTime = value;
-	}
-
 	public void setParser(Parser parser) {
 		this.parser = parser;
 	}
@@ -474,5 +441,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	public static KeyboardMovement getMovement() {
 		return movement;
+	}
+	
+	public void updateFrames(){
+		frames+=1;
+	}
+	
+	public float getCurrentTime(){
+		return frames*(float)1/60;
 	}
 }
