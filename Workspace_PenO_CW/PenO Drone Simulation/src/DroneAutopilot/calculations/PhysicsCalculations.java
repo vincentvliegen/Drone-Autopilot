@@ -1,30 +1,67 @@
 package DroneAutopilot.calculations;
 
-import java.util.ArrayList;
-
 import p_en_o_cw_2016.Drone;
 
 public class PhysicsCalculations{
 
 	private Drone drone;
-	private float speed;
+	private float[] speed;
+	private float[] position;
+	private float[] previousposition;
 	private float acceleration;
 	private float previousTime;
 	private float decelerationDistance;
 	private float previousPitch;
 	private float previousPitchRate;
-	private float[] previousTimeDistance;
-	private ArrayList<float[]> timeDistanceList;
-	public final static int avgcounter = 8; 
-	public final static float deviationLinReg = 0.01f;	
+	public float deltaT;
+	public boolean firstTime;
+	
 	
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
-		timeDistanceList = new ArrayList<float[]>();
-		float[] startTimeDistance = {0,0};
-		setPreviousTimeDistance(startTimeDistance);
-		setSpeed(0);
+		this.setSpeed(0,0,0);
+		this.setPosition(0, 0, 0);
+		this.setFirstTime(true);
 	}
+	
+	
+	//DRONE
+	
+	public void update(){
+		
+		//time, position, speed, (acceleration)
+		this.setPosition(this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ());
+		
+		if(!firstTime){
+			this.setDeltaT(this.getDrone().getCurrentTime()-this.getPreviousTime());
+			this.updateSpeed();
+			/*System.out.println("--------------");
+			System.out.println("Autopilot");
+			System.out.println("speedx: " + this.getSpeed()[0]);
+			System.out.println("speedy: " + this.getSpeed()[1]);
+			System.out.println("speedz: " + this.getSpeed()[2]);
+			System.out.println("--------------");	*/
+		}
+		
+		//update previous
+		this.setPreviousTime(this.getDrone().getCurrentTime());
+		this.setPreviousposition(this.getPosition());
+		
+		firstTime=false;
+	}
+	
+	public float calculateSpeed(float currentPos, float previousPos){
+		return (currentPos-previousPos)/deltaT;
+	}
+	
+	public void updateSpeed(){
+		speed = new float[]{calculateSpeed(this.getPosition()[0], this.getPreviousposition()[0]), 
+				calculateSpeed(this.getPosition()[1], this.getPreviousposition()[1]), 
+				calculateSpeed(this.getPosition()[2], this.getPreviousposition()[2])};
+	}
+	
+	
+	//OBJECT
 
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
@@ -93,68 +130,6 @@ public class PhysicsCalculations{
 		int height =  (int) Math.round(Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getfocalDistance()*2);
 		return height;
 	}
-
-	public void calculateSpeed(float time, float distance){
-		float[] newTD = {time,distance};
-//		System.out.println("time: "+ time);
-//		System.out.println("distance: "+ distance);
-		getTimeDistanceList().add(newTD);
-		if(getTimeDistanceList().size() >= avgcounter){
-			setTimeDistanceList(filterAvg(getTimeDistanceList()));//kan soms een lege lijst returnen, wanneer deviationLinReg te klein is
-			float avgTime = 0;
-			float avgDistance = 0;
-			float size = getTimeDistanceList().size();
-			for(int i = getTimeDistanceList().size()-1; i >= 0; i--){
-				float[] currentTD = getTimeDistanceList().get(i);
-				avgTime += currentTD[0];
-				avgDistance += currentTD[1];
-				getTimeDistanceList().remove(i);
-			}
-			avgTime = avgTime/size;
-			avgDistance = avgDistance/size;
-			this.setSpeed((getPreviousTimeDistance()[1] - avgDistance)/(avgTime - getPreviousTimeDistance()[0]));
-			this.setPreviousTimeDistance(new float[]{avgTime,avgDistance});
-		}
-	}
-	
-	public ArrayList<float[]> filterAvg(ArrayList<float[]> TDList){//gebaseerd op lineaire regressie (hoort eigenlijk zelfs kwadratisch te zijn, nauwkeurig genoeg voor kleinere waardes van avgcounter) (https://en.wikipedia.org/wiki/Simple_linear_regression)
-		if(TDList.size() > 2){
-			float Sx = 0;
-			float Sy = 0;
-			float Sxx = 0;
-			float Sxy = 0;
-			int n = TDList.size();
-			for(int i = 0; i < n; i++ ){
-				float x = TDList.get(i)[0];
-				float y = TDList.get(i)[1];
-				Sx += x;
-				Sy += y;
-				Sxx += x*x;
-				Sxy += x*y;
-			}
-			//ax+b = y
-			float a = (n*Sxy-Sx*Sy)/(n*Sxx-Sx*Sx);
-			float b = (Sy - a*Sx)/n;
-			//weghalen van uitschieters
-//			System.out.println("a " + a);
-//			System.out.println("b "+b);
-//			System.out.println(TDList);
-			for(int i = TDList.size()-1; i>=0; i--){
-//				System.out.println("x "+TDList.get(i)[0]);
-//				System.out.println("y "+TDList.get(i)[1]);
-				//te klein
-				if((a*TDList.get(i)[0] + b)*(1+deviationLinReg) < TDList.get(i)[1]){
-					TDList.remove(i);
-				}//te groot
-				else if((a*TDList.get(i)[0] + b)*(1-deviationLinReg) > TDList.get(i)[1]){
-					TDList.remove(i);
-				}
-			}
-//			System.out.println(TDList);
-		}
-		return TDList;
-	}
-
 	
 
 	//////////Getters & Setters//////////
@@ -166,12 +141,16 @@ public class PhysicsCalculations{
 	public Drone getDrone(){
 		return this.drone;
 	}
+	
+	public void setSpeed(float v_x, float v_y, float v_z){
+		this.speed = new float[] {v_x, v_y, v_z};
+	}
 
-	public void setSpeed(float speed) {
+	public void setSpeed(float[] speed) {
 		this.speed = speed;
 	}
 
-	public float getSpeed() {
+	public float[] getSpeed() {
 		return speed;
 	}
 
@@ -215,33 +194,51 @@ public class PhysicsCalculations{
 		this.previousPitchRate = previousPitchRate;
 	}
 
-	/**
-	 * @return the previousTimeDistance
-	 */
-	public float[] getPreviousTimeDistance() {
-		return previousTimeDistance;
-	}
-
-	/**
-	 * @param previousTimeDistance the previousTimeDistance to set
-	 */
-	public void setPreviousTimeDistance(float[] previousTimeDistance) {
-		this.previousTimeDistance = previousTimeDistance;
-	}
-
-	/**
-	 * @return the timeDistanceList
-	 */
-	public ArrayList<float[]> getTimeDistanceList() {
-		return timeDistanceList;
+	public float[] getPosition() {
+		return position;
 	}
 	
-	/**
-	 * @param previousTimeDistance the previousTimeDistance to set
-	 */
-	public void setTimeDistanceList(ArrayList<float[]> timeDistanceList) {
-		this.timeDistanceList = timeDistanceList;
+	public void setPosition(float x, float y, float z){
+		this.position = new float[] {x, y, z};
 	}
+
+	public void setPosition(float[] position) {
+		this.position = position;
+	}
+
+	public float[] getPreviousposition() {
+		return previousposition;
+	}
+
+	public void setPreviousposition(float[] previousposition) {
+		this.previousposition = previousposition;
+	}
+	
+	public void setPreviousposition(float x, float y, float z){
+		this.previousposition = new float[] {x, y, z};
+	}
+
+
+	public float getDeltaT() {
+		return deltaT;
+	}
+
+
+	public void setDeltaT(float deltaT) {
+		this.deltaT = deltaT;
+	}
+
+
+	public boolean isFirstTime() {
+		return firstTime;
+	}
+
+
+	public void setFirstTime(boolean firstTime) {
+		this.firstTime = firstTime;
+	}
+	
+	
 	
 //	public void updateAccSpeed(float[] cog){
 //		float v0 = getSpeed();

@@ -49,6 +49,7 @@ public class MoveToTarget {
 	}
 
 	public void execute(int color) {
+		this.getPhysicsCalculations().update();
 		this.setTargetLost(false);
 		this.setColor(color);
 		ArrayList<int[]> leftCameraList = this.getImageCalculations().getPixelsOfColor(this.getDrone().getLeftCamera(),
