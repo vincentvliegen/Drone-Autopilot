@@ -12,6 +12,10 @@ public interface Drone {
     float getMaxRollRate();
     float getMaxYawRate();
 
+    float getX();
+    float getY();
+    float getZ();
+    float getHeading();
     float getPitch();
     float getRoll();
     float getCurrentTime();

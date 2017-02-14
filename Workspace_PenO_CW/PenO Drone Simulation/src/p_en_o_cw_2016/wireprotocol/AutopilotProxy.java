@@ -36,6 +36,10 @@ public class AutopilotProxy {
                         try {
                             writePixels(drone.getLeftCamera().takeImage());
                             writePixels(drone.getRightCamera().takeImage());
+                            os.writeFloat(drone.getX());
+                            os.writeFloat(drone.getY());
+                            os.writeFloat(drone.getZ());
+                            os.writeFloat(drone.getHeading());
                             os.writeFloat(drone.getPitch());
                             os.writeFloat(drone.getRoll());
                             os.writeFloat(drone.getCurrentTime());

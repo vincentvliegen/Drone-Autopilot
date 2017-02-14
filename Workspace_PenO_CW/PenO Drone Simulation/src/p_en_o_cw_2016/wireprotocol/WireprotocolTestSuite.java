@@ -50,6 +50,10 @@ class WireProtocolTestSuite {
                             Autopilot autopilot = () -> {
                                 checkImage(drone.getLeftCamera().takeImage(), width * height);
                                 checkImage(drone.getRightCamera().takeImage(), width * height);
+                                checkFloat(drone.getX());
+                                checkFloat(drone.getY());
+                                checkFloat(drone.getZ());
+                                checkFloat(drone.getHeading());
                                 checkFloat(drone.getPitch());
                                 checkFloat(drone.getRoll());
                                 checkFloat(drone.getCurrentTime());
@@ -95,6 +99,8 @@ class WireProtocolTestSuite {
 
                 int[] leftImage = new int[width * height];
                 int[] rightImage = new int[width * height];
+                float x, y, z;
+                float heading;
                 float pitch;
                 float roll;
                 float currentTime;
@@ -127,6 +133,10 @@ class WireProtocolTestSuite {
                 public float getMaxRollRate() { return maxRollRate; }
                 public float getMaxYawRate() { return maxYawRate; }
 
+                public float getX() { return x; }
+                public float getY() { return y; }
+                public float getZ() { return z; }
+                public float getHeading() { return heading; }
                 public float getPitch() { return pitch; }
                 public float getRoll() { return roll; }
                 public float getCurrentTime() { return currentTime; }
@@ -146,6 +156,10 @@ class WireProtocolTestSuite {
                 void timeHasPassed(Runnable runnable) {
                     nextPixels(leftImage);
                     nextPixels(rightImage);
+                    x = random.nextFloat();
+                    y = random.nextFloat();
+                    z = random.nextFloat();
+                    heading = random.nextFloat();
                     pitch = random.nextFloat();
                     roll = random.nextFloat();
                     currentTime = random.nextFloat();

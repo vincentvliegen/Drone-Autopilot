@@ -511,4 +511,30 @@ public class SimulationDrone extends WorldObject implements Drone{
 	public DroneCamera getMiddleCamera() {
 		return middleCamera;
 	}
+
+	@Override
+	public float getX() {
+		float xCo = (getLeftDroneCamera().getEyeX() + getRightDroneCamera().getEyeX())/2;
+		return xCo;
+	}
+
+	@Override
+	public float getY() {
+		float yCo = (getLeftDroneCamera().getEyeY() + getRightDroneCamera().getEyeY())/2;
+		return yCo;
+	}
+
+	@Override
+	public float getZ() {
+		float zCo = (getLeftDroneCamera().getEyeZ() + getRightDroneCamera().getEyeZ())/2;
+		return zCo;
+	}
+
+	@Override
+	public float getHeading() {
+		float newYaw = yaw+90f;
+		if (newYaw > 180)
+			return newYaw-360;
+		return newYaw;
+	}
 }

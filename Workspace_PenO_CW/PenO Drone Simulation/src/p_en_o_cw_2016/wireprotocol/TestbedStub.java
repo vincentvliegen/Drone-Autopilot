@@ -43,6 +43,8 @@ class DroneStub extends DroneStub0 implements Drone {
 
     int[] leftImage = new int[width * height];
     int[] rightImage = new int[width * height];
+    float x, y, z;
+    float heading;
     float pitch;
     float roll;
     float currentTime;
@@ -79,6 +81,10 @@ class DroneStub extends DroneStub0 implements Drone {
     public float getMaxRollRate() { return maxRollRate; }
     public float getMaxYawRate() { return maxYawRate; }
 
+    public float getX() { return x; }
+    public float getY() { return y; }
+    public float getZ() { return z; }
+    public float getHeading() { return heading; }
     public float getPitch() { return pitch; }
     public float getRoll() { return roll; }
     public float getCurrentTime() { return currentTime; }
@@ -91,6 +97,10 @@ class DroneStub extends DroneStub0 implements Drone {
     void timeHasPassed(Runnable runnable) throws IOException {
         readPixels(leftImage);
         readPixels(rightImage);
+        x = is.readFloat();
+        y = is.readFloat();
+        z = is.readFloat();
+        heading = is.readFloat();
         pitch = is.readFloat();
         roll = is.readFloat();
         currentTime = is.readFloat();
