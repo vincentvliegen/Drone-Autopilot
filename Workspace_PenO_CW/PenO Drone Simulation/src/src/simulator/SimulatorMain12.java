@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import p_en_o_cw_2016.AutopilotFactory;
+import DroneAutopilot.DroneAutopilotFactory;
 import simulator.GUI.GUI;
 import simulator.world.*;
 
@@ -12,6 +14,8 @@ public class SimulatorMain12 {
 	public final static void main(String[] args) {
 		
 		World12 world = new World12();
+		AutopilotFactory factory = new DroneAutopilotFactory();
+		world.setAutopilotFactory(factory);
 		JFrame frame = new JFrame("Drone Simulator");
 		GUI gui = new GUI(world);
 		

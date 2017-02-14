@@ -2,6 +2,9 @@ package simulator.world;
 
 import java.util.*;
 
+import p_en_o_cw_2016.AutopilotFactory;
+import DroneAutopilot.DroneAutopilotFactory;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -62,11 +65,20 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private double yWindSpeed = 0;
 	private double zWindSpeed = 0;
 	private int frames = 0;
+	private AutopilotFactory factory;
 
 	public World() {
 		addGLEventListener(this);
 	}
 
+	public void setAutopilotFactory(AutopilotFactory factory) {
+		this.factory = factory;
+	}
+	
+	public AutopilotFactory getAutopilotFactory() {
+		return factory;
+	}
+	 
 	public void addGeneralCamera(GeneralCamera camera){
 		generalCameras.add(camera);		
 	}

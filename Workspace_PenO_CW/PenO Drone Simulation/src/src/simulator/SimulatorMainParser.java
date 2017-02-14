@@ -4,14 +4,19 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import p_en_o_cw_2016.*;
 import simulator.GUI.GUI;
 import simulator.world.*;
+import DroneAutopilot.DroneAutopilotFactory;
 
 public class SimulatorMainParser {
 	
 	public final static void main(String[] args) {
 		
 		WorldParser world = new WorldParser();
+		//Change this autopilotFactory to change to other autopilot
+		AutopilotFactory factory = new DroneAutopilotFactory();
+		world.setAutopilotFactory(factory);
 		JFrame frame = new JFrame("Drone Simulator");
 		GUI gui = new GUI(world);
 		

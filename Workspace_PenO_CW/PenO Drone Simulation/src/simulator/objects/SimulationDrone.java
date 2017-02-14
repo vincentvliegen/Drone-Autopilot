@@ -59,8 +59,7 @@ public class SimulationDrone extends WorldObject implements Drone{
 		this.movement = new Movement(this);
 		this.cameraSeperation = width;
 		generateDroneCameras();
-		AutopilotFactory factory = new DroneAutopilotFactory();
-		this.autopilot = factory.create(this);
+		this.autopilot = world.getAutopilotFactory().create(this);
 		this.radius = (float) Math.sqrt(Math.pow(height / 2, 2)
 				+ Math.pow(width / 2, 2) + Math.pow(depth / 2, 2));
 	}
