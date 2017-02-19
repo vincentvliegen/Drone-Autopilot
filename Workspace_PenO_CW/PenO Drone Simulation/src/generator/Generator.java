@@ -7,7 +7,9 @@ import java.util.*;
 public class Generator {
 
 	public static void main(String[] args) {
-		String path = "/home/r0578402/git/zilver/Workspace_PenO_CW/PenO Drone Simulation/inputFiles/GeneratorTest";
+		//Change path so that it loads into your inputFiles/GeneratorTest.txt
+		String path = "C:/Users/versy/git/zilver/Workspace_PenO_CW/PenO Drone Simulation/inputFiles/GeneratorTest.txt";
+		String path2 = "/home/r0578402/git/zilver/Workspace_PenO_CW/PenO Drone Simulation/inputFiles/GeneratorTest.txt";
 		File file = new File(path);
 		FileWriter f;
 
@@ -15,8 +17,8 @@ public class Generator {
 
 		double horAngle = 120;
 		double verAngle = 120;
-		double imgWidth = 200;
-		double imgHeigth = 200;
+		int imgWidth = 200;
+		int imgHeigth = 200;
 		double cameraSep = 0.25f;
 		double weight = 1;
 		double gravity = 9.81f;
@@ -26,29 +28,57 @@ public class Generator {
 		double maxRoll = 720;
 		double maxYaw = 720;
 
-		String entireString = horAngle + " " + verAngle + " " + imgWidth + " "
-				+ imgHeigth + " " + cameraSep + " " + weight + " " + gravity
-				+ " " + drag + " " + maxThrust + " " + maxPitch + " " + maxRoll
-				+ " " + maxYaw;
-		
-		for (int i = 0; i < 3; i++) {
+		String entireString = horAngle + " " + verAngle + " " + imgWidth + " " + imgHeigth + " " + cameraSep + " "
+				+ weight + " " + gravity + " " + drag + " " + maxThrust + " " + maxPitch + " " + maxRoll + " " + maxYaw;
+
+		PriorityQueue<Double> newQueue = new PriorityQueue<>();
+
+		for (int i = 0; i < 6; i++) {
 			entireString += "\n";
 			for (int j = 0; j < 6; j++) {
-				entireString += (j*2 + r.nextDouble()) + " " + r.nextDouble()
-						* 0.05 + " ";
+				newQueue.add(r.nextDouble() * 15);
+			}
+			if (i < 3)
+				for (int j = 0; j < 6; j++) {
+					entireString += newQueue.poll() + " " + r.nextDouble() * 0.05 + " ";
+				}
+			else {
+				for (int j = 0; j < 6; j++) {
+					entireString += newQueue.poll() + " " + r.nextDouble() * 0.5 + " ";
+				}
 			}
 		}
 
-		for (int i = 0; i < 3; i++) {
+		List<double[]> positionList = new ArrayList<>();
+
+		for (int i = 0; i < 20; i++) {
 			entireString += "\n";
-			for (int j = 0; j < 6; j++) {
-				entireString += (j*2 + r.nextDouble()) + " " + r.nextDouble()
-						* 0.5 + " ";
+			if (i <= 9)
+				entireString += "target_ball";
+			else {
+				entireString += "obstacle_ball";
+			}
+			boolean noValidNewPosition = true;
+			while (noValidNewPosition) {
+				double x = (r.nextDouble() - .5) * 30;
+				double y = (r.nextDouble() - .5) * 30;
+				double z = (r.nextDouble() - .5) * 30;
+				noValidNewPosition = false;
+				for (double[] otherPosition : positionList) {
+					if (Math.sqrt(Math.pow(x, otherPosition[0]) + Math.pow(y, otherPosition[1])
+							+ Math.pow(z, otherPosition[2])) <= 0.75) {
+						noValidNewPosition = true;
+						break;
+					}
+				}
+				if (!noValidNewPosition) {
+					double[] newPos = { x, y, z };
+					positionList.add(newPos);
+					entireString += " " + x + " " + y + " " + z;
+				}
 			}
 		}
-		
-		//TODO Add target ball, obstacle balls (Placement restrictions!)
-		
+
 		try {
 			f = new FileWriter(file);
 			f.write(entireString);
