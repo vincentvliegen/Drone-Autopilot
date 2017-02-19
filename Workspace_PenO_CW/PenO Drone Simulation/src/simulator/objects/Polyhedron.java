@@ -6,25 +6,21 @@ import com.jogamp.opengl.GL2;
 
 import simulator.world.World;
 
-public class Polyhedron extends WorldObject {
+public abstract class Polyhedron extends WorldObject {
 
 	GL2 gl;
-	private ArrayList<Triangle> triangles;
+	protected abstract ArrayList<Triangle> getTriangles();
 
 	// TODO op deze manier qua constructor enz.?
-	public Polyhedron(World world, ArrayList<Triangle> triangles) {
+	public Polyhedron(World world) {
 		super(world);
 		this.gl = getWorld().getGL().getGL2();
-		this.triangles = triangles;
 	}
 
 	public GL2 getGl() {
 		return gl;
 	}
 
-	private ArrayList<Triangle> getTriangles() {
-		return triangles;
-	}
 
 	@Override
 	public void draw() {
