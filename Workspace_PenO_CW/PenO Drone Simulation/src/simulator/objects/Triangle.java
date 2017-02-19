@@ -10,12 +10,13 @@ public class Triangle {
 	private double[] innerPoint1;
 	private double[] innerPoint2;
 	private double[] innerPoint3;
+	private float[] color;
 
 	GL2 gl;
 
 	// TODO voeg kleur vanbuiten toe
 	// TODO voeg kleur vanbinnen toe
-	public Triangle(GL2 gl, double[] point1, double[] point2, double[] point3) {
+	public Triangle(GL2 gl, double[] point1, double[] point2, double[] point3, float[] color) {
 		this.point1 = point1;
 		this.point2 = point2;
 		this.point3 = point3;
@@ -23,6 +24,7 @@ public class Triangle {
 		this.innerPoint1 = getInnerPoint(point1);
 		this.innerPoint2 = getInnerPoint(point2);
 		this.innerPoint3 = getInnerPoint(point3);
+		this.color = color;
 	}
 	
 	private double getGravityX() {
@@ -41,7 +43,11 @@ public class Triangle {
 		
 	}
 
-
+	private float[] getColor() {
+		return this.color;
+	}
+	
+	
 	private GL2 getGl() {
 		return gl;
 	}
@@ -82,23 +88,24 @@ public class Triangle {
 
 		// TODO buitenste kleur moet ingesteld
 
+		
 		// Driehoek zelf
 		getGl().glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
-		getGl().glColor3f(0f, 0.5f, 1f);
+
+		getGl().glColor3f(getColor()[0], getColor()[1], getColor()[2]);
+		
 		getGl().glVertex3d(getPoint1()[0], getPoint1()[1], getPoint1()[2]);
 		getGl().glVertex3d(getPoint2()[0], getPoint2()[1], getPoint2()[2]);
 		getGl().glVertex3d(getPoint3()[0], getPoint3()[1], getPoint3()[2]);
-
-//		 getGl().glVertex3f(-50f,-50f,0.0f);
-//		 getGl().glVertex3f(-50f,50f,0.0f); 
-//		 getGl().glVertex3f(50f,-50f,0.0f);
-
+		
 		getGl().glEnd();
 
+		
 		// Binnenste gedeelte
 
 		// TODO binnenste kleur moet ingesteld
 		getGl().glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
+		
 		getGl().glColor3f(0f, 1f, 0f);
 
 		getGl().glVertex3d(getInnerPoint1()[0], getInnerPoint1()[1], getInnerPoint1()[2]);
