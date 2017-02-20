@@ -65,7 +65,7 @@ public class PhysicsCalculations{
 	
 	
 //OBJECT
-	// XCoÃ¶rdinate object
+	// XCoördinate object
 	public float calculateXObject(float[] cogL, float[] cogR){
 		float deltaX;
 		double angle;
@@ -76,7 +76,7 @@ public class PhysicsCalculations{
 		return deltaX + this.getDrone().getX();
 	}
 	
-	// YCoÃ¶rdinate object
+	// YCoördinate object
 	public float calculateYObject(float[] cogL, float[] cogR){
 		float deltaY;
 		double angle;
@@ -87,7 +87,7 @@ public class PhysicsCalculations{
 		return deltaY + this.getDrone().getY();
 	}
 	
-	// ZCoÃ¶rdinate object
+	// ZCoördinate object
 		public float calculateZObject(float[] cogL, float[] cogR){
 			float deltaZ = this.getDepth(cogL, cogR);
 			return deltaZ + this.getDrone().getZ();
@@ -102,6 +102,17 @@ public class PhysicsCalculations{
 		return distance;
 	}
 
+	public float getSpeedToObject(float[] positionObject){
+		float xDistanceObject = (positionObject[0]-this.getPosition()[0]);
+		float yDistanceObject = (positionObject[1]-this.getPosition()[1]);
+		float zDistanceObject = (positionObject[2]-this.getPosition()[2]);
+		float distanceObject = (float) (Math.sqrt(Math.pow(xDistanceObject,2) + Math.pow(yDistanceObject,2) + Math.pow(zDistanceObject,2)));
+		float speedDrone = (float) (Math.sqrt(Math.pow(this.getSpeed()[0],2) + Math.pow(this.getSpeed()[1],2) + Math.pow(this.getSpeed()[2],2)));
+		//the angle between the speedvector of the drone and the distance of the object to the drone
+		float cosAngle = (xDistanceObject*this.getSpeed()[0]+yDistanceObject*this.getSpeed()[1]+zDistanceObject*this.getSpeed()[2])/(distanceObject*speedDrone);
+		return cosAngle*speedDrone;
+	}
+	
 	public float getDepth(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
 		depth = Math.abs(depth);
