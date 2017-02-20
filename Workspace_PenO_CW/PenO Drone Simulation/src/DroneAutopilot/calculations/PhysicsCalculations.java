@@ -65,6 +65,14 @@ public class PhysicsCalculations{
 	
 	
 //OBJECT
+	
+	public float[] calculatePositionObject(float[] cogL, float[] cogR){
+		float deltaX = calculateXObject(cogL, cogR);
+		float deltaY = calculateYObject(cogL, cogR);
+		float deltaZ = calculateZObject(cogL, cogR);
+		return this.droneCoördToWorldCoörd(deltaX, deltaY, deltaZ);
+	}
+	
 	// XCoördinate object
 	public float calculateXObject(float[] cogL, float[] cogR){
 		float deltaX;
@@ -73,7 +81,7 @@ public class PhysicsCalculations{
 		angle = this.horizontalAngleDeviation(cogL, cogR);
 		depth = this.getDepth(cogL, cogR);
 		deltaX = (float) (Math.tan(Math.toRadians(angle))*depth);
-		return deltaX + this.getDrone().getX();
+		return deltaX;
 	}
 	
 	// YCoördinate object
@@ -84,15 +92,38 @@ public class PhysicsCalculations{
 		angle = this.verticalAngleDeviation(cogL);
 		depth = this.getDepth(cogL, cogR);
 		deltaY = (float) (Math.tan(Math.toRadians(angle))*depth);
-		return deltaY + this.getDrone().getY();
+		return deltaY;
 	}
 	
 	// ZCoördinate object
 		public float calculateZObject(float[] cogL, float[] cogR){
-			float deltaZ = this.getDepth(cogL, cogR);
-			return deltaZ + this.getDrone().getZ();
+			//altijd negatief, positieve Z is naar achter
+			float deltaZ = -this.getDepth(cogL, cogR);
+			return deltaZ;
 		}
 	
+	public float[] droneCoördToWorldCoörd(float droneX, float droneY, float droneZ){
+		float yaw = (float) Math.toRadians(this.getDrone().getHeading());
+		float pitch = (float) Math.toRadians(this.getDrone().getPitch());
+		float roll = (float) Math.toRadians(this.getDrone().getRoll());
+		//de totale rotatiematrix (eerst roll ontdoen, dan pitch ontdoen, dan yaw ontdoen)
+		float r11 = (float) (Math.cos(roll)*Math.cos(yaw)+Math.sin(pitch)*Math.sin(roll)*Math.sin(yaw));
+		float r12 = (float) (Math.cos(yaw)*Math.sin(roll)-Math.cos(roll)*Math.sin(pitch)*Math.sin(yaw));
+		float r13 = (float) (Math.cos(pitch)*Math.sin(yaw));
+		float r21 = (float)(-Math.cos(pitch)*Math.sin(pitch));
+		float r22 = (float)(Math.cos(pitch)*Math.cos(roll));
+		float r23 = (float)(Math.sin(pitch));
+		float r31 = (float)(Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll)-Math.cos(roll)*Math.sin(yaw));
+		float r32 = (float)(-Math.sin(roll)*Math.sin(yaw)-Math.cos(roll)*Math.cos(yaw)*Math.sin(pitch));
+		float r33 = (float)(Math.cos(pitch)*Math.cos(yaw));
+		//transformeren van drone naar world
+		float xObjectRotated = r11*droneX + r12*droneY + r13*droneZ;
+		float yObjectRotated = r21*droneX + r22*droneY + r23*droneZ;
+		float zObjectRotated = r31*droneX + r32*droneY + r33*droneZ;
+		float[] result = new float[] {xObjectRotated+ getPosition()[0], yObjectRotated + getPosition()[1], zObjectRotated + getPosition()[2]};
+		return result;
+	}
+		
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
 		float distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
