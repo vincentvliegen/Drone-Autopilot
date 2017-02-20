@@ -20,7 +20,7 @@ public class PhysicsCalculations{
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
 		this.setSpeed(0,0,0);
-		this.setPosition(0, 0, 0);
+		this.setPosition(0,0,0);
 		this.setFirstTime(true);
 	}
 	
@@ -28,19 +28,22 @@ public class PhysicsCalculations{
 	//DRONE
 	
 	public void update(){
-		
-		//time, position, speed, (acceleration)
 		this.setPosition(this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ());
-		
 		if(!firstTime){
 			this.setDeltaT(this.getDrone().getCurrentTime()-this.getPreviousTime());
 			this.updateSpeed();
-			/*System.out.println("--------------");
+			/*
+			System.out.println("--------------");
 			System.out.println("Autopilot");
+			System.out.println("DeltaT: " + this.getDeltaT());
+			System.out.println("PosX: " + this.getDrone().getX());
+			System.out.println("PosY: " + this.getDrone().getY());
+			System.out.println("PosZ: " + this.getDrone().getZ());
 			System.out.println("speedx: " + this.getSpeed()[0]);
 			System.out.println("speedy: " + this.getSpeed()[1]);
 			System.out.println("speedz: " + this.getSpeed()[2]);
-			System.out.println("--------------");	*/
+			System.out.println("--------------");	
+			*/
 		}
 		
 		//update previous
@@ -51,7 +54,7 @@ public class PhysicsCalculations{
 	}
 	
 	public float calculateSpeed(float currentPos, float previousPos){
-		return (currentPos-previousPos)/deltaT;
+		return (currentPos-previousPos)/this.getDeltaT();
 	}
 	
 	public void updateSpeed(){
@@ -61,13 +64,40 @@ public class PhysicsCalculations{
 	}
 	
 	
-	//OBJECT
-
+//OBJECT
+	// XCoördinate object
+	public float calculateXObject(float[] cogL, float[] cogR){
+		float deltaX;
+		double angle;
+		float depth;
+		angle = this.horizontalAngleDeviation(cogL, cogR);
+		depth = this.getDepth(cogL, cogR);
+		deltaX = (float) (Math.tan(Math.toRadians(angle))*depth);
+		return deltaX + this.getDrone().getX();
+	}
+	
+	// YCoördinate object
+	public float calculateYObject(float[] cogL, float[] cogR){
+		float deltaY;
+		double angle;
+		float depth;
+		angle = this.verticalAngleDeviation(cogL);
+		depth = this.getDepth(cogL, cogR);
+		deltaY = (float) (Math.tan(Math.toRadians(angle))*depth);
+		return deltaY + this.getDrone().getY();
+	}
+	
+	// ZCoördinate object
+		public float calculateZObject(float[] cogL, float[] cogR){
+			float deltaZ = this.getDepth(cogL, cogR);
+			return deltaZ + this.getDrone().getZ();
+		}
+	
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
 		float distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
 		if(Float.isNaN(distance) || Float.isInfinite(distance)){
-			distance =0.5f;
+			distance = 0.5f;
 		}
 		return distance;
 	}
