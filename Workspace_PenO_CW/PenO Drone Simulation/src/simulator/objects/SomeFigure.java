@@ -6,8 +6,8 @@ public class SomeFigure extends Polyhedron{
 
 
 
-	public SomeFigure(World world) {
-		super(world);
+	public SomeFigure(World world, PolyhedronType type) {
+		super(world, type);
 	}
 
 

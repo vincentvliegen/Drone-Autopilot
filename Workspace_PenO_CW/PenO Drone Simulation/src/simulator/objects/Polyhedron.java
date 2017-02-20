@@ -11,16 +11,22 @@ public abstract class Polyhedron extends WorldObject {
 
 	GL2 gl;
 	private ArrayList<Triangle> triangles = new ArrayList<>();
+	private PolyhedronType type;
 	protected abstract void defineTriangles();
 
 	
 	protected ArrayList<Triangle> getTriangles() {
 		return this.triangles;
 	}
+	
+	protected PolyhedronType getPolyhedronType() {
+		return this.type;
+	}
 
 	// TODO op deze manier qua constructor enz.?
-	public Polyhedron(World world) {
+	public Polyhedron(World world, PolyhedronType type) {
 		super(world);
+		this.type = type;
 		this.gl = getWorld().getGL().getGL2();
 		defineTriangles();
 	}
