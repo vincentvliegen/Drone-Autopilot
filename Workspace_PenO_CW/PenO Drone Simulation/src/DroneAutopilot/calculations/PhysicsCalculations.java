@@ -70,10 +70,10 @@ public class PhysicsCalculations{
 		float deltaX = calculateXObject(cogL, cogR);
 		float deltaY = calculateYObject(cogL, cogR);
 		float deltaZ = calculateZObject(cogL, cogR);
-		return this.droneCoördToWorldCoörd(deltaX, deltaY, deltaZ);
+		return this.droneCoordToWorldCoord(deltaX, deltaY, deltaZ);
 	}
 	
-	// XCoördinate object
+	// XCoordinate object
 	public float calculateXObject(float[] cogL, float[] cogR){
 		float deltaX;
 		double angle;
@@ -84,7 +84,7 @@ public class PhysicsCalculations{
 		return deltaX;
 	}
 	
-	// YCoördinate object
+	// YCoordinate object
 	public float calculateYObject(float[] cogL, float[] cogR){
 		float deltaY;
 		double angle;
@@ -95,14 +95,14 @@ public class PhysicsCalculations{
 		return deltaY;
 	}
 	
-	// ZCoördinate object
+	// ZCoordinate object
 		public float calculateZObject(float[] cogL, float[] cogR){
 			//altijd negatief, positieve Z is naar achter
 			float deltaZ = -this.getDepth(cogL, cogR);
 			return deltaZ;
 		}
 	
-	public float[] droneCoördToWorldCoörd(float droneX, float droneY, float droneZ){
+	public float[] droneCoordToWorldCoord(float droneX, float droneY, float droneZ){
 		float yaw = (float) Math.toRadians(this.getDrone().getHeading());
 		float pitch = (float) Math.toRadians(this.getDrone().getPitch());
 		float roll = (float) Math.toRadians(this.getDrone().getRoll());
