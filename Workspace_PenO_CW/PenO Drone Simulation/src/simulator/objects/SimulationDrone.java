@@ -511,22 +511,26 @@ public class SimulationDrone extends WorldObject implements Drone{
 		return middleCamera;
 	}
 
+	//TODO Dit aanpassen, wanneer de juiste representatie van de camera er is!
 	@Override
-	public float getX() {
-		float xCo = (getLeftDroneCamera().getEyeX() + getRightDroneCamera().getEyeX())/2;
-		return xCo;
+	public float getX() {		
+//		float xCo = (getLeftDroneCamera().getEyeX() + getRightDroneCamera().getEyeX())/2;
+//		return xCo;
+		return (float) this.getMovement().getCurrentPosition()[0];
 	}
 
 	@Override
 	public float getY() {
-		float yCo = (getLeftDroneCamera().getEyeY() + getRightDroneCamera().getEyeY())/2;
-		return yCo;
+//		float yCo = (getLeftDroneCamera().getEyeY() + getRightDroneCamera().getEyeY())/2;
+//		return yCo;
+		return (float) this.getMovement().getCurrentPosition()[1];
 	}
 
 	@Override
 	public float getZ() {
-		float zCo = (getLeftDroneCamera().getEyeZ() + getRightDroneCamera().getEyeZ())/2;
-		return zCo;
+//		float zCo = (getLeftDroneCamera().getEyeZ() + getRightDroneCamera().getEyeZ())/2;
+//		return zCo;
+		return (float) this.getMovement().getCurrentPosition()[2];
 	}
 
 	@Override
