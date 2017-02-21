@@ -290,19 +290,18 @@ public class SimulationDrone extends WorldObject implements Drone{
 		// lookat moet recht vooruit zijn
 		// dus X moet zelfde zijn, Y ook, Z iets verder
 
-		float commonY = getDroneHeight() / 2;
+		float commonY = 0;
+		float commonX = 0;
 
 		// left
-		float leftX = getDroneWidth() / 2;
 		float leftZ = -getCameraSeparation() / 2;
-		leftCamera = new DroneCamera(leftX, commonY, leftZ, leftX + 100,
+		leftCamera = new DroneCamera(commonX, commonY, leftZ, commonX + 100,
 				commonY, leftZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.LEFT);
 
 		// right
-		float rightX = getDroneWidth() / 2;
 		float rightZ = getCameraSeparation() / 2;
-		rightCamera = new DroneCamera(rightX, commonY, rightZ, rightX + 100,
+		rightCamera = new DroneCamera(commonX, commonY, rightZ, commonX + 100,
 				commonY, rightZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.RIGHT);
 
