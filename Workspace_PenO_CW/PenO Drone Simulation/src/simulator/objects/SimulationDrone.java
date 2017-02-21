@@ -534,7 +534,7 @@ public class SimulationDrone extends WorldObject implements Drone{
 
 	@Override
 	public float getHeading() {
-		float newYaw = yaw; //Check github interface
+		float newYaw = yaw+90; 
 		if (newYaw > 180)
 			return newYaw-360;
 		return newYaw;
