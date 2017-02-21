@@ -65,7 +65,6 @@ public class PhysicsCalculations{
 	
 	
 //OBJECT
-	
 	public float[] calculatePositionObject(float[] cogL, float[] cogR){
 		float deltaX = calculateXObject(cogL, cogR);
 		float deltaY = calculateYObject(cogL, cogR);
@@ -107,15 +106,15 @@ public class PhysicsCalculations{
 		float pitch = (float) Math.toRadians(this.getDrone().getPitch());
 		float roll = (float) Math.toRadians(this.getDrone().getRoll());
 		//de totale rotatiematrix (eerst roll ontdoen, dan pitch ontdoen, dan yaw ontdoen)
-		float r11 = (float) (Math.cos(roll)*Math.cos(yaw)+Math.sin(pitch)*Math.sin(roll)*Math.sin(yaw));
-		float r12 = (float) (Math.cos(yaw)*Math.sin(roll)-Math.cos(roll)*Math.sin(pitch)*Math.sin(yaw));
-		float r13 = (float) (Math.cos(pitch)*Math.sin(yaw));
-		float r21 = (float)(-Math.cos(pitch)*Math.sin(pitch));
-		float r22 = (float)(Math.cos(pitch)*Math.cos(roll));
-		float r23 = (float)(Math.sin(pitch));
-		float r31 = (float)(Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll)-Math.cos(roll)*Math.sin(yaw));
-		float r32 = (float)(-Math.sin(roll)*Math.sin(yaw)-Math.cos(roll)*Math.cos(yaw)*Math.sin(pitch));
-		float r33 = (float)(Math.cos(pitch)*Math.cos(yaw));
+		float r11 = (float) (Math.cos(roll)*Math.cos(yaw)-Math.sin(pitch)*Math.sin(roll)*Math.sin(yaw));
+		float r12 = (float) (Math.cos(yaw)*Math.sin(roll)+Math.cos(roll)*Math.sin(pitch)*Math.sin(yaw));
+		float r13 = (float) (-Math.cos(pitch)*Math.sin(yaw));
+		float r21 = (float) (-Math.cos(pitch)*Math.sin(roll));
+		float r22 = (float) (Math.cos(pitch)*Math.cos(roll));
+		float r23 = (float) (Math.sin(pitch));
+		float r31 = (float) (Math.cos(roll)*Math.sin(yaw)+Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll));
+		float r32 = (float) (Math.sin(roll)*Math.sin(yaw)-Math.cos(roll)*Math.cos(yaw)*Math.sin(pitch));
+		float r33 = (float) (Math.cos(pitch)*Math.cos(yaw));
 		//transformeren van drone naar world
 		float xObjectRotated = r11*droneX + r12*droneY + r13*droneZ;
 		float yObjectRotated = r21*droneX + r22*droneY + r23*droneZ;
