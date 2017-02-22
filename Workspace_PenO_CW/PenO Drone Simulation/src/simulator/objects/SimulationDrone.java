@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES3;
 
@@ -82,73 +83,80 @@ public class SimulationDrone extends WorldObject implements Drone{
 		translateDrone(getPosition());
 		rotateDrone(-getYaw(), getGlobalRoll(), -getGlobalPitch());
 		gl.glColor3f(color[0], color[1], color[2]);
-		gl.glBegin(GL2ES3.GL_QUADS);
+		gl.glBegin(GL2ES3.GL_TRIANGLES);
+		gl.glCullFace(GL.GL_BACK);
 
-		// Top
-		gl.glVertex3f(getDroneWidth() / 2, getDroneHeight() / 2,
-				-getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, getDroneHeight() / 2,
-				-getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(getDroneWidth() / 2, getDroneHeight() / 2,
-				getDroneDepth() / 2);
 
-		// Bottom
-		gl.glVertex3f(getDroneWidth() / 2, -getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, -getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, -getDroneHeight() / 2,
-				-getDroneDepth() / 2);
-		gl.glVertex3f(getDroneWidth() / 2, -getDroneHeight() / 2,
-				-getDroneDepth() / 2);
+		//TOP new
+		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
 
-		// Front
-		gl.glVertex3f(getDroneWidth() / 2, getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, -getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(getDroneWidth() / 2, -getDroneHeight() / 2,
-				getDroneDepth() / 2);
+		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);		
+		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
 
-		// back
-		gl.glVertex3f(getDroneWidth() / 2, getDroneHeight() / 2,
-				-getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, getDroneHeight() / 2,
-				-getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, -getDroneHeight() / 2,
-				-getDroneDepth() / 2);
-		gl.glVertex3f(getDroneWidth() / 2, -getDroneHeight() / 2,
-				-getDroneDepth() / 2);
+		//BOTTOM new
 
-		// Left
-		gl.glVertex3f(-getDroneWidth() / 2, getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, getDroneHeight() / 2,
-				-getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, -getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(-getDroneWidth() / 2, -getDroneHeight() / 2,
-				-getDroneDepth() / 2);
+		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
 
-		// Right
+		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
 
-		gl.glVertex3f(getDroneWidth() / 2, getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(getDroneWidth() / 2, getDroneHeight() / 2,
-				-getDroneDepth() / 2);
-		gl.glVertex3f(getDroneWidth() / 2, -getDroneHeight() / 2,
-				getDroneDepth() / 2);
-		gl.glVertex3f(getDroneWidth() / 2, -getDroneHeight() / 2,
-				-getDroneDepth() / 2);
+
+
+		//FRONT new
+		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+
+		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+
+
+		//BACK new
+
+		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+
+		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
+
+
+		//LEFT new
+
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
+
+		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
+
+		//RIGHT new
+
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
+
+		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
+
+
+
 
 		gl.glEnd();
 		gl.glPopMatrix();// undo rotation
 
 	}
+
 
 	public void createRotateMatrix() {
 		rotateMatrix.clear();

@@ -3,8 +3,6 @@ package simulator.world;
 import java.util.*;
 
 import p_en_o_cw_2016.AutopilotFactory;
-import DroneAutopilot.DroneAutopilotFactory;
-
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -154,7 +152,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	protected abstract void handleCollision(WorldObject object, SimulationDrone drone);
 
 	protected void draw() {
-		GL2 gl = getGL().getGL2();
 
 		// translate camera.
 		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
@@ -305,6 +302,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.setSwapInterval(1);
 		animator = new FPSAnimator(this, fps);
 		animator.start();
+		gl.glEnable(GL.GL_CULL_FACE);
 	}
 
 	public void checkCollision(SimulationDrone drone) {
