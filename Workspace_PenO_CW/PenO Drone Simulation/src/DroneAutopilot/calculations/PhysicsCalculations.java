@@ -10,6 +10,7 @@ public class PhysicsCalculations{
 	private float[] previousposition;
 	private float acceleration;
 	private float previousTime;
+	private float Time;
 	private float decelerationDistance;
 	private float previousPitch;
 	private float previousPitchRate;
@@ -20,6 +21,7 @@ public class PhysicsCalculations{
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
 		this.setSpeed(0,0,0);
+		this.setTime(0);
 		this.setPosition(0,0,0);
 		this.setFirstTime(true);
 	}
@@ -28,9 +30,16 @@ public class PhysicsCalculations{
 	//DRONE
 	
 	public void update(){
+		
+		//update previous
+		this.setPreviousTime(this.getTime());
+		this.setPreviousposition(this.getPosition());
+		
+		//update current
 		this.setPosition(this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ());
+		this.setTime(this.getDrone().getCurrentTime());
 		if(!firstTime){
-			this.setDeltaT(this.getDrone().getCurrentTime()-this.getPreviousTime());
+			this.setDeltaT(this.getTime()-this.getPreviousTime());
 			this.updateSpeed();
 			/*
 			System.out.println("--------------");
@@ -45,11 +54,6 @@ public class PhysicsCalculations{
 			System.out.println("--------------");	
 			*/
 		}
-		
-		//update previous
-		this.setPreviousTime(this.getDrone().getCurrentTime());
-		this.setPreviousposition(this.getPosition());
-		
 		firstTime=false;
 	}
 	
@@ -308,6 +312,18 @@ public class PhysicsCalculations{
 	public void setFirstTime(boolean firstTime) {
 		this.firstTime = firstTime;
 	}
+
+
+	public float getTime() {
+		return Time;
+	}
+
+
+	public void setTime(float time) {
+		Time = time;
+	}
+	
+	
 	
 	
 	
