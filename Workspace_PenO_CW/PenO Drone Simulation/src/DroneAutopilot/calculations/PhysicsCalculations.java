@@ -5,31 +5,28 @@ import p_en_o_cw_2016.Drone;
 public class PhysicsCalculations{
 
 	private Drone drone;
-	private float[] speed;
-	private float[] position;
-	private float[] previousposition;
-	private float acceleration;
-	private float previousTime;
-	private float Time;
-	private float decelerationDistance;
-	private float previousPitch;
-	private float previousPitchRate;
-	public float deltaT;
-	public boolean firstTime;
 	
+	private float previousTime;
+	private float time;
+	private float[] previousposition;
+	private float[] position;
+	public float deltaT;
+	private float[] speed;
+	
+	public boolean firstTime;
 	
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
-		this.setSpeed(0,0,0);
 		this.setTime(0);
 		this.setPosition(0,0,0);
+		this.setSpeed(0,0,0);
 		this.setFirstTime(true);
 	}
 	
 	
-	//DRONE
+	//////////DRONE//////////
 	
-	public void update(){
+	public void updateDroneData(){
 		
 		//update previous
 		this.setPreviousTime(this.getTime());
@@ -38,9 +35,9 @@ public class PhysicsCalculations{
 		//update current
 		this.setPosition(this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ());
 		this.setTime(this.getDrone().getCurrentTime());
-		if(!firstTime){
+		if(!isFirstTime()){
 			this.setDeltaT(this.getTime()-this.getPreviousTime());
-			this.updateSpeed();
+			this.calculateSpeed();
 			/*
 			System.out.println("--------------");
 			System.out.println("Autopilot");
@@ -54,21 +51,74 @@ public class PhysicsCalculations{
 			System.out.println("--------------");	
 			*/
 		}
-		firstTime=false;
+		setFirstTime(false);
 	}
 	
-	public float calculateSpeed(float currentPos, float previousPos){
+	public void calculateSpeed(){
+		setSpeed(new float[] {	speedByAxis(this.getPosition()[0], this.getPreviousposition()[0]), 
+								speedByAxis(this.getPosition()[1], this.getPreviousposition()[1]), 
+								speedByAxis(this.getPosition()[2], this.getPreviousposition()[2]) });
+	}
+	
+	public float speedByAxis(float currentPos, float previousPos){
 		return (currentPos-previousPos)/this.getDeltaT();
 	}
 	
-	public void updateSpeed(){
-		speed = new float[]{calculateSpeed(this.getPosition()[0], this.getPreviousposition()[0]), 
-				calculateSpeed(this.getPosition()[1], this.getPreviousposition()[1]), 
-				calculateSpeed(this.getPosition()[2], this.getPreviousposition()[2])};
+	
+	//////////OBJECT//////////
+	
+	
+	//TODO eventueel updateObjectData (ik had iets vergelijkbaars in de reeds verwijderde physicscalculations_vincent staan) die alle stappen hieronder uitvoert op volgorde (vereenvoudigt onderstaande functies)
+	public float getfocalDistance(){
+		float focal =(float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2)));
+		return focal;
 	}
 	
+	public int getCameraHeight(){
+		int height =  (int) Math.round(Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getfocalDistance()*2);
+		return height;
+	}
 	
-//OBJECT
+	public float getX1(float[] centerofGravityL){
+		float x1 = centerofGravityL[0] - this.getDrone().getLeftCamera().getWidth()/2;
+		return x1;
+	}
+
+	public float getX2(float[] centerofGravityR){
+		float x2 = centerofGravityR[0] - this.getDrone().getRightCamera().getWidth()/2;
+		return x2;
+	}
+
+	public float getY(float[] centerofGravity){
+		float y = ((float) ((this.getCameraHeight()/2) - centerofGravity[1])) ;
+		return y;
+	}
+		
+	public float getDepth(float[] centerOfGravityL, float[]centerOfGravityR){
+		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
+		depth = Math.abs(depth);
+		if(Float.isNaN(depth) || Float.isInfinite(depth)){
+			depth =0;
+		}
+		return depth;
+	}
+	
+	public float horizontalAngleDeviation(float[] centerOfGravityL, float[] centerOfGravityR){
+		float alfa;
+		if (this.getDepth(centerOfGravityL, centerOfGravityR)!=0){
+			float x = (this.getDepth(centerOfGravityL, centerOfGravityR) * this.getX1(centerOfGravityL)) / this.getfocalDistance();
+			float tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerOfGravityR);
+			alfa = (float) Math.toDegrees(Math.atan(tanAlfa));
+		}else{
+			alfa = 0;
+		}
+		return alfa ;
+	}
+
+	public float verticalAngleDeviation(float[] centerOfGravity){
+		return (float) Math.toDegrees(Math.atan(this.getY(centerOfGravity) / this.getfocalDistance()));
+	}
+	
 	public float[] calculatePositionObject(float[] cogL, float[] cogR){
 		float deltaX = calculateXObject(cogL, cogR);
 		float deltaY = calculateYObject(cogL, cogR);
@@ -76,7 +126,6 @@ public class PhysicsCalculations{
 		return this.droneCoordToWorldCoord(deltaX, deltaY, deltaZ);
 	}
 	
-	// XCoordinate object
 	public float calculateXObject(float[] cogL, float[] cogR){
 		float deltaX;
 		double angle;
@@ -87,7 +136,6 @@ public class PhysicsCalculations{
 		return deltaX;
 	}
 	
-	// YCoordinate object
 	public float calculateYObject(float[] cogL, float[] cogR){
 		float deltaY;
 		double angle;
@@ -98,13 +146,13 @@ public class PhysicsCalculations{
 		return deltaY;
 	}
 	
-	// ZCoordinate object
-		public float calculateZObject(float[] cogL, float[] cogR){
+	public float calculateZObject(float[] cogL, float[] cogR){
 			//altijd negatief, positieve Z is naar achter
 			float deltaZ = -this.getDepth(cogL, cogR);
 			return deltaZ;
 		}
 	
+	//TODO de rotatie misschien onder EXTRA zetten, samen met zijn inverse, voor eventueel andere functies in de toekomst
 	public float[] droneCoordToWorldCoord(float droneX, float droneY, float droneZ){
 		float yaw = (float) Math.toRadians(this.getDrone().getHeading());
 		float pitch = (float) Math.toRadians(this.getDrone().getPitch());
@@ -126,7 +174,10 @@ public class PhysicsCalculations{
 		float[] result = new float[] {xObjectRotated+ getPosition()[0], yObjectRotated + getPosition()[1], zObjectRotated + getPosition()[2]};
 		return result;
 	}
-		
+	
+	
+	
+	//TODO vervangen in movetotarget etc.
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
 		float distance =(float) (depth/(Math.cos(Math.toRadians(this.horizontalAngleDeviation(centerOfGravityL, centerOfGravityR)))*Math.cos(Math.toRadians(this.verticalAngleDeviation(centerOfGravityL)))));
@@ -136,62 +187,19 @@ public class PhysicsCalculations{
 		return distance;
 	}
 	
-	public float getDistanceToDrone(float[] position){
-		float xDrone = this.getDrone().getX();
-		float yDrone = this.getDrone().getY();
-		float zDrone = this.getDrone().getZ();
-		return vectorSize(xDrone-position[0],yDrone-position[1],zDrone-position[2]);
+	public float getDistanceToPosition(float[] position){
+		return vectorSize(this.getDrone().getX()-position[0],this.getDrone().getY()-position[1],this.getDrone().getZ()-position[2]);
 	}
 	
 	public float getSpeedTowardsPosition(float[] position){
-		float distanceObject = this.getDistanceToDrone(position);
+		float distanceObject = this.getDistanceToPosition(position);
 		float speedDrone = vectorSize(this.getSpeed());
 		//the angle between the speedvector of the drone and the distance of the object to the drone
 		float cosAngle = ((position[0]-this.getPosition()[0])*this.getSpeed()[0]+(position[1]-this.getPosition()[1])*this.getSpeed()[1]+(position[2]-this.getPosition()[2])*this.getSpeed()[2])/(distanceObject*speedDrone);
 		return cosAngle*speedDrone;
 	}
 	
-	public float getDepth(float[] centerOfGravityL, float[]centerOfGravityR){
-		float depth = (this.getDrone().getCameraSeparation() * this.getfocalDistance())/(this.getX1(centerOfGravityL) - this.getX2(centerOfGravityR));
-		depth = Math.abs(depth);
-		if(Float.isNaN(depth) || Float.isInfinite(depth)){
-			depth =0;
-		}
-		return depth;
-	}
-
-	public float getfocalDistance(){
-		float focal =(float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2)));
-		return focal;
-	}
-
-	public float getX1(float[] centerofGravityL){
-		float x1 = centerofGravityL[0] - this.getDrone().getLeftCamera().getWidth()/2;
-		return x1;
-	}
-
-	public float getX2(float[] centerofGravityR){
-		float x2 = centerofGravityR[0] - this.getDrone().getRightCamera().getWidth()/2;
-		return x2;
-	}
-
-	public float horizontalAngleDeviation(float[] centerOfGravityL, float[] centerOfGravityR){
-		float alfa;
-		if (this.getDepth(centerOfGravityL, centerOfGravityR)!=0){
-			float x = (this.getDepth(centerOfGravityL, centerOfGravityR) * this.getX1(centerOfGravityL)) / this.getfocalDistance();
-			float tanAlfa = (x - this.getDrone().getCameraSeparation()/2) / this.getDepth(centerOfGravityL, centerOfGravityR);
-			alfa = (float) Math.toDegrees(Math.atan(tanAlfa));
-		}else{
-			alfa = 0;
-		}
-		return alfa ;
-	}
-
-	public float verticalAngleDeviation(float[] centerOfGravity){
-		return (float) Math.toDegrees(Math.atan(this.getY(centerOfGravity) / this.getfocalDistance()));
-	}
-	
-	
+	//TODO vervangen in movetotarget etc.
 	public float getThrust(float[] cog) {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
@@ -201,11 +209,13 @@ public class PhysicsCalculations{
 		return thrust;
 	}
 
-
-//	public float[] getThrust(float[] position){
-//		
-//		return null;
-//	}
+	public float[] getThrustToPosition(float[] position){
+		
+		return null;
+	}
+	
+	
+	//////////EXTRA//////////
 	
 	public float vectorSize(float x, float y, float z){
 		return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
@@ -216,19 +226,7 @@ public class PhysicsCalculations{
 	}
 	
 
-	
-	public float getY(float[] centerofGravity){
-		float y = ((float) ((this.getCameraHeight()/2) - centerofGravity[1])) ;
-		return y;
-	}
-
-	public int getCameraHeight(){
-		int height =  (int) Math.round(Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getfocalDistance()*2);
-		return height;
-	}
-	
-
-	//////////Getters & Setters//////////
+	//////////GETTERS & SETTERS//////////
 
 	public void setDrone(Drone drone){
 		this.drone = drone;
@@ -237,7 +235,11 @@ public class PhysicsCalculations{
 	public Drone getDrone(){
 		return this.drone;
 	}
-	
+
+	public float[] getSpeed() {
+		return speed;
+	}
+
 	public void setSpeed(float v_x, float v_y, float v_z){
 		this.speed = new float[] {v_x, v_y, v_z};
 	}
@@ -246,48 +248,12 @@ public class PhysicsCalculations{
 		this.speed = speed;
 	}
 
-	public float[] getSpeed() {
-		return speed;
-	}
-
-	public void setAcceleration(float acceleration) {
-		this.acceleration = acceleration;
-	}
-
-	public float getAcceleration() {
-		return acceleration;
-	}
-
 	public float getPreviousTime() {
 		return previousTime;
 	}
 
 	public void setPreviousTime(float previousTime) {
 		this.previousTime = previousTime;
-	}
-
-	public void setDecelerationDistance(float distance){
-		this.decelerationDistance = distance;
-	}
-
-	public float getDecelerationDistance(){
-		return this.decelerationDistance;
-	}
-
-	public float getPreviousPitch() {
-		return previousPitch;
-	}
-
-	public void setPreviousPitch(float previousPitch) {
-		this.previousPitch = previousPitch;
-	}
-
-	public float getPreviousPitchRate() {
-		return previousPitchRate;
-	}
-
-	public void setPreviousPitchRate(float previousPitchRate) {
-		this.previousPitchRate = previousPitchRate;
 	}
 
 	public float[] getPosition() {
@@ -306,46 +272,76 @@ public class PhysicsCalculations{
 		return previousposition;
 	}
 
-	public void setPreviousposition(float[] previousposition) {
-		this.previousposition = previousposition;
-	}
-	
 	public void setPreviousposition(float x, float y, float z){
 		this.previousposition = new float[] {x, y, z};
 	}
-
+	
+	public void setPreviousposition(float[] previousposition) {
+		this.previousposition = previousposition;
+	}
 
 	public float getDeltaT() {
 		return deltaT;
 	}
 
-
 	public void setDeltaT(float deltaT) {
 		this.deltaT = deltaT;
 	}
-
 
 	public boolean isFirstTime() {
 		return firstTime;
 	}
 
-
 	public void setFirstTime(boolean firstTime) {
 		this.firstTime = firstTime;
 	}
 
-
 	public float getTime() {
-		return Time;
+		return this.time;
 	}
-
 
 	public void setTime(float time) {
-		Time = time;
+		this.time = time;
 	}
 	
+
 	
+//	private float acceleration;
+//	private float decelerationDistance;
+//	private float previousPitch;
+//	private float previousPitchRate;
 	
+//	public void setAcceleration(float acceleration) {
+//		this.acceleration = acceleration;
+//	}
+//
+//	public float getAcceleration() {
+//		return acceleration;
+//	}
+//	
+//	public void setDecelerationDistance(float distance){
+//	this.decelerationDistance = distance;
+//}
+//
+//public float getDecelerationDistance(){
+//	return this.decelerationDistance;
+//}
+//
+//public float getPreviousPitch() {
+//	return previousPitch;
+//}
+//
+//public void setPreviousPitch(float previousPitch) {
+//	this.previousPitch = previousPitch;
+//}
+//
+//public float getPreviousPitchRate() {
+//	return previousPitchRate;
+//}
+//
+//public void setPreviousPitchRate(float previousPitchRate) {
+//	this.previousPitchRate = previousPitchRate;
+//}
 	
 	
 //	public void updateAccSpeed(float[] cog){
@@ -376,19 +372,19 @@ public class PhysicsCalculations{
 //		}
 //		//System.out.println("beta " + beta);
 //		//System.out.println("pitch " + pitch);
-//		//System.out.println("delta" + delta); //TODO is niet +- 0 in world 11? gaat helaas niet anders blijkbaar
+//		//System.out.println("delta" + delta); //todo is niet +- 0 in world 11? gaat helaas niet anders blijkbaar
 //		this.setSpeed(speed);
 //		this.calculateDecelerationDistance(timeDev,cog);
 //		this.setPreviousTime(this.getDrone().getCurrentTime());
 //		this.setPreviousPitch(pitch);
-//		//TODO elke keer dat de pitchrate wordt ingesteld moet this.setPreviousPitchRate worden aangepast (wanneer target = visible)
+//		//todo elke keer dat de pitchrate wordt ingesteld moet this.setPreviousPitchRate worden aangepast (wanneer target = visible)
 //	}
 //
 //	public void calculateDecelerationDistance(float timeDev,float[] cog){
-//		//TODO parameter voor maxPitch (hoogte/2*1/10) in MoveToTarget of hier
+//		//todo parameter voor maxPitch (hoogte/2*1/10) in MoveToTarget of hier
 //		float pitch = this.getDrone().getPitch();
 //		float pitchrate = this.getDrone().getMaxPitchRate();
-//		float tegenPitch = -this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;//TODO enkel wanneer max pitch het tegengestelde is, deze moet even groot zijn
+//		float tegenPitch = -this.getDrone().getLeftCamera().getVerticalAngleOfView()/10;//todo enkel wanneer max pitch het tegengestelde is, deze moet even groot zijn
 //		//tegenbeta = tegenPitch+delta = tegenPitch + (beta-pitch)
 //		float tegenBeta = tegenPitch + (this.verticalAngleDeviation(cog)-pitch);
 //		float speed = this.getSpeed();
