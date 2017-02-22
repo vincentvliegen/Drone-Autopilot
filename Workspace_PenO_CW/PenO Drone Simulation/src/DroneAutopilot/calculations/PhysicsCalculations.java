@@ -135,15 +135,19 @@ public class PhysicsCalculations{
 		}
 		return distance;
 	}
-
-	public float getSpeedToObject(float[] positionObject){
-		float xDistanceObject = (positionObject[0]-this.getPosition()[0]);
-		float yDistanceObject = (positionObject[1]-this.getPosition()[1]);
-		float zDistanceObject = (positionObject[2]-this.getPosition()[2]);
-		float distanceObject = (float) (Math.sqrt(Math.pow(xDistanceObject,2) + Math.pow(yDistanceObject,2) + Math.pow(zDistanceObject,2)));
-		float speedDrone = (float) (Math.sqrt(Math.pow(this.getSpeed()[0],2) + Math.pow(this.getSpeed()[1],2) + Math.pow(this.getSpeed()[2],2)));
+	
+	public float getDistanceToDrone(float[] position){
+		float xDrone = this.getDrone().getX();
+		float yDrone = this.getDrone().getY();
+		float zDrone = this.getDrone().getZ();
+		return vectorSize(xDrone-position[0],yDrone-position[1],zDrone-position[2]);
+	}
+	
+	public float getSpeedTowardsPosition(float[] position){
+		float distanceObject = this.getDistanceToDrone(position);
+		float speedDrone = vectorSize(this.getSpeed());
 		//the angle between the speedvector of the drone and the distance of the object to the drone
-		float cosAngle = (xDistanceObject*this.getSpeed()[0]+yDistanceObject*this.getSpeed()[1]+zDistanceObject*this.getSpeed()[2])/(distanceObject*speedDrone);
+		float cosAngle = ((position[0]-this.getPosition()[0])*this.getSpeed()[0]+(position[1]-this.getPosition()[1])*this.getSpeed()[1]+(position[2]-this.getPosition()[2])*this.getSpeed()[2])/(distanceObject*speedDrone);
 		return cosAngle*speedDrone;
 	}
 	
@@ -187,6 +191,7 @@ public class PhysicsCalculations{
 		return (float) Math.toDegrees(Math.atan(this.getY(centerOfGravity) / this.getfocalDistance()));
 	}
 	
+	
 	public float getThrust(float[] cog) {
 		float thrust;
 		float beta = this.verticalAngleDeviation(cog);
@@ -196,6 +201,22 @@ public class PhysicsCalculations{
 		return thrust;
 	}
 
+
+//	public float[] getThrust(float[] position){
+//		
+//		return null;
+//	}
+	
+	public float vectorSize(float x, float y, float z){
+		return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+	}
+	
+	public float vectorSize(float[] vector){
+		return vectorSize(vector[0], vector[1], vector[2]);
+	}
+	
+
+	
 	public float getY(float[] centerofGravity){
 		float y = ((float) ((this.getCameraHeight()/2) - centerofGravity[1])) ;
 		return y;
