@@ -68,7 +68,7 @@ public class PhysicsCalculations{
 	//////////OBJECT//////////
 	
 	
-	//TODO eventueel updateObjectData (ik had iets vergelijkbaars in de reeds verwijderde physicscalculations_vincent staan) die alle stappen hieronder uitvoert op volgorde (vereenvoudigt onderstaande functies)
+	//TODO eventueel updateObjectData of een algemene returnObjectPosition (ik had iets vergelijkbaars in de reeds verwijderde physicscalculations_vincent staan) die alle stappen hieronder uitvoert op volgorde (vereenvoudigt onderstaande functies)
 	public float getfocalDistance(){
 		float focal =(float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2)));
 		return focal;
@@ -118,14 +118,7 @@ public class PhysicsCalculations{
 	public float verticalAngleDeviation(float[] centerOfGravity){
 		return (float) Math.toDegrees(Math.atan(this.getY(centerOfGravity) / this.getfocalDistance()));
 	}
-	
-	public float[] calculatePositionObject(float[] cogL, float[] cogR){
-		float deltaX = calculateXObject(cogL, cogR);
-		float deltaY = calculateYObject(cogL, cogR);
-		float deltaZ = calculateZObject(cogL, cogR);
-		return this.droneCoordToWorldCoord(deltaX, deltaY, deltaZ);
-	}
-	
+		
 	public float calculateXObject(float[] cogL, float[] cogR){
 		float deltaX;
 		double angle;
@@ -152,30 +145,23 @@ public class PhysicsCalculations{
 			return deltaZ;
 		}
 	
-	//TODO de rotatie misschien onder EXTRA zetten, samen met zijn inverse, voor eventueel andere functies in de toekomst
-	public float[] droneCoordToWorldCoord(float droneX, float droneY, float droneZ){
-		float yaw = (float) Math.toRadians(this.getDrone().getHeading());
-		float pitch = (float) Math.toRadians(this.getDrone().getPitch());
-		float roll = (float) Math.toRadians(this.getDrone().getRoll());
-		//de totale rotatiematrix (eerst roll ontdoen, dan pitch ontdoen, dan yaw ontdoen)
-		float r11 = (float) (Math.cos(roll)*Math.cos(yaw)-Math.sin(pitch)*Math.sin(roll)*Math.sin(yaw));
-		float r12 = (float) (Math.cos(yaw)*Math.sin(roll)+Math.cos(roll)*Math.sin(pitch)*Math.sin(yaw));
-		float r13 = (float) (-Math.cos(pitch)*Math.sin(yaw));
-		float r21 = (float) (-Math.cos(pitch)*Math.sin(roll));
-		float r22 = (float) (Math.cos(pitch)*Math.cos(roll));
-		float r23 = (float) (Math.sin(pitch));
-		float r31 = (float) (Math.cos(roll)*Math.sin(yaw)+Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll));
-		float r32 = (float) (Math.sin(roll)*Math.sin(yaw)-Math.cos(roll)*Math.cos(yaw)*Math.sin(pitch));
-		float r33 = (float) (Math.cos(pitch)*Math.cos(yaw));
-		//transformeren van drone naar world
-		float xObjectRotated = r11*droneX + r12*droneY + r13*droneZ;
-		float yObjectRotated = r21*droneX + r22*droneY + r23*droneZ;
-		float zObjectRotated = r31*droneX + r32*droneY + r33*droneZ;
-		float[] result = new float[] {xObjectRotated+ getPosition()[0], yObjectRotated + getPosition()[1], zObjectRotated + getPosition()[2]};
-		return result;
+	public float[] dronePosToWorldPos(float droneX, float droneY, float droneZ){
+		float[] droneRotated = this.vectorDroneToWorld(droneX,droneY,droneZ);
+		float[] droneTranslated = new float[] {	droneRotated[0] + getPosition()[0],
+												droneRotated[1] + getPosition()[1], 
+												droneRotated[2] + getPosition()[2]};
+		return droneTranslated;
 	}
 	
+	public float[] calculatePositionObject(float[] cogL, float[] cogR){
+		float deltaX = calculateXObject(cogL, cogR);
+		float deltaY = calculateYObject(cogL, cogR);
+		float deltaZ = calculateZObject(cogL, cogR);
+		return this.dronePosToWorldPos(deltaX, deltaY, deltaZ);
+	}
+
 	
+	//////////OTHER//////////
 	
 	//TODO vervangen in movetotarget etc.
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
@@ -210,7 +196,7 @@ public class PhysicsCalculations{
 	}
 
 	public float[] getThrustToPosition(float[] position){
-		
+		 
 		return null;
 	}
 	
@@ -225,7 +211,58 @@ public class PhysicsCalculations{
 		return vectorSize(vector[0], vector[1], vector[2]);
 	}
 	
-
+	public float[] vectorDroneToWorld(float x, float y, float z){
+		float yaw = (float) Math.toRadians(this.getDrone().getHeading());
+		float pitch = (float) Math.toRadians(this.getDrone().getPitch());
+		float roll = (float) Math.toRadians(this.getDrone().getRoll());
+		//de totale rotatiematrix (eerst roll ontdoen, dan pitch ontdoen, dan yaw ontdoen)
+		//TODO corrigeren
+		float r11 = (float) (Math.cos(roll)*Math.cos(yaw)-Math.sin(pitch)*Math.sin(roll)*Math.sin(yaw));
+		float r12 = (float) (Math.cos(yaw)*Math.sin(roll)+Math.cos(roll)*Math.sin(pitch)*Math.sin(yaw));
+		float r13 = (float) (-Math.cos(pitch)*Math.sin(yaw));
+		float r21 = (float) (-Math.cos(pitch)*Math.sin(roll));
+		float r22 = (float) (Math.cos(pitch)*Math.cos(roll));
+		float r23 = (float) (Math.sin(pitch));
+		float r31 = (float) (Math.cos(roll)*Math.sin(yaw)+Math.cos(yaw)*Math.sin(pitch)*Math.sin(roll));
+		float r32 = (float) (Math.sin(roll)*Math.sin(yaw)-Math.cos(roll)*Math.cos(yaw)*Math.sin(pitch));
+		float r33 = (float) (Math.cos(pitch)*Math.cos(yaw));
+		//transformeren van drone naar world
+		float xRotated = r11*x + r12*y + r13*z;
+		float yRotated = r21*x + r22*y + r23*z;
+		float zRotated = r31*x + r32*y + r33*z;
+		return new float[] {xRotated, yRotated, zRotated};
+	}
+	
+	public float[] vectorDroneToWorld(float[] vector){
+		return vectorDroneToWorld(vector[0],vector[1],vector[2]);
+	}
+	
+	public float[] vectorWorldToDrone(float x, float y, float z){
+		float yaw = (float) Math.toRadians(this.getDrone().getHeading());
+		float pitch = (float) Math.toRadians(this.getDrone().getPitch());
+		float roll = (float) Math.toRadians(this.getDrone().getRoll());
+		//de totale rotatiematrix (eerst yaw, dan pitch, dan roll)
+		//TODO invullen
+		float r11 = 0;
+		float r12 = 0;
+		float r13 = 0;
+		float r21 = 0;
+		float r22 = 0;
+		float r23 = 0;
+		float r31 = 0;
+		float r32 = 0;
+		float r33 = 0;
+		//transformeren van world naar drone
+		float xRotated = r11*x + r12*y + r13*z;
+		float yRotated = r21*x + r22*y + r23*z;
+		float zRotated = r31*x + r32*y + r33*z;
+		return new float[] {xRotated, yRotated, zRotated};
+	}
+	
+	public float[] vectorWorldToDrone(float[] vector){
+		return vectorWorldToDrone(vector[0],vector[1],vector[2]);
+	}
+	
 	//////////GETTERS & SETTERS//////////
 
 	public void setDrone(Drone drone){
