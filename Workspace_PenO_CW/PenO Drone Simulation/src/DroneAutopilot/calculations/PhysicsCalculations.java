@@ -201,7 +201,7 @@ public class PhysicsCalculations{
 	}
 	
 	
-	//////////EXTRA//////////
+	//////////VECTOR//////////
 	
 	public float vectorSize(float x, float y, float z){
 		return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
@@ -210,6 +210,23 @@ public class PhysicsCalculations{
 	public float vectorSize(float[] vector){
 		return vectorSize(vector[0], vector[1], vector[2]);
 	}
+
+	public float[] vectorNormalise(float x, float y, float z){	
+		float size = vectorSize(x,y,z);
+		return new float[] {x/size, y/size, z/size};
+	}
+	
+	public float[] vectorNormalise(float[] vector){
+		return vectorNormalise(vector[0], vector[1], vector[2]);
+	}
+
+	public float[] vectorCrossProduct(float[] vector1, float[] vector2){
+		float x = vector1[1]*vector2[2]-vector1[2]*vector2[1];
+		float y = vector1[2]*vector2[0]-vector1[0]*vector2[2];
+		float z = vector1[0]*vector2[1]-vector1[1]*vector2[0];
+		return new float[] {x, y, z};
+	}	
+
 	
 	public float[] vectorDroneToWorld(float x, float y, float z){
 		float yaw = (float) Math.toRadians(this.getDrone().getHeading());
@@ -263,6 +280,8 @@ public class PhysicsCalculations{
 		return vectorWorldToDrone(vector[0],vector[1],vector[2]);
 	}
 	
+
+
 	//////////GETTERS & SETTERS//////////
 
 	public void setDrone(Drone drone){
