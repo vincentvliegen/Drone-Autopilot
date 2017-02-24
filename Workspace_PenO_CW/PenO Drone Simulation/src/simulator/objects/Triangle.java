@@ -13,10 +13,11 @@ public class Triangle {
 	private float[] color;
 
 	GL2 gl;
+	private Polyhedron polyhedron;
 
 	// TODO voeg kleur vanbuiten toe
 	// TODO voeg kleur vanbinnen toe
-	public Triangle(GL2 gl, double[] point1, double[] point2, double[] point3, float[] color) {
+	public Triangle(GL2 gl, double[] point1, double[] point2, double[] point3, float[] color, Polyhedron poly) {
 		this.point1 = point1;
 		this.point2 = point2;
 		this.point3 = point3;
@@ -25,29 +26,34 @@ public class Triangle {
 		this.innerPoint2 = getInnerPoint(point2);
 		this.innerPoint3 = getInnerPoint(point3);
 		this.color = color;
-	}
-	
-	private double getGravityX() {
-		return (getPoint1()[0] + getPoint2()[0] + getPoint3()[0]) / 3;
-		
-	}
-	
-	private double getGravityY() {
-		return (getPoint1()[1] + getPoint2()[1] + getPoint3()[1]) / 3;
-		
+		this.polyhedron = poly;
 	}
 
-	
+	private Polyhedron getPolyhedron() {
+		return this.polyhedron;
+	}
+
+	private double getGravityX() {
+		return (getPoint1()[0] + getPoint2()[0] + getPoint3()[0]) / 3;
+
+	}
+
+	private double getGravityY() {
+		return (getPoint1()[1] + getPoint2()[1] + getPoint3()[1]) / 3;
+
+	}
+
+
 	private double getGravityZ() {
 		return (getPoint1()[2] + getPoint2()[2] + getPoint3()[2]) / 3;
-		
+
 	}
 
 	private float[] getColor() {
 		return this.color;
 	}
-	
-	
+
+
 	private GL2 getGl() {
 		return gl;
 	}
@@ -63,57 +69,57 @@ public class Triangle {
 	private double[] getPoint3() {
 		return point3;
 	}
-	
+
 	private double[] getInnerPoint1() {
 		return innerPoint1;
 	}
-	
+
 	private double[] getInnerPoint2() {
 		return innerPoint2;
 	}
-	
+
 	private double[] getInnerPoint3() {
 		return innerPoint3;
 	}
-	
-	
+
+
 	private double[] getInnerPoint(double[] innerPoint) {
 		return new double[]{(innerPoint[0] - getGravityX()) / Math.sqrt(2) + getGravityX(),
 		(innerPoint[1] - getGravityY()) / Math.sqrt(2) + getGravityY(),
 		(innerPoint[2] - getGravityZ()) / Math.sqrt(2) + getGravityZ()};
 	}
-	
+
 	public void draw() {
 		// zowel buitenste als binnenste driehoek, met kleur
 
 		// TODO buitenste kleur moet ingesteld
 
-		
+
 		// Driehoek zelf
 		getGl().glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
 
 		getGl().glColor3f(getColor()[0], getColor()[1], getColor()[2]);
-		
-		getGl().glVertex3d(getPoint1()[0], getPoint1()[1], getPoint1()[2]);
-		getGl().glVertex3d(getPoint2()[0], getPoint2()[1], getPoint2()[2]);
-		getGl().glVertex3d(getPoint3()[0], getPoint3()[1], getPoint3()[2]);
-		
+
+		getGl().glVertex3d(getPoint1()[0]+getPolyhedron().getPosition()[0], getPoint1()[1], getPoint1()[2]+getPolyhedron().getPosition()[2]);
+		getGl().glVertex3d(getPoint2()[0]+getPolyhedron().getPosition()[0], getPoint2()[1], getPoint2()[2]+getPolyhedron().getPosition()[2]);
+		getGl().glVertex3d(getPoint3()[0]+getPolyhedron().getPosition()[0], getPoint3()[1], getPoint3()[2]+getPolyhedron().getPosition()[2]);
+
 		getGl().glEnd();
 
-		
+
 		// Binnenste gedeelte
 
 		// TODO binnenste kleur moet ingesteld
 		getGl().glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
-		
+
 		getGl().glColor3f(0f, 1f, 0f);
 
-		getGl().glVertex3d(getInnerPoint1()[0], getInnerPoint1()[1], getInnerPoint1()[2]);
-		getGl().glVertex3d(getInnerPoint2()[0], getInnerPoint2()[1], getInnerPoint2()[2]);
-		getGl().glVertex3d(getInnerPoint3()[0], getInnerPoint3()[1], getInnerPoint3()[2]);
+		getGl().glVertex3d(getInnerPoint1()[0]+getPolyhedron().getPosition()[0], getInnerPoint1()[1]+getPolyhedron().getPosition()[1], getInnerPoint1()[2]+getPolyhedron().getPosition()[2]);
+		getGl().glVertex3d(getInnerPoint2()[0]+getPolyhedron().getPosition()[0], getInnerPoint2()[1]+getPolyhedron().getPosition()[1], getInnerPoint2()[2]+getPolyhedron().getPosition()[2]);
+		getGl().glVertex3d(getInnerPoint3()[0]+getPolyhedron().getPosition()[0], getInnerPoint3()[1]+getPolyhedron().getPosition()[1], getInnerPoint3()[2]+getPolyhedron().getPosition()[2]);
 
 		getGl().glEnd();
-		
+
 	}
 
 }

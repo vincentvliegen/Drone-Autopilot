@@ -12,6 +12,7 @@ public abstract class Polyhedron extends WorldObject {
 	GL2 gl;
 	private ArrayList<Triangle> triangles = new ArrayList<>();
 	private PolyhedronType type;
+	private double[] position;
 	protected abstract void defineTriangles();
 
 	
@@ -24,10 +25,19 @@ public abstract class Polyhedron extends WorldObject {
 	}
 
 	// TODO op deze manier qua constructor enz.?
+	public Polyhedron(World world, PolyhedronType type, double[] position) {
+		super(world);
+		this.type = type;
+		this.gl = getWorld().getGL().getGL2();
+		this.position = position;
+		defineTriangles();
+	}
+	
 	public Polyhedron(World world, PolyhedronType type) {
 		super(world);
 		this.type = type;
 		this.gl = getWorld().getGL().getGL2();
+		this.position = new double[]{0,0,0};
 		defineTriangles();
 	}
 
@@ -54,7 +64,15 @@ public abstract class Polyhedron extends WorldObject {
 	@Override
 	public double[] getPosition() {
 		// TODO hoe?
-		return new double[] {0,0,0};
+		return this.position;
+
+	}
+	
+	//TODO aannemen dat je precies 3 waarden krijgt (met exception?)
+	public void translatePolyhedronOver(double[] vector) {
+		position[0] = position[0] + vector[0];
+		position[1] = position[1] + vector[1];
+		position[2] = position[2] + vector[2];
 
 	}
 	
@@ -82,7 +100,7 @@ public abstract class Polyhedron extends WorldObject {
 			color[1] = g;
 			color[2] = b;
 		}
-		addTriangle(new Triangle(getGl(), point1, point2, point3, color));
+		addTriangle(new Triangle(getGl(), point1, point2, point3, color, this));
 	}
 	
 	private void addTriangle(Triangle triangle) {
