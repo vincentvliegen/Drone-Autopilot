@@ -55,15 +55,9 @@ public class PhysicsCalculations{
 	}
 	
 	public void calculateSpeed(){
-		setSpeed(new float[] {	speedByAxis(this.getPosition()[0], this.getPreviousposition()[0]), 
-								speedByAxis(this.getPosition()[1], this.getPreviousposition()[1]), 
-								speedByAxis(this.getPosition()[2], this.getPreviousposition()[2]) });
+		setSpeed(vectorTimesScalar(vectorSum(this.getPosition(),vectorInverse(this.getPreviousposition())),1/this.getDeltaT()));
 	}
-	
-	public float speedByAxis(float currentPos, float previousPos){
-		return (currentPos-previousPos)/this.getDeltaT();
-	}
-	
+
 	
 	//////////OBJECT//////////
 	
@@ -147,9 +141,7 @@ public class PhysicsCalculations{
 	
 	public float[] dronePosToWorldPos(float droneX, float droneY, float droneZ){
 		float[] droneRotated = this.vectorDroneToWorld(droneX,droneY,droneZ);
-		float[] droneTranslated = new float[] {	droneRotated[0] + getPosition()[0],
-												droneRotated[1] + getPosition()[1], 
-												droneRotated[2] + getPosition()[2]};
+		float[] droneTranslated = vectorSum(droneRotated, this.getPosition());
 		return droneTranslated;
 	}
 	
@@ -174,14 +166,14 @@ public class PhysicsCalculations{
 	}
 	
 	public float getDistanceToPosition(float[] position){
-		return vectorSize(this.getDrone().getX()-position[0],this.getDrone().getY()-position[1],this.getDrone().getZ()-position[2]);
+		return vectorSize(vectorSum(position, vectorInverse(this.getPosition())));
 	}
 	
 	public float getSpeedTowardsPosition(float[] position){
 		float distanceObject = this.getDistanceToPosition(position);
 		float speedDrone = vectorSize(this.getSpeed());
 		//the angle between the speedvector of the drone and the distance of the object to the drone
-		float cosAngle = ((position[0]-this.getPosition()[0])*this.getSpeed()[0]+(position[1]-this.getPosition()[1])*this.getSpeed()[1]+(position[2]-this.getPosition()[2])*this.getSpeed()[2])/(distanceObject*speedDrone);
+		float cosAngle = vectorDotProduct(vectorSum(position, vectorInverse(this.getPosition())),this.getSpeed())/(distanceObject*speedDrone);
 		return cosAngle*speedDrone;
 	}
 	
@@ -195,8 +187,11 @@ public class PhysicsCalculations{
 		return thrust;
 	}
 
+	/**
+	 * berekent de thrust om naar de positie te vliegen, het dichtst bij de gevraagde positie (afhankelijk van de rotatie van de drone)
+	 */
 	public float[] getThrustToPosition(float[] position){
-		 
+		
 		return null;
 	}
 	
@@ -220,7 +215,24 @@ public class PhysicsCalculations{
 		return vectorNormalise(vector[0], vector[1], vector[2]);
 	}
 
-	public float[] vectorCrossProduct(float[] vector1, float[] vector2){
+	
+	public float[] vectorInverse(float[] vector){
+		return new float[] {-vector[0], -vector[1], -vector[2]};
+	}
+	
+ 	public float[] vectorSum(float[] vector1, float[] vector2){
+		return new float[] {vector1[0]+vector2[0], vector1[1]+vector2[1], vector1[2]+vector2[2],};
+	}
+	
+ 	public float[] vectorTimesScalar(float[] vector, float scalar){
+ 		return new float[] {vector[0]*scalar, vector[1]*scalar, vector[2]*scalar};
+ 	}
+ 	
+ 	public float vectorDotProduct(float[] vector1, float[] vector2){
+ 		return vector1[0]*vector2[0] + vector1[1]*vector2[1] + vector1[2]*vector2[2];
+ 	}
+ 			
+ 	public float[] vectorCrossProduct(float[] vector1, float[] vector2){
 		float x = vector1[1]*vector2[2]-vector1[2]*vector2[1];
 		float y = vector1[2]*vector2[0]-vector1[0]*vector2[2];
 		float z = vector1[0]*vector2[1]-vector1[1]*vector2[0];
