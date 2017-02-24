@@ -191,6 +191,19 @@ public class PhysicsCalculations{
 	 * berekent de thrust om naar de positie te vliegen, het dichtst bij de gevraagde positie (afhankelijk van de rotatie van de drone)
 	 */
 	public float[] getThrustToPosition(float[] position){
+		//normaal op het vlak gevormd door de thrust en de zwaartekracht (TODO kijk of het zwaartekracht + wind moet zijn)
+		float[] gravity = {0, -1, 0};
+		float[] thrust = {0, 1, 0};
+		float[] normal = vectorCrossProduct(gravity, vectorWorldToDrone(thrust));
+		
+		//bereken de richting naar de positie
+		float[] dirToPos = vectorNormalise(vectorSum(position, vectorInverse(getPosition())));
+
+		//bereken de projectie van de vector in de richting van de positie op het vlak
+		//TODO als normal = {0,0,0} (drone is perfect horizontaal)
+		float[] projectionDirectionOnNormal = vectorTimesScalar(normal , vectorDotProduct(dirToPos, normal)/vectorDotProduct(normal, normal));
+		float[] approxDir = vectorSum(dirToPos, vectorInverse(projectionDirectionOnNormal));
+		//TODO zoek nu een waarde van de thrust waarvoor we het best volgens deze projectie vliegen
 		
 		return null;
 	}
@@ -199,7 +212,7 @@ public class PhysicsCalculations{
 	//////////VECTOR//////////
 	
 	public float vectorSize(float x, float y, float z){
-		return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+		return (float) Math.sqrt(x*x+y*y+z*z);
 	}
 	
 	public float vectorSize(float[] vector){
