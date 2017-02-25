@@ -1,6 +1,7 @@
 package simulator.objects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import com.jogamp.opengl.GL2;
@@ -12,7 +13,7 @@ public abstract class Polyhedron extends WorldObject {
 	GL2 gl;
 	private ArrayList<Triangle> triangles = new ArrayList<>();
 	private PolyhedronType type;
-	private double[] position;
+	private double[] position = new double[]{0,0,0};
 	protected abstract void defineTriangles();
 
 	
@@ -29,7 +30,8 @@ public abstract class Polyhedron extends WorldObject {
 		super(world);
 		this.type = type;
 		this.gl = getWorld().getGL().getGL2();
-		this.position = position;
+		translatePolyhedronOver(position);
+
 		defineTriangles();
 	}
 	
@@ -37,7 +39,6 @@ public abstract class Polyhedron extends WorldObject {
 		super(world);
 		this.type = type;
 		this.gl = getWorld().getGL().getGL2();
-		this.position = new double[]{0,0,0};
 		defineTriangles();
 	}
 
@@ -63,9 +64,7 @@ public abstract class Polyhedron extends WorldObject {
 
 	@Override
 	public double[] getPosition() {
-		// TODO hoe?
 		return this.position;
-
 	}
 	
 	//TODO aannemen dat je precies 3 waarden krijgt (met exception?)
@@ -73,6 +72,10 @@ public abstract class Polyhedron extends WorldObject {
 		position[0] = position[0] + vector[0];
 		position[1] = position[1] + vector[1];
 		position[2] = position[2] + vector[2];
+		for(Triangle triangle:getTriangles()) {
+			triangle.updatePoints();
+		}
+
 
 	}
 	
