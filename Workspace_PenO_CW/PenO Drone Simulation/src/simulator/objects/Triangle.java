@@ -1,6 +1,5 @@
 package simulator.objects;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 public class Triangle {
@@ -21,14 +20,14 @@ public class Triangle {
 
 	// TODO voeg kleur vanbuiten toe
 	// TODO voeg kleur vanbinnen toe
-	public Triangle(GL2 gl, double[] point1, double[] point2, double[] point3, float[] color, Polyhedron poly) {
-		this.point1 = point1;
-		this.point2 = point2;
-		this.point3 = point3;
+	public Triangle(GL2 gl, float[] vertices, float[] vertices2, float[] vertices3, int[] is, Polyhedron poly) {
+		this.point1 = vertices;
+		this.point2 = vertices2;
+		this.point3 = vertices3;
 		this.gl = gl;
 		this.polyhedron = poly;
 		updatePoints();
-		this.color = color;
+		this.color = is;
 	}
 
 	

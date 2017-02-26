@@ -106,6 +106,8 @@ public abstract class Polyhedron extends WorldObject {
 		addTriangle(new Triangle(getGl(), point1, point2, point3, color, this));
 	}
 	
+	
+	
 	private void addTriangle(Triangle triangle) {
 		this.triangles.add(triangle);
 	}

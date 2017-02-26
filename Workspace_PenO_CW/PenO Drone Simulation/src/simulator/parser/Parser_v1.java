@@ -12,9 +12,9 @@ import simulator.world.World;
  * 
  */
 
-public class Parser {
+public class Parser_v1 {
 
-	public Parser(World world) {
+	public Parser_v1(World world) {
 		this.world = world;
 	}
 
