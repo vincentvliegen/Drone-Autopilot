@@ -7,7 +7,7 @@ import java.util.*;
 public class Generator {
 
 	public static void main(String[] args) {
-		//Change path so that it loads into your inputFiles/GeneratorTest.txt
+		// Change path so that it loads into your inputFiles/GeneratorTest.txt
 		String path = "C:/Users/versy/git/zilver/Workspace_PenO_CW/PenO Drone Simulation/inputFiles/GeneratorTest.txt";
 		String path2 = "/home/r0578402/git/zilver/Workspace_PenO_CW/PenO Drone Simulation/inputFiles/GeneratorTest.txt";
 		File file = new File(path);
@@ -50,6 +50,7 @@ public class Generator {
 		}
 
 		List<double[]> positionList = new ArrayList<>();
+		positionList.add(new double[] { 0, 0, 0 });
 
 		for (int i = 0; i < 20; i++) {
 			entireString += "\n";
@@ -65,10 +66,20 @@ public class Generator {
 				double z = (r.nextDouble() - .5) * 30;
 				noValidNewPosition = false;
 				for (double[] otherPosition : positionList) {
+					// Distance > 3*drone diameter (=1.5)
 					if (Math.sqrt(Math.pow(x, otherPosition[0]) + Math.pow(y, otherPosition[1])
-							+ Math.pow(z, otherPosition[2])) <= 0.75) {
+							+ Math.pow(z, otherPosition[2])) <= 1.5) {
 						noValidNewPosition = true;
 						break;
+					}
+					// Check if the vectors are linearly dependent (not needed for {0,0,0})
+					if ((otherPosition[0] != 0) || (otherPosition[1] != 0) || (otherPosition[2] != 0)) {
+						if ((x*otherPosition[1] - y*otherPosition[0]) == 0 && (x*otherPosition[2] - z*otherPosition[0]) == 0 && (y*otherPosition[2] - z*otherPosition[1]) == 0)
+						{
+						     noValidNewPosition = true;
+						     break;
+						}
+						
 					}
 				}
 				if (!noValidNewPosition) {
