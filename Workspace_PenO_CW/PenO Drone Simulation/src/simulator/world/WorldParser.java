@@ -31,7 +31,7 @@ public class WorldParser extends World {
 				0, this));
 		super.addGeneralCamera(new GeneralCamera(-100, 0, 0, 0, 0, 0, 0, 1, 0,
 				this));
-		super.addGeneralCamera(new GeneralCamera(10, 0, 5, 10, 0, 0, 0, 1, 0,
+		super.addGeneralCamera(new GeneralCamera(0, 0, 0, 100, 0, 0, 0, 1, 0,
 				this));
 		setCurrentCamera(getGeneralCameras().get(0));
 	}
@@ -239,6 +239,10 @@ public class WorldParser extends World {
 			}
 			GL2 gl = getGL().getGL2();
 
+			if (getEditor().wasMousePressed()) {
+				mousePressed();
+			}
+			
 			// voor scherm
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 			gl.glViewport(0, 0, drawable.getSurfaceWidth(),
@@ -282,6 +286,9 @@ public class WorldParser extends World {
 			// i++;
 			//
 			// }
+			
+			gl.glViewport(0, 0, drawable.getSurfaceWidth(),
+					drawable.getSurfaceHeight());
 		}
 	}
 

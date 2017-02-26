@@ -1,6 +1,7 @@
 package src.simulator;
 
 import java.awt.BorderLayout;
+import com.jogamp.newt.event.MouseListener;
 
 import javax.swing.JFrame;
 
@@ -30,6 +31,7 @@ public class SimulatorMainParser {
 		frame.setResizable(false); //Not resizable
 		world.requestFocus();
 		world.addKeyListener(WorldParser.getMovement());
+		world.addMouseListener(World.getEditor());
 		frame.setVisible(true);
 		
 	}

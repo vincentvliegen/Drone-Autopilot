@@ -1,8 +1,11 @@
 package simulator.world;
 
+import java.nio.IntBuffer;
 import java.util.*;
 
 import p_en_o_cw_2016.AutopilotFactory;
+
+import com.jogamp.newt.event.MouseListener;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -10,9 +13,11 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.sun.prism.impl.BufferUtil;
 
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
+import simulator.editor.WorldEditor;
 import simulator.movement.KeyboardMovement;
 import simulator.objects.ObstacleSphere;
 import simulator.objects.SimulationDrone;
@@ -28,8 +33,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	 * Superklasse voor alle werelden aan te maken werelden
 	 */
 
-
-
 	private List<GeneralCamera> generalCameras = new ArrayList<>();
 	private List<DroneCamera> droneCameras = new ArrayList<>();
 	private List<SimulationDrone> drones = new ArrayList<>();
@@ -40,7 +43,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private Parser parser = new Parser(this);
 	private int[] framebufferRight = new int[1];
 	private int[] framebufferLeft = new int[1];
-	
+
 	/** The frames per second setting. */
 	private int fps = 60;
 	/** The OpenGL animator. */
@@ -64,6 +67,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private double zWindSpeed = 0;
 	private int frames = 0;
 	private AutopilotFactory factory;
+	private static WorldEditor editor = new WorldEditor();
 
 	public World() {
 		addGLEventListener(this);
@@ -72,25 +76,25 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public void setAutopilotFactory(AutopilotFactory factory) {
 		this.factory = factory;
 	}
-	
+
 	public AutopilotFactory getAutopilotFactory() {
 		return factory;
 	}
-	 
-	public void addGeneralCamera(GeneralCamera camera){
-		generalCameras.add(camera);		
+
+	public void addGeneralCamera(GeneralCamera camera) {
+		generalCameras.add(camera);
 	}
 
-	public void addDroneCamera(DroneCamera camera){
-		droneCameras.add(camera);		
+	public void addDroneCamera(DroneCamera camera) {
+		droneCameras.add(camera);
 	}
 
-	public void addSimulationDrone(SimulationDrone drone){
+	public void addSimulationDrone(SimulationDrone drone) {
 		worldObjectsList.add(drone);
-		drones.add(drone);		
+		drones.add(drone);
 	}
 
-	public void addSphere(Sphere sphere){
+	public void addSphere(Sphere sphere) {
 		worldObjectsList.add(sphere);
 		spheres.add(sphere);
 		getTargetColors().add(sphere.getColor());
@@ -102,16 +106,14 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		getTargetColors().remove(sphere.getColor());
 	}
 
-
 	private ArrayList<float[]> targetColors = new ArrayList<>();
 	private ArrayList<float[]> obstacleColors = new ArrayList<>();
 
-
 	public void addSphereWithRandomColor(double[] position) {
 		Random rand = new Random();
-		float r = 0, g=0,b=0;
-		float[] color = {r,g,b};
-		while((r == g && r == b) || getTargetColors().contains(color)) {
+		float r = 0, g = 0, b = 0;
+		float[] color = { r, g, b };
+		while ((r == g && r == b) || getTargetColors().contains(color)) {
 			r = rand.nextFloat();
 			g = rand.nextFloat();
 			b = rand.nextFloat();
@@ -121,60 +123,55 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		}
 		addSphere(new Sphere(getGL().getGL2(), color, position, this));
 
-
 	}
 
-	
 	public void addObstacleSphereWithRandomColor(double[] position) {
 		Random rand = new Random();
 		float value = rand.nextFloat();
-		float[] color = {value, value, value};
-		while((getObstacleColors().contains(color))) {
-			value = 
-			color[0] = value;
+		float[] color = { value, value, value };
+		while ((getObstacleColors().contains(color))) {
+			value = color[0] = value;
 			color[1] = value;
 			color[2] = value;
-		
+
 		}
 		addObstacleSphere(new ObstacleSphere(getGL().getGL2(), color, position, this));
 	}
 
-
-
-
-	public void addObstacleSphere(ObstacleSphere sphere){
+	public void addObstacleSphere(ObstacleSphere sphere) {
 		worldObjectsList.add(sphere);
 		obstacleSpheres.add(sphere);
 		obstacleColors.add(sphere.getColor());
 	}
-	
+
 	protected abstract void setup();
+
 	protected abstract void handleCollision(WorldObject object, SimulationDrone drone);
 
 	protected void draw() {
 
 		// translate camera.
 		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
-			movement.update((float)1/60);
-			this.getCurrentCamera().setEyeX((float)movement.getX() + this.getCurrentCamera().getStartEyeX()); 
-			this.getCurrentCamera().setEyeY((float)movement.getY() + this.getCurrentCamera().getStartEyeY()); 
-			this.getCurrentCamera().setEyeZ((float)movement.getZ() + this.getCurrentCamera().getStartEyeZ());
-			this.getCurrentCamera().setLookAtX((float)movement.getX() + this.getCurrentCamera().getStartLookAtX());
-			this.getCurrentCamera().setLookAtY((float)movement.getY() + this.getCurrentCamera().getStartLookAtY());
-			this.getCurrentCamera().setLookAtZ((float)movement.getZ() + this.getCurrentCamera().getStartLookAtZ());
+			movement.update((float) 1 / 60);
+			this.getCurrentCamera().setEyeX((float) movement.getX() + this.getCurrentCamera().getStartEyeX());
+			this.getCurrentCamera().setEyeY((float) movement.getY() + this.getCurrentCamera().getStartEyeY());
+			this.getCurrentCamera().setEyeZ((float) movement.getZ() + this.getCurrentCamera().getStartEyeZ());
+			this.getCurrentCamera().setLookAtX((float) movement.getX() + this.getCurrentCamera().getStartLookAtX());
+			this.getCurrentCamera().setLookAtY((float) movement.getY() + this.getCurrentCamera().getStartLookAtY());
+			this.getCurrentCamera().setLookAtZ((float) movement.getZ() + this.getCurrentCamera().getStartLookAtZ());
 		}
 
-		for (WorldObject object: getWorldObjectList()){
+		for (WorldObject object : getWorldObjectList()) {
 			object.draw();
 		}
 	}
 
 	public void display(GLAutoDrawable drawable) {
 		updateFrames();
-		getPhysics().run((float) 1/60);
+		getPhysics().run((float) 1 / 60);
 
 		for (SimulationDrone drone : getDrones()) {
-			drone.timeHasPassed((float) 1/60);
+			drone.timeHasPassed((float) 1 / 60);
 
 		}
 
@@ -226,7 +223,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	}
 
 	@Override
-	public void dispose(GLAutoDrawable drawable){
+	public void dispose(GLAutoDrawable drawable) {
 	}
 
 	/**
@@ -254,8 +251,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		// Create GLU.
 		glu = new GLU();
 
-
-		//FBO voor links
+		// FBO voor links
 
 		gl.glGenFramebuffers(1, framebufferLeft, 0);
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, framebufferLeft[0]);
@@ -263,17 +259,19 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glGenRenderbuffers(1, colorRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferLeft[0]);
 		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(), getHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER, colorRenderbufferLeft[0]);
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
+				colorRenderbufferLeft[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
 		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getWidth(), getHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
+				depthRenderbufferLeft[0]);
 
 		gl.glGenTextures(1, textureLeft, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureLeft[0]);
 
-		//FBO voor rechts
+		// FBO voor rechts
 
 		gl.glGenFramebuffers(1, framebufferRight, 0);
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, framebufferRight[0]);
@@ -281,19 +279,19 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glGenRenderbuffers(1, colorRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferRight[0]);
 		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(), getHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER, colorRenderbufferRight[0]);
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
+				colorRenderbufferRight[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
 		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getWidth(), getHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
+				depthRenderbufferRight[0]);
 
 		gl.glGenTextures(1, textureRight, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureRight[0]);
 
-
-
-		//set to default buffer
+		// set to default buffer
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
 		setup();
@@ -308,12 +306,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public void checkCollision(SimulationDrone drone) {
 		List<WorldObject> copyList = new ArrayList<WorldObject>();
 		copyList.addAll(getWorldObjectList());
-		for (WorldObject currentObject: copyList) {
+		for (WorldObject currentObject : copyList) {
 			if (currentObject == drone)
 				continue;
 			double[] objectPos = currentObject.getPosition();
 			double[] dronePos = drone.getPosition();
-			double distance = Math.sqrt(Math.pow(objectPos[0] - dronePos[0], 2) + Math.pow(objectPos[1] - dronePos[1], 2) + Math.pow(objectPos[2] - dronePos[2], 2));
+			double distance = Math.sqrt(Math.pow(objectPos[0] - dronePos[0], 2)
+					+ Math.pow(objectPos[1] - dronePos[1], 2) + Math.pow(objectPos[2] - dronePos[2], 2));
 			if (distance <= (currentObject.getRadius() + drone.getRadius()))
 				handleCollision(currentObject, drone);
 		}
@@ -328,7 +327,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private ArrayList<float[]> getTargetColors() {
 		return targetColors;
 	}
-	
+
 	public ArrayList<float[]> getObstacleColors() {
 		return obstacleColors;
 	}
@@ -349,7 +348,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return obstacleSpheres;
 	}
 
-	public GeneralCamera getCurrentCamera(){
+	public GeneralCamera getCurrentCamera() {
 		return currentCamera;
 	}
 
@@ -417,7 +416,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return zWindSpeed;
 	}
 
-	public void setCurrentCamera(GeneralCamera camera){
+	public void setCurrentCamera(GeneralCamera camera) {
 		this.currentCamera = camera;
 	}
 
@@ -448,16 +447,74 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public void setWindSpeedZ(double value) {
 		zWindSpeed = value;
 	}
-	
+
 	public static KeyboardMovement getMovement() {
 		return movement;
 	}
-	
-	public void updateFrames(){
-		frames+=1;
+
+	public void updateFrames() {
+		frames += 1;
 	}
+
+	public float getCurrentTime() {
+		return frames * (float) 1 / 60;
+	}
+
+	public static WorldEditor getEditor() {
+		return editor;
+	}
+
+	public void mousePressed() {
+		int viewport[] = new int[4];
+		double modelViewMatrix[] = new double[16];
+		double projectionMatrix[] = new double[16];
+		int yCoordChanged = 0;
+		double worldCoordNear[] = new double[4];
+		double worldCoordFar[] = new double[4];
+
+		int x = getEditor().getMouseX();
+		int y = getEditor().getMouseY();
+		GL2 gl = (GL2) getGL();
+		gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0);
+		gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, modelViewMatrix, 0);
+		gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projectionMatrix, 0);
+		yCoordChanged = viewport[3] - (int) y - 1;
+
+		glu.gluUnProject((double) x, (double) yCoordChanged, 0.0, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0,
+				worldCoordNear, 0);
+		glu.gluUnProject((double) x, (double) yCoordChanged, 1.0, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0,
+				worldCoordFar, 0);
+
+		double[] vector = { (worldCoordFar[0] - worldCoordNear[0]) / 10000,
+				(worldCoordFar[1] - worldCoordNear[1]) / 10000, (worldCoordFar[2] - worldCoordNear[2]) / 10000 };
 	
-	public float getCurrentTime(){
-		return frames*(float)1/60;
+		boolean sphereChanged = false;
+		for (int i = 0; i < 10000; i++) {
+			worldCoordNear[0] += vector[0];
+			worldCoordNear[1] += vector[1];
+			worldCoordNear[2] += vector[2];
+			if (worldCoordNear[0] > 3)
+				break;
+			for (WorldObject object: getWorldObjectList()){
+				if (object instanceof SimulationDrone)
+					continue;
+				if (calculateDistance(worldCoordNear, object.getPosition()) <= 0.4) {
+					float[] newCoord = {(float) worldCoordNear[0], (float) worldCoordNear[1], (float) worldCoordNear[2]};
+					((Sphere) object).setPosition(newCoord);
+					sphereChanged = true;
+					break;
+				}
+			}
+			if (sphereChanged)
+				break;
+		}
+
+		getEditor().completedMouseCheck();
+
+	}
+
+	private static double calculateDistance(double[] vector1, double[] vector2) {
+		return Math.sqrt(
+				Math.pow(vector1[0]- vector2[0], 2) + Math.pow(vector1[1] - vector2[1],2) + Math.pow(vector1[2] - vector2[2], 2));
 	}
 }
