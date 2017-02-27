@@ -1,6 +1,7 @@
 package DroneAutopilot.calculations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import p_en_o_cw_2016.Drone;
@@ -179,10 +180,9 @@ public class PhysicsCalculations{
 	}
 	
 	public float getSpeedTowardsPosition(float[] position){
-		float distanceObject = this.getDistanceToPosition(position);
 		float speedDrone = vectorSize(this.getSpeed());
-		//the angle between the speedvector of the drone and the distance of the object to the drone
-		float cosAngle = vectorDotProduct(vectorSum(position, vectorInverse(this.getPosition())),this.getSpeed())/(distanceObject*speedDrone);
+		//the cosinus of the angle between the speedvector of the drone and the distance of the object to the drone
+		float cosAngle = vectorCosinusBetweenVectors(vectorSum(position, vectorInverse(this.getPosition())),this.getSpeed());
 		return cosAngle*speedDrone;
 	}
 	
@@ -199,23 +199,64 @@ public class PhysicsCalculations{
 	/**
 	 * berekent de thrust om naar de positie te vliegen, het dichtst bij de gevraagde positie (afhankelijk van de rotatie van de drone)
 	 */
-	public float[] getThrustToPosition(float[] position){
+	public float getThrustToPosition(float[] position){
 		//normaal op het vlak gevormd door de thrust en de zwaartekracht (TODO zwaartekracht + wind )
-		float[] gravity = {0, -1, 0};
+		float weight = this.getDrone().getWeight();
+		float gravity = this.getDrone().getGravity();
+		float[] gravityVector = vectorTimesScalar(new float[] {0, -1, 0},weight*gravity);
 		float[] thrust = {0, 1, 0};
-		float[] normal = vectorCrossProduct(gravity, vectorDroneToWorld(thrust));
+		float[] normal = vectorCrossProduct(gravityVector, vectorDroneToWorld(thrust));
 		
 		//bereken de richting naar de positie
 		float[] dirToPos = vectorNormalise(directionDronePos(position));
 
 		//bereken de projectie van de vector in de richting van de positie op het vlak
 		//TODO als normal = {0,0,0} (drone is perfect horizontaal)
-		float[] projectionDirectionOnNormal = vectorTimesScalar(normal , vectorDotProduct(dirToPos, normal)/vectorDotProduct(normal, normal));
+		float[] projectionDirectionOnNormal = vectorTimesScalar(normal , vectorDotProduct(dirToPos, normal));//correcte projectie want normal is genormaliseerd
 		float[] approxDir = vectorSum(dirToPos, vectorInverse(projectionDirectionOnNormal));
-		//TODO zoek nu een waarde van de thrust waarvoor we het best volgens deze projectie vliegen
+		//zoek nu een waarde van de thrust waarvoor we het best volgens deze projectie vliegen
+		float maxThrust = this.getDrone().getMaxThrust();
+		float[] upperLimit = vectorSum(vectorDroneToWorld(vectorTimesScalar(thrust, maxThrust)),gravityVector);
+		float[] lowerLimit = vectorSum(vectorDroneToWorld(vectorTimesScalar(thrust, -maxThrust)),gravityVector);
+		//ligt approxDir binnen of buiten de kleine hoek gevormd door upperLimit en lowerLimit?
+		boolean isInside = true;
+		//we tekenen een xy-vlak, en we leggen lowerLimit volgens de x-as en upperLimit heeft een positieve y-waarde
+		float[] coordLow = {vectorSize(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
 		
-		return null;
+		float cosLowUp = vectorCosinusBetweenVectors(lowerLimit, upperLimit);
+		float[] crossPLowUp = vectorNormalise(vectorCrossProduct(lowerLimit,upperLimit));
+		float[] coordUp = {vectorSize(upperLimit)*cosLowUp,vectorSize(upperLimit)*((float) Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
+		
+		float cosLowAppDir = vectorCosinusBetweenVectors(lowerLimit, approxDir);
+		if(cosLowAppDir>cosLowUp){
+			isInside = false;
+		}
+		float[] crossPLowAppDir = vectorNormalise(vectorCrossProduct(lowerLimit,approxDir));
+		float sign;
+		if(!Arrays.equals(crossPLowUp, crossPLowAppDir)){
+			isInside = false;
+			sign = -1;
+		}else{
+			sign = 1;
+		}
+		float[] coordAppDir = {vectorSize(approxDir)*cosLowAppDir,sign*vectorSize(approxDir)*((float) Math.sqrt(1-cosLowAppDir*cosLowAppDir))};//coordinaten approxDir in xy-vlak
+		//als binnen dan hoe groot is thrust om exact op approxDir te vliegen
+		//als buiten dan dichter bij upper of lower (om op min of max te zetten)
+		float result;
+		if(isInside){//inside
+			//TODO exacte thrust bepalen
+			result = 0;
+		}else{//outside
+			float cosUpAppDir = vectorCosinusBetweenVectors(upperLimit, approxDir);
+			if(cosLowAppDir>cosUpAppDir){//dichter bij upperLimit
+				result = -maxThrust;
+			}else{//dichter bij lowerLimit
+				result = maxThrust;
+			}
+		}
+		return result;
 	}	
+	
 	
 	//////////VECTOR//////////
 	
@@ -235,7 +276,6 @@ public class PhysicsCalculations{
 	public float[] vectorNormalise(float[] vector){
 		return vectorNormalise(vector[0], vector[1], vector[2]);
 	}
-
 	
 	public float[] vectorInverse(float[] vector){
 		return new float[] {-vector[0], -vector[1], -vector[2]};
@@ -260,6 +300,14 @@ public class PhysicsCalculations{
 		return new float[] {x, y, z};
 	}	
 
+ 	public float vectorCosinusBetweenVectors(float[] vector1, float[] vector2){
+ 		return vectorDotProduct(vector1,vector2)/(vectorSize(vector1)*vectorSize(vector2));
+ 	}
+ 	
+// 	public float vectorSinusBetweenVectors(float[] vector1, float[] vector2){
+// 		return vectorSize(vectorCrossProduct(vector1,vector2))/(vectorSize(vector1)*vectorSize(vector2));
+// 	}
+ 	
  	public void createRotateMatrix() {
  		float yaw = this.getDrone().getHeading();
 		float pitch = this.getDrone().getPitch();
@@ -343,7 +391,6 @@ public class PhysicsCalculations{
 		return vectorWorldToDrone(vector[0],vector[1],vector[2]);
 	}
 	
-
 
 	//////////GETTERS & SETTERS//////////
 
