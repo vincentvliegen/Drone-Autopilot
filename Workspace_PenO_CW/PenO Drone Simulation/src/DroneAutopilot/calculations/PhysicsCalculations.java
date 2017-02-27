@@ -160,6 +160,10 @@ public class PhysicsCalculations{
 	
 	//////////OTHER//////////
 	
+	public float[] directionDronePos(float[] position){//niet genormaliseerd, moest je de grootte willen hebben
+		return vectorSum(position, vectorInverse(this.getPosition()));
+	}
+	
 	//TODO vervangen in movetotarget etc.
 	public float getDistance(float[] centerOfGravityL, float[]centerOfGravityR){
 		float depth = this.getDepth(centerOfGravityL, centerOfGravityR);
@@ -171,7 +175,7 @@ public class PhysicsCalculations{
 	}
 	
 	public float getDistanceToPosition(float[] position){
-		return vectorSize(vectorSum(position, vectorInverse(this.getPosition())));
+		return vectorSize(directionDronePos(position));
 	}
 	
 	public float getSpeedTowardsPosition(float[] position){
@@ -196,13 +200,13 @@ public class PhysicsCalculations{
 	 * berekent de thrust om naar de positie te vliegen, het dichtst bij de gevraagde positie (afhankelijk van de rotatie van de drone)
 	 */
 	public float[] getThrustToPosition(float[] position){
-		//normaal op het vlak gevormd door de thrust en de zwaartekracht (TODO kijk of het zwaartekracht + wind moet zijn)
+		//normaal op het vlak gevormd door de thrust en de zwaartekracht (TODO zwaartekracht + wind )
 		float[] gravity = {0, -1, 0};
 		float[] thrust = {0, 1, 0};
-		float[] normal = vectorCrossProduct(gravity, vectorWorldToDrone(thrust));
+		float[] normal = vectorCrossProduct(gravity, vectorDroneToWorld(thrust));
 		
 		//bereken de richting naar de positie
-		float[] dirToPos = vectorNormalise(vectorSum(position, vectorInverse(getPosition())));
+		float[] dirToPos = vectorNormalise(directionDronePos(position));
 
 		//bereken de projectie van de vector in de richting van de positie op het vlak
 		//TODO als normal = {0,0,0} (drone is perfect horizontaal)
@@ -211,8 +215,7 @@ public class PhysicsCalculations{
 		//TODO zoek nu een waarde van de thrust waarvoor we het best volgens deze projectie vliegen
 		
 		return null;
-	}
-	
+	}	
 	
 	//////////VECTOR//////////
 	
@@ -258,9 +261,9 @@ public class PhysicsCalculations{
 	}	
 
  	public void createRotateMatrix() {
- 		float yaw = (float) Math.toRadians(this.getDrone().getHeading());
-		float pitch = (float) Math.toRadians(this.getDrone().getPitch());
-		float roll = (float) Math.toRadians(this.getDrone().getRoll());
+ 		float yaw = this.getDrone().getHeading();
+		float pitch = this.getDrone().getPitch();
+		float roll = this.getDrone().getRoll();
 		
 		this.getRotateMatrix().clear();
 		this.getRotateMatrix().add((float) (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
@@ -278,9 +281,9 @@ public class PhysicsCalculations{
  	
  	public void createInverseRotateMatrix(){
  		this.getInverseRotateMatrix().clear();
- 		float yaw = (float) Math.toRadians(this.getDrone().getHeading());
-		float pitch = (float) Math.toRadians(this.getDrone().getPitch());
-		float roll = (float) Math.toRadians(this.getDrone().getRoll());
+ 		float yaw = this.getDrone().getHeading();
+		float pitch = this.getDrone().getPitch();
+		float roll = this.getDrone().getRoll();
 		
 		this.getInverseRotateMatrix().clear();
 		this.getInverseRotateMatrix().add((float) (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
