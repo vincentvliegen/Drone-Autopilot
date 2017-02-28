@@ -76,8 +76,8 @@ public class Generator_V2 {
 		 * float = float :^)
 		 */
 		
-		String path = "C:/Users/versy/git/zilver/Workspace_PenO_CW/PenO Drone Simulation/inputFiles/GeneratorV2Test.txt";
-		String path2 = "/home/r0578402/git/zilver/Workspace_PenO_CW/PenO Drone Simulation/inputFiles/GeneratorV2Test.txt";
+		String path = "inputFiles/GeneratorV2Test.txt";
+		String path2 = "inputFiles/GeneratorV2Test.txt";
 		
 		File f = new File(path2);
 		OutputStream fileStream = new FileOutputStream(f);

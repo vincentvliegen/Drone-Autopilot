@@ -8,8 +8,8 @@ public class Generator {
 
 	public static void main(String[] args) {
 		// Change path so that it loads into your inputFiles/GeneratorTest.txt
-		String path = "C:/Users/versy/git/zilver/Workspace_PenO_CW/PenO Drone Simulation/inputFiles/GeneratorTest.txt";
-		String path2 = "/home/r0578402/git/zilver/Workspace_PenO_CW/PenO Drone Simulation/inputFiles/GeneratorTest.txt";
+		String path = "inputFiles/GeneratorTest.txt";
+		String path2 = "inputFiles/GeneratorTest.txt";
 		File file = new File(path);
 		FileWriter f;
 
