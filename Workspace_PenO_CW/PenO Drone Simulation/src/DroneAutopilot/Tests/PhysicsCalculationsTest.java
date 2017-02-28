@@ -22,8 +22,8 @@ public class PhysicsCalculationsTest {
 	private static final float dronePitch = 15;
 	
 	private Camera camera;
-	private PhysicsCalculations calc;
-	private Drone drone;
+	private PhysicsCalculations calc, calc1;
+	private Drone drone, drone1;
 	
 	private float[] cOG1;
 	private float[] cOG2;
@@ -38,9 +38,12 @@ public class PhysicsCalculationsTest {
 	public void setUp() {
 		verticalAngleOfView = (float) (2*Math.toDegrees(Math.atan((((double) heightCamera/ (double) widthCamera)*Math.tan(Math.toRadians(horizontalAngleOfView/2))))));
 		calc = new PhysicsCalculations(drone);
+		calc1 = new PhysicsCalculations(drone1);
 		camera = createCameraForTesting(horizontalAngleOfView, verticalAngleOfView, widthCamera);
-		drone = createDroneForTesting(droneWeight, droneGravity, dronePitch, cameraSeparation, camera, camera);
+		drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation, camera, camera);
+		drone1 = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, 0, 0, cameraSeparation, camera, camera);
 		calc.setDrone(drone);
+		calc1.setDrone(drone1);
 		
 		cOG1 = new float[] {1,1};
 		cOG2 = new float[] {5,80};
@@ -78,7 +81,7 @@ public class PhysicsCalculationsTest {
 		};
 	}
 
-	public Drone createDroneForTesting(float weight, float gravity, float pitch, float cameraSeparation, Camera leftCamera, Camera rightCamera){
+	public Drone createDroneForTesting(float weight, float gravity, float x, float y, float z, float yaw, float pitch, float roll, float cameraSeparation, Camera leftCamera, Camera rightCamera){
 		return new Drone(){
 			
 			@Override
@@ -130,7 +133,7 @@ public class PhysicsCalculationsTest {
 			}
 			@Override
 			public float getMaxThrust() {
-				return 0;
+				return 10;
 			}
 			@Override
 			public float getMaxPitchRate() {
@@ -146,31 +149,31 @@ public class PhysicsCalculationsTest {
 			}
 			@Override
 			public float getRoll() {
-				return 0;
+				return roll;
 			}
 
 			@Override
 			public float getX() {
 				// TODO Auto-generated method stub
-				return 0;
+				return x;
 			}
 
 			@Override
 			public float getY() {
 				// TODO Auto-generated method stub
-				return 0;
+				return y;
 			}
 
 			@Override
 			public float getZ() {
 				// TODO Auto-generated method stub
-				return 0;
+				return z;
 			}
 
 			@Override
 			public float getHeading() {
 				// TODO Auto-generated method stub
-				return 0;
+				return yaw;
 			}
 
 	    };
@@ -238,4 +241,8 @@ public class PhysicsCalculationsTest {
 		assertEquals(20.0/cosa/cosb,calc.getDistance(depthXY1, depthXY2),0.00001);
 	}	
 	
+	@Test 
+	public void getThrustToPositionTest(){
+		assertEquals(0, calc1.getThrustToPosition(new float[] {0,0,-4}), 0.0001);
+	}
 }

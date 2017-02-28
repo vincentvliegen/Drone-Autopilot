@@ -201,8 +201,11 @@ public class PhysicsCalculations{
 	 */
 	public float getThrustToPosition(float[] position){
 		//normaal op het vlak gevormd door de thrust en de gravity TODO + wind
+		System.out.println(this.getDrone().getHeading());
+		System.out.println(this.getDrone().getRoll());
+		System.out.println(this.getDrone().getPitch());
 		float weight = this.getDrone().getWeight();
-		float gravity = this.getDrone().getGravity();
+		float gravity = Math.abs(this.getDrone().getGravity());
 		float[] gravityVector = vectorTimesScalar(new float[] {0, -1, 0}, weight*gravity);
 		float[] thrust = vectorDroneToWorld(new float[] {0,1,0});//positief genormaliseerd
 		float[] normal = vectorCrossProduct(gravityVector, thrust);//TODO gravity + wind
@@ -211,7 +214,7 @@ public class PhysicsCalculations{
 		float[] dirToPos = vectorNormalise(directionDronePos(position));
 		
 		float result;
-		if(Arrays.equals(dirToPos, new float[] {0,0,0})){//als het doel de huidige positie van de drone is
+		if(Arrays.equals(dirToPos, this.getPosition())){//als het doel de huidige positie van de drone is
 			float[] projectionGravVecOnThrustAxis = vectorTimesScalar(thrust, vectorDotProduct(gravityVector, thrust));//thrust is genormaliseerd TODO gravity + wind
 			float signThrustGrav;
 			if(Arrays.equals(thrust, vectorNormalise(projectionGravVecOnThrustAxis))){//de gravity+wind staat volgens positieve thrust
@@ -220,11 +223,10 @@ public class PhysicsCalculations{
 				signThrustGrav = 1;
 			}
 			result = vectorSize(projectionGravVecOnThrustAxis)*signThrustGrav;
-		}else if(Arrays.equals(normal, this.getPosition())){//als normal = {0,0,0} (drone is gericht volgens de gravity+wind)
+		}else if(Arrays.equals(this.vectorSum(normal, new float[] {0,0,0}), new float[] {0,0,0})){//als normal = {0,0,0} (drone is gericht volgens de gravity+wind)
 			//positieve of negatieve thrust ter compensatie vd gravity+wind?
-			float[] projectionGravVecOnThrustAxis = vectorTimesScalar(thrust, vectorDotProduct(gravityVector, thrust));//thrust is genormaliseerd TODO gravity + wind
 			float signThrustGrav;
-			if(Arrays.equals(thrust, vectorNormalise(projectionGravVecOnThrustAxis))){//de gravity+wind staat volgens positieve thrust
+			if(Arrays.equals(thrust, vectorNormalise(gravityVector))){//TODO Gravity + wind //de gravity+wind staat volgens positieve thrust
 				signThrustGrav = -1;
 			}else{
 				signThrustGrav = 1;
@@ -240,7 +242,7 @@ public class PhysicsCalculations{
 				signThrustDir = -1;
 			}
 			
-			result = vectorSize(projectionGravVecOnThrustAxis)*(signThrustGrav+compensateDir*signThrustDir);
+			result = vectorSize(gravityVector)*(signThrustGrav+compensateDir*signThrustDir);
 		}else{
 			//bereken de projectie van de vector in de richting van de positie op het vlak
 			float[] projectionDirectionOnNormal = vectorTimesScalar(normal , vectorDotProduct(dirToPos, normal));//correcte projectie want normal is genormaliseerd
