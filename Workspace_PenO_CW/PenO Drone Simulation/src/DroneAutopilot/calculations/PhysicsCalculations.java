@@ -220,7 +220,7 @@ public class PhysicsCalculations{
 				signThrustGrav = 1;
 			}
 			result = vectorSize(projectionGravVecOnThrustAxis)*signThrustGrav;
-		}else if(Arrays.equals(normal, new float[] {0,0,0})){//als normal = {0,0,0} (drone is gericht volgens de gravity+wind)
+		}else if(Arrays.equals(normal, this.getPosition())){//als normal = {0,0,0} (drone is gericht volgens de gravity+wind)
 			//positieve of negatieve thrust ter compensatie vd gravity+wind?
 			float[] projectionGravVecOnThrustAxis = vectorTimesScalar(thrust, vectorDotProduct(gravityVector, thrust));//thrust is genormaliseerd TODO gravity + wind
 			float signThrustGrav;
@@ -303,7 +303,18 @@ public class PhysicsCalculations{
 		return result;
 	}	
 	
-	
+	//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch
+		public float[] getRemainingAnglesToObject(float[] position){
+			float[] dirToPosWorld = vectorNormalise(directionDronePos(position));
+			float[] droneAngles = {this.getDrone().getHeading(), this.getDrone().getPitch()};
+			float[] dirToPosDrone = vectorNormalise(this.vectorWorldToDrone(dirToPosWorld));
+			float desiredPitch = (float) Math.asin(Math.toRadians(dirToPosDrone[1]));
+			float desiredYaw = (float) Math.asin(Math.toRadians(dirToPosDrone[0]/(Math.cos(desiredPitch)))); // TODO: cos(pitch)=0
+			float[] desiredDroneAngles = {desiredYaw, desiredPitch};
+			float[] remainingAngles = this.vectorSum(desiredDroneAngles, this.vectorInverse(droneAngles));
+			return remainingAngles;
+		}
+		
 	//////////VECTOR//////////
 	
 	public float vectorSize(float x, float y, float z){
