@@ -201,9 +201,6 @@ public class PhysicsCalculations{
 	 */
 	public float getThrustToPosition(float[] position){
 		//normaal op het vlak gevormd door de thrust en de gravity TODO + wind
-		System.out.println(this.getDrone().getHeading());
-		System.out.println(this.getDrone().getRoll());
-		System.out.println(this.getDrone().getPitch());
 		float weight = this.getDrone().getWeight();
 		float gravity = Math.abs(this.getDrone().getGravity());
 		float[] gravityVector = vectorTimesScalar(new float[] {0, -1, 0}, weight*gravity);
@@ -304,6 +301,19 @@ public class PhysicsCalculations{
 		}
 		return result;
 	}	
+
+	
+	public float[][] WantedOrientation(float[] position, float acceleration){//TODO gravity+wind
+		float weight = this.getDrone().getWeight();
+		float gravity = Math.abs(this.getDrone().getGravity());
+		float[] gravityVector = vectorTimesScalar(new float[] {0, -1, 0}, weight*gravity);
+		float[] forceToPos = vectorTimesScalar(vectorNormalise(directionDronePos(position)), acceleration*weight);
+		float[] thrustVector = vectorSum(forceToPos, vectorInverse(gravityVector));//TODO gravity+wind
+		float[] normal = vectorNormalise(thrustVector);//normale op het trustvlak, genormaliseerde thrust
+		float[] projDirOnNormal = vectorTimesScalar(normal , vectorDotProduct(forceToPos, normal));
+		float[] viewVector = vectorSum(forceToPos, vectorInverse(projDirOnNormal));
+		return new float[][] {thrustVector,viewVector};
+	}
 	
 	//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch
 		public float[] getRemainingAnglesToObject(float[] position){
