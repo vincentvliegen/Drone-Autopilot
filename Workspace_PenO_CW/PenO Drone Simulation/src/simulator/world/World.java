@@ -13,7 +13,6 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
-import com.sun.prism.impl.BufferUtil;
 
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
@@ -24,6 +23,7 @@ import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
 import simulator.objects.WorldObject;
 import simulator.parser.Parser;
+import simulator.physics.Collision;
 import simulator.physics.Physics;
 
 @SuppressWarnings("serial")
@@ -68,6 +68,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private int frames = 0;
 	private AutopilotFactory factory;
 	private static WorldEditor editor = new WorldEditor();
+	private Collision collision = new Collision(this);
 
 	public World() {
 		addGLEventListener(this);
@@ -516,5 +517,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private static double calculateDistance(double[] vector1, double[] vector2) {
 		return Math.sqrt(
 				Math.pow(vector1[0]- vector2[0], 2) + Math.pow(vector1[1] - vector2[1],2) + Math.pow(vector1[2] - vector2[2], 2));
+	}
+	
+	public Collision getCollision(){
+		return collision;
 	}
 }

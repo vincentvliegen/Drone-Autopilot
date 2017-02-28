@@ -5,10 +5,7 @@ import java.io.IOException;
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.movement.KeyboardMovement;
-import simulator.objects.ObstacleSphere;
-import simulator.objects.SimulationDrone;
-import simulator.objects.Sphere;
-import simulator.objects.WorldObject;
+import simulator.objects.*;
 import simulator.parser.Parser;
 
 import com.jogamp.opengl.GL;
@@ -112,6 +109,16 @@ public class WorldParser extends World {
 		} else if (object instanceof Sphere) {
 			removeSphere((Sphere) object);
 			getWorldObjectList().remove(object);
+		} else {
+			if (getCollision().checkTrianglesForHit(object, drone)) {
+				if (((Polyhedron) object).getPolyhedronType() == PolyhedronType.OBSTACLE) {
+					System.out.println("You crashed into an Obstacle Polyhedron");
+					crash = true;
+				} else if (((Polyhedron) object).getPolyhedronType() == PolyhedronType.TARGET) {
+					// Remove Polyhedron? 
+				}
+			}
+				
 		}
 	}
 
