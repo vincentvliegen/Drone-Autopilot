@@ -200,12 +200,12 @@ public class PhysicsCalculations{
 	 * berekent de thrust om naar de positie te vliegen, het dichtst bij de gevraagde positie (afhankelijk van de rotatie van de drone)
 	 */
 	public float getThrustToPosition(float[] position){
-		//normaal op het vlak gevormd door de thrust en de zwaartekracht (TODO zwaartekracht + wind )
+		//normaal op het vlak gevormd door de thrust en de zwaartekracht TODO + wind
 		float weight = this.getDrone().getWeight();
 		float gravity = this.getDrone().getGravity();
-		float[] gravityVector = vectorTimesScalar(new float[] {0, -1, 0},weight*gravity);
-		float[] thrust = {0, 1, 0};
-		float[] normal = vectorCrossProduct(gravityVector, vectorDroneToWorld(thrust));
+		float[] gravityVector = vectorTimesScalar(new float[] {0, -1, 0}, weight*gravity);
+		float[] thrust = vectorDroneToWorld(new float[] {0,1,0});
+		float[] normal = vectorCrossProduct(gravityVector, thrust);//TODO gravity + wind
 		
 		//bereken de richting naar de positie
 		float[] dirToPos = vectorNormalise(directionDronePos(position));
@@ -214,38 +214,53 @@ public class PhysicsCalculations{
 		//TODO als normal = {0,0,0} (drone is perfect horizontaal)
 		float[] projectionDirectionOnNormal = vectorTimesScalar(normal , vectorDotProduct(dirToPos, normal));//correcte projectie want normal is genormaliseerd
 		float[] approxDir = vectorSum(dirToPos, vectorInverse(projectionDirectionOnNormal));
+		
 		//zoek nu een waarde van de thrust waarvoor we het best volgens deze projectie vliegen
 		float maxThrust = this.getDrone().getMaxThrust();
-		float[] upperLimit = vectorSum(vectorDroneToWorld(vectorTimesScalar(thrust, maxThrust)),gravityVector);
-		float[] lowerLimit = vectorSum(vectorDroneToWorld(vectorTimesScalar(thrust, -maxThrust)),gravityVector);
+		float[] upperLimit = vectorSum(vectorTimesScalar(thrust, maxThrust),gravityVector);//TODO gravity + wind
+		float[] lowerLimit = vectorSum(vectorTimesScalar(thrust, -maxThrust),gravityVector);//TODO gravity + wind
+		
 		//ligt approxDir binnen of buiten de kleine hoek gevormd door upperLimit en lowerLimit?
 		boolean isInside = true;
 		//we tekenen een xy-vlak, en we leggen lowerLimit volgens de x-as en upperLimit heeft een positieve y-waarde
-		float[] coordLow = {vectorSize(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
+		//float[] coordLow = {vectorSize(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
 		
 		float cosLowUp = vectorCosinusBetweenVectors(lowerLimit, upperLimit);
 		float[] crossPLowUp = vectorNormalise(vectorCrossProduct(lowerLimit,upperLimit));
-		float[] coordUp = {vectorSize(upperLimit)*cosLowUp,vectorSize(upperLimit)*((float) Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
+		//float[] coordUp = {vectorSize(upperLimit)*cosLowUp,vectorSize(upperLimit)*((float) Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
 		
 		float cosLowAppDir = vectorCosinusBetweenVectors(lowerLimit, approxDir);
 		if(cosLowAppDir>cosLowUp){
 			isInside = false;
 		}
 		float[] crossPLowAppDir = vectorNormalise(vectorCrossProduct(lowerLimit,approxDir));
-		float sign;
+		float signAppDir;
 		if(!Arrays.equals(crossPLowUp, crossPLowAppDir)){
 			isInside = false;
-			sign = -1;
+			signAppDir = -1;
 		}else{
-			sign = 1;
+			signAppDir = 1;
 		}
-		float[] coordAppDir = {vectorSize(approxDir)*cosLowAppDir,sign*vectorSize(approxDir)*((float) Math.sqrt(1-cosLowAppDir*cosLowAppDir))};//coordinaten approxDir in xy-vlak
+		float[] coordAppDir = {vectorSize(approxDir)*cosLowAppDir,signAppDir*vectorSize(approxDir)*((float) Math.sqrt(1-cosLowAppDir*cosLowAppDir))};//coordinaten approxDir in xy-vlak
 		//als binnen dan hoe groot is thrust om exact op approxDir te vliegen
 		//als buiten dan dichter bij upper of lower (om op min of max te zetten)
 		float result;
 		if(isInside){//inside
-			//TODO exacte thrust bepalen
-			result = 0;
+			float cosLowGravVec = vectorCosinusBetweenVectors(lowerLimit, gravityVector);//TODO gravity + wind
+			float[] coordGravVec = {vectorSize(gravityVector)*cosLowUp,vectorSize(gravityVector)*((float) Math.sqrt(1-cosLowGravVec*cosLowGravVec))};//coordinaten gravityVector in xy-vlak TODO gravity + wind
+			
+			float cosLowThrust = vectorCosinusBetweenVectors(lowerLimit, thrust);
+			float[] crossPLowThrust = vectorNormalise(vectorCrossProduct(lowerLimit,thrust));
+			float signThrust;
+			if(!Arrays.equals(crossPLowUp, crossPLowThrust)){
+				signThrust = -1;
+			}else{
+				signThrust = 1;
+			}
+			float[] coordThrust = {vectorSize(thrust)*cosLowAppDir,signThrust*vectorSize(thrust)*((float) Math.sqrt(1-cosLowThrust*cosLowThrust))};//coordinaten thrust in xy-vlak
+			
+			result = 	(coordAppDir[0]*coordGravVec[1]-coordAppDir[1]*coordGravVec[0])/
+						(coordAppDir[1]*coordThrust[0]-coordAppDir[0]*coordThrust[1]);//TODO gravity + wind	
 		}else{//outside
 			float cosUpAppDir = vectorCosinusBetweenVectors(upperLimit, approxDir);
 			if(cosLowAppDir>cosUpAppDir){//dichter bij upperLimit
