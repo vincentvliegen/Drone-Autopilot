@@ -72,15 +72,15 @@ public class Triangle {
 		return gl;
 	}
 
-	private double[] getTranslatedPoint1() {
+	public double[] getTranslatedPoint1() {
 		return translatedPoint1;
 	}
 
-	private double[] getTranslatedPoint2() {
+	public double[] getTranslatedPoint2() {
 		return translatedPoint2;
 	}
 
-	private double[] getTranslatedPoint3() {
+	public double[] getTranslatedPoint3() {
 		return translatedPoint3;
 	}
 

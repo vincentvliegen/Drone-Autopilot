@@ -24,7 +24,7 @@ public class Polyhedron extends WorldObject {
 		return vertices;
 	}
 
-	protected PolyhedronType getPolyhedronType() {
+	public PolyhedronType getPolyhedronType() {
 		return this.type;
 	}
 

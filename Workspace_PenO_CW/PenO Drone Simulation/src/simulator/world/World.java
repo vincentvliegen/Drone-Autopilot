@@ -25,6 +25,7 @@ import simulator.objects.SomeFigure;
 import simulator.objects.Sphere;
 import simulator.objects.WorldObject;
 import simulator.parser.Parser_v1;
+import simulator.physics.Collision;
 import simulator.physics.Physics;
 
 @SuppressWarnings("serial")
