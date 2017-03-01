@@ -19,11 +19,12 @@ import simulator.camera.GeneralCamera;
 import simulator.editor.WorldEditor;
 import simulator.movement.KeyboardMovement;
 import simulator.objects.ObstacleSphere;
+import simulator.objects.PolyhedronType;
 import simulator.objects.SimulationDrone;
+import simulator.objects.SomeFigure;
 import simulator.objects.Sphere;
 import simulator.objects.WorldObject;
-import simulator.parser.Parser;
-import simulator.physics.Collision;
+import simulator.parser.Parser_v1;
 import simulator.physics.Physics;
 
 @SuppressWarnings("serial")
@@ -40,7 +41,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private List<ObstacleSphere> obstacleSpheres = new ArrayList<>();
 	private GLU glu;
 
-	private Parser parser = new Parser(this);
+	private Parser_v1 parser = new Parser_v1(this);
 	private int[] framebufferRight = new int[1];
 	private int[] framebufferLeft = new int[1];
 
@@ -296,12 +297,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
 		setup();
-
+		SomeFigure fig = new SomeFigure(this, PolyhedronType.TARGET, new double[]{2,-1,0});
+		getWorldObjectList().add(fig);
 		// Start animator.
 		gl.setSwapInterval(1);
 		animator = new FPSAnimator(this, fps);
 		animator.start();
-		gl.glEnable(GL.GL_CULL_FACE);
+//		gl.glEnable(GL.GL_CULL_FACE);
 	}
 
 	public void checkCollision(SimulationDrone drone) {
@@ -377,7 +379,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return animator.getFPS();
 	}
 
-	public Parser getParser() {
+	public Parser_v1 getParser() {
 		return parser;
 	}
 
@@ -421,7 +423,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.currentCamera = camera;
 	}
 
-	public void setParser(Parser parser) {
+	public void setParser(Parser_v1 parser) {
 		this.parser = parser;
 	}
 

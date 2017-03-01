@@ -1,6 +1,5 @@
 package simulator.objects;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 public class Triangle {
@@ -11,31 +10,24 @@ public class Triangle {
 	private double[] innerPoint1;
 	private double[] innerPoint2;
 	private double[] innerPoint3;
-	private float[] color;
+	private int[] color;
 
 	GL2 gl;
-	private Polyhedron polyhedron;
 	private double[] translatedPoint1 = new double[3];
 	private double[] translatedPoint2 = new double[3];
 	private double[] translatedPoint3 = new double[3];
 
 	// TODO voeg kleur vanbuiten toe
 	// TODO voeg kleur vanbinnen toe
-	public Triangle(GL2 gl, double[] point1, double[] point2, double[] point3, float[] color, Polyhedron poly) {
-		this.point1 = point1;
-		this.point2 = point2;
-		this.point3 = point3;
+	public Triangle(GL2 gl, double[] point12, double[] point22, double[] point32, int[] is) {
+		this.point1 = point12;
+		this.point2 = point22;
+		this.point3 = point32;
 		this.gl = gl;
-		this.polyhedron = poly;
-		updatePoints();
-		this.color = color;
+		//TODO update positions!
+		this.color = is;
 	}
 
-	
-	
-	private Polyhedron getPolyhedron() {
-		return this.polyhedron;
-	}
 
 	public double[] getPoint1() {
 		return point1;
@@ -71,7 +63,7 @@ public class Triangle {
 
 	}
 
-	private float[] getColor() {
+	public int[] getColor() {
 		return this.color;
 	}
 
@@ -107,8 +99,8 @@ public class Triangle {
 
 	private double[] getInnerPoint(double[] outerPoint) {
 		return new double[]{(outerPoint[0] - getGravityX()) / Math.sqrt(2) + getGravityX(),
-		(outerPoint[1] - getGravityY()) / Math.sqrt(2) + getGravityY(),
-		(outerPoint[2] - getGravityZ()) / Math.sqrt(2) + getGravityZ()};
+				(outerPoint[1] - getGravityY()) / Math.sqrt(2) + getGravityY(),
+				(outerPoint[2] - getGravityZ()) / Math.sqrt(2) + getGravityZ()};
 	}
 
 	public void draw() {
@@ -118,7 +110,7 @@ public class Triangle {
 
 
 		// Driehoek zelf
-//		gl.glTranslated(getPolyhedron().getPosition()[0], getPolyhedron().getPosition()[1], getPolyhedron().getPosition()[2]);
+		//		gl.glTranslated(getPolyhedron().getPosition()[0], getPolyhedron().getPosition()[1], getPolyhedron().getPosition()[2]);
 		getGl().glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
 
 		getGl().glColor3f(getColor()[0], getColor()[1], getColor()[2]);
@@ -145,17 +137,31 @@ public class Triangle {
 
 	}
 
-	public void updatePoints() {
+	
+	//for placing the mass point of the polyhedron on the polyhedron's position
+	//this is the reason for "-ds[i]" instead of +ds[i]
+	public void updateOriginalPoints(double[] ds) {
 		for(int i = 0; i < 3; i++) {
-			translatedPoint1[i] = getPoint1()[i] + getPolyhedron().getPosition()[i];
-			translatedPoint2[i] = getPoint2()[i] + getPolyhedron().getPosition()[i];
-			translatedPoint3[i] = getPoint3()[i] + getPolyhedron().getPosition()[i];
+			point1[i] = (float) (getPoint1()[i] - ds[i]);
+			point2[i] = (float) (getPoint2()[i] - ds[i]);
+			point3[i] = (float) (getPoint3()[i] - ds[i]);
 		}
-//		System.out.println(Arrays.toString(point1));
+	}
+
+
+	public void updatePoints(double[] ds) {
+		//TODO nullpointer afvangen?		
+		//		if(getPolyhedron() != null) {
+		for(int i = 0; i < 3; i++) {
+			translatedPoint1[i] = (float) (getPoint1()[i] + ds[i]);
+			translatedPoint2[i] = (float) (getPoint2()[i] + ds[i]);
+			translatedPoint3[i] = (float) (getPoint3()[i] + ds[i]);
+		}
+		//		System.out.println(Arrays.toString(point1));
 		innerPoint1 = getInnerPoint(getTranslatedPoint1());
 		innerPoint2 = getInnerPoint(getTranslatedPoint2());
 		innerPoint3 = getInnerPoint(getTranslatedPoint3());
-		
+		//		}
 	}
 
 }

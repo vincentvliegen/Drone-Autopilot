@@ -5,9 +5,11 @@ import java.io.IOException;
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.movement.KeyboardMovement;
-import simulator.objects.*;
-import simulator.parser.Parser;
-
+import simulator.objects.ObstacleSphere;
+import simulator.objects.SimulationDrone;
+import simulator.objects.Sphere;
+import simulator.objects.WorldObject;
+import simulator.parser.Parser_v1;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -28,8 +30,14 @@ public class WorldParser extends World {
 				0, this));
 		super.addGeneralCamera(new GeneralCamera(-100, 0, 0, 0, 0, 0, 0, 1, 0,
 				this));
+<<<<<<< HEAD
 		super.addGeneralCamera(new GeneralCamera(0, 0, 0, 100, 0, 0, 0, 1, 0,
 				this));
+=======
+//		super.addGeneralCamera(new GeneralCamera(10, 0, 5, 10, 0, 0, 0, 1, 0,
+//				this));
+		super.addGeneralCamera(new GeneralCamera(-2, 0, 0, 0, 0, 0, 0, 1, 0, this));
+>>>>>>> Parserv2
 		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
