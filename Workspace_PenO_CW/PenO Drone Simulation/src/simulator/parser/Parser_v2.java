@@ -1,11 +1,10 @@
 package simulator.parser;
 
+import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import com.jogamp.opengl.GL2;
 
 import simulator.objects.Polyhedron;
 import simulator.objects.PolyhedronType;
@@ -109,12 +108,20 @@ class Parser_v2 {
 	    	windRotationAroundZPoints[i] = dataIn.readFloat();
 	    }
 	    
+		
+	    readInObjects(dataIn);
+		
+	    dataIn.close();
+	}
+
+	
+	private void readInObjects(DataInputStream dataIn) throws IOException {
 	    //TODO: kan zijn dat er later nog andere soorten objecten bij komen, dan moet dit wat aangepast..
 	    int objectCount = dataIn.readUnsignedShort();
 	    objects = new ArrayList<Polyhedron>(objectCount);
 	    for(int i = 0; i < objectCount; i++) {
 	    	int vertexCount = dataIn.readUnsignedShort();
-	    	float[][] vertices = new float[vertexCount][3];
+	    	double[][] vertices = new double[vertexCount][3];
 	    	int faceCount = dataIn.readUnsignedShort();
 	    	//TODO ook hier: kan zijn dat faces geen driehoeken meer hoeven zijn
 	    	ArrayList<Triangle> faces = new ArrayList<Triangle>(faceCount);
@@ -123,8 +130,7 @@ class Parser_v2 {
 	    		vertices[j][1] = dataIn.readFloat();
 	    		vertices[j][2] = dataIn.readFloat();
 	    	}
-	    	
-	    	Polyhedron poly;
+	    	float[] hsv = new float[3];
 	    	for (int j = 0; j < faceCount; j ++) {
 	    		int v1 = dataIn.readUnsignedShort();
 	    		int v2 = dataIn.readUnsignedShort();
@@ -133,29 +139,28 @@ class Parser_v2 {
 	    		int r = dataIn.readUnsignedByte();
 	    		int g = dataIn.readUnsignedByte();
 	    		int b = dataIn.readUnsignedByte();
+	    		Color.RGBtoHSB(r,g,b,hsv);
 
-	    		faces.add(new Triangle(getWorld().getGL().getGL2(), vertices[v1], vertices[v2], vertices[v3], new int[]{r,g,b} , poly));
+	    		faces.add(new Triangle(getWorld().getGL().getGL2(), vertices[v1], vertices[v2], vertices[v3], new int[]{r,g,b}));
 	    	}
 	    	//TODO kijk naar type van Polyhedron
 	    	//TODO definieer binnenkleur voor driehoeken
-	    	poly = new Polyhedron(getWorld(), ) {
-				
-				@Override
-				protected void defineTriangles() {
-					//TODO addTriangle() maken
-					
-				}
-			};
+	    	PolyhedronType type;
+	    	if(hsv[1] < 0.45) {
+	    		type = PolyhedronType.OBSTACLE;
+	    	}
+	    	//TODO else if > 0.55, else throw exception
+	    	else
+	    		type = PolyhedronType.TARGET;
 	    	
-	    	//TODO type bepalen
+	    	Polyhedron poly = new Polyhedron(getWorld(), type, vertices);
+	    	poly.addTriangleList(faces);
+	    	getWorld().addPolyhedron(poly);
+	    	
 
 	    }
-		
-	    
-		
-	    dataIn.close();
-	}
 
+	}
 
 	private World getWorld() {
 		return world;

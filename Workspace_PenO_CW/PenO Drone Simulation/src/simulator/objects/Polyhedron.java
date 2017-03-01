@@ -1,24 +1,28 @@
 package simulator.objects;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.jogamp.opengl.GL2;
 
 import simulator.world.World;
 
-public abstract class Polyhedron extends WorldObject {
+public class Polyhedron extends WorldObject {
 
 	GL2 gl;
 	private ArrayList<Triangle> triangles = new ArrayList<>();
 	private PolyhedronType type;
 	private double[] position = new double[]{0,0,0};
-	protected abstract void defineTriangles();
+	private double[][] vertices;
 
 	
-	protected ArrayList<Triangle> getTriangles() {
-		return this.triangles;
+	public ArrayList<Triangle> getTriangles() {
+		//defensieve manier
+		return new ArrayList<>(this.triangles);
+	}
+	
+	public double[][] getVertices() {
+		return vertices;
 	}
 	
 	protected PolyhedronType getPolyhedronType() {
@@ -26,20 +30,42 @@ public abstract class Polyhedron extends WorldObject {
 	}
 
 	// TODO op deze manier qua constructor enz.?
-	public Polyhedron(World world, PolyhedronType type, double[] position) {
+	public Polyhedron(World world, PolyhedronType type, double[] position, double[][] vertices) {
 		super(world);
 		this.type = type;
 		this.gl = getWorld().getGL().getGL2();
+		this.vertices = vertices;
+		
+		handlePositionAndMassPoint();
 		translatePolyhedronOver(position);
-
-		defineTriangles();
+		
 	}
 	
-	public Polyhedron(World world, PolyhedronType type) {
+	
+	// verwerkt feit dat punten op bepaalde plaats gezet kunnen worden in combinatie met vooraf ingestelde positie
+	private void handlePositionAndMassPoint() {
+		//TODO pas punten van polyhedron aan en die van driehoeken
+		
+		double[] massPoint = new double[3];
+		double temp = 0;
+		for(int i = 0; i < 3; i++) {
+			for(double[] vertex: getVertices()) {
+				temp += vertex[i];
+			}
+			massPoint[i] = temp;
+			temp = 0;
+		}
+		//TODO zwaartepunt moet 0 zijn of positie moet 0 zijn, anders niet ok!
+		//1. zet de points op hun nieuwe plaats op basis van het masspoint
+		//2. 
+		
+	}
+
+	public Polyhedron(World world, PolyhedronType type, double[][] vertices) {
 		super(world);
 		this.type = type;
 		this.gl = getWorld().getGL().getGL2();
-		defineTriangles();
+		this.vertices = vertices;
 	}
 
 	public GL2 getGl() {
@@ -49,8 +75,9 @@ public abstract class Polyhedron extends WorldObject {
 
 	@Override
 	public void draw() {
+		if(triangles != null) {
 		for (Triangle triangle : getTriangles())
-			triangle.draw();
+			triangle.draw();}
 
 	}
 
@@ -73,17 +100,22 @@ public abstract class Polyhedron extends WorldObject {
 		position[1] = position[1] + vector[1];
 		position[2] = position[2] + vector[2];
 		for(Triangle triangle:getTriangles()) {
-			triangle.updatePoints();
+			triangle.updatePoints(getPosition());
 		}
 
 
 	}
 	
-	private ArrayList<float[]> colorsOfTriangles = new ArrayList<>();
-	
-	private ArrayList<float[]> getColorsOfTriangles() {
-		return colorsOfTriangles;
+	private double calculateRadius() {
+		double maximumDistance = 0;
+		for (double[] currVertex: getVertices()) {
+			double currDistance = getWorld().getCollision().getDistanceBetweenPoints(currVertex, getPosition());
+			if (currDistance > maximumDistance)
+				maximumDistance = currDistance;
+		}
+		return maximumDistance;
 	}
+
 
 	@Override
 	public float getRadius() {
@@ -92,23 +124,30 @@ public abstract class Polyhedron extends WorldObject {
 	}
 	
 	protected void addTriangleWithRandomColor(double[] point1, double[] point2, double[] point3) {
-		Random rand = new Random();
-		float r = 0, g=0,b=0;
-		float[] color = {r,g,b};
-		while((r == g && r == b) || getColorsOfTriangles().contains(color)) {
-			r = rand.nextFloat();
-			g = rand.nextFloat();
-			b = rand.nextFloat();
+		int r = 0, g=0,b=0;
+		int[] color = {r,g,b};
+		int min = 0;
+		//TODO 256?
+		int max = 255;
+		while((r == g && r == b) || getWorld().getTargetColors().contains(color)) {
+			r = ThreadLocalRandom.current().nextInt(min, max + 1);
+			g = ThreadLocalRandom.current().nextInt(min, max + 1);
+			b = ThreadLocalRandom.current().nextInt(min, max + 1);
 			color[0] = r;
 			color[1] = g;
 			color[2] = b;
 		}
-		addTriangle(new Triangle(getGl(), point1, point2, point3, color, this));
+		addTriangle(new Triangle(getGl(), point1, point2, point3, color));
 	}
 	
 	
 	
 	private void addTriangle(Triangle triangle) {
 		this.triangles.add(triangle);
+	}
+	
+	public void addTriangleList(ArrayList<Triangle> list) {
+//		defensief
+		this.triangles = new ArrayList<>(list);
 	}
 }
