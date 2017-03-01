@@ -22,6 +22,7 @@ import simulator.objects.ObstacleSphere;
 import simulator.objects.Polyhedron;
 import simulator.objects.PolyhedronType;
 import simulator.objects.SimulationDrone;
+import simulator.objects.SomeFigure;
 import simulator.objects.Sphere;
 import simulator.objects.Triangle;
 import simulator.objects.WorldObject;
@@ -132,9 +133,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private ArrayList<float[]> targetColors = new ArrayList<>();
 	private ArrayList<float[]> obstacleColors = new ArrayList<>();
 	
-	private ArrayList<int[]> triangleColors = new ArrayList<>();
+	private ArrayList<float[]> triangleColors = new ArrayList<>();
 
-	public ArrayList<int[]> getTriangleColors() {
+	public ArrayList<float[]> getTriangleColors() {
 		return triangleColors;
 	}
 
@@ -325,8 +326,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
 		setup();
-
-		
 		// Start animator.
 		gl.setSwapInterval(1);
 		animator = new FPSAnimator(this, fps);

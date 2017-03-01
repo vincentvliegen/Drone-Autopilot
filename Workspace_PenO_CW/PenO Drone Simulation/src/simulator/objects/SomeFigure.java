@@ -14,7 +14,6 @@ public class SomeFigure extends PredefinedPolyhedron{
 	
 	public SomeFigure(World world, PolyhedronType type, double[] position) {
 		super(world, type, position, vertices);
-		defineTriangles();
 	}
 
 
