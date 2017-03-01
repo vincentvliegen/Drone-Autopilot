@@ -19,10 +19,11 @@ import simulator.camera.GeneralCamera;
 import simulator.editor.WorldEditor;
 import simulator.movement.KeyboardMovement;
 import simulator.objects.ObstacleSphere;
+import simulator.objects.Polyhedron;
 import simulator.objects.PolyhedronType;
 import simulator.objects.SimulationDrone;
-import simulator.objects.SomeFigure;
 import simulator.objects.Sphere;
+import simulator.objects.Triangle;
 import simulator.objects.WorldObject;
 import simulator.parser.Parser_v1;
 import simulator.physics.Collision;
@@ -39,6 +40,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private List<DroneCamera> droneCameras = new ArrayList<>();
 	private List<SimulationDrone> drones = new ArrayList<>();
 	private List<Sphere> spheres = new ArrayList<>();
+	private List<Polyhedron> polyhedrons = new ArrayList<>();
+
 	private List<ObstacleSphere> obstacleSpheres = new ArrayList<>();
 	private GLU glu;
 
@@ -108,9 +111,33 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		spheres.remove(sphere);
 		getTargetColors().remove(sphere.getColor());
 	}
+	
+	public void addPolyhedron(Polyhedron poly){
+		worldObjectsList.add(poly);
+		polyhedrons.add(poly);
+		for(Triangle triangle: poly.getTriangles()) {
+			triangleColors.add(triangle.getColor());
+		}
+	}
+	
+	public void removePolyhedron(Polyhedron poly) {
+		worldObjectsList.remove(poly);
+		polyhedrons.remove(poly);
+		for(Triangle triangle: poly.getTriangles()) {
+			triangleColors.remove(triangle.getColor());
+		}
+	}
+
 
 	private ArrayList<float[]> targetColors = new ArrayList<>();
 	private ArrayList<float[]> obstacleColors = new ArrayList<>();
+	
+	private ArrayList<int[]> triangleColors = new ArrayList<>();
+
+	public ArrayList<int[]> getTriangleColors() {
+		return triangleColors;
+	}
+
 
 	public void addSphereWithRandomColor(double[] position) {
 		Random rand = new Random();
@@ -298,8 +325,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
 		setup();
-		SomeFigure fig = new SomeFigure(this, PolyhedronType.TARGET, new double[]{2,-1,0});
-		getWorldObjectList().add(fig);
+
+		
 		// Start animator.
 		gl.setSwapInterval(1);
 		animator = new FPSAnimator(this, fps);
@@ -347,6 +374,11 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public List<Sphere> getSpheres() {
 		return spheres;
 	}
+	
+	public List<Polyhedron> getPolyhedrons() {
+		return polyhedrons;
+	}
+
 
 	public List<ObstacleSphere> getObstacleSpheres() {
 		return obstacleSpheres;

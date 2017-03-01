@@ -38,6 +38,7 @@ public class WorldParser extends World {
 //		super.addGeneralCamera(new GeneralCamera(10, 0, 5, 10, 0, 0, 0, 1, 0,
 //				this));
 		super.addGeneralCamera(new GeneralCamera(-2, 0, 0, 0, 0, 0, 0, 1, 0, this));
+		setCurrentCamera(getGeneralCameras().get(0));
 	}
 
 	@Override

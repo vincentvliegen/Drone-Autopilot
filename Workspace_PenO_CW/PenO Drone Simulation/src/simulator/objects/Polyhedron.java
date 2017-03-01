@@ -128,7 +128,7 @@ public class Polyhedron extends WorldObject {
 		int min = 0;
 		// TODO 256?
 		int max = 255;
-		while ((r == g && r == b) || getWorld().getTargetColors().contains(color)) {
+		while ((r == g && r == b) || getWorld().getTriangleColors().contains(color)) {
 			r = ThreadLocalRandom.current().nextInt(min, max + 1);
 			g = ThreadLocalRandom.current().nextInt(min, max + 1);
 			b = ThreadLocalRandom.current().nextInt(min, max + 1);
