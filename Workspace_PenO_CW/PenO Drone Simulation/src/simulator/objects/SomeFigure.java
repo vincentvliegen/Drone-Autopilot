@@ -2,7 +2,7 @@ package simulator.objects;
 
 import simulator.world.World;
 
-public class SomeFigure extends Polyhedron{
+public class SomeFigure extends PredefinedPolyhedron{
 
 
 	static double[] point1 = { -0.2, 0, -0.2 };
@@ -11,9 +11,6 @@ public class SomeFigure extends Polyhedron{
 	static double[] point4 = { 0, 0.2, 0 }; // upper
 	static double[][] vertices = new double[][]{point1,point2,point3,point4};
 
-	public SomeFigure(World world, PolyhedronType type) {
-		super(world, type, vertices);
-	}
 	
 	public SomeFigure(World world, PolyhedronType type, double[] position) {
 		super(world, type, position, vertices);

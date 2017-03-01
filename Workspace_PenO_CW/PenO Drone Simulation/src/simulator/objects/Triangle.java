@@ -137,6 +137,16 @@ public class Triangle {
 
 	}
 
+	
+	//for placing the mass point of the polyhedron on the polyhedron's position
+	//this is the reason for "-ds[i]" instead of +ds[i]
+	public void updateOriginalPoints(double[] ds) {
+		for(int i = 0; i < 3; i++) {
+			point1[i] = (float) (getPoint1()[i] - ds[i]);
+			point2[i] = (float) (getPoint2()[i] - ds[i]);
+			point3[i] = (float) (getPoint3()[i] - ds[i]);
+		}
+	}
 
 
 	public void updatePoints(double[] ds) {
