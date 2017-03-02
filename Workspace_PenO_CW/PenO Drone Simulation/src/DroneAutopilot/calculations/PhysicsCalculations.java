@@ -218,10 +218,10 @@ public class PhysicsCalculations{
 		float[] dirToPos = vectorNormalise(directionDronePos(position));
 		
 		float result;
-		if(Arrays.equals(dirToPos, this.getPosition())){//als het doel de huidige positie van de drone is
+		if(Arrays.equals(this.vectorSum(dirToPos, new float[] {0,0,0}), this.vectorSum(getPosition(), new float[] {0,0,0}))){//als het doel de huidige positie van de drone is
 			float[] projectionGravVecOnThrustAxis = vectorTimesScalar(thrust, vectorDotProduct(gravAndWind, thrust));//thrust is genormaliseerd
 			float signThrustGrav;
-			if(Arrays.equals(thrust, vectorNormalise(projectionGravVecOnThrustAxis))){//de gravity+wind staat volgens positieve thrust
+			if(Arrays.equals(this.vectorSum(thrust, new float[] {0,0,0}), this.vectorSum(vectorNormalise(projectionGravVecOnThrustAxis), new float[] {0,0,0}))){//de gravity+wind staat volgens positieve thrust
 				signThrustGrav = -1;
 			}else{
 				signThrustGrav = 1;
@@ -230,7 +230,7 @@ public class PhysicsCalculations{
 		} else if(Arrays.equals(this.vectorSum(normal, new float[] {0,0,0}), new float[] {0,0,0})){//als normal = {0,0,0} (drone is gericht volgens de gravity+wind)
 			//positieve of negatieve thrust ter compensatie vd gravity+wind?
 			float signThrustGrav;
-			if(Arrays.equals(thrust, vectorNormalise(gravAndWind))){//de gravity+wind staat volgens positieve thrust
+			if(Arrays.equals(this.vectorSum(thrust, new float[] {0,0,0}), this.vectorSum(vectorNormalise(gravAndWind), new float[] {0,0,0}))){//de gravity+wind staat volgens positieve thrust
 				signThrustGrav = -1;
 			}else{
 				signThrustGrav = 1;
@@ -240,7 +240,7 @@ public class PhysicsCalculations{
 			float compensateDir = 1;//hoeveel keer de kracht om de gravity+wind te compenseren wordt gebruikt om richting het object te vliegen TODO verfijnen/minder statisch maken
 			float[] projectionDirectionOnThrustAxis = vectorTimesScalar(thrust , vectorDotProduct(dirToPos, thrust));//thrust is genormaliseerd
 			float signThrustDir;
-			if(Arrays.equals(thrust, vectorNormalise(projectionDirectionOnThrustAxis))){//de richting staat volgens positieve thrust
+			if(Arrays.equals(this.vectorSum(thrust, new float[] {0,0,0}), this.vectorSum(vectorNormalise(projectionDirectionOnThrustAxis), new float[] {0,0,0}))){//de richting staat volgens positieve thrust
 				signThrustDir = 1;
 			}else{
 				signThrustDir = -1;
@@ -267,12 +267,12 @@ public class PhysicsCalculations{
 			//float[] coordUp = {vectorSize(upperLimit)*cosLowUp,vectorSize(upperLimit)*((float) Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
 			
 			float cosLowAppDir = vectorCosinusBetweenVectors(lowerLimit, approxDir);
-			if(cosLowAppDir>cosLowUp){
+			if(cosLowAppDir+0>cosLowUp+0){
 				isInside = false;
 			}
 			float[] crossPLowAppDir = vectorNormalise(vectorCrossProduct(lowerLimit,approxDir));
 			float signAppDir;
-			if(!Arrays.equals(crossPLowUp, crossPLowAppDir)){
+			if(!Arrays.equals(this.vectorSum(crossPLowUp, new float[] {0,0,0}), this.vectorSum(crossPLowAppDir, new float[] {0,0,0}))){
 				isInside = false;
 				signAppDir = -1;
 			}else{
@@ -288,7 +288,7 @@ public class PhysicsCalculations{
 				float cosLowThrust = vectorCosinusBetweenVectors(lowerLimit, thrust);
 				float[] crossPLowThrust = vectorNormalise(vectorCrossProduct(lowerLimit,thrust));
 				float signThrust;
-				if(!Arrays.equals(crossPLowUp, crossPLowThrust)){
+				if(!Arrays.equals(this.vectorSum(crossPLowUp, new float[] {0,0,0}), this.vectorSum(crossPLowThrust, new float[] {0,0,0}))){
 					signThrust = -1;
 				}else{
 					signThrust = 1;
@@ -299,7 +299,7 @@ public class PhysicsCalculations{
 							(coordAppDir[1]*coordThrust[0]-coordAppDir[0]*coordThrust[1]);
 			}else{//outside
 				float cosUpAppDir = vectorCosinusBetweenVectors(upperLimit, approxDir);
-				if(cosLowAppDir>cosUpAppDir){//dichter bij upperLimit
+				if(cosLowAppDir+0>cosUpAppDir+0){//dichter bij upperLimit
 					result = -maxThrust;
 				}else{//dichter bij lowerLimit
 					result = maxThrust;
