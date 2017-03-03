@@ -1,11 +1,9 @@
 package simulator.world;
 
-import java.nio.IntBuffer;
 import java.util.*;
 
 import p_en_o_cw_2016.AutopilotFactory;
 
-import com.jogamp.newt.event.MouseListener;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -117,7 +115,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		worldObjectsList.add(poly);
 		polyhedrons.add(poly);
 		for(Triangle triangle: poly.getTriangles()) {
-			triangleColors.add(triangle.getColor());
+			triangleColors.add(triangle.getIntColor());
 		}
 	}
 	
@@ -133,9 +131,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private ArrayList<float[]> targetColors = new ArrayList<>();
 	private ArrayList<float[]> obstacleColors = new ArrayList<>();
 	
-	private ArrayList<float[]> triangleColors = new ArrayList<>();
+	private ArrayList<int[]> triangleColors = new ArrayList<>();
 
-	public ArrayList<float[]> getTriangleColors() {
+	public ArrayList<int[]> getTriangleColors() {
 		return triangleColors;
 	}
 
@@ -326,11 +324,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
 		setup();
+//		SomeFigure fig = new SomeFigure(this, PolyhedronType.TARGET, new double[]{2,-1,0});
+//		getWorldObjectList().add(fig);
 		// Start animator.
 		gl.setSwapInterval(1);
 		animator = new FPSAnimator(this, fps);
 		animator.start();
-//		gl.glEnable(GL.GL_CULL_FACE);
+		gl.glEnable(GL.GL_CULL_FACE);
 	}
 
 	public void checkCollision(SimulationDrone drone) {

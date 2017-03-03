@@ -7,7 +7,6 @@ public abstract class PredefinedPolyhedron extends Polyhedron{
 	public PredefinedPolyhedron(World world, PolyhedronType type, double[] position, double[][] vertices) {
 		super(world, type, vertices);
 		defineTriangles();
-		handlePositionAndMassPoint();
 		translatePolyhedronOver(position);
 	}
 	

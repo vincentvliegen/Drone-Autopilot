@@ -1,5 +1,6 @@
 package simulator.objects;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -136,6 +137,18 @@ public class Polyhedron extends WorldObject {
 			color[1] = g;
 			color[2] = b;
 		}
+		float[] temp = new float[3];
+		Color.RGBtoHSB(color[0], color[1], color[2], temp);
+
+//		make sure that the outer color has the correct saturation value
+		if(temp[1] < 0.45) {
+			temp[1] = 1-temp[1];
+			int inner = Color.HSBtoRGB(temp[0], temp[1], temp[2]);
+			color[0] = ((inner >> 16) & 0xFF);
+			color[1] = ((inner >> 8) & 0xFF);
+			color[2] = (inner & 0xFF);
+		}
+
 		addTriangle(new Triangle(getGl(), point1, point2, point3, color));
 	}
 

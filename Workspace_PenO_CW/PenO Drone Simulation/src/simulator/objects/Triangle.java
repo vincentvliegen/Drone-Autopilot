@@ -1,5 +1,6 @@
 package simulator.objects;
 
+import java.awt.Color;
 import java.util.Arrays;
 
 import com.jogamp.opengl.GL2;
@@ -13,23 +14,35 @@ public class Triangle {
 	private double[] innerPoint2;
 	private double[] innerPoint3;
 	private float[] color = new float[3];
+	private int[] intColor = new int[3];
 
 	GL2 gl;
 	private double[] translatedPoint1 = new double[3];
 	private double[] translatedPoint2 = new double[3];
 	private double[] translatedPoint3 = new double[3];
+	private float[] innerColor;
 
-	// TODO voeg kleur vanbuiten toe
-	// TODO voeg kleur vanbinnen toe
-	public Triangle(GL2 gl, double[] point12, double[] point22, double[] point32, int[] is) {
+	public Triangle(GL2 gl, double[] point12, double[] point22, double[] point32, int[] color) {
 		this.point1 = point12;
 		this.point2 = point22;
 		this.point3 = point32;
 		this.gl = gl;
-		System.out.println(is[0]);
-		this.color[0] = is[0]/255f;
-		this.color[1] = is[1]/255f;
-		this.color[2] = is[2]/255f;
+		this.color[0] = color[0]/255f;
+		this.color[1] = color[1]/255f;
+		this.color[2] = color[2]/255f;
+		this.intColor = color;
+		createInnerColor();
+	}
+
+	private void createInnerColor() {
+		float[] temp = new float[3];
+		Color.RGBtoHSB(getIntColor()[0], getIntColor()[1], getIntColor()[2], temp);
+		System.out.println(Arrays.toString(temp));
+		temp[1] = 1 - temp[1];
+		int inner = Color.HSBtoRGB(temp[0], temp[1], temp[2]);
+		this.innerColor = new float[]{((inner>>16)&0xFF)/255f, ((inner>>8)&0xFF)/255f, (inner&0xFF)/255f};
+		
+		
 	}
 
 	public double[] getPoint1() {
@@ -61,6 +74,14 @@ public class Triangle {
 
 	public float[] getColor() {
 		return this.color;
+	}
+
+	public int[] getIntColor() {
+		return intColor;
+	}
+	
+	public float[] getInnerColor() {
+		return innerColor;
 	}
 
 	private GL2 getGl() {
@@ -102,32 +123,58 @@ public class Triangle {
 	public void draw() {
 		// zowel buitenste als binnenste driehoek, met kleur
 
-		// TODO buitenste kleur moet ingesteld
 
-		// Driehoek zelf
-		// gl.glTranslated(getPolyhedron().getPosition()[0],
-		// getPolyhedron().getPosition()[1], getPolyhedron().getPosition()[2]);
-		getGl().glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
-		System.out.println(Arrays.toString(getColor()));
-
-		getGl().glColor3f(getColor()[0], getColor()[1], getColor()[2]);
-
-		getGl().glVertex3d(getTranslatedPoint1()[0], getTranslatedPoint1()[1], getTranslatedPoint1()[2]);
-		getGl().glVertex3d(getTranslatedPoint2()[0], getTranslatedPoint2()[1], getTranslatedPoint2()[2]);
-		getGl().glVertex3d(getTranslatedPoint3()[0], getTranslatedPoint3()[1], getTranslatedPoint3()[2]);
-
-		getGl().glEnd();
-
+		// buitenkant van driehoek, getekend als polygon rond binnendriehoek, zodat beiden niet overlappen
+		
 		// Binnenste gedeelte
 
-		// TODO binnenste kleur moet ingesteld
 		getGl().glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
 
-		getGl().glColor3f(0f, 1f, 0f);
-
+		getGl().glColor3f(getInnerColor()[0], getInnerColor()[1], getInnerColor()[2]);
 		getGl().glVertex3d(getInnerPoint1()[0], getInnerPoint1()[1], getInnerPoint1()[2]);
 		getGl().glVertex3d(getInnerPoint2()[0], getInnerPoint2()[1], getInnerPoint2()[2]);
 		getGl().glVertex3d(getInnerPoint3()[0], getInnerPoint3()[1], getInnerPoint3()[2]);
+
+		getGl().glEnd();
+
+		
+		
+		
+		getGl().glBegin(GL2.GL_TRIANGLES);
+
+		getGl().glColor3f(getColor()[0], getColor()[1], getColor()[2]);
+		
+		getGl().glVertex3d(getInnerPoint1()[0], getInnerPoint1()[1], getInnerPoint1()[2]);
+		getGl().glVertex3d(getTranslatedPoint1()[0], getTranslatedPoint1()[1], getTranslatedPoint1()[2]);
+		getGl().glVertex3d(getTranslatedPoint2()[0], getTranslatedPoint2()[1], getTranslatedPoint2()[2]);
+	
+		getGl().glVertex3d(getInnerPoint1()[0], getInnerPoint1()[1], getInnerPoint1()[2]);
+		getGl().glVertex3d(getTranslatedPoint2()[0], getTranslatedPoint2()[1], getTranslatedPoint2()[2]);
+		getGl().glVertex3d(getInnerPoint2()[0], getInnerPoint2()[1], getInnerPoint2()[2]);
+
+		getGl().glVertex3d(getInnerPoint2()[0], getInnerPoint2()[1], getInnerPoint2()[2]);
+		getGl().glVertex3d(getTranslatedPoint2()[0], getTranslatedPoint2()[1], getTranslatedPoint2()[2]);
+		getGl().glVertex3d(getTranslatedPoint3()[0], getTranslatedPoint3()[1], getTranslatedPoint3()[2]);
+
+		getGl().glVertex3d(getInnerPoint2()[0], getInnerPoint2()[1], getInnerPoint2()[2]);
+		getGl().glVertex3d(getTranslatedPoint3()[0], getTranslatedPoint3()[1], getTranslatedPoint3()[2]);
+		getGl().glVertex3d(getInnerPoint3()[0], getInnerPoint3()[1], getInnerPoint3()[2]);
+
+		
+		getGl().glVertex3d(getInnerPoint3()[0], getInnerPoint3()[1], getInnerPoint3()[2]);
+		getGl().glVertex3d(getTranslatedPoint3()[0], getTranslatedPoint3()[1], getTranslatedPoint3()[2]);
+		getGl().glVertex3d(getTranslatedPoint1()[0], getTranslatedPoint1()[1], getTranslatedPoint1()[2]);
+
+		getGl().glVertex3d(getInnerPoint3()[0], getInnerPoint3()[1], getInnerPoint3()[2]);
+		getGl().glVertex3d(getTranslatedPoint1()[0], getTranslatedPoint1()[1], getTranslatedPoint1()[2]);
+		getGl().glVertex3d(getInnerPoint1()[0], getInnerPoint1()[1], getInnerPoint1()[2]);
+
+		
+		//		getGl().glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
+//		getGl().glColor3f(getColor()[0], getColor()[1], getColor()[2]);
+//		getGl().glVertex3d(getTranslatedPoint1()[0], getTranslatedPoint1()[1], getTranslatedPoint1()[2]);
+//		getGl().glVertex3d(getTranslatedPoint2()[0], getTranslatedPoint2()[1], getTranslatedPoint2()[2]);
+//		getGl().glVertex3d(getTranslatedPoint3()[0], getTranslatedPoint3()[1], getTranslatedPoint3()[2]);
 
 		getGl().glEnd();
 
