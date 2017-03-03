@@ -1,9 +1,6 @@
 package simulator.objects;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
-
 import com.jogamp.opengl.GL2;
 
 import simulator.world.World;
@@ -15,6 +12,7 @@ public class Polyhedron extends WorldObject {
 	private PolyhedronType type;
 	private double[] position = new double[] { 0, 0, 0 };
 	private double[][] vertices;
+	private float radius;
 
 	public ArrayList<Triangle> getTriangles() {
 		// defensieve manier
@@ -36,7 +34,7 @@ public class Polyhedron extends WorldObject {
 		this.gl = getWorld().getGL().getGL2();
 		this.vertices = vertices;
 		handlePositionAndMassPoint();
-		calculateRadius();
+		this.radius = calculateRadius();
 
 	}
 
@@ -107,52 +105,24 @@ public class Polyhedron extends WorldObject {
 	// dus radius zou in begin ok moeten zijn
 	// (we berekenen radius pas nadat de positie berekend is als het massapunt van de polyhedron)
 
-	private double calculateRadius() {
+	private float calculateRadius() {
 		double maximumDistance = 0;
 		for (double[] currVertex : getVertices()) {
 			double currDistance = getWorld().getCollision().getDistanceBetweenPoints(currVertex, getPosition());
 			if (currDistance > maximumDistance)
 				maximumDistance = currDistance;
 		}
-		return maximumDistance;
+		return (float) maximumDistance;
 	}
 
 	@Override
 	public float getRadius() {
-		// TODO hoe?
-		return 0;
+		return this.radius;
 	}
 
-	protected void addTriangleWithRandomColor(double[] point1, double[] point2, double[] point3) {
-		int r = 0, g = 0, b = 0;
-		int[] color = { r, g, b };
-		int min = 0;
-		// TODO 256?
-		int max = 255;
-		while ((r == g && r == b) || getWorld().getTriangleColors().contains(color)) {
-			r = ThreadLocalRandom.current().nextInt(min, max + 1);
-			g = ThreadLocalRandom.current().nextInt(min, max + 1);
-			b = ThreadLocalRandom.current().nextInt(min, max + 1);
-			color[0] = r;
-			color[1] = g;
-			color[2] = b;
-		}
-		float[] temp = new float[3];
-		Color.RGBtoHSB(color[0], color[1], color[2], temp);
 
-//		make sure that the outer color has the correct saturation value
-		if(temp[1] < 0.45) {
-			temp[1] = 1-temp[1];
-			int inner = Color.HSBtoRGB(temp[0], temp[1], temp[2]);
-			color[0] = ((inner >> 16) & 0xFF);
-			color[1] = ((inner >> 8) & 0xFF);
-			color[2] = (inner & 0xFF);
-		}
 
-		addTriangle(new Triangle(getGl(), point1, point2, point3, color));
-	}
-
-	private void addTriangle(Triangle triangle) {
+	protected void addTriangle(Triangle triangle) {
 		this.triangles.add(triangle);
 	}
 
