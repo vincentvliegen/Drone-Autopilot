@@ -3,6 +3,7 @@ package simulator.objects;
 import java.util.ArrayList;
 import com.jogamp.opengl.GL2;
 
+import simulator.physics.MathCalculations;
 import simulator.world.World;
 
 public class Polyhedron extends WorldObject {
@@ -108,7 +109,7 @@ public class Polyhedron extends WorldObject {
 	private float calculateRadius() {
 		double maximumDistance = 0;
 		for (double[] currVertex : getVertices()) {
-			double currDistance = getWorld().getCollision().getDistanceBetweenPoints(currVertex, getPosition());
+			double currDistance = MathCalculations.getDistanceBetweenPoints(currVertex, getPosition());
 			if (currDistance > maximumDistance)
 				maximumDistance = currDistance;
 		}
