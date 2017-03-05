@@ -1,98 +1,32 @@
 package generator;
 
+import java.awt.Color;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
-import java.util.PriorityQueue;
-import java.util.Random;
+import java.util.*;
 
 public class Generator_V2 {
 
 	public static void main(String[] args) throws FileNotFoundException {
-		/*
-		 * WorldDescriptionFile_v2 { 
-		 * 		u1 magic[4] = {'W','D','F','F'}; // The
-		 * first four bytes of the file are the ASCII characters 'W', 'D', 'F',
-		 * 'F'. 
-		 * 		u1 version = 2; 
-		 * 		float horizontalAngleOfView; 
-		 * 		float verticalAngleOfView; 
-		 * 		u2 imageWidth; 
-		 * 		u2 imageHeight; 
-		 * 		float cameraSeparation; 
-		 * 		float weight; 
-		 *		float gravity; 
-		 * 		float drag; 
-		 *		float maxThrust; 
-		 * 		float maxPitchRate; 
-		 * 		float maxRollRate; 
-		 * 		float maxYawRate;
-		 * 		u2 windSpeedXPointsCount; 
-		 * 		float windSpeedXPoints[2*windSpeedXPointsCount]; 
-		 * 		u2 windSpeedYPointsCount;
-		 *		float windSpeedYPoints[2*windSpeedYPointsCount]; 
-		 * 		u2 windSpeedZPointsCount; 
-		 * 		float windSpeedZPoints[2*windSpeedZPointsCount]; 
-		 * 		u2 windRotationAroundXCount; 
-		 * 		float windRotationAroundXPoints[2*windRotationAroundXPointsCount]; 
-		 * 		u2 windRotationAroundYCount; 
-		 * 		float windRotationAroundYPoints[2*windRotationAroundYPointsCount]; 
-		 * 		u2 windRotationAroundZCount; 
-		 * 		float windRotationAroundZPoints[2*windRotationAroundZPointsCount]; 
-		 * 		u2 objectCount; 
-		 * 		object objects[objectCount]; 
-		 * }
-		 * 
-		 * object { 
-		 * 		u2 vertexCount; 
-		 * 		vertex vertices[vertexCount]; 
-		 * 		u2 faceCount;
-		 * 		face faces[faceCount]; 
-		 * }
-		 * 
-		 * vertex { 	
-		 * 		float x; 
-		 * 		float y; 
-		 * 		float z; 
-		 * }
-		 * 
-		 * face { // The three vertices are sorted clockwise when viewed from
-		 * outside the object 
-		 * 		u2 vertex1; // 0-based index into array 'vertices'
-		 * 		u2 vertex2; 
-		 * 		u2 vertex3; // Outline color 
-		 * 		u1 red; 
-		 * 		u1 green; 
-		 * 		u1 blue;
-		 * // The inside color should be a desaturated version of the outline
-		 * color. A future version of the file format may allow separately
-		 * specifying the color or texture of the inside. }
-		 * 
-		 * u1 = byte
-		 * u2 = short
-		 * float = float :^)
-		 */
-		
 		String path = "inputFiles/GeneratorV2Test.txt";
-		String path2 = "inputFiles/GeneratorV2Test.txt";
-		
-		File f = new File(path2);
+
+		File f = new File(path);
 		OutputStream fileStream = new FileOutputStream(f);
 		DataOutputStream stream = new DataOutputStream(fileStream);
 		Random r = new Random();
-		
-		
+
 		try {
-			//Magic
+			// Magic
 			stream.writeByte(87);
 			stream.writeByte(68);
 			stream.writeByte(70);
 			stream.writeByte(70);
-			
-			//Standard constants
+
+			// Standard constants
 			stream.writeByte(2);
 			stream.writeFloat(120);
 			stream.writeFloat(120);
@@ -106,8 +40,8 @@ public class Generator_V2 {
 			stream.writeFloat(720.0f);
 			stream.writeFloat(720.0f);
 			stream.writeFloat(720.0f);
-			
-			//Wind
+
+			// Wind
 			PriorityQueue<Float> newQueue = new PriorityQueue<>();
 
 			for (int i = 0; i < 6; i++) {
@@ -118,122 +52,168 @@ public class Generator_V2 {
 				if (i < 3)
 					for (int j = 0; j < 6; j++) {
 						stream.writeFloat(newQueue.poll());
-						stream.writeFloat(r.nextFloat()*0.05f);
+						stream.writeFloat(r.nextFloat() * 0.05f);
 					}
 				else {
 					for (int j = 0; j < 6; j++) {
 						stream.writeFloat(newQueue.poll());
-						stream.writeFloat(r.nextFloat()*0.5f);
+						stream.writeFloat(r.nextFloat() * 0.5f);
 					}
 				}
 			}
-			
-			//Objects
+
+			// Objects
 			stream.writeShort(2);
-			
-			//Object 1
+
+			// Object 1 == target
 			stream.writeShort(4);
-			
+			// Locations of points
 			stream.writeFloat(4.8f);
 			stream.writeFloat(0);
 			stream.writeFloat(-0.2f);
-			
+
 			stream.writeFloat(4.8f);
 			stream.writeFloat(0);
 			stream.writeFloat(0.2f);
-			
+
 			stream.writeFloat(5.2f);
 			stream.writeFloat(0);
 			stream.writeFloat(0);
-			
+
 			stream.writeFloat(5);
 			stream.writeFloat(0.2f);
 			stream.writeFloat(0);
-			
+
 			stream.writeShort(4);
-			
-			stream.writeShort(0);
-			stream.writeShort(1);
-			stream.writeShort(2);
-			stream.writeByte(0);
-			stream.writeByte(1);
-			stream.writeByte(0);
-			
-			stream.writeShort(0);
-			stream.writeShort(1);
-			stream.writeShort(3);
-			stream.writeByte(1);
-			stream.writeByte(1);
-			stream.writeByte(0);
-			
-			stream.writeShort(0);
-			stream.writeShort(3);
-			stream.writeShort(2);
-			stream.writeByte(0);
-			stream.writeByte(0);
-			stream.writeByte(1);
-			
-			stream.writeShort(1);
-			stream.writeShort(3);
-			stream.writeShort(2);
-			stream.writeByte(1);
-			stream.writeByte(0);
-			stream.writeByte(0);
-			
-			//Object 2
+			// Connect points + colors
+
+			List<int[]> colorListRGB = new ArrayList<>();
+			for (int i = 0; i < 4; i++) {
+				int hue = r.nextInt(361);
+				float saturation = r.nextFloat() * 0.45f + 0.55f;
+				float brightness = r.nextFloat() * 0.45f + 0.55f;
+				int rgb = Color.HSBtoRGB(hue, saturation, brightness);
+				int[] color = new int[3];
+				color[0] = ((rgb >> 16) & 0xFF);
+				color[1] = ((rgb >> 8) & 0xFF);
+				color[2] = (rgb & 0xFF);
+				colorListRGB.add(color);
+			}
+
+			for (int i = 0; i < 4; i++) {
+				int[] currentcolor = colorListRGB.get(i);
+				switch (i) {
+				case 0:
+					stream.writeShort(0);
+					stream.writeShort(1);
+					stream.writeShort(2);
+					stream.writeByte(currentcolor[0]);
+					stream.writeByte(currentcolor[1]);
+					stream.writeByte(currentcolor[2]);
+					break;
+				case 1:
+					stream.writeShort(0);
+					stream.writeShort(1);
+					stream.writeShort(3);
+					stream.writeByte(currentcolor[0]);
+					stream.writeByte(currentcolor[1]);
+					stream.writeByte(currentcolor[2]);
+					break;
+				case 2:
+					stream.writeShort(0);
+					stream.writeShort(3);
+					stream.writeShort(2);
+					stream.writeByte(currentcolor[0]);
+					stream.writeByte(currentcolor[1]);
+					stream.writeByte(currentcolor[2]);
+					break;
+				case 3:
+					stream.writeShort(1);
+					stream.writeShort(3);
+					stream.writeShort(2);
+					stream.writeByte(currentcolor[0]);
+					stream.writeByte(currentcolor[1]);
+					stream.writeByte(currentcolor[2]);
+					break;
+				}
+			}
+
+			colorListRGB.clear();
+			// Object 2 == obstacle
 			stream.writeShort(4);
-			
+
 			stream.writeFloat(-0.2f);
 			stream.writeFloat(5);
 			stream.writeFloat(-0.2f);
-			
+
 			stream.writeFloat(-0.2f);
 			stream.writeFloat(5);
 			stream.writeFloat(0.2f);
-			
+
 			stream.writeFloat(0.2f);
 			stream.writeFloat(5);
 			stream.writeFloat(0);
-			
+
 			stream.writeFloat(0);
 			stream.writeFloat(5.2f);
 			stream.writeFloat(0);
-			
+
 			stream.writeShort(4);
-			
-			stream.writeShort(0);
-			stream.writeShort(1);
-			stream.writeShort(2);
-			stream.writeByte(2);
-			stream.writeByte(2);
-			stream.writeByte(2);
-			
-			stream.writeShort(0);
-			stream.writeShort(1);
-			stream.writeShort(3);
-			stream.writeByte(3);
-			stream.writeByte(3);
-			stream.writeByte(3);
-			
-			stream.writeShort(0);
-			stream.writeShort(3);
-			stream.writeShort(2);
-			stream.writeByte(4);
-			stream.writeByte(4);
-			stream.writeByte(4);
-			
-			stream.writeShort(1);
-			stream.writeShort(3);
-			stream.writeShort(2);
-			stream.writeByte(5);
-			stream.writeByte(5);
-			stream.writeByte(5);
-			
-		} catch(Exception e) {
+
+			for (int i = 0; i < 4; i++) {
+				int hue = r.nextInt(361);
+				float saturation = r.nextFloat() * 0.45f + 0.55f;
+				float brightness = r.nextFloat() * 0.45f;
+				int rgb = Color.HSBtoRGB(hue, saturation, brightness);
+				int[] color = new int[3];
+				color[0] = ((rgb >> 16) & 0xFF);
+				color[1] = ((rgb >> 8) & 0xFF);
+				color[2] = (rgb & 0xFF);
+				colorListRGB.add(color);
+			}
+
+			for (int i = 0; i < 4; i++) {
+				int[] currentcolor = colorListRGB.get(i);
+				switch (i) {
+				case 0:
+					stream.writeShort(0);
+					stream.writeShort(1);
+					stream.writeShort(2);
+					stream.writeByte(currentcolor[0]);
+					stream.writeByte(currentcolor[1]);
+					stream.writeByte(currentcolor[2]);
+					break;
+				case 1:
+					stream.writeShort(0);
+					stream.writeShort(1);
+					stream.writeShort(3);
+					stream.writeByte(currentcolor[0]);
+					stream.writeByte(currentcolor[1]);
+					stream.writeByte(currentcolor[2]);
+					break;
+				case 2:
+					stream.writeShort(0);
+					stream.writeShort(3);
+					stream.writeShort(2);
+					stream.writeByte(currentcolor[0]);
+					stream.writeByte(currentcolor[1]);
+					stream.writeByte(currentcolor[2]);
+					break;
+				case 3:
+					stream.writeShort(1);
+					stream.writeShort(3);
+					stream.writeShort(2);
+					stream.writeByte(currentcolor[0]);
+					stream.writeByte(currentcolor[1]);
+					stream.writeByte(currentcolor[2]);
+					break;
+				}
+			}
+			stream.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
-		
+
 	}
 
 }
