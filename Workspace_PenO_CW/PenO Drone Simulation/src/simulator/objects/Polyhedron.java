@@ -47,13 +47,17 @@ public class Polyhedron extends WorldObject {
 
 		double[] massPoint = new double[3];
 		double temp = 0;
+		int temp2 = 0;
 		for (int i = 0; i < 3; i++) {
 			for (double[] vertex : getVertices()) {
 				temp += vertex[i];
+				temp2 +=1;
 			}
-			massPoint[i] = temp;
+			massPoint[i] = temp/temp2;
 			temp = 0;
+			temp2 = 0;
 		}
+		
 
 		// 1. zet de points op hun nieuwe plaats op basis van het masspoint
 		// 2. tel masspoint op bij positie
@@ -62,7 +66,6 @@ public class Polyhedron extends WorldObject {
 			triangle.updateOriginalPoints(massPoint);
 		}
 		translatePolyhedronOver(massPoint);
-
 	}
 
 	public GL2 getGl() {
@@ -110,8 +113,9 @@ public class Polyhedron extends WorldObject {
 		double maximumDistance = 0;
 		for (double[] currVertex : getVertices()) {
 			double currDistance = MathCalculations.getDistanceBetweenPoints(currVertex, getPosition());
-			if (currDistance > maximumDistance)
+			if (currDistance > maximumDistance) {
 				maximumDistance = currDistance;
+			}
 		}
 		return (float) maximumDistance;
 	}

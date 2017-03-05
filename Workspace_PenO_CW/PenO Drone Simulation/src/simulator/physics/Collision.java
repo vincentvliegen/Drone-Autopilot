@@ -26,8 +26,7 @@ public class Collision {
 	}
 
 	// Requires two vertices of triangle + 1 point of triangle
-	public void calculatePlane(double[] vector1, double[] vector2,
-			double[] point) {
+	public void calculatePlane(double[] vector1, double[] vector2, double[] point) {
 		double[] crossProd = MathCalculations.getCrossProduct(vector1, vector2);
 		this.a = crossProd[0];
 		this.b = crossProd[1];
@@ -36,8 +35,7 @@ public class Collision {
 	}
 
 	public double calculateDistanceBetweenCurrentPlaneAndPoint(double[] point) {
-		return (a * point[0] + b * point[1] + c * point[2] + d)
-				/ getRootOfABCSquared();
+		return (a * point[0] + b * point[1] + c * point[2] + d) / getRootOfABCSquared();
 	}
 
 	// Requires point not on plane (doesn't matter?)
@@ -46,8 +44,7 @@ public class Collision {
 		double distance = calculateDistanceBetweenCurrentPlaneAndPoint(point);
 		double fraction = distance / vectorLength;
 		double[] newVector = { a * fraction, b * fraction, c * fraction };
-		return new double[] { point[0] - newVector[0], point[1] - newVector[1],
-				point[2] - newVector[2] };
+		return new double[] { point[0] - newVector[0], point[1] - newVector[1], point[2] - newVector[2] };
 	}
 
 	public double getRootOfABCSquared() {
@@ -58,10 +55,9 @@ public class Collision {
 		return new double[] { a, b, c };
 	}
 
-	
-	// We already know the point is on the same plane as the triangle, now we just need to check if it's inside it
-	public boolean isPointInTriangle(double[] triangle1, double[] triangle2,
-			double[] triangle3, double[] point) {
+	// We already know the point is on the same plane as the triangle, now we
+	// just need to check if it's inside it
+	public boolean isPointInTriangle(double[] triangle1, double[] triangle2, double[] triangle3, double[] point) {
 		// Compute vectors
 		double[] v0 = MathCalculations.getVector(triangle3, triangle1);
 		double[] v1 = MathCalculations.getVector(triangle2, triangle1);
@@ -83,10 +79,8 @@ public class Collision {
 		return (u >= 0) && (v >= 0) && ((u + v) < 1);
 	}
 
-	public boolean checkTrianglesForHit(WorldObject polyhedron,
-			SimulationDrone drone) {
-		ArrayList<Triangle> trianglesList = ((Polyhedron) polyhedron)
-				.getTriangles();
+	public boolean checkTrianglesForHit(WorldObject polyhedron, SimulationDrone drone) {
+		ArrayList<Triangle> trianglesList = ((Polyhedron) polyhedron).getTriangles();
 		for (Triangle currTriangle : trianglesList) {
 			double[] T1 = currTriangle.getTranslatedPoint1();
 			double[] T2 = currTriangle.getTranslatedPoint2();
@@ -94,10 +88,11 @@ public class Collision {
 			double[] vector12 = MathCalculations.getVector(T1, T2);
 			double[] vector13 = MathCalculations.getVector(T1, T3);
 			calculatePlane(vector13, vector12, T1);
-			double[] perpPoint = getPointPerpendicularOnPlane(drone
-					.getPosition());
-			if (isPointInTriangle(T1, T2, T3, perpPoint))
-				return true;
+			double[] perpPoint = getPointPerpendicularOnPlane(drone.getPosition());
+			double distPointDrone = MathCalculations.getDistanceBetweenPoints(perpPoint, drone.getPosition());
+			if (distPointDrone > drone.getRadius())
+				continue;
+			return true;
 		}
 		return false;
 	}
