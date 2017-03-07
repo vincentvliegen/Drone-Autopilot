@@ -5,8 +5,6 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import simulator.objects.Polyhedron;
 import simulator.objects.PolyhedronType;
 import simulator.objects.Triangle;
@@ -31,8 +29,8 @@ public class Parser_v2 extends Parser{
 		// print working dir
 		// System.out.println(System.getProperty("user.dir"));
 
-//		DataInputStream dataIn= new DataInputStream(new FileInputStream("inputFiles/GeneratorV2Test.txt"));
-		DataInputStream dataIn = new DataInputStream(new FileInputStream("inputFiles/world.bin"));
+		DataInputStream dataIn= new DataInputStream(new FileInputStream("inputFiles/GeneratorV2Test.txt"));
+//		DataInputStream dataIn = new DataInputStream(new FileInputStream("inputFiles/world.bin"));
 
 		//u1: writeByte, readUnsignedByte
 		//u2: writeShort, readUnsignedShort
