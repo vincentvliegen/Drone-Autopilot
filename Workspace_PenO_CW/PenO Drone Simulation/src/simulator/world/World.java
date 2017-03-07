@@ -110,33 +110,31 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		spheres.remove(sphere);
 		getTargetColors().remove(sphere.getColor());
 	}
-	
-	public void addPolyhedron(Polyhedron poly){
+
+	public void addPolyhedron(Polyhedron poly) {
 		worldObjectsList.add(poly);
 		polyhedrons.add(poly);
-		for(Triangle triangle: poly.getTriangles()) {
+		for (Triangle triangle : poly.getTriangles()) {
 			triangleColors.add(triangle.getIntColor());
 		}
 	}
-	
+
 	public void removePolyhedron(Polyhedron poly) {
 		worldObjectsList.remove(poly);
 		polyhedrons.remove(poly);
-		for(Triangle triangle: poly.getTriangles()) {
+		for (Triangle triangle : poly.getTriangles()) {
 			triangleColors.remove(triangle.getColor());
 		}
 	}
 
-
 	private ArrayList<float[]> targetColors = new ArrayList<>();
 	private ArrayList<float[]> obstacleColors = new ArrayList<>();
-	
+
 	private ArrayList<int[]> triangleColors = new ArrayList<>();
 
 	public ArrayList<int[]> getTriangleColors() {
 		return triangleColors;
 	}
-
 
 	public void addSphereWithRandomColor(double[] position) {
 		Random rand = new Random();
@@ -164,7 +162,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 			color[2] = value;
 
 		}
-		addObstacleSphere(new ObstacleSphere(getGL().getGL2(), color, position, this));
+		addObstacleSphere(new ObstacleSphere(getGL().getGL2(), color, position,
+				this));
 	}
 
 	public void addObstacleSphere(ObstacleSphere sphere) {
@@ -175,19 +174,32 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	protected abstract void setup();
 
-	protected abstract void handleCollision(WorldObject object, SimulationDrone drone);
+	protected abstract void handleCollision(WorldObject object,
+			SimulationDrone drone);
 
 	protected void draw() {
 
 		// translate camera.
 		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
 			movement.update((float) 1 / 60);
-			this.getCurrentCamera().setEyeX((float) movement.getX() + this.getCurrentCamera().getStartEyeX());
-			this.getCurrentCamera().setEyeY((float) movement.getY() + this.getCurrentCamera().getStartEyeY());
-			this.getCurrentCamera().setEyeZ((float) movement.getZ() + this.getCurrentCamera().getStartEyeZ());
-			this.getCurrentCamera().setLookAtX((float) movement.getX() + this.getCurrentCamera().getStartLookAtX());
-			this.getCurrentCamera().setLookAtY((float) movement.getY() + this.getCurrentCamera().getStartLookAtY());
-			this.getCurrentCamera().setLookAtZ((float) movement.getZ() + this.getCurrentCamera().getStartLookAtZ());
+			this.getCurrentCamera().setEyeX(
+					(float) movement.getX()
+							+ this.getCurrentCamera().getStartEyeX());
+			this.getCurrentCamera().setEyeY(
+					(float) movement.getY()
+							+ this.getCurrentCamera().getStartEyeY());
+			this.getCurrentCamera().setEyeZ(
+					(float) movement.getZ()
+							+ this.getCurrentCamera().getStartEyeZ());
+			this.getCurrentCamera().setLookAtX(
+					(float) movement.getX()
+							+ this.getCurrentCamera().getStartLookAtX());
+			this.getCurrentCamera().setLookAtY(
+					(float) movement.getY()
+							+ this.getCurrentCamera().getStartLookAtY());
+			this.getCurrentCamera().setLookAtZ(
+					(float) movement.getZ()
+							+ this.getCurrentCamera().getStartLookAtZ());
 		}
 
 		for (WorldObject object : getWorldObjectList()) {
@@ -211,7 +223,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		// voor scherm
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+		gl.glViewport(0, 0, drawable.getSurfaceWidth(),
+				drawable.getSurfaceHeight());
 		getCurrentCamera().setCamera(gl, getGlu());
 		draw();
 
@@ -226,7 +239,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		// voor takeimage linkerCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferLeft()[0]);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+		gl.glViewport(0, 0, drawable.getSurfaceWidth(),
+				drawable.getSurfaceHeight());
 		getDrones().get(0).getLeftDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
@@ -234,7 +248,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		// voor takeimage rechterCamera
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferRight()[0]);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
+		gl.glViewport(0, 0, drawable.getSurfaceWidth(),
+				drawable.getSurfaceHeight());
 		getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
 		draw();
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
@@ -287,15 +302,18 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		gl.glGenRenderbuffers(1, colorRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferLeft[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(), getHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(),
+				getHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,
+				GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
 				colorRenderbufferLeft[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getWidth(), getHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
-				depthRenderbufferLeft[0]);
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16,
+				getWidth(), getHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT,
+				GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
 
 		gl.glGenTextures(1, textureLeft, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureLeft[0]);
@@ -307,15 +325,18 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		gl.glGenRenderbuffers(1, colorRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferRight[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(), getHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getWidth(),
+				getHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,
+				GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
 				colorRenderbufferRight[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getWidth(), getHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
-				depthRenderbufferRight[0]);
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16,
+				getWidth(), getHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT,
+				GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
 
 		gl.glGenTextures(1, textureRight, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureRight[0]);
@@ -324,8 +345,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
 		setup();
-//		SomeFigure fig = new SomeFigure(this, PolyhedronType.TARGET, new double[]{2,-1,0});
-//		getWorldObjectList().add(fig);
+		 SomeFigure fig = new SomeFigure(this, PolyhedronType.TARGET, new
+		 double[]{2,-1,0});
+		 getWorldObjectList().add(fig);
 		// Start animator.
 		gl.setSwapInterval(1);
 		animator = new FPSAnimator(this, fps);
@@ -342,14 +364,16 @@ public abstract class World extends GLCanvas implements GLEventListener {
 			double[] objectPos = currentObject.getPosition();
 			double[] dronePos = drone.getPosition();
 			double distance = Math.sqrt(Math.pow(objectPos[0] - dronePos[0], 2)
-					+ Math.pow(objectPos[1] - dronePos[1], 2) + Math.pow(objectPos[2] - dronePos[2], 2));
+					+ Math.pow(objectPos[1] - dronePos[1], 2)
+					+ Math.pow(objectPos[2] - dronePos[2], 2));
 			if (distance <= (currentObject.getRadius() + drone.getRadius()))
 				handleCollision(currentObject, drone);
 		}
 	}
 
 	@Override
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
+			int height) {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport(0, 0, width, height);
 	}
@@ -373,11 +397,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	public List<Sphere> getSpheres() {
 		return spheres;
 	}
-	
+
 	public List<Polyhedron> getPolyhedrons() {
 		return polyhedrons;
 	}
-
 
 	public List<ObstacleSphere> getObstacleSpheres() {
 		return obstacleSpheres;
@@ -515,45 +538,69 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projectionMatrix, 0);
 		yCoordChanged = viewport[3] - (int) y - 1;
 
-		glu.gluUnProject((double) x, (double) yCoordChanged, 0.0, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0,
+		glu.gluUnProject((double) x, (double) yCoordChanged, 0.0,
+				modelViewMatrix, 0, projectionMatrix, 0, viewport, 0,
 				worldCoordNear, 0);
-		glu.gluUnProject((double) x, (double) yCoordChanged, 1.0, modelViewMatrix, 0, projectionMatrix, 0, viewport, 0,
+		glu.gluUnProject((double) x, (double) yCoordChanged, 1.0,
+				modelViewMatrix, 0, projectionMatrix, 0, viewport, 0,
 				worldCoordFar, 0);
 
 		double[] vector = { (worldCoordFar[0] - worldCoordNear[0]) / 10000,
-				(worldCoordFar[1] - worldCoordNear[1]) / 10000, (worldCoordFar[2] - worldCoordNear[2]) / 10000 };
-	
-		boolean sphereChanged = false;
+				(worldCoordFar[1] - worldCoordNear[1]) / 10000,
+				(worldCoordFar[2] - worldCoordNear[2]) / 10000 };
+		
+
+		boolean objectChanged = false;
+		double maxDistance = Double.MAX_VALUE;
+		double[] changeLocation = new double[3];
+		double[] changeLocationSphere = new double[3];
+		WorldObject changeObject = null;
 		for (int i = 0; i < 10000; i++) {
 			worldCoordNear[0] += vector[0];
 			worldCoordNear[1] += vector[1];
 			worldCoordNear[2] += vector[2];
-			if (worldCoordNear[0] > 3)
-				break;
-			for (WorldObject object: getWorldObjectList()){
+			for (WorldObject object : getWorldObjectList()) {
 				if (object instanceof SimulationDrone)
 					continue;
-				if (calculateDistance(worldCoordNear, object.getPosition()) <= 0.4) {
-					float[] newCoord = {(float) worldCoordNear[0], (float) worldCoordNear[1], (float) worldCoordNear[2]};
-					((Sphere) object).setPosition(newCoord);
-					sphereChanged = true;
-					break;
+				double distance = calculateDistance(object.getPosition(),
+						worldCoordNear);
+				if (distance <= 1) {
+					if (distance <= maxDistance) {
+						changeLocation = new double[]{worldCoordNear[0]-object.getPosition()[0], worldCoordNear[1]-object.getPosition()[1], worldCoordNear[2]-object.getPosition()[2]};
+						changeLocationSphere = new double[]{worldCoordNear[0], worldCoordNear[1], worldCoordNear[2]};
+						maxDistance = distance;
+						changeObject = object;
+					}
 				}
+				if (distance > maxDistance)
+					objectChanged = true;
 			}
-			if (sphereChanged)
-				break;
 		}
-
+		for (double i: changeLocation)
+			System.out.println(i);
+		for (double k: changeLocationSphere)
+			System.out.println(k);
+		if (objectChanged)
+		for (double j: changeObject.getPosition())
+			System.out.println(j);
+		if (objectChanged) {
+			if (changeObject instanceof Polyhedron)
+				((Polyhedron)changeObject).translatePolyhedronOver(changeLocation);
+			else if (changeObject instanceof Sphere) {
+				float[] newChange = {(float)changeLocationSphere[0], (float)changeLocationSphere[1], (float) changeLocationSphere[2]};
+				((Sphere)changeObject).setPosition(newChange);
+			}
+		}
 		getEditor().completedMouseCheck();
-
 	}
 
 	private static double calculateDistance(double[] vector1, double[] vector2) {
-		return Math.sqrt(
-				Math.pow(vector1[0]- vector2[0], 2) + Math.pow(vector1[1] - vector2[1],2) + Math.pow(vector1[2] - vector2[2], 2));
+		return Math.sqrt(Math.pow(vector1[0] - vector2[0], 2)
+				+ Math.pow(vector1[1] - vector2[1], 2)
+				+ Math.pow(vector1[2] - vector2[2], 2));
 	}
-	
-	public Collision getCollision(){
+
+	public Collision getCollision() {
 		return collision;
 	}
 }
