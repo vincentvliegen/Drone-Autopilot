@@ -30,7 +30,7 @@ public class PolyhedraCalculations {
 				if(colorLeft[0] == colorRight[0] && colorLeft[1] == colorRight[1] && colorLeft[2] == colorRight[2]){
 					ArrayList<float[]> COG = new ArrayList<float[]>();
 					COG.add(leftCOGS.get(colorLeft));
-					COG.add(rightCOGS.get(colorLeft));
+					COG.add(rightCOGS.get(colorRight));
 					COGS.put(colorLeft, COG);
 				}
 			}
