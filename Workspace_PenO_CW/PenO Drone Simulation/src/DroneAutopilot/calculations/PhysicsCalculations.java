@@ -26,9 +26,9 @@ public class PhysicsCalculations{
 	private float[] expectedOrientation;
 
 	private float thrust;
-	private float yaw;
-	private float pitch;
-	private float roll;
+	private float yawRate;
+	private float pitchRate;
+	private float rollRate;
 
 
 
@@ -173,6 +173,8 @@ public class PhysicsCalculations{
 	}
 
 
+	
+	
 	public float[] directionDronePos(float[] position){//niet genormaliseerd, moest je de grootte willen hebben
 		return VectorCalculations.sum(position, VectorCalculations.inverse(this.getPosition()));
 	}
@@ -198,7 +200,28 @@ public class PhysicsCalculations{
 		return cosAngle*speedDrone;
 	}
 
+	
+	//////////MOVEMENT//////////
 
+	public void updateMovement(float[] targetPosition, float acceleration){
+		correctWindTranslation();
+		correctWindRotation();
+	
+		calculateThrust(targetPosition);
+		//wantedOrientation(targetPosition, acceleration);
+		//getRemainingAnglesToObject(targetPosition, acceleration);
+		calculateRotationRates(targetPosition, acceleration);
+		
+		this.getDrone().setThrust(this.getThrust());
+		this.getDrone().setYawRate(this.getYawRate());
+		this.getDrone().setPitchRate(this.getPitchRate());
+		this.getDrone().setRollRate(this.getRollRate());
+
+		calculateExpectedPosition();
+		calculateExpectedOrientation();
+	}
+	
+	
 	//////////OTHER//////////
 
 	//TODO vervangen in movetotarget etc.
@@ -343,7 +366,12 @@ public class PhysicsCalculations{
 		return remainingAngles;
 	}
 
+	public void calculateRotationRates(float[] position, float acceleration){
+		this.getRemainingAnglesToObject(position, acceleration);
+		//TODO
+	}
 
+	
 	//////////WIND//////////
 
 	public void calculateExpectedPosition(){
@@ -368,7 +396,10 @@ public class PhysicsCalculations{
 		this.setWindTranslation(VectorCalculations.sum(this.getWindTranslation(), Wcorr));
 	}
 
-	public void calculateExpectedOrientation(float yawRate, float pitchRate, float rollRate){
+	public void calculateExpectedOrientation(){
+		float yawRate = this.getYawRate();
+		float pitchRate = this.getPitchRate();
+		float rollRate = this.getRollRate();
 		float[] droneAngles = {this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll()};
 		float[] AnglesDev = {this.getDeltaT()*yawRate, this.getDeltaT()*pitchRate, this.getDeltaT()*rollRate};
 		this.setExpectedOrientation(VectorCalculations.sum(droneAngles, AnglesDev));
@@ -381,12 +412,7 @@ public class PhysicsCalculations{
 		this.setWindRotation(VectorCalculations.sum(rate, this.getWindRotation()));
 	}
 
-	public void calculateRotationRates(float[] position, float acceleration){
-		this.getRemainingAnglesToObject(position, acceleration);
-		//TODO
-	}
-
-
+	
 	//////////ROTATEMATRIX//////////
 
 	public void createRotateMatrix() {
@@ -623,27 +649,27 @@ public class PhysicsCalculations{
 		this.thrust = thrust;
 	}
 
-	public float getYaw() {
-		return yaw;
+	public float getYawRate() {
+		return yawRate;
 	}
 
-	public void setYaw(float yaw) {
-		this.yaw = yaw;
+	public void setYawRate(float yawRate) {
+		this.yawRate = yawRate;
 	}
 
-	public float getPitch() {
-		return pitch;
+	public float getPitchRate() {
+		return pitchRate;
 	}
 
-	public void setPitch(float pitch) {
-		this.pitch = pitch;
+	public void setPitchRate(float pitchRate) {
+		this.pitchRate = pitchRate;
 	}
 
-	public float getRoll() {
-		return roll;
+	public float getRollRate() {
+		return rollRate;
 	}
 
-	public void setRoll(float roll) {
-		this.roll = roll;
+	public void setRollRate(float rollRate) {
+		this.rollRate = rollRate;
 	}
 }
