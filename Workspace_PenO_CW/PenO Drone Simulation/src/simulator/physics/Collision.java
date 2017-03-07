@@ -34,17 +34,19 @@ public class Collision {
 		this.d = a * point[0] + b * point[1] + c * point[2];
 	}
 
-	public double calculateDistanceBetweenCurrentPlaneAndPoint(double[] point) {
-		return (a * point[0] + b * point[1] + c * point[2] + d) / getRootOfABCSquared();
+	public double calculateT(double[] point) {
+		return -(a * point[0] + b * point[1] + c * point[2] - d) / getABCSquared();
+	}
+	
+	public double getABCSquared() {
+		return (Math.pow(a, 2) + Math.pow(b, 2) + Math.pow(c, 2)); 
 	}
 
 	// Requires point not on plane (doesn't matter?)
+	// x = a*t + point[0], y = b*t + point[1], z = c*t + point[2]
 	public double[] getPointPerpendicularOnPlane(double[] point) {
-		double vectorLength = getRootOfABCSquared();
-		double distance = calculateDistanceBetweenCurrentPlaneAndPoint(point);
-		double fraction = distance / vectorLength;
-		double[] newVector = { a * fraction, b * fraction, c * fraction };
-		return new double[] { point[0] - newVector[0], point[1] - newVector[1], point[2] - newVector[2] };
+		double t = calculateT(point);
+		return new double[] { a*t + point[0], b*t + point[1], c*t + point[2]};
 	}
 
 	public double getRootOfABCSquared() {
@@ -81,7 +83,13 @@ public class Collision {
 
 	public boolean checkTrianglesForHit(WorldObject polyhedron, SimulationDrone drone) {
 		ArrayList<Triangle> trianglesList = ((Polyhedron) polyhedron).getTriangles();
+		int i=0;
 		for (Triangle currTriangle : trianglesList) {
+			if (i!=1) {
+				i+=1;
+				continue;
+			}
+			i+=1;
 			double[] T1 = currTriangle.getTranslatedPoint1();
 			double[] T2 = currTriangle.getTranslatedPoint2();
 			double[] T3 = currTriangle.getTranslatedPoint3();

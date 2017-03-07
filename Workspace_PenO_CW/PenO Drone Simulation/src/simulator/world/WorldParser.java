@@ -122,7 +122,8 @@ public class WorldParser extends World {
 					System.out.println("You crashed into an Obstacle Polyhedron");
 					crash = true;
 				} else if (((Polyhedron) object).getPolyhedronType() == PolyhedronType.TARGET) {
-					// Remove Polyhedron? 
+					removePolyhedron((Polyhedron)object);
+					System.out.println("hit Polyhedron target");
 				}
 			}
 				
