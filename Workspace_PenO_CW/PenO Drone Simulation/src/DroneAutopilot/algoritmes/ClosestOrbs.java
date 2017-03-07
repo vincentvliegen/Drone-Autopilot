@@ -2,11 +2,14 @@ package DroneAutopilot.algoritmes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.FactoryConfigurationError;
 
 import DroneAutopilot.calculations.ImageCalculations;
 import DroneAutopilot.calculations.PhysicsCalculations;
+import DroneAutopilot.calculations.PolyhedraCalculations;
 import exceptions.FirstOrbNotVisibleException;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
@@ -16,39 +19,43 @@ public class ClosestOrbs {
 	private final Drone drone;
 	private final ImageCalculations imageCalculations;
 	private final PhysicsCalculations physicsCalculations;
+	private final PolyhedraCalculations polyhedraCalculations;
 	private final static int numberOfOrbsConsidered = 5;
 	private int colorFirstOrb;
 	private int colorSecondOrb;
 	private float distanceSecondOrb;
 	private HashMap<Integer, ArrayList<int[]>> allPixelsImage;
 	private HashMap<Integer, float[][]> closestOrbs;// <color,[[cogL],[cogr]]>
-	
-	
+	private final float minDistance = 1;
+	private float[] closestObject;
+	private float[] secondObject;
+
 	public ClosestOrbs(Drone drone) {
 		this.drone = drone;
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations(drone);
+		this.polyhedraCalculations = new PolyhedraCalculations();
 
 	}
 
 	public void determineClosestOrbs() {
 		HashMap<Integer, float[][]> closestOrbsList = new HashMap<Integer, float[][]>();
-		HashMap<Integer,float[]>closestOrbsListLeft = this.getBiggestOrbs(this.getDrone().getLeftCamera());
-		HashMap<Integer,float[]>closestOrbsListRight = this.getBiggestOrbs(this.getDrone().getRightCamera());
-		for (int colorLeft : closestOrbsListLeft.keySet()){
-			for(int colorRight : closestOrbsListRight.keySet()){
-				if(colorLeft == colorRight){
-					float[][] cogs = {closestOrbsListLeft.get(colorLeft),closestOrbsListRight.get(colorLeft)};
-					closestOrbsList.put(colorLeft,cogs);
-					break;					
+		HashMap<Integer, float[]> closestOrbsListLeft = this.getBiggestOrbs(this.getDrone().getLeftCamera());
+		HashMap<Integer, float[]> closestOrbsListRight = this.getBiggestOrbs(this.getDrone().getRightCamera());
+		for (int colorLeft : closestOrbsListLeft.keySet()) {
+			for (int colorRight : closestOrbsListRight.keySet()) {
+				if (colorLeft == colorRight) {
+					float[][] cogs = { closestOrbsListLeft.get(colorLeft), closestOrbsListRight.get(colorLeft) };
+					closestOrbsList.put(colorLeft, cogs);
+					break;
 				}
 			}
 		}
 		this.setClosestOrbs(closestOrbsList);
 	}
-	
-	//Geeft n grootste bollen op beeld van opgegeven camera
-	public HashMap<Integer,float[]> getBiggestOrbs(Camera camera) {
+
+	// Geeft n grootste bollen op beeld van opgegeven camera
+	public HashMap<Integer, float[]> getBiggestOrbs(Camera camera) {
 		ArrayList<int[]> colorAndSizeList = new ArrayList<int[]>();
 		this.getImageCalculations().calculatePixelsOfEachColor(camera);
 		this.setAllPixelsImage(this.getImageCalculations().getPixelsOfEachColor());
@@ -79,11 +86,12 @@ public class ClosestOrbs {
 				}
 			}
 		}
-		//zwaartepunt berekenen
-		HashMap<Integer,float[]> colorList = new HashMap<Integer,float[]>();
-		for (int i = 0; i < colorAndSizeList.size(); i++){
-			float[] cog = this.getImageCalculations().findBestCenterOfGravity(getAllPixelsImage().get(colorAndSizeList.get(i)[0]), camera);
-			colorList.put(colorAndSizeList.get(i)[0],cog);
+		// zwaartepunt berekenen
+		HashMap<Integer, float[]> colorList = new HashMap<Integer, float[]>();
+		for (int i = 0; i < colorAndSizeList.size(); i++) {
+			float[] cog = this.getImageCalculations()
+					.findBestCenterOfGravity(getAllPixelsImage().get(colorAndSizeList.get(i)[0]), camera);
+			colorList.put(colorAndSizeList.get(i)[0], cog);
 		}
 		return colorList;
 	}
@@ -91,83 +99,83 @@ public class ClosestOrbs {
 	// Geeft n grootste kleuren van bollen (of minder als er geen n bollen zijn)
 	// checken voor twee camera's -> niet in beide beelden -> laten vallen
 	// Left en Right hashmap parameters maken
-//	public List<Integer> getBiggestOrbs() {
-//		// left
-//		List<int[]> colorAndSizeListLeft = new ArrayList<int[]>();
-//		this.getImageCalculations()
-//				.calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
-//		this.setAllPixelsLeftImage(this.getImageCalculations().getPixelsOfEachColor());
-//
-//		int minLeftPixels = Integer.MAX_VALUE;
-//		for (int color : this.getAllPixelsLeftImage().keySet()) {
-//			int size = this.getAllPixelsLeftImage().get(color).size();
-//			int[] colorAndSize = { color, size };
-//			if (colorAndSizeListLeft.size() < this.getNumberoforbsconsidered()) {
-//
-//				colorAndSizeListLeft.add(colorAndSize);
-//				minLeftPixels = Math.min(minLeftPixels, size);
-//
-//			} else if (size > minLeftPixels) {
-//
-//				colorAndSizeListLeft.add(colorAndSize);
-//
-//				int i = 0;
-//				while (colorAndSizeListLeft.size() > this.getNumberoforbsconsidered()) {
-//					if (colorAndSizeListLeft.get(i)[1] <= minLeftPixels) {
-//						colorAndSizeListLeft.remove(i);
-//						int newSmallest = Integer.MAX_VALUE;
-//						for (int j = 0; j < colorAndSizeListLeft.size(); j++) {
-//							newSmallest = Math.min(newSmallest, colorAndSizeListLeft.get(i)[1]);
-//						}
-//						minLeftPixels = newSmallest;
-//					}
-//					i++;
-//				}
-//			}
-//		}
-//		// right
-//		List<int[]> colorAndSizeListRight = new ArrayList<int[]>();
-//		this.getImageCalculations()
-//				.calculatePixelsOfEachColor(this.getDrone().getRightCamera());
-//		this.setAllPixelsRightImage(this.getImageCalculations().getPixelsOfEachColor());
-//
-//		int minRightPixels = Integer.MAX_VALUE;
-//		for (int color : this.getAllPixelsRightImage().keySet()) {
-//			int size = this.getAllPixelsRightImage().get(color).size();
-//			int[] colorAndSize = { color, size };
-//			if (colorAndSizeListRight.size() < this.getNumberoforbsconsidered()) {
-//
-//				colorAndSizeListRight.add(colorAndSize);
-//				minRightPixels = Math.min(minRightPixels, size);
-//
-//			} else if (size > minRightPixels) {
-//
-//				colorAndSizeListRight.add(colorAndSize);
-//
-//				int i = 0;
-//				while (colorAndSizeListRight.size() > this.getNumberoforbsconsidered()) {
-//					if (colorAndSizeListRight.get(i)[1] <= minRightPixels) {
-//						colorAndSizeListRight.remove(i);
-//						int newSmallest = Integer.MAX_VALUE;
-//						for (int j = 0; j < colorAndSizeListRight.size(); j++) {
-//							newSmallest = Math.min(newSmallest, colorAndSizeListRight.get(i)[1]);
-//						}
-//						minRightPixels = newSmallest;
-//					}
-//					i++;
-//				}
-//			}
-//		}
-//
-//		// compare left and right list
-//		
-//		return colorListLeft;
-//	}
+	// public List<Integer> getBiggestOrbs() {
+	// // left
+	// List<int[]> colorAndSizeListLeft = new ArrayList<int[]>();
+	// this.getImageCalculations()
+	// .calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
+	// this.setAllPixelsLeftImage(this.getImageCalculations().getPixelsOfEachColor());
+	//
+	// int minLeftPixels = Integer.MAX_VALUE;
+	// for (int color : this.getAllPixelsLeftImage().keySet()) {
+	// int size = this.getAllPixelsLeftImage().get(color).size();
+	// int[] colorAndSize = { color, size };
+	// if (colorAndSizeListLeft.size() < this.getNumberoforbsconsidered()) {
+	//
+	// colorAndSizeListLeft.add(colorAndSize);
+	// minLeftPixels = Math.min(minLeftPixels, size);
+	//
+	// } else if (size > minLeftPixels) {
+	//
+	// colorAndSizeListLeft.add(colorAndSize);
+	//
+	// int i = 0;
+	// while (colorAndSizeListLeft.size() > this.getNumberoforbsconsidered()) {
+	// if (colorAndSizeListLeft.get(i)[1] <= minLeftPixels) {
+	// colorAndSizeListLeft.remove(i);
+	// int newSmallest = Integer.MAX_VALUE;
+	// for (int j = 0; j < colorAndSizeListLeft.size(); j++) {
+	// newSmallest = Math.min(newSmallest, colorAndSizeListLeft.get(i)[1]);
+	// }
+	// minLeftPixels = newSmallest;
+	// }
+	// i++;
+	// }
+	// }
+	// }
+	// // right
+	// List<int[]> colorAndSizeListRight = new ArrayList<int[]>();
+	// this.getImageCalculations()
+	// .calculatePixelsOfEachColor(this.getDrone().getRightCamera());
+	// this.setAllPixelsRightImage(this.getImageCalculations().getPixelsOfEachColor());
+	//
+	// int minRightPixels = Integer.MAX_VALUE;
+	// for (int color : this.getAllPixelsRightImage().keySet()) {
+	// int size = this.getAllPixelsRightImage().get(color).size();
+	// int[] colorAndSize = { color, size };
+	// if (colorAndSizeListRight.size() < this.getNumberoforbsconsidered()) {
+	//
+	// colorAndSizeListRight.add(colorAndSize);
+	// minRightPixels = Math.min(minRightPixels, size);
+	//
+	// } else if (size > minRightPixels) {
+	//
+	// colorAndSizeListRight.add(colorAndSize);
+	//
+	// int i = 0;
+	// while (colorAndSizeListRight.size() > this.getNumberoforbsconsidered()) {
+	// if (colorAndSizeListRight.get(i)[1] <= minRightPixels) {
+	// colorAndSizeListRight.remove(i);
+	// int newSmallest = Integer.MAX_VALUE;
+	// for (int j = 0; j < colorAndSizeListRight.size(); j++) {
+	// newSmallest = Math.min(newSmallest, colorAndSizeListRight.get(i)[1]);
+	// }
+	// minRightPixels = newSmallest;
+	// }
+	// i++;
+	// }
+	// }
+	// }
+	//
+	// // compare left and right list
+	//
+	// return colorListLeft;
+	// }
 
 	// geeft kleur terug van dichtstbijzijnde
 	public void calculateFirstOrb() throws NullPointerException {
 		int size = getClosestOrbs().size();
-		if(size != 0){
+		if (size != 0) {
 			float[] distances = new float[size];
 			int[] keys = new int[size];
 			int i = 0;
@@ -179,7 +187,7 @@ public class ClosestOrbs {
 			}
 			int index = this.indexMinValueArray(distances);
 			this.setColorFirstOrb(keys[index]);
-		} else{
+		} else {
 			throw new NullPointerException();
 		}
 	}
@@ -194,18 +202,82 @@ public class ClosestOrbs {
 		return index;
 	}
 
+	/*
+	 * Berekent twee hoogste values van array en geeft hiervan (afhankelijk van de argumenten) de waarde of index van terug
+	 */
+	public float twoHighestValues(float[] array, int value, boolean index) {
+		float high1 = 0;
+		float high2 = 0;
+		int index1 = 0;
+		int index2 = 0;
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] >= high1) {
+				high2 = high1;
+				index2 = index1;
+				high1 = array[i];
+				index1 = i;
+			} else if (array[i] >= high2) {
+				high2 = array[i];
+				index2 = i;
+			}
+		}
+		if (value == 1) {
+			if (index) {
+				return (float)index1;
+			} else {
+				return high1;
+			}
+		} else if (value == 2) {
+			if (index) {
+				return (float)index2;
+			} else {
+				return high2;
+			}
+		}
+		return -1;
+	}
+	
+	public void determineClosestObject() {
+		int size = this.getObjectList().size();
+		if (size != 0) {
+			float[] distances = new float[size];
+			int i = 0;
+			for (float[] coord : this.getObjectList()) {
+				distances[i] = this.getPhysicsCalculations().getDistanceToPosition(coord);
+				i++;
+			}
+			int index = this.indexMinValueArray(distances);
+			this.setClosestObject(this.getObjectList().get(index));
+		}
+	}
+
+	public void determineSecondObject() throws NullPointerException {
+		int size = this.getObjectList().size() - 1;
+		if (size != 0) {
+			float[] distances = new float[size];
+			int i = 0;
+			for (float[] coord : this.getObjectList()) {
+				distances[i] = this.getPhysicsCalculations().calculateDistanceBetweenCoords(coord,this.getClosestObject());
+				i++;
+			}
+			int index = (int) this.twoHighestValues(distances, 2, true);
+			this.setSecondObject(this.getObjectList().get(index));
+		}
+	}
+	
 	// kleur bol dichtst bij bol 1
-	public void calculateSecondOrb() throws NullPointerException,FirstOrbNotVisibleException {
-		if(this.getClosestOrbs().containsKey(this.getColorFirstOrb())){
+	public void calculateSecondOrb() throws NullPointerException, FirstOrbNotVisibleException {
+		if (this.getClosestOrbs().containsKey(this.getColorFirstOrb())) {
 			int size = getClosestOrbs().size() - 1;
-			if(size != 0){
+			if (size != 0) {
 				float[] distances = new float[size];
 				int[] keys = new int[size];
 				int i = 0;
 				for (int key : getClosestOrbs().keySet()) {
 					if (key != this.getColorFirstOrb()) {
-						distances[i] = getDistanceBetweenOrbs(getClosestOrbs().get(key)[0], getClosestOrbs().get(key)[1],
-								getClosestOrbs().get(getColorFirstOrb())[0], getClosestOrbs().get(getColorFirstOrb())[1]);
+						distances[i] = getDistanceBetweenOrbs(getClosestOrbs().get(key)[0],
+								getClosestOrbs().get(key)[1], getClosestOrbs().get(getColorFirstOrb())[0],
+								getClosestOrbs().get(getColorFirstOrb())[1]);
 						keys[i] = key;
 						i++;
 					}
@@ -213,7 +285,7 @@ public class ClosestOrbs {
 				int index = this.indexMinValueArray(distances);
 				this.setColorSecondOrb(keys[index]);
 				this.setDistanceSecondOrb(distances[index]);
-			} else{
+			} else {
 				throw new NullPointerException();
 			}
 		} else {
@@ -239,12 +311,31 @@ public class ClosestOrbs {
 		return distance;
 	}
 
+	// functie die controleert of object van geg coordinaten al eerder
+	// gedetecteerd is
+	public void updateObjectList(float[] coords) {
+		for (float[] checkcoords : this.getObjectList()) {
+			if (this.getPhysicsCalculations().calculateDistanceBetweenCoords(coords, checkcoords) >= this.getMinDistance()) {
+				this.getObjectList().add(coords);
+			}
+		}
+	}
 	
-	
-	
-	
+	public void addVisibleObjects() {//[0] links [1] rechts
+		HashMap<float[], ArrayList<float[]>> visibleCogs = this.getPolyhedraCalculations().execute(this.getDrone().getLeftCamera(),this.getDrone().getRightCamera());
+		for (float[] color : visibleCogs.keySet()) {
+				this.updateObjectList(this.getPhysicsCalculations().calculatePositionObject(visibleCogs.get(color).get(0), visibleCogs.get(color).get(1)));
+			
+		}
+	}
+
+
 	public ImageCalculations getImageCalculations() {
 		return imageCalculations;
+	}
+	
+	public PolyhedraCalculations getPolyhedraCalculations() {
+		return polyhedraCalculations;
 	}
 
 	public HashMap<Integer, ArrayList<int[]>> getAllPixelsImage() {
@@ -271,7 +362,6 @@ public class ClosestOrbs {
 		this.colorSecondOrb = colorSecondOrb;
 	}
 
-
 	public float getDistanceSecondOrb() {
 		return distanceSecondOrb;
 	}
@@ -290,6 +380,36 @@ public class ClosestOrbs {
 
 	public void setClosestOrbs(HashMap<Integer, float[][]> closestOrbs) {
 		this.closestOrbs = closestOrbs;
+	}
+
+	public List<float[]> getObjectList() {
+		return objectList;
+	}
+
+	public void setObjectList(List<float[]> objectList) {
+		this.objectList = objectList;
+	}
+
+	private List<float[]> objectList = new ArrayList<float[]>();
+
+	public float getMinDistance() {
+		return minDistance;
+	}
+
+	public float[] getClosestObject() {
+		return closestObject;
+	}
+
+	public void setClosestObject(float[] closestObject) {
+		this.closestObject = closestObject;
+	}
+	
+	public float[] getSecondObject() {
+		return secondObject;
+	}
+
+	public void setSecondObject(float[] secondObject) {
+		this.secondObject = secondObject;
 	}
 
 	/**
