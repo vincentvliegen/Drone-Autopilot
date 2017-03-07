@@ -14,16 +14,29 @@ public class PolyhedraCalculations {
 	private HashMap<float[], ArrayList<int[]>> hashMapOuterColor;
 	private HashMap<float[], ArrayList<int[]>> hashMapInnerColor;
 	private HashMap<float[], ArrayList<int[]>> hashMapObstacle;
-	private Camera leftCamera;
-	private Camera rightCamera;
 	
-	public void execute(){
+	public HashMap<float[],ArrayList<float[]>> execute(Camera leftCamera ,Camera rightCamera){
+		HashMap<float[],ArrayList<float[]>> COGS = new HashMap<float[],ArrayList<float[]>>();
 		this.SeparateTargetsAndObstacles(leftCamera);
 		HashMap<float[],float[]> leftCOGS = this.findCornersOfFullTrianglesViaCOG();
-		System.out.println(leftCOGS.size());
+		System.out.println("foundL " + leftCOGS.keySet());
+		
 		this.SeparateTargetsAndObstacles(rightCamera);
 		HashMap<float[],float[]> rightCOGS = this.findCornersOfFullTrianglesViaCOG();
-		System.out.println(rightCOGS.size());
+		System.out.println("foundR "+rightCOGS.keySet());
+		
+		for(float[] colorLeft:leftCOGS.keySet()){
+			for(float[] colorRight: rightCOGS.keySet()){
+				if(colorLeft[0] == colorRight[0] && colorLeft[1] == colorRight[1] && colorLeft[2] == colorRight[2]){
+					ArrayList<float[]> COG = new ArrayList<float[]>();
+					COG.add(leftCOGS.get(colorLeft));
+					COG.add(rightCOGS.get(colorLeft));
+					COGS.put(colorLeft, COG);
+				}
+			}
+		}
+		System.out.println("final " + COGS.size());
+		return COGS;
 	}
 	
 	// [i] -> (x,y)
@@ -52,6 +65,7 @@ public class PolyhedraCalculations {
 				}
 			}
 		}
+//		System.out.println("calculate pixels of each color: " + hashMapDifferentColors.keySet().size());
 		return hashMapDifferentColors;
 	}
 	
@@ -67,7 +81,7 @@ public class PolyhedraCalculations {
 		return HSV;
 	}
 	
-	public void SeparateTargetsAndObstacles(Camera camera){
+	public void SeparateTargetsAndObstacles(Camera camera) throws IllegalArgumentException{
 		HashMap<Integer, ArrayList<int[]>> hashMapDifferentColors = this.calculatePixelsOfEachColor(camera);
 		Set<Integer> colorIntValuesSet = hashMapDifferentColors.keySet();
 		ArrayList<Integer> colorIntValuesArray = new ArrayList<Integer>();
@@ -81,18 +95,18 @@ public class PolyhedraCalculations {
 		// V>0.55: target , V<0.45: obstacle
 		// anders Error
 		for(int i=0;i<colorIntValuesArray.size();i++){
-			float[] HSV = this.colorIntToHSV(i);
+			float[] HSV = this.colorIntToHSV(colorIntValuesArray.get(i));
 			if(HSV[2]<0.45){  		//obstacle
 				if(HSV[1]>0.55){	//outertriangle
-					ArrayList<int[]> coordinateList = hashMapDifferentColors.get(i);
+					ArrayList<int[]> coordinateList = hashMapDifferentColors.get(colorIntValuesArray.get(i));
 					hashMapObstacle.put(HSV, coordinateList);
 				}
 			}else if(HSV[2]>0.55){	//target
 				if(HSV[1]<0.45){	//innertriangle
-					ArrayList<int[]> coordinateList = hashMapDifferentColors.get(i);
+					ArrayList<int[]> coordinateList = hashMapDifferentColors.get(colorIntValuesArray.get(i));
 					hashMapInnerColor.put(HSV, coordinateList);
 				}else if(HSV[1]>0.55){	//outertriangle
-					ArrayList<int[]> coordinateList = hashMapDifferentColors.get(i);
+					ArrayList<int[]> coordinateList = hashMapDifferentColors.get(colorIntValuesArray.get(i));
 					hashMapOuterColor.put(HSV, coordinateList);
 				}else{
 					throw new IllegalArgumentException();
@@ -101,6 +115,9 @@ public class PolyhedraCalculations {
 				throw new IllegalArgumentException();
 			}
 		}
+		System.out.println("outerTargetColors =" + hashMapOuterColor.size());
+		System.out.println("innerTargetColors =" + hashMapInnerColor.size());
+		System.out.println("obstaclesTargetColors =" + hashMapObstacle.size());
 		this.setHashMapTargetOuterColor(hashMapOuterColor);
 		this.setHashMapTargetInnerColor(hashMapInnerColor);
 		this.setHashMapObstacleOuterColor(hashMapObstacle);
@@ -141,8 +158,7 @@ public class PolyhedraCalculations {
 		HashMap<float[],ArrayList<int[]>> solution = new HashMap<float[],ArrayList<int[]>>();
 		//gevonden HSV kleuren in arraylist opslaan
 		Set<float[]> HSVcolorSet = hashMapTarget.keySet();
-		ArrayList<float[]> HSVcolorArray = new ArrayList<float[]>();
-		HSVcolorArray.addAll(HSVcolorSet);
+		ArrayList<float[]> HSVcolorArray = new ArrayList<float[]>(HSVcolorSet);
 		
 		//loopen over alle kleuren en daarvan de hoekpunten bepalen.
 		for(int i=0;i<HSVcolorArray.size();i++){
@@ -151,88 +167,108 @@ public class PolyhedraCalculations {
 			//linker boven
 			ArrayList<int[]> links = this.findMinimumCoordinates(coordinates, 0);
 			ArrayList<int[]> linksBoven = this.findMinimumCoordinates(links, 1);
+//			System.out.println("linksboven" + linksBoven.get(0)[0] + " " + linksBoven.get(0)[1]);
 			possibleCorners.add(linksBoven.get(0));
 			//linker onder
 			ArrayList<int[]> links2 = this.findMinimumCoordinates(coordinates, 0);
 			ArrayList<int[]> linksOnder = this.findMaximumCoordinates(links2, 1);
+//			System.out.println("linksonder" + linksOnder.get(0)[0] + " " + linksOnder.get(0)[1]);
 			possibleCorners.add(linksOnder.get(0));
 			//rechts boven
 			ArrayList<int[]> rechts = this.findMaximumCoordinates(coordinates, 0);
 			ArrayList<int[]> rechtsBoven = this.findMinimumCoordinates(rechts, 1);
+//			System.out.println("rechtsboven" + rechtsBoven.get(0)[0] + " " + rechtsBoven.get(0)[1]);
 			possibleCorners.add(rechtsBoven.get(0));
 			//rechts onder
 			ArrayList<int[]> rechts2 = this.findMaximumCoordinates(coordinates, 0);
 			ArrayList<int[]> rechtsOnder = this.findMaximumCoordinates(rechts2, 1);
+//			System.out.println("rechtsonder" + rechtsOnder.get(0)[0] + " " + rechtsOnder.get(0)[1]);
 			possibleCorners.add(rechtsOnder.get(0));
 			//boven links
 			ArrayList<int[]> boven = this.findMinimumCoordinates(coordinates, 1);
 			ArrayList<int[]> bovenLinks = this.findMinimumCoordinates(boven, 0);
+//			System.out.println("bovenLinks" + bovenLinks.get(0)[0] + " " + bovenLinks.get(0)[1]);
 			possibleCorners.add(bovenLinks.get(0));
 			//boven rechts
 			ArrayList<int[]> boven2 = this.findMinimumCoordinates(coordinates, 1);
 			ArrayList<int[]> bovenRechts = this.findMaximumCoordinates(boven2, 0);
+//			System.out.println("bovenRechts" + bovenRechts.get(0)[0] + " " + bovenRechts.get(0)[1]);
 			possibleCorners.add(bovenRechts.get(0));
 			//onder links
 			ArrayList<int[]> onder = this.findMaximumCoordinates(coordinates, 1);
 			ArrayList<int[]> onderLinks = this.findMinimumCoordinates(onder, 0);
+//			System.out.println("onderLinks" + onderLinks.get(0)[0] + " " + onderLinks.get(0)[1]);
 			possibleCorners.add(onderLinks.get(0));
 			//onder rechts
 			ArrayList<int[]> onder2 = this.findMaximumCoordinates(coordinates, 1);
 			ArrayList<int[]> onderRechts = this.findMaximumCoordinates(onder2, 0);
+//			System.out.println("onderRechts" + onderRechts.get(0)[0] + " " + onderRechts.get(0)[1]);
 			possibleCorners.add(onderRechts.get(0));
 			
 			boolean boolLinks= false;
 			boolean boolRechts=false;
 			boolean boolOnder=false;
 			boolean boolBoven=false;
-			
+
 			//verwijder overlappende hoekpunten
-			if(linksBoven.get(0)[0] == linksOnder.get(0)[0] &&  linksBoven.get(0)[1] == linksOnder.get(0)[1]){
-				possibleCorners.remove(linksOnder);
+			if(this.equalPixelCorner(linksOnder,linksBoven)){
+				possibleCorners.remove(linksOnder.get(0));
 				boolLinks = true;
 			}
-			if(rechtsBoven.get(0)[0] == rechtsOnder.get(0)[0] &&  rechtsBoven.get(0)[1] == rechtsOnder.get(0)[1]){
-				possibleCorners.remove(rechtsBoven);
+			if(this.equalPixelCorner(rechtsOnder, rechtsBoven)){
+				possibleCorners.remove(rechtsBoven.get(0));
 				boolRechts = true;
 			} 
-			if(bovenLinks.get(0)[0] == bovenRechts.get(0)[0] &&  bovenLinks.get(0)[1] == bovenRechts.get(0)[1]){
-				possibleCorners.remove(bovenLinks);
+			if(this.equalPixelCorner(bovenRechts, bovenLinks)){
+				possibleCorners.remove(bovenLinks.get(0));
 				boolBoven = true;
 			} 
-			if(onderLinks.get(0)[0] == onderRechts.get(0)[0] && onderLinks.get(0)[1] == onderRechts.get(0)[1]){
-				possibleCorners.remove(onderRechts);
+			if(this.equalPixelCorner(onderLinks, onderRechts)){
+				possibleCorners.remove(onderRechts.get(0));
 				boolOnder = true;
 			}
-			if(linksBoven.get(0)[0] == bovenLinks.get(0)[0] && linksBoven.get(0)[1] == bovenLinks.get(0)[1]){
+			
+			if(this.equalPixelCorner(linksBoven, bovenLinks)){
 				if(boolBoven)
-					possibleCorners.remove(bovenRechts);
+					possibleCorners.remove(bovenRechts.get(0));
 				else
-					possibleCorners.remove(bovenLinks);
+					possibleCorners.remove(bovenLinks.get(0));
 			}
-			if(bovenRechts.get(0)[0] == rechtsBoven.get(0)[0] && bovenRechts.get(0)[1] == rechtsBoven.get(0)[1]){
+			if(this.equalPixelCorner(bovenRechts, rechtsBoven)){
 				if(boolRechts)
-					possibleCorners.remove(rechtsOnder);
+					possibleCorners.remove(rechtsOnder.get(0));
 				else
-					possibleCorners.remove(rechtsBoven);
+					possibleCorners.remove(rechtsBoven.get(0));
 			}
-			if(rechtsOnder.get(0)[0] == onderRechts.get(0)[0] && rechtsOnder.get(0)[1] == onderRechts.get(0)[1]){
+			if(this.equalPixelCorner(rechtsOnder, onderRechts)){
 				if(boolOnder)
-					possibleCorners.remove(onderLinks);
+					possibleCorners.remove(onderLinks.get(0));
 				else
-					possibleCorners.remove(onderRechts);
+					possibleCorners.remove(onderRechts.get(0));
 			}
-			if(linksOnder.get(0)[0] == onderLinks.get(0)[0] && linksOnder.get(0)[1] == onderLinks.get(0)[1]){
+			if(this.equalPixelCorner(linksOnder, onderLinks)){
 				if(boolLinks)
-					possibleCorners.remove(linksBoven);
+					possibleCorners.remove(linksBoven.get(0));
 				else
-					possibleCorners.remove(linksOnder);
+					possibleCorners.remove(linksOnder.get(0));
 			}
+			
+			System.out.println("corners"+possibleCorners.size());
 			
 			if(possibleCorners.size() == 3){
 				solution.put(HSVcolorArray.get(i), possibleCorners);
 			}
 		}
+//		System.out.println(solution.size() +"solution");
 		return solution;
+	}
+	
+	public boolean equalPixelCorner(ArrayList<int[]> list1, ArrayList<int[]> list2){
+		if(list1.get(0)[0] <= list2.get(0)[0]+3 && list1.get(0)[0] >= list2.get(0)[0]-3 && 
+				list1.get(0)[1] <= list2.get(0)[1]+3 && list1.get(0)[1] >= list2.get(0)[1]-3){
+			return true;
+		}
+		return false;
 	}
 	
 	public HashMap<float[],float[]> findCOGOfAllColors(HashMap<float[],ArrayList<int[]>> hashMapCorners){
@@ -243,6 +279,7 @@ public class PolyhedraCalculations {
 			//bereken zp
 			float x = (corners.get(0)[0] + corners.get(1)[0] + corners.get(2)[0]) / 3;
 			float y = (corners.get(0)[1] + corners.get(1)[1] + corners.get(2)[1]) / 3;
+			System.out.println("cog" + x + " " + y);
 			float[] COG = {x,y};
 			COGHashMap.put(color, COG);
 		}
@@ -264,8 +301,8 @@ public class PolyhedraCalculations {
 			for(float[] innercolor:setInnerCOG){
 				float[] outerCOG = outerTrianglesCOG.get(outercolor);
 				float[] innerCOG = innerTrianglesCOG.get(innercolor);
-				if(outerCOG[0] <= innerCOG[0]+1 && outerCOG[0] >= innerCOG[0]-1 && outerCOG[1] <= innerCOG[1]+1 
-						&& outerCOG[1] >= innerCOG[1]-1){
+				if(outerCOG[0] <= innerCOG[0]+3 && outerCOG[0] >= innerCOG[0]-3 && outerCOG[1] <= innerCOG[1]+3
+						&& outerCOG[1] >= innerCOG[1]-3){
 					//buiten en binnen COG liggen max 1 pixel van elkaar
 					resultingOuterTriangleCOGs.put(outercolor,outerCOG);
 				}
