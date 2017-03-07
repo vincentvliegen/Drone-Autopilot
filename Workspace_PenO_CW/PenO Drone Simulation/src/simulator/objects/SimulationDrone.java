@@ -75,6 +75,7 @@ public class SimulationDrone extends WorldObject implements Drone{
 	// TODO afmetingen (voor collision detection)
 
 	public void draw() {
+		gl.glEnable(GL.GL_CULL_FACE);
 
 		gl.glPushMatrix(); // store current transform, so we can undo the
 							// rotation
@@ -154,6 +155,9 @@ public class SimulationDrone extends WorldObject implements Drone{
 
 		gl.glEnd();
 		gl.glPopMatrix();// undo rotation
+		
+		gl.glDisable(GL.GL_CULL_FACE);
+
 
 	}
 

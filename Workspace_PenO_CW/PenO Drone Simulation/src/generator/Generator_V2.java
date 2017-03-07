@@ -77,15 +77,15 @@ public class Generator_V2 {
 			for (int i = 0; i < numberOfObjects; i++) {
 				boolean noValidNewPosition = true;
 				while (noValidNewPosition) {
-					double x = (r.nextDouble() - .5) * 30;
-					double y = (r.nextDouble() - .5) * 30;
-					double z = (r.nextDouble() - .5) * 30;
+					double x = (r.nextDouble() - .5) * 10;
+					double y = (r.nextDouble() - .5) * 10;
+					double z = (r.nextDouble() - .5) * 10;
 					double[] newPos = { x, y, z };
 					noValidNewPosition = false;
 					for (double[] otherPosition : positionList) {
 						// Distance > 3*drone diameter (=1.5)
 						if (MathCalculations.getDistanceBetweenPoints(
-								otherPosition, newPos) <= 1.5) {
+								otherPosition, newPos) <= 2) {
 							noValidNewPosition = true;
 							break;
 						}
@@ -125,13 +125,14 @@ public class Generator_V2 {
 			}
 
 			// Target objects
-			int currentPosIndex = 0;
+			int currentPosIndex = 1;
 			for (int i = 0; i < numberOfTargets; i++) {
 				stream.writeShort(4);
 				float x = (float) positionList.get(currentPosIndex)[0];
 				float y = (float) positionList.get(currentPosIndex)[1];
 				float z = (float) positionList.get(currentPosIndex)[2];
-
+				currentPosIndex+=1;
+				
 				stream.writeFloat(-0.2f + x);
 				stream.writeFloat(y);
 				stream.writeFloat(-0.2f + z);
@@ -209,7 +210,7 @@ public class Generator_V2 {
 				float x = (float) positionList.get(currentPosIndex)[0];
 				float y = (float) positionList.get(currentPosIndex)[1];
 				float z = (float) positionList.get(currentPosIndex)[2];
-
+				currentPosIndex+=1;
 				stream.writeFloat(-0.2f + x);
 				stream.writeFloat(y);
 				stream.writeFloat(-0.2f + z);

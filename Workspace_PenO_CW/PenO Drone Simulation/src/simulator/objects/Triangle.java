@@ -32,6 +32,7 @@ public class Triangle {
 		this.color[2] = color[2]/255f;
 		this.intColor = color;
 		createInnerColor();
+		updatePoints(new double[]{0,0,0});
 	}
 
 	private void createInnerColor() {

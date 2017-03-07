@@ -3,7 +3,6 @@ package simulator.parser;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import simulator.objects.ObstacleSphere;
 import simulator.world.World;
 
 /**
@@ -12,43 +11,11 @@ import simulator.world.World;
  * 
  */
 
-public class Parser_v1 {
+public class Parser_v1 extends Parser {
 
 	public Parser_v1(World world) {
-		this.world = world;
+		super(world);
 	}
-
-	private World world;
-	private World getWorld() {
-		return this.world;
-	}
-
-	//TODO verander naar float?
-	double horizontalAngleOfView;
-	double verticalAngleOfView;
-	int imageWidth;
-	int imageHeight;
-	double cameraSeparation; 
-	double weight ;
-	double gravity; 
-	double drag ;
-	double maxThrust ;
-	double maxPitchRate; 
-	double maxRollRate; 
-	double maxYawRate; 
-	float[] arrayXValues;
-	float[] arrayXTimes;
-	float[] arrayYValues;
-	float[] arrayYTimes;
-	float[] arrayZValues;
-	float[] arrayZTimes;
-
-	float[] windRotationXValues;
-	float[] windRotationXTimes;
-	float[] windRotationYValues;
-	float[] windRotationYTimes;
-	float[] windRotationZValues;
-	float[] windRotationZTimes;
 
 
 
@@ -165,100 +132,6 @@ public class Parser_v1 {
 		return returnArray;
 	}
 
-	public double getHorizontalAngleOfView() {
-		return horizontalAngleOfView;
-	}
 
-	public double getVerticalAngleOfView() {
-		return verticalAngleOfView;
-	}
-
-	public int getImageWidth() {
-		return imageWidth;
-	}
-
-	public int getImageHeight() {
-		return imageHeight;
-	}
-
-	public double getCameraSeparation() {
-		return cameraSeparation;
-	}
-
-	public double getWeight() {
-		return weight;
-	}
-
-	public double getGravity() {
-		return gravity;
-	}
-
-	public double getDrag() {
-		return drag;
-	}
-
-	public double getMaxThrust() {
-		return maxThrust;
-	}
-
-	public double getMaxPitchRate() {
-		return maxPitchRate;
-	}
-
-	public double getMaxRollRate() {
-		return maxRollRate;
-	}
-
-	public double getMaxYawRate() {
-		return maxYawRate;
-	}
-
-	public float[] getArrayXValues() {
-		return arrayXValues;
-	}
-
-	public float[] getArrayXTimes() {
-		return arrayXTimes;
-	}
-
-	public float[] getArrayYValues() {
-		return arrayYValues;
-	}
-
-	public float[] getArrayYTimes() {
-		return arrayYTimes;
-	}
-
-	public float[] getArrayZValues() {
-		return arrayZValues;
-	}
-
-	public float[] getArrayZTimes() {
-		return arrayZTimes;
-	}
-
-	public float[] getWindRotationXValues() {
-		return windRotationXValues;
-	}
-
-	public float[] getWindRotationXTimes() {
-		return windRotationXTimes;
-	}
-
-	public float[] getWindRotationYValues() {
-		return windRotationYValues;
-	}
-
-	public float[] getWindRotationYTimes() {
-		return windRotationYTimes;
-	}
-
-	public float[] getWindRotationZValues() {
-		return windRotationZValues;
-	}
-
-	public float[] getWindRotationZTimes() {
-		return windRotationZTimes;
-	}
 
 }

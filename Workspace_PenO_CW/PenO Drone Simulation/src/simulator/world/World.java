@@ -24,6 +24,7 @@ import simulator.objects.SomeFigure;
 import simulator.objects.Sphere;
 import simulator.objects.Triangle;
 import simulator.objects.WorldObject;
+import simulator.parser.Parser;
 import simulator.parser.Parser_v1;
 import simulator.physics.Collision;
 import simulator.physics.Physics;
@@ -44,7 +45,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private List<ObstacleSphere> obstacleSpheres = new ArrayList<>();
 	private GLU glu;
 
-	private Parser_v1 parser = new Parser_v1(this);
+	private Parser parser = new Parser_v1(this);
 	private int[] framebufferRight = new int[1];
 	private int[] framebufferLeft = new int[1];
 
@@ -281,16 +282,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		// Enable z- (depth) buffer for hidden surface removal.
 		gl.glEnable(GL.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL.GL_LEQUAL);
-
-		// Enable smooth shading.
-		gl.glShadeModel(GL2.GL_SMOOTH);
-
 		// Define "clear" color.
 		gl.glClearColor(1f, 1f, 1f, 0.5f);
 
-		// We want a nice perspective.
-		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 
 		// Create GLU.
 		glu = new GLU();
@@ -434,7 +428,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		return animator.getFPS();
 	}
 
-	public Parser_v1 getParser() {
+	public Parser getParser() {
 		return parser;
 	}
 
@@ -478,7 +472,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.currentCamera = camera;
 	}
 
-	public void setParser(Parser_v1 parser) {
+	public void setParser(Parser parser) {
 		this.parser = parser;
 	}
 

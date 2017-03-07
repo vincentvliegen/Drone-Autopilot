@@ -11,7 +11,10 @@ import simulator.objects.SimulationDrone;
 import simulator.objects.Sphere;
 import simulator.objects.WorldObject;
 import simulator.objects.Polyhedron;
+import simulator.parser.Parser;
 import simulator.parser.Parser_v1;
+import simulator.parser.Parser_v2;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -30,6 +33,9 @@ public class WorldParser extends World {
 		super();
 		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 0, 0, 1,
 				0, this));
+		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 2, 0, 1,
+				0, this));
+
 		super.addGeneralCamera(new GeneralCamera(-100, 0, 0, 0, 0, 0, 0, 1, 0,
 				this));
 
@@ -38,6 +44,7 @@ public class WorldParser extends World {
 		super.addGeneralCamera(new GeneralCamera(10, 0, 5, 10, 0, 0, 0, 1, 0,
 				this));
 		setCurrentCamera(getGeneralCameras().get(0));
+		setParser(new Parser_v2(this));
 	}
 
 	@Override

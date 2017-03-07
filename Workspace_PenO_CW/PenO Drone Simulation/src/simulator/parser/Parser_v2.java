@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import simulator.objects.Polyhedron;
 import simulator.objects.PolyhedronType;
@@ -13,33 +14,15 @@ import simulator.world.World;
 
 
 
-class Parser_v2 {
+public class Parser_v2 extends Parser{
 
 	int [] magic = new int[4];
 	int version;
-	float horizontalAngleOfView;
-    float verticalAngleOfView;
-    int imageWidth;
-    int imageHeight;
-    float cameraSeparation;
-    float weight;
-    float gravity;
-    float drag;
-    float maxThrust;
-    float maxPitchRate;
-    float maxRollRate;
-    float maxYawRate;
-    float[] windSpeedXPoints;
-    float[] windSpeedYPoints;
-    float[] windSpeedZPoints;
-    float[] windRotationAroundXPoints;
-    float[] windRotationAroundYPoints;
-    float[] windRotationAroundZPoints;
+	float cameraSeparation;
     ArrayList<Polyhedron> objects;
-	private World world;
 
 	public Parser_v2(World world) {
-		this.world = world;
+		super(world);
 	}
 
 
@@ -48,7 +31,8 @@ class Parser_v2 {
 		// print working dir
 		// System.out.println(System.getProperty("user.dir"));
 
-		DataInputStream dataIn = new DataInputStream(new FileInputStream("E:\\file.txt"));
+//		DataInputStream dataIn= new DataInputStream(new FileInputStream("inputFiles/GeneratorV2Test.txt"));
+		DataInputStream dataIn = new DataInputStream(new FileInputStream("inputFiles/world.bin"));
 
 		//u1: writeByte, readUnsignedByte
 		//u2: writeShort, readUnsignedShort
@@ -65,8 +49,8 @@ class Parser_v2 {
 		
 		horizontalAngleOfView = dataIn.readFloat();
 	    verticalAngleOfView = dataIn.readFloat();
-	    imageWidth = dataIn.readUnsignedByte();
-	    imageHeight = dataIn.readUnsignedByte();
+	    imageWidth = dataIn.readUnsignedShort();
+	    imageHeight = dataIn.readUnsignedShort();
 	    cameraSeparation = dataIn.readFloat();
 	    weight = dataIn.readFloat();
 	    gravity = dataIn.readFloat();
@@ -75,44 +59,76 @@ class Parser_v2 {
 	    maxPitchRate = dataIn.readFloat();
 	    maxRollRate = dataIn.readFloat();
 	    maxYawRate = dataIn.readFloat();
+	    
+	    
 	    int windSpeedXPointsCount = dataIn.readUnsignedShort();
-	    windSpeedXPoints = new float[2*windSpeedXPointsCount];
-	    for(int i = 0; i < 2 * windSpeedXPointsCount; i ++) {
-	    	windSpeedXPoints[i] = dataIn.readFloat();
-	    }
+	    float[] windSpeedXPoints = readInArray(dataIn, windSpeedXPointsCount);
+	    arrayXValues = readInHelper(windSpeedXPointsCount, false, windSpeedXPoints);
+	    arrayXTimes = readInHelper(windSpeedXPointsCount, true, windSpeedXPoints);
 	    int windSpeedYPointsCount = dataIn.readUnsignedShort();
-	    windSpeedYPoints = new float[2*windSpeedYPointsCount];
-	    for(int i = 0; i < 2 * windSpeedYPointsCount; i ++) {
-	    	windSpeedYPoints[i] = dataIn.readFloat();
-	    }
+	    float[] windSpeedYPoints = readInArray(dataIn, windSpeedYPointsCount);
+	    arrayYValues = readInHelper(windSpeedYPointsCount, false, windSpeedYPoints);
+	    arrayYTimes= readInHelper(windSpeedYPointsCount, true, windSpeedYPoints);
+	    
 	    int windSpeedZPointsCount = dataIn.readUnsignedShort();
-	    windSpeedZPoints = new float[2*windSpeedZPointsCount];
-	    for(int i = 0; i < 2 * windSpeedZPointsCount; i ++) {
-	    	windSpeedZPoints[i] = dataIn.readFloat();
-	    }
+	    float[] windSpeedZPoints = readInArray(dataIn, windSpeedZPointsCount);
+	    arrayZValues = readInHelper(windSpeedZPointsCount, false, windSpeedZPoints);
+	    arrayZTimes = readInHelper(windSpeedZPointsCount, true, windSpeedZPoints);
+
+	    
+	    
+
 	    
 	    int windRotationAroundXCount = dataIn.readUnsignedShort();
-	    windRotationAroundXPoints = new float[2*windRotationAroundXCount];
-	    for(int i = 0; i < 2 * windRotationAroundXCount; i ++) {
-	    	windRotationAroundXPoints[i] = dataIn.readFloat();
-	    }
+	    float[] windRotationAroundXPoints = readInArray(dataIn, windRotationAroundXCount);
+	    windRotationXValues = readInHelper(windRotationAroundXCount, false, windRotationAroundXPoints);
+	    windRotationXTimes = readInHelper(windRotationAroundXCount, true, windRotationAroundXPoints);
+	    
 	    
 	    int windRotationAroundYCount = dataIn.readUnsignedShort();
-	    windRotationAroundYPoints = new float[2*windRotationAroundYCount];
-	    for(int i = 0; i < 2 * windRotationAroundYCount; i ++) {
-	    	windRotationAroundYPoints[i] = dataIn.readFloat();
-	    }
+	    float[] windRotationAroundYPoints = readInArray(dataIn, windRotationAroundYCount);
+	    windRotationYValues = readInHelper(windRotationAroundYCount, false, windRotationAroundYPoints);
+	    windRotationYTimes = readInHelper(windRotationAroundYCount, true, windRotationAroundYPoints);
+
 	    int windRotationAroundZCount = dataIn.readUnsignedShort();
-	    windRotationAroundZPoints = new float[2*windRotationAroundZCount];
-	    for(int i = 0; i < 2 * windRotationAroundZCount; i ++) {
-	    	windRotationAroundZPoints[i] = dataIn.readFloat();
-	    }
-	    
+	    float[] windRotationAroundZPoints = readInArray(dataIn, windRotationAroundZCount);
+	    windRotationZValues = readInHelper(windRotationAroundZCount, false, windRotationAroundZPoints);
+	    windRotationZTimes = readInHelper(windRotationAroundZCount, true, windRotationAroundZPoints);
+
 		
 	    readInObjects(dataIn);
 		
 	    dataIn.close();
 	}
+
+	
+	private float[] readInArray(DataInputStream dataIn, int count) throws IOException {
+        float[] temp = new float[2*count];
+        for(int i = 0; i < 2 * count; i ++) {
+            temp[i] = dataIn.readFloat();
+        }
+        
+        return temp;
+
+		
+	}
+
+	
+	
+	private float[] readInHelper(int count, boolean time, float[] sourceArray) {
+		float[] returnArray = new float[count];
+		for (int i = 0; i < count * 2; i++) {
+			if (time) {
+				if (i % 2 == 0) {
+					returnArray[i / 2] = sourceArray[i];
+				}
+			} else {
+				if (i % 2 != 0)
+					returnArray[(i - 1) / 2] = sourceArray[i];
+			}
+		}
+		return returnArray;
+	}	
 
 	
 	private void readInObjects(DataInputStream dataIn) throws IOException {
@@ -122,25 +138,27 @@ class Parser_v2 {
 	    for(int i = 0; i < objectCount; i++) {
 	    	int vertexCount = dataIn.readUnsignedShort();
 	    	double[][] vertices = new double[vertexCount][3];
-	    	int faceCount = dataIn.readUnsignedShort();
-	    	//TODO ook hier: kan zijn dat faces geen driehoeken meer hoeven zijn
-	    	ArrayList<Triangle> faces = new ArrayList<Triangle>(faceCount);
 	    	for(int j = 0; j < vertexCount; j ++) {
 	    		vertices[j][0] = dataIn.readFloat();
 	    		vertices[j][1] = dataIn.readFloat();
 	    		vertices[j][2] = dataIn.readFloat();
 	    	}
+	    	int faceCount = dataIn.readUnsignedShort();
+	    	//TODO ook hier: kan zijn dat faces geen driehoeken meer hoeven zijn
+	    	ArrayList<Triangle> faces = new ArrayList<Triangle>(faceCount);
+
 	    	float[] hsv = new float[3];
 	    	for (int j = 0; j < faceCount; j ++) {
 	    		int v1 = dataIn.readUnsignedShort();
 	    		int v2 = dataIn.readUnsignedShort();
 	    		int v3 = dataIn.readUnsignedShort();
 	    		
+	    		
 	    		int r = dataIn.readUnsignedByte();
 	    		int g = dataIn.readUnsignedByte();
 	    		int b = dataIn.readUnsignedByte();
 	    		Color.RGBtoHSB(r,g,b,hsv);
-
+	    		
 	    		faces.add(new Triangle(getWorld().getGL().getGL2(), vertices[v1], vertices[v2], vertices[v3], new int[]{r,g,b}));
 	    	}
 	    	//TODO kijk naar type van Polyhedron
@@ -160,10 +178,6 @@ class Parser_v2 {
 
 	    }
 
-	}
-
-	private World getWorld() {
-		return world;
 	}
 
 

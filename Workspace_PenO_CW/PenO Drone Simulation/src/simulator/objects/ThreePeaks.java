@@ -1,7 +1,7 @@
 package simulator.objects;
 
 import simulator.world.World;
-import sun.net.www.content.audio.wav;
+//import sun.net.www.content.audio.wav;
 
 public class ThreePeaks extends PredefinedPolyhedron {
 
