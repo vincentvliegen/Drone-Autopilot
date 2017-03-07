@@ -1,10 +1,7 @@
 package DroneAutopilot;
 
 import DroneAutopilot.algoritmes.ClosestOrbs;
-import mission.Hover;
-import mission.Mission;
-import mission.OneSphere;
-import mission.SeveralSpheres;
+import mission.*;
 import p_en_o_cw_2016.Autopilot;
 import p_en_o_cw_2016.Drone;
 
@@ -23,6 +20,7 @@ public class DroneAutopilot implements Autopilot {
 	private final ClosestOrbs closestOrbs;
 	private Mission oneSphere;
 	private Mission severalSpheres;
+	private Mission severalObjects;
 	private Mission hover;
 
 	public DroneAutopilot(Drone drone) {
@@ -31,6 +29,7 @@ public class DroneAutopilot implements Autopilot {
 		this.closestOrbs = new ClosestOrbs(drone);
 		this.oneSphere = new OneSphere(this.getMoveToTarget(), this.getDrone(), RED);
 		this.severalSpheres = new SeveralSpheres(this.getMoveToTarget(), this.getDrone());
+		this.severalObjects = new SeveralObjects(this.getMoveToTarget(),this.getDrone());
 		this.hover = new Hover(this.getMoveToTarget(), this.getDrone());
 	}
 
@@ -49,6 +48,8 @@ public class DroneAutopilot implements Autopilot {
 			oneSphere.execute();
 		} else if (this.getMoveToTarget().getGUI().flyShortest) {
 			severalSpheres.execute();
+		} else if (this.getMoveToTarget().getGUI().flyPoly) {
+			severalObjects.execute();
 		} else if (this.getMoveToTarget().getGUI().test) {
 			System.out.println("test");
 		} else {

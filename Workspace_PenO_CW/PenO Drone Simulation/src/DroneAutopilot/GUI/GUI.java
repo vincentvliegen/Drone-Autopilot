@@ -62,7 +62,7 @@ public class GUI {
 		select.setFont(font);
 		panel.add(select);
 
-		String[] list = { " ------ Select Mission ------ ", "Fly to red sphere","Fly shortest path"};
+		String[] list = { " ------ Select Mission ------ ", "Fly to red sphere","Fly shortest path","Fly shortest path poly"};
 		JComboBox menu = new JComboBox(list);
 		menu.setPreferredSize(new Dimension(250,30));
 		panel.add(menu);
@@ -77,11 +77,19 @@ public class GUI {
 				if (selected.toString().equals("Fly to red sphere")){
 					setLastOrbEnabled(true);
 					setFlyShortest(false);
+					setFlyPoly(false);
 //					test = false;
 				}
 				else if (selected.toString().equals("Fly shortest path")){
 					setFlyShortest(true);
 					setLastOrbEnabled(false);
+					setFlyPoly(false);
+//					test = false;
+				}
+				else if (selected.toString().equals("Fly shortest path poly")){
+					setFlyShortest(false);
+					setLastOrbEnabled(false);
+					setFlyPoly(true);
 //					test = false;
 				}
 //				else if (selected.toString().equals("TEST")){
@@ -183,6 +191,14 @@ public class GUI {
 		this.flyShortest = flyShortest;
 	}
 	
+	public boolean isFlyPoly() {
+		return flyPoly;
+	}
+
+	public void setFlyPoly(boolean flyPoly) {
+		this.flyPoly = flyPoly;
+	}
+
 	public JFrame getFrame() {
 		return frame;
 	}
@@ -195,6 +211,7 @@ public class GUI {
 	public int maxValue;
 	public boolean lastOrbEnabled;
 	public boolean flyShortest;
+	public boolean flyPoly;
 	public boolean test;
 	private JFrame frame;
 	private boolean reached;

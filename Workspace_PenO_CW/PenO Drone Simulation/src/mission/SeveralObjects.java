@@ -1,9 +1,12 @@
 package mission;
 
+import java.util.Vector;
+
 import DroneAutopilot.MoveToTarget;
 import DroneAutopilot.algoritmes.ClosestOrbs;
 import DroneAutopilot.algoritmes.WorldScan;
 import DroneAutopilot.calculations.PolyhedraCalculations;
+import DroneAutopilot.calculations.VectorCalculations;
 import exceptions.FirstOrbNotVisibleException;
 import p_en_o_cw_2016.Drone;
 
@@ -113,15 +116,13 @@ public class SeveralObjects extends Mission {
 
 				if (isSecondObjectAcquired()) {
 					float[] previousSecond = this.getClosestObjects().getSecondObject();
-					float previousDistance = this.getClosestObjects().getPhysicsCalculations()
-							.calculateDistanceBetweenCoords(previousFirst, previousSecond);
+					float previousDistance = VectorCalculations.calculateDistanceBetweenCoords(previousFirst, previousSecond);
 					try {
 						this.getClosestObjects().determineSecondObject();
 					} catch (NullPointerException e) {
 					}
 					if (this.getClosestObjects().getSecondObject() != previousSecond) {
-						if (previousDistance <= this.getClosestObjects().getPhysicsCalculations()
-								.calculateDistanceBetweenCoords(previousFirst,
+						if (previousDistance <= VectorCalculations.calculateDistanceBetweenCoords(previousFirst,
 										this.getClosestObjects().getSecondObject())) {
 							this.getClosestObjects().setSecondObject(previousSecond);
 						}
@@ -142,7 +143,6 @@ public class SeveralObjects extends Mission {
 					this.setSecondObjectAcquired(false);
 				}
 			}
-
 		} catch (NullPointerException e) {
 
 		}

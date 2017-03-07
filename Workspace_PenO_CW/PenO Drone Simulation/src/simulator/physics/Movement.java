@@ -5,7 +5,7 @@ import simulator.objects.SimulationDrone;
 public class Movement {
 	private SimulationDrone drone;
 	private float[] velocity = {0,0,0};
-	public double[] currentPosition;
+	public double[] currentPosition = {0,0,0};
 	
 
 	public Movement(SimulationDrone drone) {
