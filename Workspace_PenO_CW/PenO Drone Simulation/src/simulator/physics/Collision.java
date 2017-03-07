@@ -83,13 +83,7 @@ public class Collision {
 
 	public boolean checkTrianglesForHit(WorldObject polyhedron, SimulationDrone drone) {
 		ArrayList<Triangle> trianglesList = ((Polyhedron) polyhedron).getTriangles();
-		int i=0;
 		for (Triangle currTriangle : trianglesList) {
-			if (i!=1) {
-				i+=1;
-				continue;
-			}
-			i+=1;
 			double[] T1 = currTriangle.getTranslatedPoint1();
 			double[] T2 = currTriangle.getTranslatedPoint2();
 			double[] T3 = currTriangle.getTranslatedPoint3();
@@ -100,6 +94,7 @@ public class Collision {
 			double distPointDrone = MathCalculations.getDistanceBetweenPoints(perpPoint, drone.getPosition());
 			if (distPointDrone > drone.getRadius())
 				continue;
+			if (isPointInTriangle(T1, T2, T3, perpPoint))
 			return true;
 		}
 		return false;
