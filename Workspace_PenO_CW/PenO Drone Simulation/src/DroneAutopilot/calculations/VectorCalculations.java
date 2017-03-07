@@ -46,7 +46,13 @@ public class VectorCalculations {
 		return dotProduct(vector1,vector2)/(size(vector1)*size(vector2));
 	}
 	
+	public static float vectorSinusBetweenVectors(float[] vector1, float[] vector2){
+		return size(crossProduct(vector1,vector2))/(size(vector1)*size(vector2));
+ 	}
+	
 	public static float calculateDistanceBetweenCoords(float[] coord1, float[] coord2) {
 		return (float) Math.sqrt(Math.pow(coord1[0]-coord2[0], 2) + Math.pow(coord1[1]-coord2[1], 2) + Math.pow(coord1[2]-coord2[2], 2));
 	}
+	
+ 	
 }
