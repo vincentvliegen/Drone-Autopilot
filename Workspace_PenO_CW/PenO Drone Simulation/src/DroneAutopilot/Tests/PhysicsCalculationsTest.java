@@ -21,6 +21,8 @@ public class PhysicsCalculationsTest {
 	private static final float droneWeight = 1;
 	private static final float dronePitch = 15;
 	
+	private static final float maxThrust = 50;
+	
 	private Camera camera;
 	private PhysicsCalculations calc, calc1;
 	private Drone drone, drone1;
@@ -37,14 +39,14 @@ public class PhysicsCalculationsTest {
 	@Before
 	public void setUp() {
 		verticalAngleOfView = (float) (2*Math.toDegrees(Math.atan((((double) heightCamera/ (double) widthCamera)*Math.tan(Math.toRadians(horizontalAngleOfView/2))))));
-		calc = new PhysicsCalculations(drone);
-		calc1 = new PhysicsCalculations(drone1);
 		camera = createCameraForTesting(horizontalAngleOfView, verticalAngleOfView, widthCamera);
 		drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation, camera, camera);
 		drone1 = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, 0, 0, cameraSeparation, camera, camera);
-		calc.setDrone(drone);
-		calc1.setDrone(drone1);
+		calc = new PhysicsCalculations(drone);
+		calc1 = new PhysicsCalculations(drone1);
 		
+		//calc1.setWindTranslation((float) 0.5, 0, 0);
+
 		cOG1 = new float[] {1,1};
 		cOG2 = new float[] {5,80};
 		cOG3 = new float[] {127,33};
@@ -133,7 +135,7 @@ public class PhysicsCalculationsTest {
 			}
 			@Override
 			public float getMaxThrust() {
-				return 10;
+				return maxThrust;
 			}
 			@Override
 			public float getMaxPitchRate() {
@@ -154,25 +156,21 @@ public class PhysicsCalculationsTest {
 
 			@Override
 			public float getX() {
-				// TODO Auto-generated method stub
 				return x;
 			}
 
 			@Override
 			public float getY() {
-				// TODO Auto-generated method stub
 				return y;
 			}
 
 			@Override
 			public float getZ() {
-				// TODO Auto-generated method stub
 				return z;
 			}
 
 			@Override
 			public float getHeading() {
-				// TODO Auto-generated method stub
 				return yaw;
 			}
 
@@ -211,7 +209,7 @@ public class PhysicsCalculationsTest {
 	
 	@Test
 	public void focalDistanceTest(){
-		assertEquals(75,calc.getfocalDistance(),0.00001);
+		assertEquals(75,calc.getFocalDistance(),0.00001);
 	}
 	
 	@Test
@@ -243,6 +241,9 @@ public class PhysicsCalculationsTest {
 	
 	@Test 
 	public void getThrustToPositionTest(){
-		assertEquals(0, calc1.getThrustToPosition(new float[] {0,0,-4}), 0.0001);
+		calc1.calculateThrust(new float[] {0,0,-4});
+		assertEquals(0, calc1.getThrust(), 0.0001);
 	}
+	
+	
 }

@@ -43,29 +43,30 @@ public class PhysicsCalculations{
 	private float yawRate;
 	private float pitchRate;
 	private float rollRate;
-	private static final float[] WINDROTATION = new float[]{(float) 0.5,(float) 0.5,(float) 0.5};
-
+	private final static float maxWindTranslation = 0.05f;
+	private static final float[] maxWindRotationRate = new float[]{(float) 0.5,(float) 0.5,(float) 0.5};
+	
 	//Vector Rotations
 	private List<Float> rotateMatrix;
 	private List<Float> inverseRotateMatrix;
 
-
-
+	
+	
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
 		this.setTime(0);
 		this.setPosition(0,0,0);
 		this.setSpeed(0,0,0);
 		this.setFirstTime(true);
-
-		this.focalDistance = calculatefocalDistance();
+		
+		this.focalDistance = calculateFocalDistance();
 		this.cameraHeight = calculateCameraHeight();
-
+		
 		this.setWindTranslation(0,0,0);
 		this.setWindRotation(0,0,0);
 		this.setExpectedPosition(this.getDrone().getX(),this.getDrone().getY(),this.getDrone().getZ());
 		this.setExpectedOrientation(this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll());
-
+		
 		setRotateMatrix(new ArrayList<>());
 		setInverseRotateMatrix(new ArrayList<>());
 	}
@@ -112,16 +113,16 @@ public class PhysicsCalculations{
 		calculateX1(centerOfGravityL);
 		calculateX2(centerOfGravityR);
 		calculateY(centerOfGravityL);
-
+		
 		calculateDepth();
 		calculateHorizontalAngleDeviation();
 		calculateVerticalAngleDeviation();
-
+		
 		calculateXObject();
 		calculateYObject();
 		calculateZObject();	
 		float[] objectPosition = objectPosDroneToWorld();
-
+		
 		return objectPosition;
 	}
 
@@ -164,7 +165,7 @@ public class PhysicsCalculations{
 	private void calculateVerticalAngleDeviation(){
 		setVerticalAngleDeviation((float) Math.toDegrees(Math.atan(this.getY() / this.getFocalDistance())));
 	}
-
+	
 	private void calculateXObject(){
 		float deltaX;
 		double angle;
@@ -197,8 +198,8 @@ public class PhysicsCalculations{
 		return droneTranslated;
 	}
 
-
-	private float calculatefocalDistance(){
+		
+ 	private float calculateFocalDistance(){
 		float focal =(float) ((this.getDrone().getLeftCamera().getWidth()/2) / Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getHorizontalAngleOfView()/2)));
 		return focal;
 	}
@@ -207,7 +208,7 @@ public class PhysicsCalculations{
 		int height =  (int) Math.round(Math.tan(Math.toRadians(this.getDrone().getLeftCamera().getVerticalAngleOfView()/2))*this.getFocalDistance()*2);
 		return height;
 	}
-
+	
 	private float[] directionDronePos(float[] position){//niet genormaliseerd, moest je de grootte willen hebben
 		return VectorCalculations.sum(position, VectorCalculations.inverse(this.getPosition()));
 	}
@@ -223,18 +224,18 @@ public class PhysicsCalculations{
 		return cosAngle*speedDrone;
 	}
 
-
+	
 	//////////MOVEMENT//////////
 
 	public void updateMovement(float[] targetPosition, float acceleration){
 		correctWindTranslation();
 		correctWindRotation();
-
+	
 		calculateThrust(targetPosition);
 		calculateWantedOrientation(targetPosition, acceleration);
 		calculateRemainingAnglesToObject();
 		calculateRotationRates();
-
+		
 		this.getDrone().setThrust(this.getThrust());
 		this.getDrone().setYawRate(this.getYawRate());
 		this.getDrone().setPitchRate(this.getPitchRate());
@@ -295,7 +296,7 @@ public class PhysicsCalculations{
 			}
 
 			//positieve of negatieve thrust ter compensatie vd gravity+wind?
-			float compensateDir = 1;//hoeveel keer de kracht om de gravity+wind te compenseren wordt gebruikt om richting het object te vliegen TODO verfijnen/minder statisch maken
+			float compensateDir = 1;//hoeveel keer de kracht om de gravity+wind te compenseren wordt gebruikt om richting het object te vliegen TODO verfijnen/minder statisch maken //TODO comp = 0 wanneer in vlak met normaal grav+wind
 			float[] projectionDirectionOnThrustAxis = VectorCalculations.timesScalar(thrust , VectorCalculations.dotProduct(dirToPos, thrust));//thrust is genormaliseerd
 			float signThrustDir;
 			if(Arrays.equals(VectorCalculations.sum(thrust, new float[] {0,0,0}), VectorCalculations.sum(VectorCalculations.normalise(projectionDirectionOnThrustAxis), new float[] {0,0,0}))){//de richting staat volgens positieve thrust
@@ -397,7 +398,7 @@ public class PhysicsCalculations{
 		float[] remainingAngles = this.getRemainingAngles();
 		float[] maxAngleRates = new float[]{this.getDrone().getMaxYawRate(), this.getDrone().getMaxPitchRate(), this.getDrone().getMaxRollRate()};
 		//Gecorrigeerde waarde ifv de maxwindrates.
-		float[] correctedMaxAngleRates = VectorCalculations.sum(maxAngleRates, VectorCalculations.inverse(VectorCalculations.timesScalar(WINDROTATION, this.getDeltaT())));
+		float[] correctedMaxAngleRates = VectorCalculations.sum(maxAngleRates, VectorCalculations.inverse(VectorCalculations.timesScalar(getMaxWindRotationRate(), this.getDeltaT())));
 		//Nodige tijd per remainingAngle => deltaT * hoekRate = hoek
 		float[] neededTime = new float[]{remainingAngles[0]/correctedMaxAngleRates[0],remainingAngles[1]/correctedMaxAngleRates[1],remainingAngles[2]/correctedMaxAngleRates[2]};
 		float maxRotateTime = Math.max(neededTime[0], Math.max(neededTime[1], neededTime[2]));
@@ -407,7 +408,7 @@ public class PhysicsCalculations{
 		this.setPitchRate(remainingAngles[1]/maxRotateTime);
 		this.setRollRate(remainingAngles[2]/maxRotateTime);
 	}
-
+	
 	private void calculateExpectedPosition(){
 		float weight = this.getDrone().getWeight();
 		float gravity = this.getDrone().getGravity();//negatief
@@ -428,10 +429,50 @@ public class PhysicsCalculations{
 		this.setExpectedOrientation(VectorCalculations.sum(droneAngles, AnglesDev));
 	}	
 
-
+		
+	public float[] getMaxAccelerationValues(float[] position){
+		float maxthrust = this.getDrone().getMaxThrust();
+		float weight = this.getDrone().getWeight();
+		float gravity = this.getDrone().getGravity();
+		float[] gravityVector = VectorCalculations.timesScalar(new float[] {0, 1, 0}, weight*gravity);
+		float[] windVector = this.getWindTranslation();
+		float[] direction = VectorCalculations.normalise(directionDronePos(position));
+		
+		float[] minMaxAcceleration = accelerationCalc(gravityVector, windVector, maxthrust, direction, weight);
+		
+		return new float[] {minMaxAcceleration[0]+PhysicsCalculations.getMaxWindTranslation(),minMaxAcceleration[1]-PhysicsCalculations.getMaxWindTranslation() };//max uitwijking door de wind
+	}
+	
+	private float[] accelerationCalc(float[] gravityVector, float[] windVector, float thrustSize, float[] direction, float weight){
+		//m*acc*Dir - Grav - Wind = Thrust met Thrust = t*(u,v,w) en t = size => u^2+v^2+w^2=1
+		//(ax+b)^2+(cx+d)^2+(ex+f)^2=1 met x = acc,
+		//a = (m*dirx)/t,
+		//b = -(gravx+windx)/t
+		//c = (m*diry)/t,
+		//d = -(gravy+windy)/t
+		//e = (m*dirz)/t,
+		//f = -(gravz+windz)/t
+		float a = weight*direction[0]/thrustSize;
+		float b = -(gravityVector[0]+windVector[0])/thrustSize;
+		float c = weight*direction[1]/thrustSize;
+		float d = -(gravityVector[1]+windVector[1])/thrustSize;
+		float e = weight*direction[2]/thrustSize;
+		float f = -(gravityVector[2]+windVector[2])/thrustSize;
+		
+		//oplossing is van de vorm (-b +- sqrt(b^2-4ac))/2a => (part1 +- sqrt)/part2
+		float sqrt = (float) Math.sqrt(Math.pow((2*a*b+2*c*d+2*e*f),2)-4*(a*a+c*c+e*e)*(b*b+d*d+f*f-1));
+		float part1 = -(2*a*b+2*c*d+2*e*f);
+		float part2 = 2*(a*a+c*c+e*e);
+		
+		float maxAcc = (part1 + sqrt)/part2;
+		float minAcc = (part1 - sqrt)/part2;
+		
+		return new float[] {minAcc,maxAcc};
+	}
+	
 	//////////VECTOR ROTATIONS//////////
 
-	private void createRotateMatrix() {
+ 	private void createRotateMatrix() {
 		float yaw = this.getDrone().getHeading();
 		float pitch = this.getDrone().getPitch();
 		float roll = this.getDrone().getRoll();
@@ -576,7 +617,7 @@ public class PhysicsCalculations{
 		return distance;
 	}
 
-
+	
 	//////////GETTERS & SETTERS//////////
 
 	private void setDrone(Drone drone){
@@ -750,7 +791,7 @@ public class PhysicsCalculations{
 	private void setRollRate(float rollRate) {
 		this.rollRate = rollRate;
 	}
-
+	
 	public float getX1() {
 		return X1;
 	}
@@ -799,11 +840,11 @@ public class PhysicsCalculations{
 		this.verticalAngleDeviation = verticalAngleDeviation;
 	}
 
-	public float getFocalDistance() {
+	public final float getFocalDistance() {
 		return focalDistance;
 	}
 
-	public int getCameraHeight() {
+	public final int getCameraHeight() {
 		return cameraHeight;
 	}
 
@@ -845,7 +886,16 @@ public class PhysicsCalculations{
 
 	private void setRemainingAngles(float[] remainingAngles) {
 		this.remainingAngles = remainingAngles;
-	}	
+	}
+
+	public final static float getMaxWindTranslation() {
+		return maxWindTranslation;
+	}
+
+	public final static float[] getMaxWindRotationRate() {
+		return maxWindRotationRate;
+	}
+
 }
 
 
