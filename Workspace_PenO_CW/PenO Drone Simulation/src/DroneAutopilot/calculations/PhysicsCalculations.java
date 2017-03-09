@@ -46,6 +46,7 @@ public class PhysicsCalculations{
 	private float rollRate;
 	private final static float maxWindTranslation = 0.05f;
 	private static final float[] maxWindRotationRate = new float[]{(float) 0.5,(float) 0.5,(float) 0.5};
+	private boolean firstMovement;
 	
 	//Vector Rotations
 	private List<Float> rotateMatrix;
@@ -55,8 +56,8 @@ public class PhysicsCalculations{
 	
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
-		this.setTime(0);
-		this.setPosition(0,0,0);
+		this.setTime(this.getDrone().getCurrentTime());
+		this.setPosition(this.getDrone().getX(),this.getDrone().getY(),this.getDrone().getZ());
 		this.setSpeed(0,0,0);
 		this.setFirstTime(true);
 		
@@ -67,6 +68,7 @@ public class PhysicsCalculations{
 		this.setWindRotation(0,0,0);
 		this.setExpectedPosition(this.getDrone().getX(),this.getDrone().getY(),this.getDrone().getZ());
 		this.setExpectedOrientation(this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll());
+		this.setFirstMovement(true);
 		
 		setRotateMatrix(new ArrayList<>());
 		setInverseRotateMatrix(new ArrayList<>());
@@ -240,21 +242,32 @@ public class PhysicsCalculations{
 	 * @param acceleration
 	 */
 	public void updatePosition(float[] targetPosition, float acceleration){
-		correctWindTranslation();
-		correctWindRotation();
-	
-		calculateThrust(targetPosition);
-		calculateWantedOrientation(targetPosition, acceleration);
-		calculateRemainingAnglesToObject();
-		calculateRotationRates();
+		if(!isFirstMovement()){
+			correctWindTranslation();
+			correctWindRotation();
 		
-		this.getDrone().setThrust(this.getThrust());
-		this.getDrone().setYawRate(this.getYawRate());
-		this.getDrone().setPitchRate(this.getPitchRate());
-		this.getDrone().setRollRate(this.getRollRate());
-
-		calculateExpectedPosition();
-		calculateExpectedOrientation();
+			calculateThrust(targetPosition);
+			calculateWantedOrientation(targetPosition, acceleration);
+			calculateRemainingAnglesToObject();
+			calculateRotationRates();
+		
+			this.getDrone().setThrust(this.getThrust());
+			this.getDrone().setYawRate(this.getYawRate());
+			this.getDrone().setPitchRate(this.getPitchRate());
+			this.getDrone().setRollRate(this.getRollRate());
+		
+			calculateExpectedPosition();
+			calculateExpectedOrientation();
+		}else{
+			calculateThrust(targetPosition);
+			
+			this.getDrone().setThrust(this.getThrust());
+			this.getDrone().setYawRate(0);
+			this.getDrone().setPitchRate(0);
+			this.getDrone().setRollRate(0);
+			
+			setFirstMovement(false);
+		}
 	}
 
 	/**
@@ -262,21 +275,32 @@ public class PhysicsCalculations{
 	 * @param direction
 	 */
 	public void updateOrientation(float[] direction){
-		correctWindTranslation();
-		correctWindRotation();
-	
-		calculateThrust(getPosition());
-		calculateWantedOrientation(direction);
-		calculateRemainingAnglesToObject();
-		calculateRotationRates();
+		if(!isFirstMovement()){
+			correctWindTranslation();
+			correctWindRotation();
 		
-		this.getDrone().setThrust(this.getThrust());
-		this.getDrone().setYawRate(this.getYawRate());
-		this.getDrone().setPitchRate(this.getPitchRate());
-		this.getDrone().setRollRate(this.getRollRate());
-
-		calculateExpectedPosition();
-		calculateExpectedOrientation();
+			calculateThrust(this.getPosition());
+			calculateWantedOrientation(direction);
+			calculateRemainingAnglesToObject();
+			calculateRotationRates();
+		
+			this.getDrone().setThrust(this.getThrust());
+			this.getDrone().setYawRate(this.getYawRate());
+			this.getDrone().setPitchRate(this.getPitchRate());
+			this.getDrone().setRollRate(this.getRollRate());
+		
+			calculateExpectedPosition();
+			calculateExpectedOrientation();
+		}else{
+			calculateThrust(this.getPosition());
+			
+			this.getDrone().setThrust(this.getThrust());
+			this.getDrone().setYawRate(0);
+			this.getDrone().setPitchRate(0);
+			this.getDrone().setRollRate(0);
+			
+			setFirstMovement(false);
+		}
 	}
 	
 		private void correctWindTranslation(){
@@ -330,10 +354,13 @@ public class PhysicsCalculations{
 				}
 	
 				//positieve of negatieve thrust ter compensatie vd gravity+wind?
-				float compensateDir = 1;//hoeveel keer de kracht om de gravity+wind te compenseren wordt gebruikt om richting het object te vliegen TODO verfijnen/minder statisch maken //TODO comp = 0 wanneer in vlak met normaal grav+wind
+				float compensateDir = 1;//hoeveel keer de kracht om de gravity+wind te compenseren wordt gebruikt om richting het object te vliegen TODO verfijnen/minder statisch maken
 				float[] projectionDirectionOnThrustAxis = VectorCalculations.timesScalar(thrust , VectorCalculations.dotProduct(dirToPos, thrust));//thrust is genormaliseerd
+				float sizeProjectionDirectionOnGravWindAxis = VectorCalculations.dotProduct(dirToPos, gravAndWind);
 				float signThrustDir;
-				if(Arrays.equals(VectorCalculations.sum(thrust, new float[] {0,0,0}), VectorCalculations.sum(VectorCalculations.normalise(projectionDirectionOnThrustAxis), new float[] {0,0,0}))){//de richting staat volgens positieve thrust
+				if(sizeProjectionDirectionOnGravWindAxis+0 == 0){// geen compensatie wanneer direction in vlak met normaal grav+wind
+					signThrustDir = 0;
+				}else if(Arrays.equals(VectorCalculations.sum(thrust, new float[] {0,0,0}), VectorCalculations.sum(VectorCalculations.normalise(projectionDirectionOnThrustAxis), new float[] {0,0,0}))){//de richting staat volgens positieve thrust
 					signThrustDir = 1;
 				}else{
 					signThrustDir = -1;
@@ -954,7 +981,21 @@ public class PhysicsCalculations{
 
 	private void setDirectionOfView(float[] directionOfView) {
 		this.directionOfView = directionOfView;
+	}
+
+
+
+	public boolean isFirstMovement() {
+		return firstMovement;
+	}
+	
+
+
+	private void setFirstMovement(boolean firstMovement) {
+		this.firstMovement = firstMovement;
 	}	
+	
+	
 	
 }
 
