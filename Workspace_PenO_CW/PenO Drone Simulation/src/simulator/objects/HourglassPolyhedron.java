@@ -35,14 +35,6 @@ public class HourglassPolyhedron extends PredefinedPolyhedron {
 		addTriangleWithRandomColor(point3, point8, point9);
 		addTriangleWithRandomColor(point7, point6, point8);
 		addTriangleWithRandomColor(point8, point9, point6);
-//		addTriangleWithRandomColor(point4, point9, point6);
-//		addTriangleWithRandomColor(point1, point4, point6);
-//		addTriangleWithRandomColor(point1, point6, point9);
-//		addTriangleWithRandomColor(point1, point9, point4);
-//		addTriangleWithRandomColor(point5, point8, point7);
-//		addTriangleWithRandomColor(point5, point7, point2);
-//		addTriangleWithRandomColor(point5, point2, point7);
-//		addTriangleWithRandomColor(point5, point7, point8);
 	}
 
 }
