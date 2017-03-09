@@ -83,6 +83,7 @@ public class PhysicsCalculations{
 
 		//update current
 		this.setPosition(this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ());
+		this.calculateDirectionOfView();
 		this.setTime(this.getDrone().getCurrentTime());
 		if(!isFirstTime()){
 			this.setDeltaT(this.getTime()-this.getPreviousTime());
@@ -108,7 +109,8 @@ public class PhysicsCalculations{
 		}
 
 		private void calculateDirectionOfView(){
-			//TODO
+			float[] view = new float[] {0,0,-1};
+			setDirectionOfView(vectorDroneToWorld(view));
 		}
 	
 
@@ -232,7 +234,12 @@ public class PhysicsCalculations{
 	
 	//////////MOVEMENT//////////
 
-	public void updateMovement(float[] targetPosition, float acceleration){
+	/**
+	 * Deze functie roep je op wanneer je naar een bepaalde positie wilt vliegen, met een gegeven acceleratie
+	 * @param targetPosition
+	 * @param acceleration
+	 */
+	public void updatePosition(float[] targetPosition, float acceleration){
 		correctWindTranslation();
 		correctWindRotation();
 	
@@ -250,12 +257,16 @@ public class PhysicsCalculations{
 		calculateExpectedOrientation();
 	}
 
-	public void updateMovement(float[] targetPosition, float[] direction){
+	/**
+	 * Deze functie roep je op wanneer je volgens een bepaalde richting wilt kijken, vanaf je huidige positie.
+	 * @param direction
+	 */
+	public void updateOrientation(float[] direction){
 		correctWindTranslation();
 		correctWindRotation();
 	
-		calculateThrust(targetPosition);
-		calculateWantedOrientation(targetPosition, direction);
+		calculateThrust(getPosition());
+		calculateWantedOrientation(direction);
 		calculateRemainingAnglesToObject();
 		calculateRotationRates();
 		
@@ -300,7 +311,7 @@ public class PhysicsCalculations{
 			float[] dirToPos = VectorCalculations.normalise(directionDronePos(position));
 	
 			float result;
-			if(Arrays.equals(VectorCalculations.sum(dirToPos, new float[] {0,0,0}), VectorCalculations.sum(getPosition(), new float[] {0,0,0}))){//als het doel de huidige positie van de drone is
+			if(Arrays.equals(VectorCalculations.sum(position, new float[] {0,0,0}), VectorCalculations.sum(getPosition(), new float[] {0,0,0}))){//als het doel de huidige positie van de drone is
 				float[] projectionGravVecOnThrustAxis = VectorCalculations.timesScalar(thrust, VectorCalculations.dotProduct(gravAndWind, thrust));//thrust is genormaliseerd
 				float signThrustGrav;
 				if(Arrays.equals(VectorCalculations.sum(thrust, new float[] {0,0,0}), VectorCalculations.sum(VectorCalculations.normalise(projectionGravVecOnThrustAxis), new float[] {0,0,0}))){//de gravity+wind staat volgens positieve thrust
@@ -405,8 +416,17 @@ public class PhysicsCalculations{
 			setWantedOrientation(new float[][] {thrustVector,viewVector});
 		}
 	
-		private void calculateWantedOrientation(float[] position, float[] direction){
-			//TODO
+		private void calculateWantedOrientation(float[] direction){
+			float weight = this.getDrone().getWeight();
+			float gravity = Math.abs(this.getDrone().getGravity());
+			float[] gravVector = VectorCalculations.timesScalar(new float[] {0, -1, 0}, weight*gravity);
+			float[] gravAndWind = VectorCalculations.sum(gravVector, this.getWindTranslation());
+			
+			float[] thrustVector = VectorCalculations.inverse(gravAndWind);// = hover
+			float[] normal = VectorCalculations.normalise(thrustVector);//normale op het trustvlak, genormaliseerde thrust
+			float[] projDirOnNormal = VectorCalculations.timesScalar(normal , VectorCalculations.dotProduct(direction, normal));
+			float[] viewVector = VectorCalculations.sum(direction, VectorCalculations.inverse(projDirOnNormal));
+			setWantedOrientation(new float[][] {thrustVector,viewVector});
 		}
 		
 		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll

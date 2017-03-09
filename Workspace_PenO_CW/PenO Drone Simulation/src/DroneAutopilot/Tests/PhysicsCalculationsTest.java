@@ -242,7 +242,7 @@ public class PhysicsCalculationsTest {
 	
 	@Test 
 	public void getThrustToPositionTest(){
-		calc.updateMovement(new float[] {0,0,-4},5);
+		calc.updatePosition(new float[] {0,0,-4},5);
 		assertEquals(0, calc1.getThrust(), 0.0001);
 	}
 	
