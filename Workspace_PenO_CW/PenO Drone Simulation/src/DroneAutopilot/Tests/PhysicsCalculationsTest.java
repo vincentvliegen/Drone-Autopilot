@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import DroneAutopilot.calculations.PhysicsCalculations;
+import DroneAutopilot.calculations.VectorCalculations;
 
 public class PhysicsCalculationsTest {
 
@@ -45,7 +46,7 @@ public class PhysicsCalculationsTest {
 		calc = new PhysicsCalculations(drone);
 		calc1 = new PhysicsCalculations(drone1);
 		
-		//calc1.setWindTranslation((float) 0.5, 0, 0);
+		//calc1.setWindTranslation(0,(float) 0.5, 0);
 
 		cOG1 = new float[] {1,1};
 		cOG2 = new float[] {5,80};
@@ -241,9 +242,19 @@ public class PhysicsCalculationsTest {
 	
 	@Test 
 	public void getThrustToPositionTest(){
-		calc1.calculateThrust(new float[] {0,0,-4});
+		calc.updateMovement(new float[] {0,0,-4},5);
 		assertEquals(0, calc1.getThrust(), 0.0001);
 	}
 	
+//	@Test
+//	public void acctest(){
+//		float[] pos = new float[] {0,5,9};
+//		float[] acc = calc1.getMaxAccelerationValues(pos);
+//		System.out.println("acc= { "+acc[0] + ", " + acc[1] + "}");
+//		calc1.calculateWantedOrientation(pos,acc[1]);
+//		float[][] wo = calc1.getWantedOrientation();
+//		System.out.println("wo: thrust = { "+wo[0][0] + ", " + wo[0][1] + ", " + wo[0][2] + "}, view =  " + "{ "+wo[1][0] + ", " + wo[1][1] + ", " + wo[1][2] + "} ");
+//		System.out.println("sizeThrust = " + VectorCalculations.size(wo[0]));
+//	}
 	
 }

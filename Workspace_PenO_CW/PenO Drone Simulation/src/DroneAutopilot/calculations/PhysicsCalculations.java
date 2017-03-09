@@ -18,6 +18,7 @@ public class PhysicsCalculations{
 	private float deltaT;
 	private float[] speed;
 	private boolean firstTime;
+	private float[] directionOfView;
 	
 	//Object
 	private final float focalDistance;
@@ -106,6 +107,10 @@ public class PhysicsCalculations{
 			setSpeed(VectorCalculations.timesScalar(VectorCalculations.sum(this.getPosition(), VectorCalculations.inverse(this.getPreviousPosition())),1/this.getDeltaT()));
 		}
 
+		private void calculateDirectionOfView(){
+			//TODO
+		}
+	
 
 	//////////OBJECT//////////
 
@@ -245,6 +250,24 @@ public class PhysicsCalculations{
 		calculateExpectedOrientation();
 	}
 
+	public void updateMovement(float[] targetPosition, float[] direction){
+		correctWindTranslation();
+		correctWindRotation();
+	
+		calculateThrust(targetPosition);
+		calculateWantedOrientation(targetPosition, direction);
+		calculateRemainingAnglesToObject();
+		calculateRotationRates();
+		
+		this.getDrone().setThrust(this.getThrust());
+		this.getDrone().setYawRate(this.getYawRate());
+		this.getDrone().setPitchRate(this.getPitchRate());
+		this.getDrone().setRollRate(this.getRollRate());
+
+		calculateExpectedPosition();
+		calculateExpectedOrientation();
+	}
+	
 		private void correctWindTranslation(){
 			float[] deviation = VectorCalculations.sum(this.getPosition(),VectorCalculations.inverse(this.getExpectedPosition()));
 			float weight = this.getDrone().getWeight();
@@ -382,6 +405,10 @@ public class PhysicsCalculations{
 			setWantedOrientation(new float[][] {thrustVector,viewVector});
 		}
 	
+		private void calculateWantedOrientation(float[] position, float[] direction){
+			//TODO
+		}
+		
 		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll
 		private void calculateRemainingAnglesToObject(){
 			float[] thrustWanted = VectorCalculations.normalise(this.vectorWorldToDrone(getWantedOrientation()[0]));
@@ -398,7 +425,7 @@ public class PhysicsCalculations{
 			float[] remainingAngles = this.getRemainingAngles();
 			float[] maxAngleRates = new float[]{this.getDrone().getMaxYawRate(), this.getDrone().getMaxPitchRate(), this.getDrone().getMaxRollRate()};
 			//Gecorrigeerde waarde ifv de maxwindrates.
-			float[] correctedMaxAngleRates = VectorCalculations.sum(maxAngleRates, VectorCalculations.inverse(VectorCalculations.timesScalar(getMaxWindRotationRate(), this.getDeltaT())));
+			float[] correctedMaxAngleRates = VectorCalculations.sum(maxAngleRates, VectorCalculations.inverse(VectorCalculations.timesScalar(getMaxwindrotationrate(), this.getDeltaT())));
 			//Nodige tijd per remainingAngle => deltaT * hoekRate = hoek
 			float[] neededTime = new float[]{remainingAngles[0]/correctedMaxAngleRates[0],remainingAngles[1]/correctedMaxAngleRates[1],remainingAngles[2]/correctedMaxAngleRates[2]};
 			float maxRotateTime = Math.max(neededTime[0], Math.max(neededTime[1], neededTime[2]));
@@ -440,7 +467,7 @@ public class PhysicsCalculations{
 		
 		float[] minMaxAcceleration = accelerationCalc(gravityVector, windVector, maxthrust, direction, weight);
 		
-		return new float[] {minMaxAcceleration[0]+PhysicsCalculations.getMaxWindTranslation(),minMaxAcceleration[1]-PhysicsCalculations.getMaxWindTranslation() };//max uitwijking door de wind
+		return new float[] {minMaxAcceleration[0]+PhysicsCalculations.getMaxwindtranslation(),minMaxAcceleration[1]-PhysicsCalculations.getMaxwindtranslation()};//max uitwijking door de wind
 	}
 	
 		private float[] accelerationCalc(float[] gravityVector, float[] windVector, float thrustSize, float[] direction, float weight){
@@ -889,14 +916,26 @@ public class PhysicsCalculations{
 		this.remainingAngles = remainingAngles;
 	}
 
-	public final static float getMaxWindTranslation() {
+	public static float getMaxwindtranslation() {
 		return maxWindTranslation;
 	}
 
-	public final static float[] getMaxWindRotationRate() {
+	public static float[] getMaxwindrotationrate() {
 		return maxWindRotationRate;
 	}
 
+
+
+	public float[] getDirectionOfView() {
+		return directionOfView;
+	}
+	
+
+
+	private void setDirectionOfView(float[] directionOfView) {
+		this.directionOfView = directionOfView;
+	}	
+	
 }
 
 
