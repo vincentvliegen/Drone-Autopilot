@@ -1,13 +1,10 @@
 package mission;
 
-import java.util.Vector;
 
 import DroneAutopilot.MoveToTarget;
 import DroneAutopilot.algoritmes.ClosestOrbs;
 import DroneAutopilot.algoritmes.WorldScan;
-import DroneAutopilot.calculations.PolyhedraCalculations;
 import DroneAutopilot.calculations.VectorCalculations;
-import exceptions.FirstOrbNotVisibleException;
 import p_en_o_cw_2016.Drone;
 
 public class SeveralObjects extends Mission {
@@ -18,10 +15,15 @@ public class SeveralObjects extends Mission {
 	private boolean firstTime;
 	private boolean closestObjectAcquired;
 	private boolean secondObjectAcquired;
-	private final static float distanceToArrival = 0.55f;// TODO afstellen,
-															// straal is 0.5
+	private final static float distanceToArrival = 0.55f;// TODO
+															// afstellen,straal
+															// is 0.5
+	private final static float factorD = 2;
+
 	private final WorldScan worldScan;
 	private int targetLostCounter = 0;
+	private float[] currentTarget = null;
+	private float inFrontFactor;
 
 	public SeveralObjects(MoveToTarget moveToTarget, Drone drone) {
 		super(moveToTarget, drone);
@@ -50,10 +52,17 @@ public class SeveralObjects extends Mission {
 			// BEREKENING OBJECTS
 			if (isFirstTime()) {
 				firstTimeSinceScan();
-			} else if (!this.getMoveToTarget().isScanning() && this.getRefreshCounter() >= getTimeToRefresh()
-					&& !otherObjectsFar()) { // TODO functie otherObjectsFar die
-												// aangeeft of andere objecten
-												// ver af liggen
+			} else if (!this.getMoveToTarget().isScanning() && this.getRefreshCounter() >= getTimeToRefresh()) { // TODO
+																													// functie
+																													// otherObjectsFar
+																													// die
+																													// aangeeft
+																													// of
+																													// andere
+																													// objecten
+																													// ver
+																													// af
+																													// liggen
 				refreshWhenFlying();
 			}
 			if (!isFirstTime()) {
@@ -68,12 +77,25 @@ public class SeveralObjects extends Mission {
 
 			// BEWEGING
 			if (isClosestObjectAcquired()) {
-				this.getMoveToTarget().execute(this.getClosestObjects().getClosestObject()); // TODO
-																								// execute
-																								// kleur
-																								// ->
-																								// coordinaten
+				if (this.getClosestObjects().getClosestObject() != this.getCurrentTarget()) {
+					this.setCurrentTarget(this.getClosestObjects().getClosestObject());
+				}
 				this.setRefreshCounter(this.getRefreshCounter() + 1);
+
+				if (this.getClosestObjects().getPhysicsCalculations()
+						.getSpeedTowardsPosition(this.getCurrentTarget()) < 0) {
+					System.out.println("SPEED < 0");
+					this.getClosestObjects().getPhysicsCalculations().updateMovement(this.getCurrentTarget(),
+							this.determineAcceleration(1));
+				}
+				if (this.getClosestObjects().getPhysicsCalculations()
+						.getDistanceToPosition(this.getCurrentTarget()) <= this.getClosestObjects()
+								.getPhysicsCalculations().getSpeedTowardsPosition(this.getCurrentTarget())
+								* this.getInFrontFactor()) {
+					System.out.println("DISTANCE < SPEED*factor");
+					this.getClosestObjects().getPhysicsCalculations().updateMovement(this.getCurrentTarget(),
+							this.determineAcceleration(0));
+				}
 			} else {// begin opnieuw te zoeken naar dichtste object
 				this.getWorldScan().scan(this.getDrone());
 				setFirstTime(true);
@@ -84,6 +106,19 @@ public class SeveralObjects extends Mission {
 			 * (isSecondOrbAcquired()) { System.out.println("secondOrb " +
 			 * this.getClosestOrbs().getColorSecondOrb()); }
 			 */
+		}
+	}
+
+	public float determineAcceleration(int x) {
+		if (this.getClosestObjects().getPhysicsCalculations()
+				.getDistanceToPosition(this.getCurrentTarget()) <= getFactord()) {
+			return this.getClosestObjects().getPhysicsCalculations()
+					.getMaxAccelerationValues(this.getCurrentTarget())[x]
+					* this.getClosestObjects().getPhysicsCalculations().getDistanceToPosition(this.getCurrentTarget())
+					/ getFactord();
+		} else {
+			return this.getClosestObjects().getPhysicsCalculations()
+					.getMaxAccelerationValues(this.getCurrentTarget())[x];
 		}
 	}
 
@@ -116,14 +151,15 @@ public class SeveralObjects extends Mission {
 
 				if (isSecondObjectAcquired()) {
 					float[] previousSecond = this.getClosestObjects().getSecondObject();
-					float previousDistance = VectorCalculations.calculateDistanceBetweenCoords(previousFirst, previousSecond);
+					float previousDistance = VectorCalculations.calculateDistanceBetweenCoords(previousFirst,
+							previousSecond);
 					try {
 						this.getClosestObjects().determineSecondObject();
 					} catch (NullPointerException e) {
 					}
 					if (this.getClosestObjects().getSecondObject() != previousSecond) {
 						if (previousDistance <= VectorCalculations.calculateDistanceBetweenCoords(previousFirst,
-										this.getClosestObjects().getSecondObject())) {
+								this.getClosestObjects().getSecondObject())) {
 							this.getClosestObjects().setSecondObject(previousSecond);
 						}
 					}
@@ -190,6 +226,10 @@ public class SeveralObjects extends Mission {
 		return distanceToArrival;
 	}
 
+	public static float getFactord() {
+		return factorD;
+	}
+
 	public ClosestOrbs getClosestObjects() {
 		return closestObjects;
 	}
@@ -216,6 +256,27 @@ public class SeveralObjects extends Mission {
 
 	public void setTargetLostCounter(int targetLostCounter) {
 		this.targetLostCounter = targetLostCounter;
+	}
+
+	public float[] getCurrentTarget() {
+		return currentTarget;
+	}
+
+	public void setCurrentTarget(float[] currentTarget) {
+		this.currentTarget = currentTarget;
+	}
+
+	public void setInFrontFactor(boolean inFront) {
+		if (inFront) {
+			this.inFrontFactor = (float) 0.5; // TODO factor bepalen
+		} else {
+			this.inFrontFactor = (float) 0.7;
+		} // TODO factor bepalen
+	}
+
+	// TODO afhankelijk van missie factor instellen
+	public float getInFrontFactor() {
+		return inFrontFactor;
 	}
 
 	/**
