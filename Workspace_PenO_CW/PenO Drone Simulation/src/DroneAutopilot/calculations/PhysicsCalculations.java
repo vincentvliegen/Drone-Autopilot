@@ -440,7 +440,7 @@ public class PhysicsCalculations{
 			float[] normal = VectorCalculations.normalise(thrustVector);//normale op het trustvlak, genormaliseerde thrust
 			float[] projDirOnNormal = VectorCalculations.timesScalar(normal , VectorCalculations.dotProduct(forceToPos, normal));
 			float[] viewVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(projDirOnNormal));
-			setWantedOrientation(new float[][] {thrustVector,viewVector});
+			this.setWantedOrientation(new float[][] {thrustVector,viewVector});
 		}
 	
 		private void calculateWantedOrientation(float[] direction){
@@ -453,18 +453,23 @@ public class PhysicsCalculations{
 			float[] normal = VectorCalculations.normalise(thrustVector);//normale op het trustvlak, genormaliseerde thrust
 			float[] projDirOnNormal = VectorCalculations.timesScalar(normal , VectorCalculations.dotProduct(direction, normal));
 			float[] viewVector = VectorCalculations.sum(direction, VectorCalculations.inverse(projDirOnNormal));
-			setWantedOrientation(new float[][] {thrustVector,viewVector});
+			this.setWantedOrientation(new float[][] {thrustVector,viewVector});
 		}
 		
 		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll
-		private void calculateRemainingAnglesToObject(){
-			float[] thrustWanted = VectorCalculations.normalise(this.vectorWorldToDrone(getWantedOrientation()[0]));
-			float[] droneAngles = new float[] {this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll()};
-			float desiredPitch = (float) Math.asin(Math.toRadians(thrustWanted[1]));
-			float desiredYaw = (float) Math.asin(Math.toRadians(thrustWanted[0]/(Math.cos(desiredPitch)))); // TODO: cos(pitch)=0
-			float[] desiredDroneAngles = {desiredYaw, desiredPitch, 0};
-			float[] remainingAngles = VectorCalculations.sum(desiredDroneAngles, VectorCalculations.inverse(droneAngles));
-			setRemainingAngles(remainingAngles);
+		private void calculateRemainingAnglesToObject() throws ArithmeticException{
+			float[] thrustWanted = VectorCalculations.normalise(this.vectorWorldToDrone(this.getWantedOrientation()[0]));
+			float[] viewWanted = VectorCalculations.normalise(this.vectorWorldToDrone(this.getWantedOrientation()[1]));
+			float[] inverseDroneAngles = new float[] {-this.getDrone().getHeading(), -this.getDrone().getPitch(), -this.getDrone().getRoll()};
+			float pitchWanted = (float) Math.asin(Math.toRadians(thrustWanted[2]));
+			if (pitchWanted+0 == 0){
+				throw new ArithmeticException("pitchWanted is zero, division by zero");
+			}
+			float rollWanted = (float) -Math.acos(Math.toRadians(thrustWanted[1]/Math.cos(Math.toRadians(pitchWanted)))); 
+			float yawWanted = (float) Math.acos(Math.toRadians(-viewWanted[2]/Math.cos(Math.toRadians(pitchWanted))));
+			float[] wantedDroneAngles = new float[] {yawWanted, pitchWanted, rollWanted};
+			float[] remainingAngles = VectorCalculations.sum(inverseDroneAngles, wantedDroneAngles);
+			this.setRemainingAngles(remainingAngles);
 		}
 	
 		//Geeft de nodige rotatieRates om in bepaalde tijd de remainingAngles te overbruggen.
@@ -964,32 +969,21 @@ public class PhysicsCalculations{
 		return maxWindRotationRate;
 	}
 
-
-
 	public float[] getDirectionOfView() {
 		return directionOfView;
 	}
 	
-
-
 	private void setDirectionOfView(float[] directionOfView) {
 		this.directionOfView = directionOfView;
 	}
-
-
 
 	public boolean isFirstMovement() {
 		return firstMovement;
 	}
 	
-
-
 	private void setFirstMovement(boolean firstMovement) {
 		this.firstMovement = firstMovement;
 	}	
-	
-	
-	
 }
 
 
