@@ -547,12 +547,9 @@ public class PhysicsCalculations{
 		
 	//////////VECTOR ROTATIONS//////////
 
- 	private void createRotateMatrix() {
-		float yaw = this.getDrone().getHeading();
-		float pitch = this.getDrone().getPitch();
-		float roll = this.getDrone().getRoll();
-
+ 	private void createRotateMatrix(float yaw, float pitch, float roll) {
 		this.getRotateMatrix().clear();
+		
 		this.getRotateMatrix().add((float) (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
 		this.getRotateMatrix().add((float) (Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))+Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))));
 		this.getRotateMatrix().add((float) (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))));
@@ -566,13 +563,9 @@ public class PhysicsCalculations{
 		this.getRotateMatrix().add((float) (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))));
 	}
 
-	private void createInverseRotateMatrix(){
+	private void createInverseRotateMatrix(float yaw, float pitch, float roll){
 		this.getInverseRotateMatrix().clear();
-		float yaw = this.getDrone().getHeading();
-		float pitch = this.getDrone().getPitch();
-		float roll = this.getDrone().getRoll();
-
-		this.getInverseRotateMatrix().clear();
+		
 		this.getInverseRotateMatrix().add((float) (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
 		this.getInverseRotateMatrix().add((float) (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))));
 		this.getInverseRotateMatrix().add((float) (Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))+Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))));
@@ -587,7 +580,7 @@ public class PhysicsCalculations{
 	}
 
 	public float[] vectorDroneToWorld(float x, float y, float z){
-		this.createInverseRotateMatrix();
+		this.createInverseRotateMatrix(this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll());
 		float r11 = this.getInverseRotateMatrix().get(0);
 		float r12 = this.getInverseRotateMatrix().get(1);
 		float r13 = this.getInverseRotateMatrix().get(2);
@@ -609,7 +602,7 @@ public class PhysicsCalculations{
 	}
 
 	public float[] vectorWorldToDrone(float x, float y, float z){
-		this.createRotateMatrix();
+		this.createRotateMatrix(this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll());
 		float r11 = this.getRotateMatrix().get(0);
 		float r12 = this.getRotateMatrix().get(1);
 		float r13 = this.getRotateMatrix().get(2);
