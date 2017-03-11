@@ -47,15 +47,12 @@ public class Polyhedron extends WorldObject {
 
 		double[] massPoint = new double[3];
 		double temp = 0;
-		int temp2 = 0;
 		for (int i = 0; i < 3; i++) {
 			for (double[] vertex : getVertices()) {
 				temp += vertex[i];
-				temp2 +=1;
 			}
-			massPoint[i] = temp/temp2;
+			massPoint[i] = temp/getVertices().length;
 			temp = 0;
-			temp2 = 0;
 		}
 		
 
