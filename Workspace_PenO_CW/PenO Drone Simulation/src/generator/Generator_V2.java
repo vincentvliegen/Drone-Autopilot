@@ -113,17 +113,18 @@ public class Generator_V2 {
 			// create target colors
 			List<int[]> colorListRGB = new ArrayList<>();
 			for (int i = 0; i < numberOfTargets * 4; i++) {
-				int hue = r.nextInt(361);
+				int hueDegrees = r.nextInt(361);
+				float hueRadians = (float)Math.toRadians(hueDegrees);
 				float saturation = r.nextFloat() * 0.45f + 0.55f;
 				float brightness = r.nextFloat() * 0.45f + 0.55f;
-				int rgb = Color.HSBtoRGB(hue, saturation, brightness);
+				int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
 				int[] color = new int[3];
-				color[0] = ((rgb >> 16) & 0xFF);
-				color[1] = ((rgb >> 8) & 0xFF);
-				color[2] = (rgb & 0xFF);
+				color[0] = (rgb >> 16) & 0xFF;
+				color[1] = (rgb >> 8) & 0xFF;
+				color[2] = rgb & 0xFF;
 				colorListRGB.add(color);
 			}
-
+						
 			// Target objects
 			int currentPosIndex = 1;
 			for (int i = 0; i < numberOfTargets; i++) {
@@ -151,9 +152,9 @@ public class Generator_V2 {
 
 				stream.writeShort(4);
 
-				for (int j = 0; j < 4 * numberOfTargets; j++) {
+				for (int j = 4*i; j < 4*i + 4; j++) {
 					int[] currentcolor = colorListRGB.get(j);
-					switch (j) {
+					switch (j%4) {
 					case 0:
 						stream.writeShort(0);
 						stream.writeShort(1);
@@ -194,14 +195,15 @@ public class Generator_V2 {
 			colorListRGB.clear();
 			// Obstacle
 			for (int i = 0; i < 4 * numberOfObstacles; i++) {
-				int hue = r.nextInt(361);
+				int hueDegrees = r.nextInt(361);
+				float hueRadians = (float)Math.toRadians(hueDegrees);
 				float saturation = r.nextFloat() * 0.45f + 0.55f;
 				float brightness = r.nextFloat() * 0.45f;
-				int rgb = Color.HSBtoRGB(hue, saturation, brightness);
+				int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
 				int[] color = new int[3];
-				color[0] = ((rgb >> 16) & 0xFF);
-				color[1] = ((rgb >> 8) & 0xFF);
-				color[2] = (rgb & 0xFF);
+				color[0] = (rgb >> 16) & 0xFF;
+				color[1] = (rgb >> 8) & 0xFF;
+				color[2] = rgb & 0xFF;
 				colorListRGB.add(color);
 			}
 
@@ -229,9 +231,9 @@ public class Generator_V2 {
 
 				stream.writeShort(4);
 
-				for (int j = 0; j < 4 * numberOfObstacles; j++) {
+				for (int j = 4*i; j < 4 * i + 4; j++) {
 					int[] currentcolor = colorListRGB.get(j);
-					switch (j) {
+					switch (j%4) {
 					case 0:
 						stream.writeShort(0);
 						stream.writeShort(1);
