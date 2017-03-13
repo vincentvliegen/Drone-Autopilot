@@ -39,8 +39,8 @@ public class WorldParser extends World {
 		super.addGeneralCamera(new GeneralCamera(-100, 0, 0, 0, 0, 0, 0, 1, 0,
 				this));
 
-//		super.addGeneralCamera(new GeneralCamera(0, 0, 0, 100, 0, 0, 0, 1, 0,
-//				this));
+		super.addGeneralCamera(new GeneralCamera(0, 0, 0, 100, 0, 0, 0, 1, 0,
+				this));
 		super.addGeneralCamera(new GeneralCamera(10, 0, 5, 10, 0, 0, 0, 1, 0,
 				this));
 		setCurrentCamera(getGeneralCameras().get(0));
@@ -260,10 +260,6 @@ public class WorldParser extends World {
 				return;
 			}
 			GL2 gl = getGL().getGL2();
-
-			if (getEditor().wasMousePressed()) {
-				mousePressed();
-			}
 			
 			// voor scherm
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -271,6 +267,10 @@ public class WorldParser extends World {
 					drawable.getSurfaceHeight());
 			getCurrentCamera().setCamera(gl, getGlu());
 			draw();
+			
+			if (getEditor().wasMousePressed()) {
+				mousePressed();
+			}
 
 			/*
 			 * TODO Moet slimmer aangepakt worden, wat als er nu meerdere drones

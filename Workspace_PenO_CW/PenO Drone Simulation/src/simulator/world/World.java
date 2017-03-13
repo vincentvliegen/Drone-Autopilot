@@ -340,7 +340,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		setup();
 		 SomeFigure fig = new SomeFigure(this, PolyhedronType.TARGET, new
-		 double[]{2,-1,0});
+		 double[]{2,0,0});
 		 getWorldObjectList().add(fig);
 		// Start animator.
 		gl.setSwapInterval(1);
@@ -541,9 +541,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		double[] vector = { (worldCoordFar[0] - worldCoordNear[0]) / 10000,
 				(worldCoordFar[1] - worldCoordNear[1]) / 10000,
-				(worldCoordFar[2] - worldCoordNear[2]) / 10000 };
+				(worldCoordFar[2] - worldCoordNear[2]) / 10000 };		
 		
-
 		boolean objectChanged = false;
 		double maxDistance = Double.MAX_VALUE;
 		double[] changeLocation = new double[3];
@@ -570,13 +569,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 					objectChanged = true;
 			}
 		}
-		for (double i: changeLocation)
-			System.out.println(i);
-		for (double k: changeLocationSphere)
-			System.out.println(k);
-		if (objectChanged)
-		for (double j: changeObject.getPosition())
-			System.out.println(j);
+
 		if (objectChanged) {
 			if (changeObject instanceof Polyhedron)
 				((Polyhedron)changeObject).translatePolyhedronOver(changeLocation);
