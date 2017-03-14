@@ -15,9 +15,9 @@ public class DroneAutopilot implements Autopilot {
 	private final PhysicsCalculations physicsCalculations;//deze mag niet verschillen tussen de missies, omdat de snelheid/positie/wind elk frame moet worden geupdate
 	private final GUI GUI;
 	
-	private final Mission oneSphere;
-	private final Mission severalSpheres;
-	private final Mission severalObjects;
+	//private final Mission oneSphere;
+	//private final Mission severalSpheres;
+//	private final Mission severalObjects;
 	private final Mission hover;
 	
 	private final static int RED = 16711680;
@@ -26,9 +26,9 @@ public class DroneAutopilot implements Autopilot {
 		this.drone = drone;
 		this.physicsCalculations = new PhysicsCalculations(getDrone());
 		this.GUI = new GUI();
-		this.oneSphere = new OneSphere(this);//TODO execute
-		this.severalSpheres = new SeveralSpheres(this);//TODO execute + updateGUI
-		this.severalObjects = new SeveralObjects(this);//TODO execute + updateGUI
+		//this.oneSphere = new OneSphere(this);//TODO execute
+		//this.severalSpheres = new SeveralSpheres(this);//TODO execute + updateGUI
+		//this.severalObjects = new SeveralObjects(this);//TODO execute + updateGUI
 		this.hover = new Hover(this);//TODO updateGUI
 	}
 
@@ -47,11 +47,11 @@ public class DroneAutopilot implements Autopilot {
 		getPhysicsCalculations().updateDroneData();
 		
 		if (getGUI().lastOrbEnabled) {
-			getOneSphere().execute();
+			//getOneSphere().execute();
 		} else if (getGUI().flyShortest) {
-			getSeveralSpheres().execute();
-		} else if (getGUI().flyPoly) {
-			getSeveralObjects().execute();
+			//getSeveralSpheres().execute();
+//		} else if (getGUI().flyPoly) {
+//			getSeveralObjects().execute();
 		} else if (getGUI().test) {
 			System.out.println("test");
 		} else {
@@ -74,17 +74,17 @@ public class DroneAutopilot implements Autopilot {
 		return physicsCalculations;
 	}
 
-	public Mission getOneSphere() {
-		return oneSphere;
-	}
+//	public Mission getOneSphere() {
+//		return oneSphere;
+//	}
+//
+//	public Mission getSeveralSpheres() {
+//		return severalSpheres;
+//	}
 
-	public Mission getSeveralSpheres() {
-		return severalSpheres;
-	}
-
-	public Mission getSeveralObjects() {
-		return severalObjects;
-	}
+//	public Mission getSeveralObjects() {
+//		return severalObjects;
+//	}
 
 	public Mission getHover() {
 		return hover;

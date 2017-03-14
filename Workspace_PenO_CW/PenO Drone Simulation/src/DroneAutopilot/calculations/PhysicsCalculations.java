@@ -462,7 +462,7 @@ public class PhysicsCalculations{
 			float[] viewWanted = VectorCalculations.normalise(this.vectorWorldToDrone(this.getWantedOrientation()[1]));
 			float[] inverseDroneAngles = new float[] {-this.getDrone().getHeading(), -this.getDrone().getPitch(), -this.getDrone().getRoll()};
 			float pitchWanted = (float) Math.asin(Math.toRadians(thrustWanted[2]));
-			if (pitchWanted+0 == 0){
+			if (pitchWanted == Math.PI){
 				throw new ArithmeticException("pitchWanted is zero, division by zero");
 			}
 			float rollWanted = (float) -Math.acos(Math.toRadians(thrustWanted[1]/Math.cos(Math.toRadians(pitchWanted)))); 

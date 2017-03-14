@@ -17,8 +17,6 @@ public class DroneAutopilotFactory implements AutopilotFactory{
 	@Override
 	public DroneAutopilot create(Drone drone) {		
 		DroneAutopilot autopilot = new DroneAutopilot(drone);
-		GUI gui = new GUI();
-		autopilot.getMoveToTarget().setGUI(gui);
 		//GraphPI graphPI = new GraphPI();
 		//autopilot.getMoveToTarget().setGraphPI(graphPI);
 		drone.setThrust(Math.abs(drone.getGravity()*drone.getWeight()));
