@@ -3,12 +3,14 @@ package simulator.movement;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import simulator.objects.*;
+
 public class KeyboardMovement implements KeyListener{
 	
 	public double x=0,y=0,z=0;
-	public boolean left, right, up, down, front, back, rotateUp, rotateDown, rotateRight, rotateLeft, rotateZ1, rotateZ2;
-	// public int[] array={0,0,0};
-	private float rotateX, rotateY, rotateZ;
+	public boolean left, right, up, down, front, back;
+	public boolean objFront, objLeft, objRight, objDown, objUp, objBack;
+	public WorldObject object = null;
 	public KeyboardMovement(){}
 	
 	@Override
@@ -26,24 +28,22 @@ public class KeyboardMovement implements KeyListener{
 			front = true;
 		else if((key.getKeyCode()== KeyEvent.VK_DOWN))
 			back = true;	
-		else if((key.getKeyCode()== KeyEvent.VK_P))
-			up = true;
-		else if((key.getKeyCode()== KeyEvent.VK_M))
-			down = true;	
 		else if((key.getKeyCode()== KeyEvent.VK_E))
-			rotateUp = true;
+			up = true;
 		else if((key.getKeyCode()== KeyEvent.VK_D))
-			rotateDown = true;
-		else if((key.getKeyCode()== KeyEvent.VK_F))
-			rotateRight = true;
-		else if((key.getKeyCode()== KeyEvent.VK_S))
-			rotateLeft = true;
-		else if((key.getKeyCode()== KeyEvent.VK_A))
-			rotateZ1 = true;
-		else if((key.getKeyCode()== KeyEvent.VK_Z))
-			rotateZ2 = true;
-		else if (key.getKeyCode()== KeyEvent.VK_SPACE)
-			rotateX = rotateY = rotateZ = 0;
+			down = true;	
+		else if((key.getKeyCode()==KeyEvent.VK_I))
+			objFront = true;
+		else if((key.getKeyCode()==KeyEvent.VK_K))
+			objBack = true;
+		else if((key.getKeyCode()==KeyEvent.VK_J))
+			objLeft = true;
+		else if((key.getKeyCode()==KeyEvent.VK_L))
+			objRight = true;
+		else if((key.getKeyCode()==KeyEvent.VK_U))
+			objUp = true;
+		else if((key.getKeyCode()==KeyEvent.VK_O))
+			objDown = true;
 	}
 
 	@Override
@@ -56,22 +56,22 @@ public class KeyboardMovement implements KeyListener{
 			front = false;
 		else if((key.getKeyCode()== KeyEvent.VK_DOWN))
 			back = false;	
-		else if((key.getKeyCode()== KeyEvent.VK_P))
-			up = false;
-		else if((key.getKeyCode()== KeyEvent.VK_M))
-			down = false;	
 		else if((key.getKeyCode()== KeyEvent.VK_E))
-			rotateUp = false;
+			up = false;
 		else if((key.getKeyCode()== KeyEvent.VK_D))
-			rotateDown = false;
-		else if((key.getKeyCode()== KeyEvent.VK_F))
-			rotateRight = false;
-		else if((key.getKeyCode()== KeyEvent.VK_A))
-			rotateZ1 = false;
-		else if((key.getKeyCode()== KeyEvent.VK_Z))
-			rotateZ2 = false;
-		else if((key.getKeyCode()== KeyEvent.VK_S))
-			rotateLeft = false;
+			down = false;	
+		else if((key.getKeyCode()==KeyEvent.VK_I))
+			objFront = false;
+		else if((key.getKeyCode()==KeyEvent.VK_K))
+			objBack = false;
+		else if((key.getKeyCode()==KeyEvent.VK_J))
+			objLeft = false;
+		else if((key.getKeyCode()==KeyEvent.VK_L))
+			objRight = false;
+		else if((key.getKeyCode()==KeyEvent.VK_U))
+			objUp = false;
+		else if((key.getKeyCode()==KeyEvent.VK_O))
+			objDown = false;
 	}
 	
 	public void update(float dt){
@@ -93,25 +93,34 @@ public class KeyboardMovement implements KeyListener{
 		if(back){
 			x -= 1*dt;
 		}
-		if(rotateUp){
-			 rotateX -=10*dt;
+		if (objBack|| objFront ||objLeft || objRight || objUp|| objDown) {
+			if (object == null)
+				return;
+			float x=0,y=0,z=0;
+			if(objRight){
+				z += 1*dt;
+			}
+			if(objLeft){
+				z -= 1*dt;
+			}
+			if(objUp){
+				y += 1*dt;
+			}
+			if(objDown){
+				y -= 1*dt;
+			}
+			if(objFront){
+				x += 1*dt;
+			}
+			if(objBack){
+				x -= 1*dt;
+			}
+			if(object instanceof Sphere) {
+				((Sphere)object).setPosition(new float[]{(float)object.getPosition()[0] + x, (float)object.getPosition()[1] + y, (float)object.getPosition()[2] + z});
+			} else if (object instanceof Polyhedron) {
+				((Polyhedron)object).translatePolyhedronOver(new double[]{(double)x, (double)y, (double)z});
+			}
 		}
-		if(rotateDown){
-			rotateX +=10*dt;
-		}
-		if(rotateRight){
-			rotateY += 10*dt;
-		}
-		if(rotateLeft){
-			rotateY -= 10*dt;
-		}
-		if(rotateZ1){
-			rotateZ += 10*dt;
-		}
-		if(rotateZ2){
-			rotateZ -= 10*dt;
-		}
-		
 	}
 
 	public void setX(double x) {
@@ -126,18 +135,6 @@ public class KeyboardMovement implements KeyListener{
 		this.z = z;
 	}
 
-	public float getRotateX(){
-		return rotateX;
-	}
-
-	public float getRotateY(){
-		return rotateY;
-	}
-
-	public float getRotateZ(){
-		return rotateZ;
-	}
-
 	public double getX() {
 		return x;
 	}
@@ -148,6 +145,10 @@ public class KeyboardMovement implements KeyListener{
 
 	public double getZ() {
 		return z;
+	}
+	
+	public void setObject(WorldObject object){
+		this.object = object;
 	}
 
 }
