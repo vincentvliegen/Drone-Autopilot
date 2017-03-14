@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import DroneAutopilot.calculations.PhysicsCalculations;
 import DroneAutopilot.calculations.PolyhedraCalculations;
+import DroneAutopilot.calculations.VectorCalculations;
 import p_en_o_cw_2016.Drone;
 
 public class NewWorldScan {
@@ -27,9 +28,9 @@ public class NewWorldScan {
 		if(this.getPreviousView() == null){
 			this.setPreviousView(this.getPreviousView());
 		}
-		float norm = this.norm(getViewDirection());
-		float x = (float) (norm*Math.cos(Math.toRadians(this.getCameraWidth())));
-		float z = (float) (norm*Math.sin(Math.toRadians(this.getCameraWidth())));
+		float norm = VectorCalculations.size(getViewDirection());
+		float x = (float) (norm*Math.cos(Math.toRadians(this.getCameraAngle())));
+		float z = (float) (norm*Math.sin(Math.toRadians(this.getCameraAngle())));
 		float[] newDirection = {x,getViewDirection()[1],z};
 		this.getPhysics().updateOrientation(newDirection);
 		
@@ -37,8 +38,8 @@ public class NewWorldScan {
 		if (this.degreesTurned>420){
 			 this.getPhysics().updatePosition(new float[]{0,0,0});
 		}else{
-			float inwendigProduct = this.dotProduct(this.getViewDirection(), this.getPreviousView());
-			float angle = inwendigProduct / (this.norm(this.getViewDirection())*this.norm(this.getPreviousView()));
+			float inwendigProduct = VectorCalculations.dotProduct(this.getViewDirection(), this.getPreviousView());
+			float angle = inwendigProduct / (VectorCalculations.size(this.getViewDirection())*VectorCalculations.size(this.getPreviousView()));
 			this.degreesTurned += angle;
 			this.setPreviousView(this.getViewDirection());
 		
@@ -59,23 +60,12 @@ public class NewWorldScan {
 		return false;
 	}
 	
-	private float dotProduct(float[] a, float[] b){
-		float sum = 0;
-        for (int i = 0; i < a.length; i++)
-            sum = sum + (a[i] * b[i]);
-        return sum;
-	}
-	
-	private float norm(float[] a){
-		return (float) Math.sqrt(Math.pow(a[0],2) + Math.pow(a[1], 2) + Math.pow(a[2], 2));
-	}
-	
 	
 	private float[] getViewDirection(){
 		return this.getPhysics().getDirectionOfView();
 	}
-	private int getCameraWidth(){
-		return this.getDrone().getLeftCamera().getWidth();
+	private float getCameraAngle(){
+		return this.getDrone().getLeftCamera().getHorizontalAngleOfView();
 	}
 	public boolean getFinishedScan(){
 		return this.finished;
