@@ -10,6 +10,7 @@ import javax.xml.parsers.FactoryConfigurationError;
 import DroneAutopilot.calculations.ImageCalculations;
 import DroneAutopilot.calculations.PhysicsCalculations;
 import DroneAutopilot.calculations.PolyhedraCalculations;
+import DroneAutopilot.calculations.VectorCalculations;
 import exceptions.FirstOrbNotVisibleException;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
@@ -257,7 +258,7 @@ public class ClosestOrbs {
 			float[] distances = new float[size];
 			int i = 0;
 			for (float[] coord : this.getObjectList()) {
-				distances[i] = this.getPhysicsCalculations().calculateDistanceBetweenCoords(coord,this.getClosestObject());
+				distances[i] = VectorCalculations.calculateDistanceBetweenCoords(coord,this.getClosestObject());
 				i++;
 			}
 			int index = (int) this.twoHighestValues(distances, 2, true);
@@ -315,7 +316,7 @@ public class ClosestOrbs {
 	// gedetecteerd is
 	public void updateObjectList(float[] coords) {
 		for (float[] checkcoords : this.getObjectList()) {
-			if (this.getPhysicsCalculations().calculateDistanceBetweenCoords(coords, checkcoords) >= this.getMinDistance()) {
+			if (VectorCalculations.calculateDistanceBetweenCoords(coords, checkcoords) >= this.getMinDistance()) {
 				this.getObjectList().add(coords);
 			}
 		}
