@@ -14,6 +14,7 @@ public class NewWorldScan {
 	private PolyhedraCalculations polyCalc;
 	private float degreesTurned;
 	private float[] previousView = null;
+	private boolean finished;
 
 	public NewWorldScan(Drone drone) {
 		this.setDrone(drone);
@@ -21,7 +22,8 @@ public class NewWorldScan {
 		this.setPolyCalc(new PolyhedraCalculations());
 	}
 
-	public boolean scan(){
+	public void scan(){
+		this.setFinishedScan(false);
 		if(this.getPreviousView() == null){
 			this.setPreviousView(this.getPreviousView());
 		}
@@ -33,19 +35,18 @@ public class NewWorldScan {
 		
 		//checken rond of iets gevonden
 		if (this.degreesTurned>420){
-			return false; //TODO andere beweging?
+			 this.getPhysics().updatePosition(new float[]{0,0,0});
 		}else{
 			float inwendigProduct = this.dotProduct(this.getViewDirection(), this.getPreviousView());
 			float angle = inwendigProduct / (this.norm(this.getViewDirection())*this.norm(this.getPreviousView()));
 			this.degreesTurned += angle;
 			this.setPreviousView(this.getViewDirection());
 		
-			if(this.foundTarget()){ // & vindt driehoeken -> stuur driehoeken door
+			if(this.foundTarget() && 
+					this.getPolyCalc().execute(this.getDrone().getLeftCamera(), this.getDrone().getRightCamera()).size() >= 1){
 				this.setPreviousView(null);
 				this.degreesTurned = 0;
-				return true;
-			}else{
-				return false;
+				this.setFinishedScan(true);
 			}
 		}
 	}
@@ -69,11 +70,18 @@ public class NewWorldScan {
 		return (float) Math.sqrt(Math.pow(a[0],2) + Math.pow(a[1], 2) + Math.pow(a[2], 2));
 	}
 	
+	
 	private float[] getViewDirection(){
 		return this.getPhysics().getDirectionOfView();
 	}
 	private int getCameraWidth(){
 		return this.getDrone().getLeftCamera().getWidth();
+	}
+	public boolean getFinishedScan(){
+		return this.finished;
+	}
+	private void setFinishedScan(boolean finished){
+		this.finished = finished;
 	}
 	private float[] getPreviousView(){
 		return this.previousView;
