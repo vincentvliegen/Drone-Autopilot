@@ -21,7 +21,7 @@ import simulator.physics.Movement;
 import simulator.world.World;
 import simulator.world.WorldParser;
 
-public class SimulationDrone extends WorldObject implements Drone{
+public class SimulationDrone extends WorldObject implements Drone {
 	private float pitch = 0;
 	private float roll = 0;
 	private float thrust = 0;
@@ -87,94 +87,148 @@ public class SimulationDrone extends WorldObject implements Drone{
 		gl.glBegin(GL2ES3.GL_TRIANGLES);
 		gl.glCullFace(GL.GL_BACK);
 
+		// TOP new
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				-getDroneWidth() / 2);
 
-		//TOP new
-		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				-getDroneWidth() / 2);
 
-		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);		
-		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
+		// BOTTOM new
 
-		//BOTTOM new
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				getDroneWidth() / 2);
 
-		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
 
-		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		// FRONT new
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
 
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
 
+		// BACK new
 
-		//FRONT new
-		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
 
-		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				getDroneWidth() / 2);
 
+		// LEFT new
 
-		//BACK new
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				-getDroneWidth() / 2);
 
-		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				-getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				-getDroneWidth() / 2);
 
-		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
+		// RIGHT new
 
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				getDroneWidth() / 2);
 
-		//LEFT new
-
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
-
-		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, -getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, -getDroneWidth()/2);
-
-		//RIGHT new
-
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
-
-		gl.glVertex3f(getDroneDepth()/2, getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(-getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
-		gl.glVertex3f(getDroneDepth()/2, -getDroneHeight()/2, getDroneWidth()/2);
-
-
-
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
+				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
+				getDroneWidth() / 2);
 
 		gl.glEnd();
 		gl.glPopMatrix();// undo rotation
-		
-		gl.glDisable(GL.GL_CULL_FACE);
 
+		gl.glDisable(GL.GL_CULL_FACE);
 
 	}
 
-
 	public void createRotateMatrix() {
 		this.getRotateMatrix().clear();
-		this.getRotateMatrix().add((Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
-		this.getRotateMatrix().add((Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))+Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))));
-		this.getRotateMatrix().add((-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))));
-		
-		this.getRotateMatrix().add((-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))));
-		this.getRotateMatrix().add((Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll))));
+		this.getRotateMatrix()
+				.add((Math.cos(Math.toRadians(roll))
+						* Math.cos(Math.toRadians(yaw)) - Math.sin(Math
+						.toRadians(pitch))
+						* Math.sin(Math.toRadians(roll))
+						* Math.sin(Math.toRadians(yaw))));
+		this.getRotateMatrix()
+				.add((Math.cos(Math.toRadians(yaw))
+						* Math.sin(Math.toRadians(roll)) + Math.cos(Math
+						.toRadians(roll))
+						* Math.sin(Math.toRadians(pitch))
+						* Math.sin(Math.toRadians(yaw))));
+		this.getRotateMatrix().add(
+				(-Math.cos(Math.toRadians(pitch)) * Math.sin(Math
+						.toRadians(yaw))));
+
+		this.getRotateMatrix().add(
+				(-Math.cos(Math.toRadians(pitch)) * Math.sin(Math
+						.toRadians(roll))));
+		this.getRotateMatrix().add(
+				(Math.cos(Math.toRadians(pitch)) * Math.cos(Math
+						.toRadians(roll))));
 		this.getRotateMatrix().add((Math.sin(Math.toRadians(pitch))));
-		
-		this.getRotateMatrix().add((Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))+Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))));
-		this.getRotateMatrix().add((Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))));
-		this.getRotateMatrix().add((Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))));
+
+		this.getRotateMatrix()
+				.add((Math.cos(Math.toRadians(roll))
+						* Math.sin(Math.toRadians(yaw)) + Math.cos(Math
+						.toRadians(yaw))
+						* Math.sin(Math.toRadians(pitch))
+						* Math.sin(Math.toRadians(roll))));
+		this.getRotateMatrix()
+				.add((Math.sin(Math.toRadians(roll))
+						* Math.sin(Math.toRadians(yaw)) - Math.cos(Math
+						.toRadians(roll))
+						* Math.cos(Math.toRadians(yaw))
+						* Math.sin(Math.toRadians(pitch))));
+		this.getRotateMatrix()
+				.add((Math.cos(Math.toRadians(pitch)) * Math.cos(Math
+						.toRadians(yaw))));
 	}
 
 	// TODO afmetingen (voor collision detection)
@@ -235,17 +289,17 @@ public class SimulationDrone extends WorldObject implements Drone{
 		this.roll += getWorld().getWindRotationX() * timePassed;
 		this.pitch -= getWorld().getWindRotationZ() * timePassed;
 		/*
-		System.out.println("--------------");
-		System.out.println("global pitch " + this.pitch);
-		System.out.println("global yaw " + this.yaw);
-		System.out.println("global roll " + this.roll);
-		System.out.println("current pitch " + getPitch());
-		System.out.println("current roll " + getRoll());
-		System.out.println("pitchRate " + this.pitchRate);
-		System.out.println("yawRate " + this.yawRate);
-		System.out.println("rollRate " + this.rollRate);
-		System.out.println("--------------");
-		*/
+		 * System.out.println("--------------");
+		 * System.out.println("global pitch " + this.pitch);
+		 * System.out.println("global yaw " + this.yaw);
+		 * System.out.println("global roll " + this.roll);
+		 * System.out.println("current pitch " + getPitch());
+		 * System.out.println("current roll " + getRoll());
+		 * System.out.println("pitchRate " + this.pitchRate);
+		 * System.out.println("yawRate " + this.yawRate);
+		 * System.out.println("rollRate " + this.rollRate);
+		 * System.out.println("--------------");
+		 */
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
 		getMiddleCamera().updateDroneCamera();
@@ -264,17 +318,37 @@ public class SimulationDrone extends WorldObject implements Drone{
 
 	private void createInverseRotate() {
 		inverseRotateMatrix.clear();
-		inverseRotateMatrix.add((Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
-		inverseRotateMatrix.add((-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))));
-		inverseRotateMatrix.add( (Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))+Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))));
+		inverseRotateMatrix.add((Math.cos(Math.toRadians(roll))
+				* Math.cos(Math.toRadians(yaw)) - Math.sin(Math
+				.toRadians(pitch))
+				* Math.sin(Math.toRadians(roll))
+				* Math.sin(Math.toRadians(yaw))));
+		inverseRotateMatrix.add((-Math.cos(Math.toRadians(pitch)) * Math
+				.sin(Math.toRadians(roll))));
+		inverseRotateMatrix.add((Math.cos(Math.toRadians(roll))
+				* Math.sin(Math.toRadians(yaw)) + Math.cos(Math.toRadians(yaw))
+				* Math.sin(Math.toRadians(pitch))
+				* Math.sin(Math.toRadians(roll))));
 
-		inverseRotateMatrix.add((Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))+Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))));
-		inverseRotateMatrix.add((Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll))));
-		inverseRotateMatrix.add((Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))));
+		inverseRotateMatrix.add((Math.cos(Math.toRadians(yaw))
+				* Math.sin(Math.toRadians(roll)) + Math.cos(Math
+				.toRadians(roll))
+				* Math.sin(Math.toRadians(pitch))
+				* Math.sin(Math.toRadians(yaw))));
+		inverseRotateMatrix.add((Math.cos(Math.toRadians(pitch)) * Math
+				.cos(Math.toRadians(roll))));
+		inverseRotateMatrix
+				.add((Math.sin(Math.toRadians(roll))
+						* Math.sin(Math.toRadians(yaw)) - Math.cos(Math
+						.toRadians(roll))
+						* Math.cos(Math.toRadians(yaw))
+						* Math.sin(Math.toRadians(pitch))));
 
-		inverseRotateMatrix.add((-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))));
+		inverseRotateMatrix.add((-Math.cos(Math.toRadians(pitch)) * Math
+				.sin(Math.toRadians(yaw))));
 		inverseRotateMatrix.add((Math.sin(Math.toRadians(pitch))));
-		inverseRotateMatrix.add((Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))));
+		inverseRotateMatrix.add((Math.cos(Math.toRadians(pitch)) * Math
+				.cos(Math.toRadians(yaw))));
 	}
 
 	private void generateDroneCameras() {
@@ -334,7 +408,10 @@ public class SimulationDrone extends WorldObject implements Drone{
 	}
 
 	public void setThrust(float value) {
-		if (value > getMaxThrust())
+		if (value != value) {
+			throw new IllegalArgumentException("NaN thrust????");
+		}
+		else if (value > getMaxThrust())
 			this.thrust = getMaxThrust();
 		else
 			this.thrust = value;
@@ -342,7 +419,10 @@ public class SimulationDrone extends WorldObject implements Drone{
 
 	@Override
 	public void setPitchRate(float value) {
-		if (Math.abs(value) > getMaxPitchRate())
+		if (value != value) {
+			throw new IllegalArgumentException("NaN pitchrate????");
+		}
+		else if (Math.abs(value) > getMaxPitchRate())
 			this.pitchRate = getMaxPitchRate() * Math.signum(value);
 		else
 			this.pitchRate = value;
@@ -350,7 +430,10 @@ public class SimulationDrone extends WorldObject implements Drone{
 
 	@Override
 	public void setRollRate(float value) {
-		if (Math.abs(value) > getMaxRollRate())
+		if (value != value) {
+			throw new IllegalArgumentException("NaN rollrate????");
+		}
+		else if (Math.abs(value) > getMaxRollRate())
 			this.rollRate = getMaxRollRate() * Math.signum(value);
 		else
 			this.rollRate = value;
@@ -358,7 +441,10 @@ public class SimulationDrone extends WorldObject implements Drone{
 
 	@Override
 	public void setYawRate(float value) {
-		if (Math.abs(value) > getMaxYawRate())
+		if (value != value) {
+			throw new IllegalArgumentException("NaN yawrate????");
+		}
+		else if (Math.abs(value) > getMaxYawRate())
 			this.yawRate = getMaxYawRate() * Math.signum(value);
 		else
 			this.yawRate = value;
@@ -480,11 +566,13 @@ public class SimulationDrone extends WorldObject implements Drone{
 	}
 
 	public float getPitch() {
-		return (float) (this.pitch*Math.cos(Math.toRadians(yaw)) + this.roll*Math.sin(Math.toRadians(yaw)));
+		return (float) (this.pitch * Math.cos(Math.toRadians(yaw)) + this.roll
+				* Math.sin(Math.toRadians(yaw)));
 	}
 
 	public float getRoll() {
-		return (float) (this.roll*Math.cos(Math.toRadians(yaw)) - this.pitch*Math.sin(Math.toRadians(yaw)));
+		return (float) (this.roll * Math.cos(Math.toRadians(yaw)) - this.pitch
+				* Math.sin(Math.toRadians(yaw)));
 	}
 
 	public float getYaw() {
@@ -503,33 +591,36 @@ public class SimulationDrone extends WorldObject implements Drone{
 		return middleCamera;
 	}
 
-	//TODO Dit aanpassen, wanneer de juiste representatie van de camera er is!
+	// TODO Dit aanpassen, wanneer de juiste representatie van de camera er is!
 	@Override
-	public float getX() {		
-//		float xCo = (getLeftDroneCamera().getEyeX() + getRightDroneCamera().getEyeX())/2;
-//		return xCo;
+	public float getX() {
+		// float xCo = (getLeftDroneCamera().getEyeX() +
+		// getRightDroneCamera().getEyeX())/2;
+		// return xCo;
 		return (float) this.getMovement().getCurrentPosition()[0];
 	}
 
 	@Override
 	public float getY() {
-//		float yCo = (getLeftDroneCamera().getEyeY() + getRightDroneCamera().getEyeY())/2;
-//		return yCo;
+		// float yCo = (getLeftDroneCamera().getEyeY() +
+		// getRightDroneCamera().getEyeY())/2;
+		// return yCo;
 		return (float) this.getMovement().getCurrentPosition()[1];
 	}
 
 	@Override
 	public float getZ() {
-//		float zCo = (getLeftDroneCamera().getEyeZ() + getRightDroneCamera().getEyeZ())/2;
-//		return zCo;
+		// float zCo = (getLeftDroneCamera().getEyeZ() +
+		// getRightDroneCamera().getEyeZ())/2;
+		// return zCo;
 		return (float) this.getMovement().getCurrentPosition()[2];
 	}
 
 	@Override
 	public float getHeading() {
-		float newYaw = 90-yaw; 
-		if (Math.abs(newYaw) > 180) 
-			newYaw-=Math.signum(newYaw)*360;
+		float newYaw = 90 - yaw;
+		if (Math.abs(newYaw) > 180)
+			newYaw -= Math.signum(newYaw) * 360;
 		return newYaw;
 	}
 }

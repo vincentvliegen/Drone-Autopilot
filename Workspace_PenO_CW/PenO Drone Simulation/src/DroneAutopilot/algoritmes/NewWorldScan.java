@@ -15,7 +15,10 @@ public class NewWorldScan {
 	private PolyhedraCalculations polyCalc;
 	private float degreesTurned;
 	private float[] previousView = null;
+	
 	private boolean finished;
+	private float[] newDirectionView;
+	private HashMap<float[],ArrayList<float[]>> colorAndCogs;
 
 	public NewWorldScan(Drone drone) {
 		this.setDrone(drone);
@@ -28,9 +31,9 @@ public class NewWorldScan {
 		if(this.getPreviousView() == null){
 			this.setPreviousView(this.getPreviousView());
 		}
-		float norm = VectorCalculations.size(getViewDirection());
-		float x = (float) (norm*Math.cos(Math.toRadians(this.getCameraAngle())));
-		float z = (float) (norm*Math.sin(Math.toRadians(this.getCameraAngle())));
+		float norm = VectorCalculations.size(getViewDirection());//TODO correcte berekening
+		float x = (float) (norm*Math.cos(Math.toRadians(this.getCameraAngle()/2)));
+		float z = (float) (norm*Math.sin(Math.toRadians(this.getCameraAngle()/2)));
 		float[] newDirection = {x,getViewDirection()[1],z};
 		this.getPhysics().updateOrientation(newDirection);
 		
@@ -96,6 +99,30 @@ public class NewWorldScan {
 	}
 	private void setDrone(Drone drone) {
 		this.drone = drone;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public float[] getNewDirectionView() {
+		return newDirectionView;
+	}
+
+	public void setNewDirectionView(float[] newDirectionView) {
+		this.newDirectionView = newDirectionView;
+	}
+
+	public HashMap<float[], ArrayList<float[]>> getColorAndCogs() {
+		return colorAndCogs;
+	}
+
+	public void setColorAndCogs(HashMap<float[], ArrayList<float[]>> colorAndCogs) {
+		this.colorAndCogs = colorAndCogs;
 	}
 
 }

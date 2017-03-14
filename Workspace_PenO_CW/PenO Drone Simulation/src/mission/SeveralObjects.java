@@ -3,7 +3,7 @@ package mission;
 
 import DroneAutopilot.MoveToTarget;
 import DroneAutopilot.algoritmes.ClosestOrbs;
-import DroneAutopilot.algoritmes.WorldScan;
+import DroneAutopilot.algoritmes.NewWorldScan;
 import DroneAutopilot.calculations.VectorCalculations;
 import p_en_o_cw_2016.Drone;
 
@@ -20,35 +20,35 @@ public class SeveralObjects extends Mission {
 															// is 0.5
 	private final static float factorD = 2;
 
-	private final WorldScan worldScan;
+	private final NewWorldScan scan;
 	private int targetLostCounter = 0;
 	private float[] currentTarget = null;
 	private float inFrontFactor;
 
 	public SeveralObjects(MoveToTarget moveToTarget, Drone drone) {
 		super(moveToTarget, drone);
-		this.closestObjects = new ClosestOrbs(this.getDrone());
-		this.worldScan = new WorldScan(drone);
+		this.closestObjects = new ClosestOrbs(drone);
+		this.scan = new NewWorldScan(drone);
 		setRefreshCounter(0);
 		setFirstTime(true);
 	}
 
 	@Override
 	public void execute() {
-		if (!this.getWorldScan().getFinished()) {// als de scanner nog geen
+		if (!this.getScan().getFinishedScan()) {// als de scanner nog geen
 													// object heeft gevonden,
 													// blijf zoeken
-			this.getWorldScan().scan(this.getDrone());
+			this.getScan().scan();
 			this.setFirstTime(true);
 			this.setRefreshCounter(0);
 		} else { // als de scanner gedaan heeft met zoeken:
-			if (this.getMoveToTarget().isTargetLost()) {
-				this.setTargetLostCounter(this.getTargetLostCounter() + 1);
-				if (this.getTargetLostCounter() >= 20) {
-					this.setClosestObjectAcquired(false);
-					this.setTargetLostCounter(0);
-				}
-			}
+//			if (this.getMoveToTarget().isTargetLost()) {
+//				this.setTargetLostCounter(this.getTargetLostCounter() + 1);
+//				if (this.getTargetLostCounter() >= 20) {
+//					this.setClosestObjectAcquired(false);
+//					this.setTargetLostCounter(0);
+//				}
+//			}
 			// BEREKENING OBJECTS
 			if (isFirstTime()) {
 				firstTimeSinceScan();
@@ -65,7 +65,7 @@ public class SeveralObjects extends Mission {
 																													// liggen
 				refreshWhenFlying();
 			}
-			if (!isFirstTime()) {
+			else {
 				float distance = this.getClosestObjects().getPhysicsCalculations()
 						.getDistanceToPosition(this.getClosestObjects().getClosestObject());
 
@@ -82,22 +82,22 @@ public class SeveralObjects extends Mission {
 				}
 				this.setRefreshCounter(this.getRefreshCounter() + 1);
 
-				if (this.getClosestObjects().getPhysicsCalculations()
-						.getSpeedTowardsPosition(this.getCurrentTarget()) < 0) {
+				this.getClosestObjects().getPhysicsCalculations().updatePosition(this.getCurrentTarget());
+				////
+				/*
+				if (this.getClosestObjects().getPhysicsCalculations().getSpeedTowardsPosition(this.getCurrentTarget()) < 0) {
 					System.out.println("SPEED < 0");
-					this.getClosestObjects().getPhysicsCalculations().updateMovement(this.getCurrentTarget(),
-							this.determineAcceleration(1));
+					this.getClosestObjects().getPhysicsCalculations().updateMovement(this.getCurrentTarget(),this.determineAcceleration(1));
 				}
-				if (this.getClosestObjects().getPhysicsCalculations()
-						.getDistanceToPosition(this.getCurrentTarget()) <= this.getClosestObjects()
-								.getPhysicsCalculations().getSpeedTowardsPosition(this.getCurrentTarget())
-								* this.getInFrontFactor()) {
+				if (this.getClosestObjects().getPhysicsCalculations().getDistanceToPosition(this.getCurrentTarget()) <= this.getClosestObjects().getPhysicsCalculations().getSpeedTowardsPosition(this.getCurrentTarget())* this.getInFrontFactor()) {
 					System.out.println("DISTANCE < SPEED*factor");
-					this.getClosestObjects().getPhysicsCalculations().updateMovement(this.getCurrentTarget(),
-							this.determineAcceleration(0));
+					this.getClosestObjects().getPhysicsCalculations().updateMovement(this.getCurrentTarget(),this.determineAcceleration(0));
 				}
+				*/
+				//////
+				
 			} else {// begin opnieuw te zoeken naar dichtste object
-				this.getWorldScan().scan(this.getDrone());
+				this.getScan().scan();
 				setFirstTime(true);
 			}
 			/*
@@ -108,7 +108,10 @@ public class SeveralObjects extends Mission {
 			 */
 		}
 	}
+	
 
+
+/*
 	public float determineAcceleration(int x) {
 		if (this.getClosestObjects().getPhysicsCalculations()
 				.getDistanceToPosition(this.getCurrentTarget()) <= getFactord()) {
@@ -121,10 +124,10 @@ public class SeveralObjects extends Mission {
 					.getMaxAccelerationValues(this.getCurrentTarget())[x];
 		}
 	}
-
+*/
+	
 	public void firstTimeSinceScan() {
-		// TODO functie die coordinaten van alle gezien objecten toevoegd met
-		// updateObjectList // bepaal alle objects in zicht
+		this.getClosestObjects().addVisibleObjects();
 		try {
 			this.getClosestObjects().determineClosestObject();
 			this.setClosestObjectAcquired(true);
@@ -139,7 +142,11 @@ public class SeveralObjects extends Mission {
 			this.setSecondObjectAcquired(false);
 		}
 	}
-
+/*
+ * - Reset refresh counter
+ * - Voegt coordinaten zichtbare polyhedra toe
+ * - Kies dichtstbijzijnde coordinaat als nieuw target
+ */
 	public void refreshWhenFlying() {
 		this.setRefreshCounter(0);
 		this.getClosestObjects().addVisibleObjects();
@@ -185,6 +192,9 @@ public class SeveralObjects extends Mission {
 	}
 
 	public void ArrivedAtTarget() {
+		//oude target verwijderen
+		this.getClosestObjects().getObjectList().remove(this.getCurrentTarget());
+		//nieuw target selecteren
 		if (isSecondObjectAcquired()) {
 			this.getClosestObjects().setClosestObject(this.getClosestObjects().getSecondObject());
 			setClosestObjectAcquired(true);
@@ -267,22 +277,15 @@ public class SeveralObjects extends Mission {
 	}
 
 	public void setInFrontFactor(boolean inFront) {
-		if (inFront) {
 			this.inFrontFactor = (float) 0.5; // TODO factor bepalen
-		} else {
-			this.inFrontFactor = (float) 0.7;
-		} // TODO factor bepalen
 	}
 
-	// TODO afhankelijk van missie factor instellen
 	public float getInFrontFactor() {
 		return inFrontFactor;
 	}
 
-	/**
-	 * @return the worldScan
-	 */
-	public final WorldScan getWorldScan() {
-		return worldScan;
+	public NewWorldScan getScan() {
+		return scan;
 	}
+
 }

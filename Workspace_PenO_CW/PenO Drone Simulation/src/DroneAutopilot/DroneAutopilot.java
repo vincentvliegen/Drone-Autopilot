@@ -1,36 +1,35 @@
 package DroneAutopilot;
 
-import DroneAutopilot.algoritmes.ClosestOrbs;
+import DroneAutopilot.GUI.GUI;
+import DroneAutopilot.calculations.PhysicsCalculations;
 import mission.*;
 import p_en_o_cw_2016.Autopilot;
 import p_en_o_cw_2016.Drone;
 
 public class DroneAutopilot implements Autopilot {
-	private final int RED = 16711680;
 
 	/**
 	 * Variable registering the drone linked to the Autopilot.
 	 */
-	private Drone drone;
-
-	/**
-	 * An object of the class MoveToTarget.
-	 */
-	private final MoveToTarget moveToTarget;
-	private final ClosestOrbs closestOrbs;
-	private Mission oneSphere;
-	private Mission severalSpheres;
-	private Mission severalObjects;
-	private Mission hover;
+	private final Drone drone;
+	private final PhysicsCalculations physicsCalculations;//deze mag niet verschillen tussen de missies, omdat de snelheid/positie/wind elk frame moet worden geupdate
+	private final GUI GUI;
+	
+	//private final Mission oneSphere;
+	//private final Mission severalSpheres;
+//	private final Mission severalObjects;
+	private final Mission hover;
+	
+	private final static int RED = 16711680;
 
 	public DroneAutopilot(Drone drone) {
-		this.setDrone(drone);
-		this.moveToTarget = new MoveToTarget(drone);
-		this.closestOrbs = new ClosestOrbs(drone);
-		this.oneSphere = new OneSphere(this.getMoveToTarget(), this.getDrone(), RED);
-		this.severalSpheres = new SeveralSpheres(this.getMoveToTarget(), this.getDrone());
-		this.severalObjects = new SeveralObjects(this.getMoveToTarget(),this.getDrone());
-		this.hover = new Hover(this.getMoveToTarget(), this.getDrone());
+		this.drone = drone;
+		this.physicsCalculations = new PhysicsCalculations(getDrone());
+		this.GUI = new GUI();
+		//this.oneSphere = new OneSphere(this);//TODO execute
+		//this.severalSpheres = new SeveralSpheres(this);//TODO execute + updateGUI
+		//this.severalObjects = new SeveralObjects(this);//TODO execute + updateGUI
+		this.hover = new Hover(this);//TODO updateGUI
 	}
 
 	/**
@@ -44,45 +43,60 @@ public class DroneAutopilot implements Autopilot {
 	 */
 	@Override
 	public void timeHasPassed() {
-		if (this.getMoveToTarget().getGUI().lastOrbEnabled) {
-			oneSphere.execute();
-		} else if (this.getMoveToTarget().getGUI().flyShortest) {
-			severalSpheres.execute();
-		} else if (this.getMoveToTarget().getGUI().flyPoly) {
-			severalObjects.execute();
-		} else if (this.getMoveToTarget().getGUI().test) {
+		//Moet altijd gebeuren
+		getPhysicsCalculations().updateDroneData();
+		
+		if (getGUI().lastOrbEnabled) {
+			//getOneSphere().execute();
+		} else if (getGUI().flyShortest) {
+			//getSeveralSpheres().execute();
+//		} else if (getGUI().flyPoly) {
+//			getSeveralObjects().execute();
+		} else if (getGUI().test) {
 			System.out.println("test");
 		} else {
-			hover.execute();
+			getHover().execute();
 		}
 	}
 
-	/**
-	 * Set the drone, linked to this Autopilot, to the given drone.
-	 * 
-	 * @param drone
-	 *            | the drone linked to the Autopilot.
-	 */
-	public final void setDrone(Drone drone) {
-		this.drone = drone;
-	}
-
+	
+	//////////GETTERS & SETTERS//////////
+	
 	/**
 	 * Return the drone linked to the Autopilot.
 	 */
-	public final Drone getDrone() {
+	public Drone getDrone() {
 		return this.drone;
 	}
 
-	/**
-	 * Return an object of the class MoveToTarget, which will execute the
-	 * movements of the drone.
-	 */
-	public final MoveToTarget getMoveToTarget() {
-		return this.moveToTarget;
+
+	public PhysicsCalculations getPhysicsCalculations() {
+		return physicsCalculations;
 	}
 
-	public ClosestOrbs getShortestPath() {
-		return closestOrbs;
+//	public Mission getOneSphere() {
+//		return oneSphere;
+//	}
+//
+//	public Mission getSeveralSpheres() {
+//		return severalSpheres;
+//	}
+
+//	public Mission getSeveralObjects() {
+//		return severalObjects;
+//	}
+
+	public Mission getHover() {
+		return hover;
 	}
+
+	public static int getRed() {
+		return RED;
+	}
+
+	public GUI getGUI() {
+		return GUI;
+	}
+
+
 }

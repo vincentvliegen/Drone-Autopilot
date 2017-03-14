@@ -27,6 +27,7 @@ import simulator.objects.WorldObject;
 import simulator.parser.Parser;
 import simulator.parser.Parser_v1;
 import simulator.physics.Collision;
+import simulator.physics.MathCalculations;
 import simulator.physics.Physics;
 
 @SuppressWarnings("serial")
@@ -543,11 +544,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 				(worldCoordFar[1] - worldCoordNear[1]) / 10000,
 				(worldCoordFar[2] - worldCoordNear[2]) / 10000 };		
 		
-		boolean objectChanged = false;
 		double maxDistance = Double.MAX_VALUE;
-		double[] changeLocation = new double[3];
-		double[] changeLocationSphere = new double[3];
-		WorldObject changeObject = null;
 		for (int i = 0; i < 10000; i++) {
 			worldCoordNear[0] += vector[0];
 			worldCoordNear[1] += vector[1];
@@ -555,36 +552,17 @@ public abstract class World extends GLCanvas implements GLEventListener {
 			for (WorldObject object : getWorldObjectList()) {
 				if (object instanceof SimulationDrone)
 					continue;
-				double distance = calculateDistance(object.getPosition(),
+				double distance = MathCalculations.getDistanceBetweenPoints(object.getPosition(),
 						worldCoordNear);
 				if (distance <= 1) {
 					if (distance <= maxDistance) {
-						changeLocation = new double[]{worldCoordNear[0]-object.getPosition()[0], worldCoordNear[1]-object.getPosition()[1], worldCoordNear[2]-object.getPosition()[2]};
-						changeLocationSphere = new double[]{worldCoordNear[0], worldCoordNear[1], worldCoordNear[2]};
 						maxDistance = distance;
-						changeObject = object;
+						getMovement().setObject(object);
 					}
 				}
-				if (distance > maxDistance)
-					objectChanged = true;
-			}
-		}
-
-		if (objectChanged) {
-			if (changeObject instanceof Polyhedron)
-				((Polyhedron)changeObject).translatePolyhedronOver(changeLocation);
-			else if (changeObject instanceof Sphere) {
-				float[] newChange = {(float)changeLocationSphere[0], (float)changeLocationSphere[1], (float) changeLocationSphere[2]};
-				((Sphere)changeObject).setPosition(newChange);
 			}
 		}
 		getEditor().completedMouseCheck();
-	}
-
-	private static double calculateDistance(double[] vector1, double[] vector2) {
-		return Math.sqrt(Math.pow(vector1[0] - vector2[0], 2)
-				+ Math.pow(vector1[1] - vector2[1], 2)
-				+ Math.pow(vector1[2] - vector2[2], 2));
 	}
 
 	public Collision getCollision() {
