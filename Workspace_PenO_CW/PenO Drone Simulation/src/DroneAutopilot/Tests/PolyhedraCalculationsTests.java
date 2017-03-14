@@ -118,11 +118,18 @@ public class PolyhedraCalculationsTests {
 		}
 	
 	@Test
-	public void testimage() throws IOException {
+	public void testAllCOGs() throws IOException {
 		createImage();
 //		polyhedraCalc.execute(camera1);
 //		polyhedraCalc.execute(camera2);
-		polyhedraCalc.execute(camera3, camera3b);
+		assertEquals(polyhedraCalc.findAllCOGs(camera3, camera3b).size(),6);
+	}
+	
+	@Test
+	public void testAllCorners() throws IOException{
+		createImage();
+		polyhedraCalc.getMatchingCorners(camera3, camera3b);
+		
 	}
 	
 	@Test
