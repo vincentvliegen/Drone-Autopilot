@@ -16,6 +16,7 @@ public class HourglassPolyhedron extends PredefinedPolyhedron {
 	static double[] point9 = { 0.25, -0.25, -0.25};
 	
 	static double[][] vertices = new double[][]{point1,point2,point3,point4,point5,point6,point7,point8,point9};
+	static int[][] faces = new int[][]{{0,2,1},{0,1,3},{4,3,1},{1,2,4},{3,2,0},{4,2,3},{2,5,6},{2,6,7},{2,5,6},{2,8,5},{2,7,8},{6,5,7},{7,8,5}};
 
 	public HourglassPolyhedron(World world, PolyhedronType type, double[] position) {
 		super(world, type, position, vertices);
@@ -23,18 +24,15 @@ public class HourglassPolyhedron extends PredefinedPolyhedron {
 
 	@Override
 	protected void defineTriangles() {
-		addTriangleWithRandomColor(point1, point3, point2);
-		addTriangleWithRandomColor(point1, point2, point4);
-		addTriangleWithRandomColor(point5, point4, point2);
-		addTriangleWithRandomColor(point2, point3, point5);
-		addTriangleWithRandomColor(point4, point3, point1);
-		addTriangleWithRandomColor(point5, point3, point4);
-		addTriangleWithRandomColor(point3, point6, point7);
-		addTriangleWithRandomColor(point3, point7, point8);
-		addTriangleWithRandomColor(point3, point9, point6);
-		addTriangleWithRandomColor(point3, point8, point9);
-		addTriangleWithRandomColor(point7, point6, point8);
-		addTriangleWithRandomColor(point8, point9, point6);
+		for (int[] point: getFaces())
+			addTriangleWithRandomColor(vertices[point[0]], vertices[point[1]], vertices[point[2]]);
 	}
 
+	public static int[][] getFaces(){
+		return faces;
+	}
+	
+	public static double[][] getPoints() {
+		return vertices;
+	}
 }

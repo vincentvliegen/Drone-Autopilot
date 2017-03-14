@@ -18,7 +18,10 @@ public class ThreePeaks extends PredefinedPolyhedron {
 	static double[] point11 = {0, 0.5, -1}; // left middle
 	
 	static double[][] vertices = new double[][]{point1,point2,point3,point4,point5,point6,point7,point8,point9,point10,point11};
-	
+	static int[][] faces = new int[][]{
+		{0,3,2},{0,1,3},{0,2,5},{0,5,4},{1,7,3},{1,6,7},{0,1,8},{1,3,8},{3,2,8},{2,0,8},
+		{4,0,10},{0,2,10},{2,5,10},{5,4,10},{1,6,9},{6,7,9},{7,3,9},{3,1,9}
+	};
 	
 	public ThreePeaks(World world, PolyhedronType type, double[] position) {
 		super(world, type, position, vertices);
@@ -27,6 +30,7 @@ public class ThreePeaks extends PredefinedPolyhedron {
 
 	@Override
 	protected void defineTriangles() {
+		/*
 		addTriangleWithRandomColor(point1, point4, point3);
 		addTriangleWithRandomColor(point1, point2, point4);
 		addTriangleWithRandomColor(point1, point3, point6);
@@ -37,6 +41,7 @@ public class ThreePeaks extends PredefinedPolyhedron {
 		addTriangleWithRandomColor(point2, point4, point9);
 		addTriangleWithRandomColor(point4, point3, point9);
 		addTriangleWithRandomColor(point3, point1, point9);
+		
 		addTriangleWithRandomColor(point5, point1, point11);
 		addTriangleWithRandomColor(point1, point3, point11);
 		addTriangleWithRandomColor(point3, point6, point11);
@@ -45,7 +50,16 @@ public class ThreePeaks extends PredefinedPolyhedron {
 		addTriangleWithRandomColor(point7, point8, point10);
 		addTriangleWithRandomColor(point8, point4, point10);
 		addTriangleWithRandomColor(point4, point2, point10);
-		
+		*/
+		for (int[] point: getFaces())
+			addTriangleWithRandomColor(vertices[point[0]], vertices[point[1]], vertices[point[2]]);
+	}
+	
+	public static int[][] getFaces() {
+		return faces;
 	}
 
+	public static double[][] getPoints(){
+		return vertices;
+	}
 }

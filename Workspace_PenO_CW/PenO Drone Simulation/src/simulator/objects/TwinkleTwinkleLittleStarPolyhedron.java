@@ -21,6 +21,11 @@ public class TwinkleTwinkleLittleStarPolyhedron extends PredefinedPolyhedron{
 	
 	static double[][] vertices = new double[][]{point1,point2,point3,point4,point5,point6,point7,point8,point9,
 		point10,point11,point12,point13,point14};
+	static int[][] faces = new int[][]{
+		{0,2,11},{11,2,3},{11,3,1},{0,11,1},{1,3,8},{8,3,4},{8,4,5},{1,8,5},
+		{0,1,9},{9,1,5},{6,9,5},{6,0,9},{6,7,10},{10,7,2},{0,10,2},{6,10,0},
+		{2,7,12},{12,7,4},{2,12,3},{12,4,3},{5,4,13},{13,4,7},{6,13,7},{6,5,13}
+	};
 
 	public TwinkleTwinkleLittleStarPolyhedron(World world, PolyhedronType type, double[] position) {
 		super(world, type, position, vertices);
@@ -28,36 +33,15 @@ public class TwinkleTwinkleLittleStarPolyhedron extends PredefinedPolyhedron{
 
 	@Override
 	protected void defineTriangles() {
-		// TODO Auto-generated method stub
-		addTriangleWithRandomColor(point1, point3, point12);
-		addTriangleWithRandomColor(point12, point3, point4);
-		addTriangleWithRandomColor(point12, point4, point2);
-		addTriangleWithRandomColor(point1, point12, point2);
-		
-		addTriangleWithRandomColor(point2, point4, point9);
-		addTriangleWithRandomColor(point9, point4, point5);
-		addTriangleWithRandomColor(point9, point5, point6);
-		addTriangleWithRandomColor(point2, point9, point6);
-		
-		addTriangleWithRandomColor(point1, point2, point10);
-		addTriangleWithRandomColor(point10, point2, point6);
-		addTriangleWithRandomColor(point7, point10, point6);
-		addTriangleWithRandomColor(point7, point1, point10);
-		
-		addTriangleWithRandomColor(point7, point8, point11);
-		addTriangleWithRandomColor(point11, point8, point3);
-		addTriangleWithRandomColor(point1, point11, point3);
-		addTriangleWithRandomColor(point7, point11, point1);
-		
-		addTriangleWithRandomColor(point3, point8, point13);
-		addTriangleWithRandomColor(point13, point8, point5);
-		addTriangleWithRandomColor(point3, point13, point4);
-		addTriangleWithRandomColor(point13, point5, point4);
-		
-		addTriangleWithRandomColor(point6, point5, point14);
-		addTriangleWithRandomColor(point14, point5, point8);
-		addTriangleWithRandomColor(point7, point14, point8);
-		addTriangleWithRandomColor(point7, point6, point14);
+		for (int[] point: getFaces())
+			addTriangleWithRandomColor(vertices[point[0]], vertices[point[1]], vertices[point[2]]);
 	}
 
+	public static int[][] getFaces() {
+		return faces;
+	}
+	
+	public static double[][] getPoints(){
+		return vertices;
+	}
 }

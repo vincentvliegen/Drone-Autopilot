@@ -5,10 +5,10 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.util.*;
 
+import simulator.objects.*;
 import simulator.physics.MathCalculations;
 
 public class Generator_V2 {
@@ -69,7 +69,7 @@ public class Generator_V2 {
 			int numberOfObstacles = numberOfObjects / 2;
 			int numberOfTargets = numberOfObjects - numberOfObstacles;
 			stream.writeShort(numberOfObjects);
-
+			
 			// Calculate all positions
 			List<double[]> positionList = new ArrayList<>();
 			positionList.add(new double[] { 0, 0, 0 });
@@ -112,165 +112,156 @@ public class Generator_V2 {
 
 			// create target colors
 			List<int[]> colorListRGB = new ArrayList<>();
-			for (int i = 0; i < numberOfTargets * 4; i++) {
-				int hueDegrees = r.nextInt(361);
-				float hueRadians = (float)Math.toRadians(hueDegrees);
-				float saturation = r.nextFloat() * 0.45f + 0.55f;
-				float brightness = r.nextFloat() * 0.45f + 0.55f;
-				int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
-				int[] color = new int[3];
-				color[0] = (rgb >> 16) & 0xFF;
-				color[1] = (rgb >> 8) & 0xFF;
-				color[2] = rgb & 0xFF;
-				colorListRGB.add(color);
-			}
 						
 			// Target objects
 			int currentPosIndex = 1;
 			for (int i = 0; i < numberOfTargets; i++) {
-				stream.writeShort(4);
 				float x = (float) positionList.get(currentPosIndex)[0];
 				float y = (float) positionList.get(currentPosIndex)[1];
 				float z = (float) positionList.get(currentPosIndex)[2];
 				currentPosIndex+=1;
+				int randomPoly = r.nextInt(5);
 				
-				stream.writeFloat(-0.2f + x);
-				stream.writeFloat(y);
-				stream.writeFloat(-0.2f + z);
-
-				stream.writeFloat(-0.2f + x);
-				stream.writeFloat(y);
-				stream.writeFloat(0.2f + z);
-
-				stream.writeFloat(0.2f + x);
-				stream.writeFloat(y);
-				stream.writeFloat(z);
-
-				stream.writeFloat(x);
-				stream.writeFloat(y + 0.2f);
-				stream.writeFloat(z);
-
-				stream.writeShort(4);
-
-				for (int j = 4*i; j < 4*i + 4; j++) {
-					int[] currentcolor = colorListRGB.get(j);
-					switch (j%4) {
-					case 0:
-						stream.writeShort(0);
-						stream.writeShort(1);
-						stream.writeShort(2);
-						stream.writeByte(currentcolor[0]);
-						stream.writeByte(currentcolor[1]);
-						stream.writeByte(currentcolor[2]);
-						break;
-					case 1:
-						stream.writeShort(0);
-						stream.writeShort(1);
-						stream.writeShort(3);
-						stream.writeByte(currentcolor[0]);
-						stream.writeByte(currentcolor[1]);
-						stream.writeByte(currentcolor[2]);
-						break;
-					case 2:
-						stream.writeShort(0);
-						stream.writeShort(3);
-						stream.writeShort(2);
-						stream.writeByte(currentcolor[0]);
-						stream.writeByte(currentcolor[1]);
-						stream.writeByte(currentcolor[2]);
-						break;
-					case 3:
-						stream.writeShort(1);
-						stream.writeShort(3);
-						stream.writeShort(2);
-						stream.writeByte(currentcolor[0]);
-						stream.writeByte(currentcolor[1]);
-						stream.writeByte(currentcolor[2]);
-						break;
-					}
+				int[][] faces;
+				double[][] points;
+				
+				switch(randomPoly) {
+				case 0:
+					// HollowCube
+					faces = HollowCubePolyhedron.getFaces();
+					points = HollowCubePolyhedron.getPoints();
+					break;
+				case 1:
+					// LetterL
+					faces = LetterLPolyhedron.getFaces();
+					points = LetterLPolyhedron.getPoints();
+					break;
+				case 2:
+					//SomeFigure
+					faces = SomeFigure.getFaces();
+					points = SomeFigure.getPoints();
+					break;
+				case 3:
+					//ThreePeaks
+					faces = ThreePeaks.getFaces();
+					points = ThreePeaks.getPoints();
+					break;
+				case 4:
+					//Star
+					faces = TwinkleTwinkleLittleStarPolyhedron.getFaces();
+					points = TwinkleTwinkleLittleStarPolyhedron.getPoints();
+					break;
+				default:
+					throw new IllegalArgumentException();
 				}
-
+				stream.writeShort(points.length);
+				
+				for (double[] point:points) {
+					stream.writeFloat(x + (float)point[0]);
+					stream.writeFloat(y + (float)point[1]);
+					stream.writeFloat(z + (float)point[2]);
+				}
+				
+				for (int j = 0; j < faces.length; j++) {
+					int hueDegrees = r.nextInt(361);
+					float hueRadians = (float)Math.toRadians(hueDegrees);
+					float saturation = r.nextFloat() * 0.45f + 0.55f;
+					float brightness = r.nextFloat() * 0.45f + 0.55f;
+					int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
+					int[] color = new int[3];
+					color[0] = (rgb >> 16) & 0xFF;
+					color[1] = (rgb >> 8) & 0xFF;
+					color[2] = rgb & 0xFF;
+					colorListRGB.add(color);
+				}
+				
+				stream.writeShort(faces.length);
+				for (int k = 0; k < faces.length; k++){
+					int[] currentColor = colorListRGB.get(k);
+					stream.writeShort(faces[k][0]);
+					stream.writeShort(faces[k][1]);
+					stream.writeShort(faces[k][2]);
+					stream.writeByte(currentColor[0]);
+					stream.writeByte(currentColor[1]);
+					stream.writeByte(currentColor[2]);
+				}
+				colorListRGB.clear();
 			}
 
-			colorListRGB.clear();
+			
 			// Obstacle
-			for (int i = 0; i < 4 * numberOfObstacles; i++) {
-				int hueDegrees = r.nextInt(361);
-				float hueRadians = (float)Math.toRadians(hueDegrees);
-				float saturation = r.nextFloat() * 0.45f + 0.55f;
-				float brightness = r.nextFloat() * 0.45f;
-				int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
-				int[] color = new int[3];
-				color[0] = (rgb >> 16) & 0xFF;
-				color[1] = (rgb >> 8) & 0xFF;
-				color[2] = rgb & 0xFF;
-				colorListRGB.add(color);
-			}
-
 			for (int i = 0; i < numberOfObstacles; i++) {
-				stream.writeShort(4);
 				float x = (float) positionList.get(currentPosIndex)[0];
 				float y = (float) positionList.get(currentPosIndex)[1];
 				float z = (float) positionList.get(currentPosIndex)[2];
 				currentPosIndex+=1;
-				stream.writeFloat(-0.2f + x);
-				stream.writeFloat(y);
-				stream.writeFloat(-0.2f + z);
-
-				stream.writeFloat(-0.2f + x);
-				stream.writeFloat(y);
-				stream.writeFloat(0.2f + z);
-
-				stream.writeFloat(0.2f + x);
-				stream.writeFloat(y);
-				stream.writeFloat(z);
-
-				stream.writeFloat(x);
-				stream.writeFloat(y + 0.2f);
-				stream.writeFloat(z);
-
-				stream.writeShort(4);
-
-				for (int j = 4*i; j < 4 * i + 4; j++) {
-					int[] currentcolor = colorListRGB.get(j);
-					switch (j%4) {
-					case 0:
-						stream.writeShort(0);
-						stream.writeShort(1);
-						stream.writeShort(2);
-						stream.writeByte(currentcolor[0]);
-						stream.writeByte(currentcolor[1]);
-						stream.writeByte(currentcolor[2]);
-						break;
-					case 1:
-						stream.writeShort(0);
-						stream.writeShort(1);
-						stream.writeShort(3);
-						stream.writeByte(currentcolor[0]);
-						stream.writeByte(currentcolor[1]);
-						stream.writeByte(currentcolor[2]);
-						break;
-					case 2:
-						stream.writeShort(0);
-						stream.writeShort(3);
-						stream.writeShort(2);
-						stream.writeByte(currentcolor[0]);
-						stream.writeByte(currentcolor[1]);
-						stream.writeByte(currentcolor[2]);
-						break;
-					case 3:
-						stream.writeShort(1);
-						stream.writeShort(3);
-						stream.writeShort(2);
-						stream.writeByte(currentcolor[0]);
-						stream.writeByte(currentcolor[1]);
-						stream.writeByte(currentcolor[2]);
-						break;
-					}
+				int randomPoly = r.nextInt(5);
+				
+				int[][] faces;
+				double[][] points;
+				
+				switch(randomPoly) {
+				case 0:
+					// HollowCube
+					faces = HollowCubePolyhedron.getFaces();
+					points = HollowCubePolyhedron.getPoints();
+					break;
+				case 1:
+					// LetterL
+					faces = LetterLPolyhedron.getFaces();
+					points = LetterLPolyhedron.getPoints();
+					break;
+				case 2:
+					//SomeFigure
+					faces = SomeFigure.getFaces();
+					points = SomeFigure.getPoints();
+					break;
+				case 3:
+					//ThreePeaks
+					faces = ThreePeaks.getFaces();
+					points = ThreePeaks.getPoints();
+					break;
+				case 4:
+					//Star
+					faces = TwinkleTwinkleLittleStarPolyhedron.getFaces();
+					points = TwinkleTwinkleLittleStarPolyhedron.getPoints();
+					break;
+				default:
+					throw new IllegalArgumentException();
 				}
-
+				stream.writeShort(points.length);
+				
+				for (double[] point:points) {
+					stream.writeFloat(x + (float)point[0]);
+					stream.writeFloat(y + (float)point[1]);
+					stream.writeFloat(z + (float)point[2]);
+				}
+				
+				for (int j = 0; j < faces.length; j++) {
+					int hueDegrees = r.nextInt(361);
+					float hueRadians = (float)Math.toRadians(hueDegrees);
+					float saturation = r.nextFloat() * 0.45f + 0.55f;
+					float brightness = r.nextFloat() * 0.45f;
+					int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
+					int[] color = new int[3];
+					color[0] = (rgb >> 16) & 0xFF;
+					color[1] = (rgb >> 8) & 0xFF;
+					color[2] = rgb & 0xFF;
+					colorListRGB.add(color);
+				}
+				
+				stream.writeShort(faces.length);
+				for (int k = 0; k < faces.length; k++){
+					int[] currentColor = colorListRGB.get(k);
+					stream.writeShort(faces[k][0]);
+					stream.writeShort(faces[k][1]);
+					stream.writeShort(faces[k][2]);
+					stream.writeByte(currentColor[0]);
+					stream.writeByte(currentColor[1]);
+					stream.writeByte(currentColor[2]);
+				}
+				colorListRGB.clear();
 			}
-
 			stream.close();
 		} catch (Exception e) {
 			e.printStackTrace();

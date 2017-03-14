@@ -33,6 +33,11 @@ public class HollowCubePolyhedron extends PredefinedPolyhedron {
 	static double[][] vertices = new double[][]{point1,point2,point3,point4,point5,point6,point7,point8,point9,
 		point10,point11,point12,point13,point14,point15,point16,point17,point18,point19,point20,point21,point22,
 		point23,point24};
+	static int[][] faces = new int[][]{
+	{8,17,0}, {10, 17, 8},{10,2,17},{18,2,10},{11,18,10},{3,18,11},{19,3,11},{19,11,9},{1,19,9},{1,9,16},{9,8,16},{16,8,0}, 
+	{7,15,22}, {7,23,15},{15,23,13},{23,5,13}, {13,5,20}, {13,20,12}, {12,20,4}, {21,12,4},{14,12,21},{6,14,21},{6,22,14},
+	{6,2,3},{7,6,3},{6,4,0},{2,6,0},{3,1,7},{1,5,7},{0,4,1},{1,4,5},
+	{8,9,12},{9,13,12},{10,8,12},{10,12,14},{10,14,11},{11,14,15},{15,13,9},{11,15,9}};
 	
 	public HollowCubePolyhedron(World world, PolyhedronType type, double[] position) {
 		super(world, type, position, vertices);
@@ -40,53 +45,16 @@ public class HollowCubePolyhedron extends PredefinedPolyhedron {
 
 	@Override
 	protected void defineTriangles() {
-		//voorkant
-		addTriangleWithRandomColor(point9, point18, point1);
-		addTriangleWithRandomColor(point11, point18, point9);
-		addTriangleWithRandomColor(point11, point3, point18);
-		addTriangleWithRandomColor(point19, point3, point11);
-		addTriangleWithRandomColor(point12, point19, point11);
-		addTriangleWithRandomColor(point4, point19, point12);
-		addTriangleWithRandomColor(point20, point4, point12);
-		addTriangleWithRandomColor(point20, point12, point10);
-		addTriangleWithRandomColor(point2, point20, point10);
-		addTriangleWithRandomColor(point2, point10, point17);
-		addTriangleWithRandomColor(point10, point9, point17);
-		addTriangleWithRandomColor(point17, point9, point1);
-		
-		//achterkant
-		addTriangleWithRandomColor(point8, point16, point23);
-		addTriangleWithRandomColor(point8, point24, point16);
-		addTriangleWithRandomColor(point16, point24, point14);
-		addTriangleWithRandomColor(point24, point6, point14);
-		addTriangleWithRandomColor(point14, point6, point21);
-		addTriangleWithRandomColor(point14, point21, point13);
-		addTriangleWithRandomColor(point13, point21, point5);
-		addTriangleWithRandomColor(point22, point13, point5);
-		addTriangleWithRandomColor(point15, point13, point22);
-		addTriangleWithRandomColor(point7, point15, point22);
-		addTriangleWithRandomColor(point7, point23, point15);
-		
-		//grote vlakken
-		addTriangleWithRandomColor(point7, point3, point4);
-		addTriangleWithRandomColor(point8, point7, point4);
-		addTriangleWithRandomColor(point7, point5, point1);
-		addTriangleWithRandomColor(point3, point7, point1);
-		addTriangleWithRandomColor(point4, point2, point8);
-		addTriangleWithRandomColor(point2, point6, point8);
-		addTriangleWithRandomColor(point1, point5, point2);
-		addTriangleWithRandomColor(point2, point5, point6);
-		
-		//binnenkant
-		addTriangleWithRandomColor(point9, point10, point13);
-		addTriangleWithRandomColor(point10, point14, point13);
-		addTriangleWithRandomColor(point11, point9, point13);
-		addTriangleWithRandomColor(point11, point13, point15);
-		addTriangleWithRandomColor(point11, point15, point12);
-		addTriangleWithRandomColor(point12, point15, point16);
-		addTriangleWithRandomColor(point16, point14, point10);
-		addTriangleWithRandomColor(point12, point16, point10);
-		
+		for (int[] points: getFaces())
+			addTriangleWithRandomColor(vertices[points[0]], vertices[points[1]], vertices[points[2]]);
+	}
+
+	public static int[][] getFaces() {
+		return faces;
+	}
+	
+	public static double[][] getPoints() {
+		return vertices;
 	}
 
 }
