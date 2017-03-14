@@ -458,15 +458,15 @@ public class PhysicsCalculations{
 		
 		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll
 		private void calculateRemainingAnglesToObject() throws ArithmeticException{
-			float[] thrustWanted = VectorCalculations.normalise(this.vectorWorldToDrone(this.getWantedOrientation()[0]));
-			float[] viewWanted = VectorCalculations.normalise(this.vectorWorldToDrone(this.getWantedOrientation()[1]));
+			float[] thrustWanted = VectorCalculations.normalise(this.getWantedOrientation()[0]);
+			float[] viewWanted = VectorCalculations.normalise(this.getWantedOrientation()[1]);
 			float[] inverseDroneAngles = new float[] {-this.getDrone().getHeading(), -this.getDrone().getPitch(), -this.getDrone().getRoll()};
-			float pitchWanted = (float) Math.asin(Math.toRadians(thrustWanted[2]));
-            if (pitchWanted == Math.PI){
+			float pitchWanted = (float) Math.toDegrees(Math.asin(thrustWanted[2]));
+			if (pitchWanted == Math.PI){
 				throw new ArithmeticException("pitchWanted is zero, division by zero");
 			}
-			float rollWanted = (float) -Math.acos(Math.toRadians(thrustWanted[1]/Math.cos(Math.toRadians(pitchWanted)))); 
-			float yawWanted = (float) Math.acos(Math.toRadians(-viewWanted[2]/Math.cos(Math.toRadians(pitchWanted))));
+			float rollWanted = (float) Math.toDegrees(-Math.acos(thrustWanted[1]/Math.cos(Math.toRadians(pitchWanted)))); 
+			float yawWanted = (float) Math.toDegrees(Math.acos(-viewWanted[2]/Math.cos(Math.toRadians(pitchWanted))));
 			float[] wantedDroneAngles = new float[] {yawWanted, pitchWanted, rollWanted};
 			float[] remainingAngles = VectorCalculations.sum(inverseDroneAngles, wantedDroneAngles);
 			this.setRemainingAngles(remainingAngles);
@@ -475,17 +475,24 @@ public class PhysicsCalculations{
 		//Geeft de nodige rotatieRates om in bepaalde tijd de remainingAngles te overbruggen.
 		private void calculateRotationRates(){
 			float[] remainingAngles = this.getRemainingAngles();
-			float[] maxAngleRates = new float[]{this.getDrone().getMaxYawRate(), this.getDrone().getMaxPitchRate(), this.getDrone().getMaxRollRate()};
-			//Gecorrigeerde waarde ifv de maxwindrates.
-			float[] correctedMaxAngleRates = VectorCalculations.sum(maxAngleRates, VectorCalculations.inverse(VectorCalculations.timesScalar(getMaxwindrotationrate(), this.getDeltaT())));
-			//Nodige tijd per remainingAngle => deltaT * hoekRate = hoek
-			float[] neededTime = new float[]{remainingAngles[0]/correctedMaxAngleRates[0],remainingAngles[1]/correctedMaxAngleRates[1],remainingAngles[2]/correctedMaxAngleRates[2]};
-			float maxRotateTime = Math.max(neededTime[0], Math.max(neededTime[1], neededTime[2]));
-			//Alle hoeken overbruggen in gelijke tijd (langste tijd die nodig is om bepaalde hoek te overbruggen)
-			//deltaT * hoekRate = hoek
-			this.setYawRate(remainingAngles[0]/maxRotateTime);
-			this.setPitchRate(remainingAngles[1]/maxRotateTime);
-			this.setRollRate(remainingAngles[2]/maxRotateTime);
+			if(!Arrays.equals(VectorCalculations.sum(remainingAngles, new float[] {0,0,0}),new float[] {0,0,0})){
+				float[] maxAngleRates = new float[]{this.getDrone().getMaxYawRate(), this.getDrone().getMaxPitchRate(), this.getDrone().getMaxRollRate()};
+				//Gecorrigeerde waarde ifv de maxwindrates.
+				float[] correctedMaxAngleRates = VectorCalculations.sum(maxAngleRates, VectorCalculations.inverse(VectorCalculations.timesScalar(getMaxwindrotationrate(), this.getDeltaT())));
+				//Nodige tijd per remainingAngle => deltaT * hoekRate = hoek
+				float[] neededTime = new float[]{remainingAngles[0]/correctedMaxAngleRates[0],remainingAngles[1]/correctedMaxAngleRates[1],remainingAngles[2]/correctedMaxAngleRates[2]};
+				float maxRotateTime = Math.max(Math.abs(neededTime[0]), Math.max(Math.abs(neededTime[1]), Math.abs(neededTime[2])));
+				//Alle hoeken overbruggen in gelijke tijd (langste tijd die nodig is om bepaalde hoek te overbruggen)
+				//deltaT * hoekRate = hoek
+				this.setYawRate(remainingAngles[0]/maxRotateTime);
+				this.setPitchRate(remainingAngles[1]/maxRotateTime);
+				this.setRollRate(remainingAngles[2]/maxRotateTime);
+			}else{
+				this.setYawRate(0);
+				this.setPitchRate(0);
+				this.setRollRate(0);
+			}
+			
 		}
 		
 		private void calculateExpectedPosition(){
