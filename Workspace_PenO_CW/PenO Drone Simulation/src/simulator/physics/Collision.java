@@ -84,9 +84,9 @@ public class Collision {
 	public boolean checkTrianglesForHit(WorldObject polyhedron, SimulationDrone drone) {
 		ArrayList<Triangle> trianglesList = ((Polyhedron) polyhedron).getTriangles();
 		for (Triangle currTriangle : trianglesList) {
-			double[] T1 = currTriangle.getTranslatedPoint1();
-			double[] T2 = currTriangle.getTranslatedPoint2();
-			double[] T3 = currTriangle.getTranslatedPoint3();
+			double[] T1 = currTriangle.getPoint1();
+			double[] T2 = currTriangle.getPoint2();
+			double[] T3 = currTriangle.getPoint3();
 			double[] vector12 = MathCalculations.getVector(T1, T2);
 			double[] vector13 = MathCalculations.getVector(T1, T3);
 			calculatePlane(vector13, vector12, T1);

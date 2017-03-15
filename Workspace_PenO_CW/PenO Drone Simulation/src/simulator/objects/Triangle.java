@@ -17,15 +17,12 @@ public class Triangle {
 	private int[] intColor = new int[3];
 
 	GL2 gl;
-	private double[] translatedPoint1 = new double[3];
-	private double[] translatedPoint2 = new double[3];
-	private double[] translatedPoint3 = new double[3];
 	private float[] innerColor;
 
 	public Triangle(GL2 gl, double[] point12, double[] point22, double[] point32, int[] color) {
-		this.point1 = point12;
-		this.point2 = point22;
-		this.point3 = point32;
+		this.point1 = new double[]{point12[0],point12[1],point12[2]};
+		this.point2 = new double[]{point22[0],point22[1],point22[2]};
+		this.point3 = new double[]{point32[0],point32[1],point32[2]};
 		this.gl = gl;
 		this.color[0] = color[0]/255f;
 		this.color[1] = color[1]/255f;
@@ -61,17 +58,17 @@ public class Triangle {
 	}
 
 	private double getGravityX() {
-		return (getTranslatedPoint1()[0] + getTranslatedPoint2()[0] + getTranslatedPoint3()[0]) / 3;
+		return (getPoint1()[0] + getPoint2()[0] + getPoint3()[0]) / 3;
 
 	}
 
 	private double getGravityY() {
-		return (getTranslatedPoint1()[1] + getTranslatedPoint2()[1] + getTranslatedPoint3()[1]) / 3;
+		return (getPoint1()[1] + getPoint2()[1] + getPoint3()[1]) / 3;
 
 	}
 
 	private double getGravityZ() {
-		return (getTranslatedPoint1()[2] + getTranslatedPoint2()[2] + getTranslatedPoint3()[2]) / 3;
+		return (getPoint1()[2] + getPoint2()[2] + getPoint3()[2]) / 3;
 
 	}
 
@@ -89,20 +86,6 @@ public class Triangle {
 
 	private GL2 getGl() {
 		return gl;
-	}
-
-	public double[] getTranslatedPoint1() {
-		Arrays.toString(translatedPoint1);
-
-		return translatedPoint1;
-	}
-
-	public double[] getTranslatedPoint2() {
-		return translatedPoint2;
-	}
-
-	public double[] getTranslatedPoint3() {
-		return translatedPoint3;
 	}
 
 	private double[] getInnerPoint1() {
@@ -148,28 +131,28 @@ public class Triangle {
 		getGl().glColor3f(getColor()[0], getColor()[1], getColor()[2]);
 		
 		getGl().glVertex3d(getInnerPoint1()[0], getInnerPoint1()[1], getInnerPoint1()[2]);
-		getGl().glVertex3d(getTranslatedPoint1()[0], getTranslatedPoint1()[1], getTranslatedPoint1()[2]);
-		getGl().glVertex3d(getTranslatedPoint2()[0], getTranslatedPoint2()[1], getTranslatedPoint2()[2]);
+		getGl().glVertex3d(getPoint1()[0], getPoint1()[1], getPoint1()[2]);
+		getGl().glVertex3d(getPoint2()[0], getPoint2()[1], getPoint2()[2]);
 	
 		getGl().glVertex3d(getInnerPoint1()[0], getInnerPoint1()[1], getInnerPoint1()[2]);
-		getGl().glVertex3d(getTranslatedPoint2()[0], getTranslatedPoint2()[1], getTranslatedPoint2()[2]);
+		getGl().glVertex3d(getPoint2()[0], getPoint2()[1], getPoint2()[2]);
 		getGl().glVertex3d(getInnerPoint2()[0], getInnerPoint2()[1], getInnerPoint2()[2]);
 
 		getGl().glVertex3d(getInnerPoint2()[0], getInnerPoint2()[1], getInnerPoint2()[2]);
-		getGl().glVertex3d(getTranslatedPoint2()[0], getTranslatedPoint2()[1], getTranslatedPoint2()[2]);
-		getGl().glVertex3d(getTranslatedPoint3()[0], getTranslatedPoint3()[1], getTranslatedPoint3()[2]);
+		getGl().glVertex3d(getPoint2()[0], getPoint2()[1], getPoint2()[2]);
+		getGl().glVertex3d(getPoint3()[0], getPoint3()[1], getPoint3()[2]);
 
 		getGl().glVertex3d(getInnerPoint2()[0], getInnerPoint2()[1], getInnerPoint2()[2]);
-		getGl().glVertex3d(getTranslatedPoint3()[0], getTranslatedPoint3()[1], getTranslatedPoint3()[2]);
+		getGl().glVertex3d(getPoint3()[0], getPoint3()[1], getPoint3()[2]);
 		getGl().glVertex3d(getInnerPoint3()[0], getInnerPoint3()[1], getInnerPoint3()[2]);
 
 		
 		getGl().glVertex3d(getInnerPoint3()[0], getInnerPoint3()[1], getInnerPoint3()[2]);
-		getGl().glVertex3d(getTranslatedPoint3()[0], getTranslatedPoint3()[1], getTranslatedPoint3()[2]);
-		getGl().glVertex3d(getTranslatedPoint1()[0], getTranslatedPoint1()[1], getTranslatedPoint1()[2]);
+		getGl().glVertex3d(getPoint3()[0], getPoint3()[1], getPoint3()[2]);
+		getGl().glVertex3d(getPoint1()[0], getPoint1()[1], getPoint1()[2]);
 
 		getGl().glVertex3d(getInnerPoint3()[0], getInnerPoint3()[1], getInnerPoint3()[2]);
-		getGl().glVertex3d(getTranslatedPoint1()[0], getTranslatedPoint1()[1], getTranslatedPoint1()[2]);
+		getGl().glVertex3d(getPoint1()[0], getPoint1()[1], getPoint1()[2]);
 		getGl().glVertex3d(getInnerPoint1()[0], getInnerPoint1()[1], getInnerPoint1()[2]);
 
 		
@@ -197,13 +180,13 @@ public class Triangle {
 		// TODO nullpointer afvangen?
 		// if(getPolyhedron() != null) {
 		for (int i = 0; i < 3; i++) {
-			translatedPoint1[i] = (float) (getPoint1()[i] + ds[i]);
-			translatedPoint2[i] = (float) (getPoint2()[i] + ds[i]);
-			translatedPoint3[i] = (float) (getPoint3()[i] + ds[i]);
+			point1[i] = getPoint1()[i] + ds[i];
+			point2[i] = getPoint2()[i] + ds[i];
+			point3[i] = getPoint3()[i] + ds[i];
 		}
-		innerPoint1 = getInnerPoint(getTranslatedPoint1());
-		innerPoint2 = getInnerPoint(getTranslatedPoint2());
-		innerPoint3 = getInnerPoint(getTranslatedPoint3());
+		innerPoint1 = getInnerPoint(getPoint1());
+		innerPoint2 = getInnerPoint(getPoint2());
+		innerPoint3 = getInnerPoint(getPoint3());
 		// }
 	}
 

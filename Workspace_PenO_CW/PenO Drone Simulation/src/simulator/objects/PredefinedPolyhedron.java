@@ -3,6 +3,7 @@ package simulator.objects;
 import java.awt.Color;
 import java.util.concurrent.ThreadLocalRandom;
 
+import simulator.physics.MathCalculations;
 import simulator.world.World;
 
 public abstract class PredefinedPolyhedron extends Polyhedron {
@@ -10,7 +11,7 @@ public abstract class PredefinedPolyhedron extends Polyhedron {
 	public PredefinedPolyhedron(World world, PolyhedronType type, double[] position, double[][] vertices) {
 		super(world, type, vertices);
 		defineTriangles();
-		translatePolyhedronOver(position);
+		translatePolyhedronOver(MathCalculations.getVector(position, getPosition()));
 	}
 
 	protected abstract void defineTriangles();

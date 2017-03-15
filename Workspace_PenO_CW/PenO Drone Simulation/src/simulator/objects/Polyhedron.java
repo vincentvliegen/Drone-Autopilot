@@ -54,15 +54,7 @@ public class Polyhedron extends WorldObject {
 			massPoint[i] = temp/getVertices().length;
 			temp = 0;
 		}
-		
-
-		// 1. zet de points op hun nieuwe plaats op basis van het masspoint
-		// 2. tel masspoint op bij positie
-
-		for (Triangle triangle : getTriangles()) {
-			triangle.updateOriginalPoints(massPoint);
-		}
-		translatePolyhedronOver(massPoint);
+		this.position = massPoint;
 	}
 
 	public GL2 getGl() {
@@ -96,8 +88,9 @@ public class Polyhedron extends WorldObject {
 		position[0] = position[0] + vector[0];
 		position[1] = position[1] + vector[1];
 		position[2] = position[2] + vector[2];
+
 		for (Triangle triangle : getTriangles()) {
-			triangle.updatePoints(getPosition());
+			triangle.updatePoints(vector);
 		}
 
 	}
