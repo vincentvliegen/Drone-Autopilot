@@ -112,7 +112,7 @@ public class PhysicsCalculations{
 
 		private void calculateDirectionOfView(){
 			float[] view = new float[] {0,0,-1};
-			setDirectionOfView(vectorDroneToWorld(view));
+			setDirectionOfView(vectorWorldToDrone(view));
 		}
 	
 
