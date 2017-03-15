@@ -48,15 +48,13 @@ public class PhysicsCalculations{
 	private final static float maxWindTranslation = 0.05f;
 	private static final float[] maxWindRotationRate = new float[]{(float) 0.5,(float) 0.5,(float) 0.5};
 	private boolean firstMovement;
-	private final static float factorI = 0.5f;
-	private final static float factorD = 2f;
-
+	private final static float distanceSpeedFactor = 0.5f;
+	private final static float dropdownDistance = 2f;
 	
 	//Vector Rotations
 	private List<Float> rotateMatrix;
 	private List<Float> inverseRotateMatrix;
 
-	
 	
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
@@ -120,6 +118,22 @@ public class PhysicsCalculations{
 		}
 	
 
+	public float[] getDirectionDroneToPosition(float[] position){//niet genormaliseerd, moest je de grootte willen hebben
+		return VectorCalculations.sum(position, VectorCalculations.inverse(this.getPosition()));
+	}
+
+	public float getDistanceDroneToPosition(float[] position){
+		return VectorCalculations.size(getDirectionDroneToPosition(position));
+	}
+
+	public float getSpeedDroneToPosition(float[] position){
+		float speedDrone = VectorCalculations.size(this.getSpeed());
+		//the cosinus of the angle between the speedvector of the drone and the distance of the object to the drone
+		float cosAngle = VectorCalculations.cosinusBetweenVectors(VectorCalculations.sum(position, VectorCalculations.inverse(this.getPosition())),this.getSpeed());
+		return cosAngle*speedDrone;
+	}
+
+		
 	//////////OBJECT//////////
 
 	public float[] calculatePositionObject(float[] centerOfGravityL, float[]centerOfGravityR){
@@ -222,22 +236,6 @@ public class PhysicsCalculations{
 		return height;
 	}
 	
-	
-	private float[] directionDronePos(float[] position){//niet genormaliseerd, moest je de grootte willen hebben
-		return VectorCalculations.sum(position, VectorCalculations.inverse(this.getPosition()));
-	}
-
-	public float getDistanceToPosition(float[] position){
-		return VectorCalculations.size(directionDronePos(position));
-	}
-
-	public float getSpeedTowardsPosition(float[] position){
-		float speedDrone = VectorCalculations.size(this.getSpeed());
-		//the cosinus of the angle between the speedvector of the drone and the distance of the object to the drone
-		float cosAngle = VectorCalculations.cosinusBetweenVectors(VectorCalculations.sum(position, VectorCalculations.inverse(this.getPosition())),this.getSpeed());
-		return cosAngle*speedDrone;
-	}
-
 	
 	//////////MOVEMENT//////////
 
@@ -350,7 +348,7 @@ public class PhysicsCalculations{
 			float[] normal = VectorCalculations.crossProduct(externalForces, thrust);
 	
 			//bereken de richting naar de positie
-			float[] dirToPos = VectorCalculations.normalise(directionDronePos(position));
+			float[] dirToPos = VectorCalculations.normalise(getDirectionDroneToPosition(position));
 	
 			float result;
 			if(Arrays.equals(VectorCalculations.sum(position, new float[] {0,0,0}), VectorCalculations.sum(getPosition(), new float[] {0,0,0}))){//als het doel de huidige positie van de drone is
@@ -451,7 +449,7 @@ public class PhysicsCalculations{
 			float acceleration = this.determineAcceleration(position);
 			float weight = this.getDrone().getWeight();
 			float[] externalForces = this.getExternalForces();
-			float[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(directionDronePos(position)), acceleration*weight);
+			float[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(getDirectionDroneToPosition(position)), acceleration*weight);
 	
 			float[] thrustVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(externalForces));
 			float[] normal = VectorCalculations.normalise(thrustVector);//normale op het trustvlak, genormaliseerde thrust
@@ -460,26 +458,58 @@ public class PhysicsCalculations{
 			this.setWantedOrientation(new float[][] {thrustVector,viewVector});
 		}
 
-			public float determineAcceleration(float[] target) {
-				if (this.getSpeedTowardsPosition(target) < 0) {
-					return this.determineSpecificAcceleration(1,target);
-				}
-				if (this.getDistanceToPosition(target) <= this.getSpeedTowardsPosition(target)* PhysicsCalculations.getFactori()) {
-					return this.determineSpecificAcceleration(0,target);
-				} else {
-					return this.getMaxAccelerationValues(target)[1];
+			private float determineAcceleration(float[] position) {
+				float distance = this.getDistanceDroneToPosition(position);
+				float speed = this.getSpeedDroneToPosition(position);
+				int minMaxIndex = 1;//accelerate
+				if (distance/speed <= PhysicsCalculations.getDistancespeedfactor()) {//d/v <= i -> te snel -> vertragen
+					minMaxIndex = 0;//decelerate
+				} 
+				if (distance <= PhysicsCalculations.getDropdowndistance()){
+					return maxAccelerationValues(position)[minMaxIndex]*distance/PhysicsCalculations.getDropdowndistance();
+				}else{
+					return maxAccelerationValues(position)[minMaxIndex];
 				}
 			}
+			
+				private float[] maxAccelerationValues(float[] position){
+					float maxthrust = this.getDrone().getMaxThrust();
+					float weight = this.getDrone().getWeight();
+					float[] externalForces = this.getExternalForces();
+					float[] direction = VectorCalculations.normalise(getDirectionDroneToPosition(position));
+					
+					float[] minMaxAcceleration = accelerationCalc(externalForces, maxthrust, direction, weight);
+					
+					return new float[] {minMaxAcceleration[0]+PhysicsCalculations.getMaxwindtranslation(),minMaxAcceleration[1]-PhysicsCalculations.getMaxwindtranslation()};//max uitwijking door de wind
+				}
+				
+					private float[] accelerationCalc(float[] externalForces, float thrustSize, float[] direction, float weight){
+						//m*acc*Dir - (Grav + Wind + Drag) = Thrust met Thrust = t*(u,v,w) en t = size => u^2+v^2+w^2=1
+						//(ax+b)^2+(cx+d)^2+(ex+f)^2=1 met x = acc,
+						//a = (m*dirx)/t,
+						//b = -(gravx+windx)/t
+						//c = (m*diry)/t,
+						//d = -(gravy+windy)/t
+						//e = (m*dirz)/t,
+						//f = -(gravz+windz)/t
+						float a = weight*direction[0]/thrustSize;
+						float b = -(externalForces[0])/thrustSize;
+						float c = weight*direction[1]/thrustSize;
+						float d = -(externalForces[1])/thrustSize;
+						float e = weight*direction[2]/thrustSize;
+						float f = -(externalForces[2])/thrustSize;
+						
+						//oplossing is van de vorm (-b +- sqrt(b^2-4ac))/2a => (part1 +- sqrt)/part2
+						float sqrt = (float) Math.sqrt(Math.pow((2*a*b+2*c*d+2*e*f),2)-4*(a*a+c*c+e*e)*(b*b+d*d+f*f-1));
+						float part1 = -(2*a*b+2*c*d+2*e*f);
+						float part2 = 2*(a*a+c*c+e*e);
+						
+						float maxAcc = (part1 + sqrt)/part2;
+						float minAcc = (part1 - sqrt)/part2;
+						
+						return new float[] {minAcc,maxAcc};
+					}
 	
-			public float determineSpecificAcceleration(int x, float[] target) {
-				if (this.getDistanceToPosition(target) <= getFactord()) {
-					return this.getMaxAccelerationValues(target)[x]
-							* this.getDistanceToPosition(target) / getFactord();
-				} else {
-					return this.getMaxAccelerationValues(target)[x];
-				}
-			}
-
 		
 		private void calculateWantedOrientationDir(float[] direction){
 			float[] externalForces = this.getExternalForces();
@@ -549,46 +579,7 @@ public class PhysicsCalculations{
 			float[] AnglesDev = {this.getDeltaT()*yawRate, this.getDeltaT()*pitchRate, this.getDeltaT()*rollRate};
 			this.setExpectedOrientation(VectorCalculations.sum(droneAngles, AnglesDev));
 		}	
-		
-		
-	public float[] getMaxAccelerationValues(float[] position){
-		float maxthrust = this.getDrone().getMaxThrust();
-		float weight = this.getDrone().getWeight();
-		float[] externalForces = this.getExternalForces();
-		float[] direction = VectorCalculations.normalise(directionDronePos(position));
-		
-		float[] minMaxAcceleration = accelerationCalc(externalForces, maxthrust, direction, weight);
-		
-		return new float[] {minMaxAcceleration[0]+PhysicsCalculations.getMaxwindtranslation(),minMaxAcceleration[1]-PhysicsCalculations.getMaxwindtranslation()};//max uitwijking door de wind
-	}
-	
-		private float[] accelerationCalc(float[] externalForces, float thrustSize, float[] direction, float weight){
-			//m*acc*Dir - (Grav + Wind + Drag) = Thrust met Thrust = t*(u,v,w) en t = size => u^2+v^2+w^2=1
-			//(ax+b)^2+(cx+d)^2+(ex+f)^2=1 met x = acc,
-			//a = (m*dirx)/t,
-			//b = -(gravx+windx)/t
-			//c = (m*diry)/t,
-			//d = -(gravy+windy)/t
-			//e = (m*dirz)/t,
-			//f = -(gravz+windz)/t
-			float a = weight*direction[0]/thrustSize;
-			float b = -(externalForces[0])/thrustSize;
-			float c = weight*direction[1]/thrustSize;
-			float d = -(externalForces[1])/thrustSize;
-			float e = weight*direction[2]/thrustSize;
-			float f = -(externalForces[2])/thrustSize;
-			
-			//oplossing is van de vorm (-b +- sqrt(b^2-4ac))/2a => (part1 +- sqrt)/part2
-			float sqrt = (float) Math.sqrt(Math.pow((2*a*b+2*c*d+2*e*f),2)-4*(a*a+c*c+e*e)*(b*b+d*d+f*f-1));
-			float part1 = -(2*a*b+2*c*d+2*e*f);
-			float part2 = 2*(a*a+c*c+e*e);
-			
-			float maxAcc = (part1 + sqrt)/part2;
-			float minAcc = (part1 - sqrt)/part2;
-			
-			return new float[] {minAcc,maxAcc};
-		}
-		
+				
 		
 	//////////VECTOR ROTATIONS//////////
 
@@ -976,16 +967,18 @@ public class PhysicsCalculations{
 	}
 
 
-
-	public static float getFactori() {
-		return factorI;
+	
+	public static float getDistancespeedfactor() {
+		return distanceSpeedFactor;
 	}
 
 
 
-	public static float getFactord() {
-		return factorD;
+	public static float getDropdowndistance() {
+		return dropdownDistance;
 	}
+
+
 	
 }
 

@@ -44,7 +44,7 @@ public class OneSphere extends Mission{
 
 	@Override
 	public void updateGUI() {
-		this.getGUI().update(this.getPhysicsCalculations().getDistanceToPosition(getTarget()),0);//TODO 
+		this.getGUI().update(this.getPhysicsCalculations().getDistanceDroneToPosition(getTarget()),0);//TODO 
 	}
 
 
