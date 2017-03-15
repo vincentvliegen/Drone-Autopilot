@@ -10,95 +10,56 @@ import p_en_o_cw_2016.Drone;
 
 public class NewWorldScan {
 
-	private Drone drone;
-	private PhysicsCalculations physicsCalc;
-	private PolyhedraCalculations polyCalc;
-	private float degreesTurned;
-	private float[] previousView = null;
+	private final Drone drone;
+	private final  PhysicsCalculations physicsCalc;
+	private final PolyhedraCalculations polyCalc;
 	
 	private boolean finished;
-	private float[] newDirectionView;
+	private float[] newDirectionOfView;
 	private HashMap<float[],ArrayList<float[]>> colorAndCogs;
 
-	public NewWorldScan(Drone drone) {
-		this.setDrone(drone);
-		this.setPhysicsCalc(new PhysicsCalculations(drone));
-		this.setPolyCalc(new PolyhedraCalculations());
+	public NewWorldScan(PhysicsCalculations physicsCalculations) {
+		this.physicsCalc = physicsCalculations;
+		this.drone = getPhysics().getDrone();
+		this.polyCalc = new PolyhedraCalculations();
 	}
 
+	/**
+	 * de scan kijkt of er bruikbare punten zijn in het beeld (zwaartepunten). 
+	 * Als er geen bruikbare punten zijn, wordt isFinished() false en kan je de nieuwe kijkrichting opvragen via getNewDirectionOfView().
+	 * Als er wel bruikbare punten zijn, wordt isFinished() true en kan je deze punten opvragen via getColorsAndCogs().
+	 */
 	public void scan(){
-		this.setFinishedScan(false);
-		if(this.getPreviousView() == null){
-			this.setPreviousView(this.getPreviousView());
+		setColorAndCogs(this.getPolyCalc().findAllCOGs(this.getDrone().getLeftCamera(), this.getDrone().getRightCamera()));
+		if(getColorAndCogs().isEmpty()){//nieuwe viewDirection
+			setFinished(false);
+			calculateNewDirectionOfView();
+		}else{//geef de lijst mee
+			setFinished(true);
 		}
-		float norm = VectorCalculations.size(getViewDirection());//TODO correcte berekening
-		float x = (float) (norm*Math.cos(Math.toRadians(this.getCameraAngle()/2)));
-		float z = (float) (norm*Math.sin(Math.toRadians(this.getCameraAngle()/2)));
-		float[] newDirection = {x,getViewDirection()[1],z};
-		this.getPhysics().updateOrientation(newDirection);
-		
-		//checken rond of iets gevonden
-		if (this.degreesTurned>420){
-			 this.getPhysics().updatePosition(new float[]{0,0,0});
-		}else{
-			float inwendigProduct = VectorCalculations.dotProduct(this.getViewDirection(), this.getPreviousView());
-			float angle = inwendigProduct / (VectorCalculations.size(this.getViewDirection())*VectorCalculations.size(this.getPreviousView()));
-			this.degreesTurned += angle;
-			this.setPreviousView(this.getViewDirection());
-		
-			if(this.foundTarget() && 
-					this.getPolyCalc().execute(this.getDrone().getLeftCamera(), this.getDrone().getRightCamera()).size() >= 1){
-				this.setPreviousView(null);
-				this.degreesTurned = 0;
-				this.setFinishedScan(true);
-			}
+	}	
+		//TODO check of rotatie juist is
+		private void calculateNewDirectionOfView(){// draait met een hoek die overeenkomt met de helft van de horizontale hoek van het gezichtsveld
+			float cameraAngle = this.getDrone().getLeftCamera().getHorizontalAngleOfView();
+			float[][] rotationMatrix = VectorCalculations.createRotationMatrix(cameraAngle/2, 0, 0);//dit zorgt ervoor dat je een vector kan jawen
+			float[] newViewDrone = VectorCalculations.rotate(rotationMatrix, new float[] {0,0,-1});//dit is de oorspronkelijke view gejawd
+			float[] newViewWorld = this.getPhysics().vectorDroneToWorld(newViewDrone);//omgezet naar het wereldassenstelsel
+			setNewDirectionOfView(newViewWorld);
 		}
-	}
+	
+	
+	//////////GETTERS & SETTERS//////////
 
-	private boolean foundTarget(){
-		HashMap<Integer, ArrayList<int[]>> colors = this.getPolyCalc().calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
-		if(colors.size()>=1){
-			return true;
-		}
-		return false;
-	}
-	
-	
-	private float[] getViewDirection(){
-		return this.getPhysics().getDirectionOfView();
-	}
-	private float getCameraAngle(){
-		return this.getDrone().getLeftCamera().getHorizontalAngleOfView();
-	}
-	public boolean getFinishedScan(){
-		return this.finished;
-	}
-	private void setFinishedScan(boolean finished){
-		this.finished = finished;
-	}
-	private float[] getPreviousView(){
-		return this.previousView;
-	}
-	private void setPreviousView(float[] view){
-		this.previousView = view;
-	}
-	private PolyhedraCalculations getPolyCalc(){
+	private  PolyhedraCalculations getPolyCalc(){
 		return this.polyCalc;
 	}
-	private void setPolyCalc(PolyhedraCalculations polyCalc){
-		this.polyCalc = polyCalc;
-	}
-	private PhysicsCalculations getPhysics(){
+
+	private  PhysicsCalculations getPhysics(){
 		return this.physicsCalc;
 	}
-	private void setPhysicsCalc(PhysicsCalculations physics){
-		this.physicsCalc = physics;
-	}
-	private Drone getDrone() {
+
+	private  Drone getDrone() {
 		return this.drone;
-	}
-	private void setDrone(Drone drone) {
-		this.drone = drone;
 	}
 
 	public boolean isFinished() {
@@ -109,12 +70,12 @@ public class NewWorldScan {
 		this.finished = finished;
 	}
 
-	public float[] getNewDirectionView() {
-		return newDirectionView;
+	public float[] getNewDirectionOfView() {
+		return newDirectionOfView;
 	}
 
-	public void setNewDirectionView(float[] newDirectionView) {
-		this.newDirectionView = newDirectionView;
+	public void setNewDirectionOfView(float[] newDirectionOfView) {
+		this.newDirectionOfView = newDirectionOfView;
 	}
 
 	public HashMap<float[], ArrayList<float[]>> getColorAndCogs() {

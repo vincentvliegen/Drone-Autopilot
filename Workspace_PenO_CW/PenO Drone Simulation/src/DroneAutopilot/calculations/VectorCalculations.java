@@ -71,17 +71,19 @@ public class VectorCalculations {
 	}
 
 	public static float[][] createInverseRotationMatrix(float yaw, float pitch, float roll){	
-		float r11 = ((float) (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
-		float r12 = (float) (float) (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
-		float r13 = (float) (Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))+Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
+		float[][] rotatonMatrix = createRotationMatrix(yaw, pitch, roll);
+		
+		float r11 = rotatonMatrix[0][0];
+		float r12 = rotatonMatrix[1][0];
+		float r13 = rotatonMatrix[2][0];
+		
+		float r21 = rotatonMatrix[0][1];
+		float r22 = rotatonMatrix[1][1];
+		float r23 = rotatonMatrix[2][1];
 
-		float r21 = (float) (Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))+Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
-		float r22 = (float) (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
-		float r23 = (float) (Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
-
-		float r31 = (float) (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
-		float r32 = (float) (Math.sin(Math.toRadians(pitch)));
-		float r33 = (float) (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw)));
+		float r31 = rotatonMatrix[0][2];
+		float r32 = rotatonMatrix[1][2];
+		float r33 = rotatonMatrix[2][2];
 		
 		return new float[][] {{r11,r12,r13},{r21,r22,r23},{r31,r32,r33}};
 	}

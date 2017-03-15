@@ -1,24 +1,20 @@
 package mission;
 
-import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.algoritmes.NewWorldScan;
-import DroneAutopilot.calculations.PolyhedraCalculations;
 
 public class OneSphere extends Mission{
 
 	private NewWorldScan worldScan;
-	private PolyhedraCalculations polyhedraCalculations;
 	private float[] target;
 	private boolean targetFound;
 
 	public OneSphere(DroneAutopilot droneAutopilot){
 		super(droneAutopilot);
-		setWorldScan(new NewWorldScan(this.getDrone()));
-		setPolyhedraCalculations(new PolyhedraCalculations());
+		setWorldScan(new NewWorldScan(this.getPhysicsCalculations()));
 		setTargetFound(false);
 	}
 
@@ -37,14 +33,14 @@ public class OneSphere extends Mission{
 				setTarget(this.getPhysicsCalculations().calculatePositionObject(cogs.get(0), cogs.get(1)));
 				this.getPhysicsCalculations().updatePosition(getTarget());
 			}else{
-				this.getPhysicsCalculations().updateOrientation(this.getWorldScan().getNewDirectionView());
+				this.getPhysicsCalculations().updateOrientation(this.getWorldScan().getNewDirectionOfView());
 			}
 		}
 	}
 
 	@Override
 	public void updateGUI() {
-		this.getGUI().update(this.getPhysicsCalculations().getDistanceDroneToPosition(getTarget()),0);//TODO 
+		this.getGUI().update(this.getPhysicsCalculations().getDistanceDroneToPosition(getTarget()),0);//TODO iets voor de kleur
 	}
 
 
@@ -72,14 +68,6 @@ public class OneSphere extends Mission{
 
 	public void setTargetFound(boolean targetFound) {
 		this.targetFound = targetFound;
-	}
-
-	public PolyhedraCalculations getPolyhedraCalculations() {
-		return polyhedraCalculations;
-	}
-
-	public void setPolyhedraCalculations(PolyhedraCalculations polyhedraCalculations) {
-		this.polyhedraCalculations = polyhedraCalculations;
 	}
 
 }
