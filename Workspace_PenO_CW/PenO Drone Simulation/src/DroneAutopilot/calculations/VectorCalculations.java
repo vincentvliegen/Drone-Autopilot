@@ -54,5 +54,57 @@ public class VectorCalculations {
 		return (float) Math.sqrt(Math.pow(coord1[0]-coord2[0], 2) + Math.pow(coord1[1]-coord2[1], 2) + Math.pow(coord1[2]-coord2[2], 2));
 	}
 	
- 	
+ 	public static float[][] createRotationMatrix(float yaw, float pitch, float roll) {		
+		float r11 = (float) (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		float r12 = (float) (Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))+Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
+		float r13 = (float) (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
+
+		float r21 = (float) (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
+		float r22 = (float) (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
+		float r23 = (float) (Math.sin(Math.toRadians(pitch)));
+
+		float r31 = (float) (Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))+Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
+		float r32 = (float) (Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
+		float r33 = (float) (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw)));
+		
+		return new float[][] {{r11,r12,r13},{r21,r22,r23},{r31,r32,r33}};
+	}
+
+	public static float[][] createInverseRotationMatrix(float yaw, float pitch, float roll){	
+		float r11 = ((float) (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
+		float r12 = (float) (float) (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
+		float r13 = (float) (Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))+Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
+
+		float r21 = (float) (Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))+Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
+		float r22 = (float) (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
+		float r23 = (float) (Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
+
+		float r31 = (float) (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
+		float r32 = (float) (Math.sin(Math.toRadians(pitch)));
+		float r33 = (float) (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw)));
+		
+		return new float[][] {{r11,r12,r13},{r21,r22,r23},{r31,r32,r33}};
+	}
+	
+	public static float[] rotate(float[][] rotationMatrix, float[] vector){
+		float r11 = rotationMatrix[0][0];
+		float r12 = rotationMatrix[0][1];
+		float r13 = rotationMatrix[0][2];
+		float r21 = rotationMatrix[1][0];
+		float r22 = rotationMatrix[1][1];
+		float r23 = rotationMatrix[1][2];
+		float r31 = rotationMatrix[2][0];
+		float r32 = rotationMatrix[2][1];
+		float r33 = rotationMatrix[2][2];
+		
+		float x = vector[0];
+		float y = vector[1];
+		float z = vector[2];
+		
+		float xRotated = r11*x + r12*y + r13*z;
+		float yRotated = r21*x + r22*y + r23*z;
+		float zRotated = r31*x + r32*y + r33*z;
+		return new float[] {xRotated, yRotated, zRotated};
+	}
+	
 }
