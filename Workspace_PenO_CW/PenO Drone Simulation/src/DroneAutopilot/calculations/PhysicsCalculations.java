@@ -1,8 +1,6 @@
 package DroneAutopilot.calculations;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import p_en_o_cw_2016.Drone;
 
@@ -228,6 +226,7 @@ public class PhysicsCalculations{
 			setZObject(deltaZ);
 		}
 	
+		//TODO check vectorDroneToWorld of het worldtodrone moet zijn
 		private float[] objectPosDroneToWorld(){
 			float[] droneRotated = this.vectorDroneToWorld(getXObject(), getYObject(), getZObject());
 			float[] droneTranslated = VectorCalculations.sum(droneRotated, this.getPosition());
@@ -353,7 +352,7 @@ public class PhysicsCalculations{
 		private void calculateThrust(float[] position){
 			//normaal op het vlak gevormd door de thrust en de gravity + wind
 			float[] externalForces = this.getExternalForces();
-			float[] thrust = vectorDroneToWorld(new float[] {0,1,0});//positief genormaliseerd
+			float[] thrust = this.getDirectionOfThrust();//positief genormaliseerd
 			float[] normal = VectorCalculations.crossProduct(externalForces, thrust);
 	
 			//bereken de richting naar de positie
@@ -572,7 +571,7 @@ public class PhysicsCalculations{
 		private void calculateExpectedPosition(){
 			float weight = this.getDrone().getWeight();
 			float[] externalForces = this.getExternalForces();
-			float[] thrust = VectorCalculations.timesScalar(vectorDroneToWorld(new float[] {0,1,0}), this.getThrust());
+			float[] thrust = VectorCalculations.timesScalar(this.getDirectionOfThrust(), this.getThrust());
 
 			//(T+G+W+D)/(2m) * deltaT^2  {I} +  v0*deltaT + x0  {II} = Xexp
 			float[] part1 = VectorCalculations.timesScalar(VectorCalculations.sum(thrust, externalForces), this.getDeltaT()*this.getDeltaT()/(2*weight));
@@ -902,43 +901,30 @@ public class PhysicsCalculations{
 	private void setFirstMovement(boolean firstMovement) {
 		this.firstMovement = firstMovement;
 	}	
-	
-
 
 	public float[] getExternalForces() {
 		return externalForces;
 	}
 
-
-
 	public void setExternalForces(float[] externalForces) {
 		this.externalForces = externalForces;
 	}
-
-
 	
 	public static float getDistancespeedfactor() {
 		return distanceSpeedFactor;
 	}
 
-
-
 	public static float getDropdowndistance() {
 		return dropdownDistance;
 	}
-
-
 
 	public float[] getDirectionOfThrust() {
 		return directionOfThrust;
 	}
 
-
-
 	public void setDirectionOfThrust(float[] directionOfThrust) {
 		this.directionOfThrust = directionOfThrust;
 	}
-
 
 }
 
