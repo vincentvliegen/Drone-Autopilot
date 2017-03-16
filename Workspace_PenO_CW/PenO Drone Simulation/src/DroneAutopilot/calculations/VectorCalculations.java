@@ -12,7 +12,11 @@ public class VectorCalculations {
 
 	public static float[] normalise(float x, float y, float z){	
 		float size = size(x,y,z);
-		return new float[] {x/size, y/size, z/size};
+		if (size == 0){
+			return new float[] {0,0,0};
+		}else{
+			return new float[] {x/size, y/size, z/size};
+		}
 	}
 
 	public static float[] normalise(float[] vector){
@@ -43,11 +47,19 @@ public class VectorCalculations {
 	}	
 
 	public static float cosinusBetweenVectors(float[] vector1, float[] vector2){
-		return dotProduct(vector1,vector2)/(size(vector1)*size(vector2));
+		if(size(vector1)==0||size(vector2)==0){
+			return 0;
+		}else{
+			return dotProduct(vector1,vector2)/(size(vector1)*size(vector2));
+		}
 	}
 	
 	public static float sinusBetweenVectors(float[] vector1, float[] vector2){
-		return size(crossProduct(vector1,vector2))/(size(vector1)*size(vector2));
+		if(size(vector1)==0||size(vector2)==0){
+			return 0;
+		}else{
+			return size(crossProduct(vector1,vector2))/(size(vector1)*size(vector2));
+		}
  	}
 	
 	public static float calculateDistanceBetweenCoords(float[] coord1, float[] coord2) {
