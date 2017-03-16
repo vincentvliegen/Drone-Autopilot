@@ -519,10 +519,13 @@ public class PhysicsCalculations{
 						float sqrt = (float) Math.sqrt(Math.pow((2*a*b+2*c*d+2*e*f),2)-4*(a*a+c*c+e*e)*(b*b+d*d+f*f-1));
 						float part1 = -(2*a*b+2*c*d+2*e*f);
 						float part2 = 2*(a*a+c*c+e*e);
+						float maxAcc = 0;
+						float minAcc = 0;
 						
-						float maxAcc = (part1 + sqrt)/part2;
-						float minAcc = (part1 - sqrt)/part2;
-						
+						if(part2+0!=0){
+							 maxAcc = (part1 + sqrt)/part2;
+							 minAcc = (part1 - sqrt)/part2;
+						}
 						return new float[] {minAcc,maxAcc};
 					}
 	
