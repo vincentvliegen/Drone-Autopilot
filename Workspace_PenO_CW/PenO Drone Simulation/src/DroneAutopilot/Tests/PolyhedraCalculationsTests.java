@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import DroneAutopilot.calculations.PolyhedraCalculations;
-import p_en_o_cw_2016.Camera;
+import p_en_o_cw_2016.*;
 
 public class PolyhedraCalculationsTests {
 	
@@ -30,10 +30,30 @@ public class PolyhedraCalculationsTests {
 	private int[] polylist2;
 	private int[] polylist3;
 	private int[] polylist3b;
+	
+	private static final int widthCamera = 150;
+	private static final int heightCamera = 100;
+	private static final float horizontalAngleOfView = 90; 
+	private float verticalAngleOfView; 
+	
+	private static final float cameraSeparation = 20;
+	private static final float droneGravity = -10;
+	private static final float droneWeight = 1;
+	private static final float dronePitch = 15;
+	
+	private static final float maxThrust = 50;
+	private Camera camera;
 
 	@Before
 	public void setup(){
-		polyhedraCalc = new PolyhedraCalculations();
+		try {
+			createImage();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Drone drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation, camera3, camera3b);
+		polyhedraCalc = new PolyhedraCalculations(drone);
 	}
 
 	public void createImage() throws IOException{
@@ -47,13 +67,13 @@ public class PolyhedraCalculationsTests {
 		camera2 = createCameraForTesting(polylist2, 1, 1, 167);
 //		this.writeTakeImageToFile(polylist2,167,177);
 		
-		poly3 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/testsimulator-left.png"));
-		polylist3 = convertImageToIntArray(poly3,200,200);
-		camera3 = createCameraForTesting(polylist3, 1, 1, 200);
+		poly3 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/links.png"));
+		polylist3 = convertImageToIntArray(poly3,628,739);
+		camera3 = createCameraForTesting(polylist3, 38.78388f, 45.0f, 628);
 		
-		poly3b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/testsimulator-right.png"));
-		polylist3b = convertImageToIntArray(poly3b,200,200);
-		camera3b = createCameraForTesting(polylist3b, 1, 1, 200);
+		poly3b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/rechts.png"));
+		polylist3b = convertImageToIntArray(poly3b,628,739);
+		camera3b = createCameraForTesting(polylist3b, 38.78388f, 45.0f, 628);
 
 	}
 	
@@ -68,7 +88,7 @@ public class PolyhedraCalculationsTests {
 		return result;
 	}
 	
-	public Camera createCameraForTesting(int[] image, int horAngle, int verAngle, int width){
+	public Camera createCameraForTesting(int[] image, float horAngle, float verAngle, int width){
 		return new Camera(){
 	    	
 			@Override
@@ -135,5 +155,99 @@ public class PolyhedraCalculationsTests {
 	@Test
 	public void testRGBtoHSV() throws IOException {
 		assertArrayEquals(new float[] {311/360,0.93f,0.79f},polyhedraCalc.colorIntToHSV(13242279), 2);
+	}
+	
+	public Drone createDroneForTesting(float weight, float gravity, float x, float y, float z, float yaw, float pitch, float roll, float cameraSeparation, Camera leftCamera, Camera rightCamera){
+		return new Drone(){
+			
+			@Override
+			public float getCameraSeparation() {
+				return cameraSeparation;
+			}
+
+			@Override
+			public Camera getLeftCamera() {
+				return leftCamera;
+			}
+
+			@Override
+			public Camera getRightCamera() {
+				return rightCamera;
+			}
+
+			@Override
+			public float getWeight() {
+				return weight;
+			}
+
+			@Override
+			public float getGravity() {
+				return gravity;
+			}
+
+			@Override
+			public float getPitch() {
+				return pitch;
+			}
+			
+			//ongebruikt
+			@Override
+			public void setPitchRate(float value) {}
+			@Override
+			public void setRollRate(float value) {}
+			@Override
+			public void setYawRate(float value) {}
+			@Override
+			public void setThrust(float value) {}
+			@Override
+			public float getDrag() {
+				return 0;
+			}
+			@Override
+			public float getCurrentTime() {
+				return 0;
+			}
+			@Override
+			public float getMaxThrust() {
+				return maxThrust;
+			}
+			@Override
+			public float getMaxPitchRate() {
+				return 0;
+			}
+			@Override
+			public float getMaxRollRate() {
+				return 0;
+			}
+			@Override
+			public float getMaxYawRate() {
+				return 0;
+			}
+			@Override
+			public float getRoll() {
+				return roll;
+			}
+
+			@Override
+			public float getX() {
+				return x;
+			}
+
+			@Override
+			public float getY() {
+				return y;
+			}
+
+			@Override
+			public float getZ() {
+				return z;
+			}
+
+			@Override
+			public float getHeading() {
+				return yaw;
+			}
+
+	    };
 	}
 }
