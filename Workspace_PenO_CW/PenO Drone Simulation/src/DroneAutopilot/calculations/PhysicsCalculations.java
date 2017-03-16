@@ -536,9 +536,13 @@ public class PhysicsCalculations{
 			float[] inverseDroneAngles = new float[] {-this.getDrone().getHeading(), -this.getDrone().getPitch(), -this.getDrone().getRoll()};
 			float pitchWanted = (float) Math.toDegrees(Math.asin(thrustWanted[2]));
 			if (pitchWanted == Math.PI){
-				throw new ArithmeticException("pitchWanted is zero, division by zero");
+				throw new ArithmeticException("pitchWanted is PI, division by zero");
 			}
-			float rollWanted = (float) Math.toDegrees(-Math.acos(thrustWanted[1]/Math.cos(Math.toRadians(pitchWanted)))); 
+			//float rollWanted = (float) Math.toDegrees(-Math.acos(thrustWanted[1]/Math.cos(Math.toRadians(pitchWanted))));  Alles in stukken gehakt, waardoor geen NaN meer.
+				float value1 = (float) Math.cos(Math.toRadians(pitchWanted));
+				float value2 = (float) (thrustWanted[1]/value1);
+				float value3 = (float) -Math.acos(value2);
+				float rollWanted = (float) Math.toDegrees(value3);
 			float yawWanted = (float) Math.toDegrees(Math.acos(-viewWanted[2]/Math.cos(Math.toRadians(pitchWanted))));
 			float[] wantedDroneAngles = new float[] {yawWanted, pitchWanted, rollWanted};
 			float[] remainingAngles = VectorCalculations.sum(inverseDroneAngles, wantedDroneAngles);
