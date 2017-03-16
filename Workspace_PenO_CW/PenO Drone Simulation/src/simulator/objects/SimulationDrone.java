@@ -258,19 +258,6 @@ public class SimulationDrone extends WorldObject implements Drone {
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		checkYawPitchRoll();
 
-		double rollPass = this.rollRate * timePassed;
-		createInverseRotate();
-		this.pitch += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(6)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.yaw += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(3)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.roll += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(0)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		checkYawPitchRoll();
-
 		double pitchPass = this.pitchRate * timePassed;
 		createInverseRotate();
 		this.pitch += pitchPass
@@ -281,6 +268,19 @@ public class SimulationDrone extends WorldObject implements Drone {
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		this.roll += pitchPass
 				* new BigDecimal(inverseRotateMatrix.get(2)).setScale(2,
+						BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		checkYawPitchRoll();
+		
+		double rollPass = this.rollRate * timePassed;
+		createInverseRotate();
+		this.pitch += rollPass
+				* new BigDecimal(inverseRotateMatrix.get(6)).setScale(2,
+						BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		this.yaw += rollPass
+				* new BigDecimal(inverseRotateMatrix.get(3)).setScale(2,
+						BigDecimal.ROUND_HALF_DOWN).doubleValue();
+		this.roll += rollPass
+				* new BigDecimal(inverseRotateMatrix.get(0)).setScale(2,
 						BigDecimal.ROUND_HALF_DOWN).doubleValue();
 		checkYawPitchRoll();
 
@@ -419,6 +419,13 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	@Override
 	public void setPitchRate(float value) {
+		System.out.println("Wind");
+		System.out.println(getWorld().getWindSpeedX());
+		System.out.println(getWorld().getWindSpeedY());
+		System.out.println(getWorld().getWindSpeedZ());
+		System.out.println(getWorld().getWindRotationX());
+		System.out.println(getWorld().getWindRotationY());
+		System.out.println(getWorld().getWindRotationZ());
 		if (value != value) {
 			throw new IllegalArgumentException("NaN pitchrate????");
 		}

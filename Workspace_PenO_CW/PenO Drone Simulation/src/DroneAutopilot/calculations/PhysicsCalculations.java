@@ -321,6 +321,7 @@ public class PhysicsCalculations{
 	
 		private void correctWindTranslation(){
 			float[] deviation = VectorCalculations.sum(this.getPosition(),VectorCalculations.inverse(this.getExpectedPosition()));
+			this.getDrone().setPitchRate(this.getPitchRate());
 			float weight = this.getDrone().getWeight();
 			//De voorspelde versnelling (som van thrust, gravity en wind) blijkt niet juist te zijn. 
 			//De wind kan afwijken (onnauwkeurigheid,verandering van de wind,...) en zorgt ervoor dat de drone ergens anders heen vliegt dan voorspeld.
@@ -342,8 +343,15 @@ public class PhysicsCalculations{
 			float gravity = this.getDrone().getGravity();//gravity is negatief
 			float drag = this.getDrone().getDrag();
 			float[] gravityForce = VectorCalculations.timesScalar(new float[] {0, 1, 0}, weight*gravity);//vector is positief, want gravity is negatief
+			for (float x: gravityForce)
+				System.out.println(x);
 			float[] windForce = this.getWindTranslation();
+			for (float x: windForce)
+				System.out.println(x);
 			float[] dragForce = VectorCalculations.timesScalar(this.getSpeed(),-drag);//- drag want tegengesteld aan de snelheidsvector
+			for (float x: dragForce)
+				System.out.println(x);
+			System.out.println("------");
 			float[] totalExternalForce = VectorCalculations.sum(VectorCalculations.sum(gravityForce, windForce), dragForce);
 			setExternalForces(totalExternalForce);
 		}
@@ -541,7 +549,11 @@ public class PhysicsCalculations{
 			//float rollWanted = (float) Math.toDegrees(-Math.acos(thrustWanted[1]/Math.cos(Math.toRadians(pitchWanted))));  Alles in stukken gehakt, waardoor geen NaN meer.
 				float value1 = (float) Math.cos(Math.toRadians(pitchWanted));
 				float value2 = (float) (thrustWanted[1]/value1);
-				float value3 = (float) -Math.acos(value2);
+				float value3;
+				if (Math.abs(value2) > 1){
+					value3 = 1*Math.signum(value2);
+				} else {
+					value3 = (float) -Math.acos(value2);}
 				float rollWanted = (float) Math.toDegrees(value3);
 			float yawWanted = (float) Math.toDegrees(Math.acos(-viewWanted[2]/Math.cos(Math.toRadians(pitchWanted))));
 			float[] wantedDroneAngles = new float[] {yawWanted, pitchWanted, rollWanted};
@@ -555,15 +567,16 @@ public class PhysicsCalculations{
 			if(!Arrays.equals(VectorCalculations.sum(remainingAngles, new float[] {0,0,0}),new float[] {0,0,0})){
 				float[] maxAngleRates = new float[]{this.getDrone().getMaxYawRate(), this.getDrone().getMaxPitchRate(), this.getDrone().getMaxRollRate()};
 				//Gecorrigeerde waarde ifv de maxwindrates.
-				float[] correctedMaxAngleRates = VectorCalculations.sum(maxAngleRates, VectorCalculations.inverse(VectorCalculations.timesScalar(getMaxwindrotationrate(), this.getDeltaT())));
-				//Nodige tijd per remainingAngle => deltaT * hoekRate = hoek
-				float[] neededTime = new float[]{remainingAngles[0]/correctedMaxAngleRates[0],remainingAngles[1]/correctedMaxAngleRates[1],remainingAngles[2]/correctedMaxAngleRates[2]};
-				float maxRotateTime = Math.max(Math.abs(neededTime[0]), Math.max(Math.abs(neededTime[1]), Math.abs(neededTime[2])));
-				//Alle hoeken overbruggen in gelijke tijd (langste tijd die nodig is om bepaalde hoek te overbruggen)
-				//deltaT * hoekRate = hoek
-				this.setYawRate(remainingAngles[0]/maxRotateTime);
-				this.setPitchRate(remainingAngles[1]/maxRotateTime);
-				this.setRollRate(remainingAngles[2]/maxRotateTime);
+				// Remain angles in 1 frame => 1/Delta * Remain
+				float[] correctAnglesInOneFrames = VectorCalculations.timesScalar(remainingAngles, 1/getDeltaT());
+				//Check vs maxRates
+				if (correctAnglesInOneFrames[0]+0 != 0)
+					this.setYawRate(correctAnglesInOneFrames[0]);
+				if (correctAnglesInOneFrames[1]+0 != 0)
+					this.setPitchRate(correctAnglesInOneFrames[1]);
+				if (correctAnglesInOneFrames[2]+0 != 0) {
+					this.setRollRate(correctAnglesInOneFrames[2]);
+				}
 			}else{
 				this.setYawRate(0);
 				this.setPitchRate(0);
@@ -588,7 +601,7 @@ public class PhysicsCalculations{
 			float pitchRate = this.getPitchRate();
 			float rollRate = this.getRollRate();
 			float[] droneAngles = {this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll()};
-			float[] AnglesDev = {this.getDeltaT()*yawRate, this.getDeltaT()*pitchRate, this.getDeltaT()*rollRate};
+			float[] AnglesDev = {this.getDeltaT()*yawRate+this.getWindRotation()[0], this.getDeltaT()*pitchRate+this.getWindRotation()[1], this.getDeltaT()*rollRate+this.getWindRotation()[2]};
 			this.setExpectedOrientation(VectorCalculations.sum(droneAngles, AnglesDev));
 		}	
 				
