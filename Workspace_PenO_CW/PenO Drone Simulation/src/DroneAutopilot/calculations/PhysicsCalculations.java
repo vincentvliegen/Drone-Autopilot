@@ -343,12 +343,16 @@ public class PhysicsCalculations{
 			float gravity = this.getDrone().getGravity();//gravity is negatief
 			float drag = this.getDrone().getDrag();
 			float[] gravityForce = VectorCalculations.timesScalar(new float[] {0, 1, 0}, weight*gravity);//vector is positief, want gravity is negatief
+			System.out.println("------");
+			System.out.println("gravity: ");
 			for (float x: gravityForce)
 				System.out.println(x);
 			float[] windForce = this.getWindTranslation();
+			System.out.println("wind: ");
 			for (float x: windForce)
 				System.out.println(x);
 			float[] dragForce = VectorCalculations.timesScalar(this.getSpeed(),-drag);//- drag want tegengesteld aan de snelheidsvector
+			System.out.println("drag: ");
 			for (float x: dragForce)
 				System.out.println(x);
 			System.out.println("------");

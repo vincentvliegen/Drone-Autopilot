@@ -420,12 +420,12 @@ public class SimulationDrone extends WorldObject implements Drone {
 	@Override
 	public void setPitchRate(float value) {
 		System.out.println("Wind");
-		System.out.println(getWorld().getWindSpeedX());
-		System.out.println(getWorld().getWindSpeedY());
-		System.out.println(getWorld().getWindSpeedZ());
-		System.out.println(getWorld().getWindRotationX());
-		System.out.println(getWorld().getWindRotationY());
-		System.out.println(getWorld().getWindRotationZ());
+		System.out.println("windx = " + getWorld().getWindSpeedX());
+		System.out.println("windy = " + getWorld().getWindSpeedY());
+		System.out.println("windz = " + getWorld().getWindSpeedZ());
+		System.out.println("wind roll = " + getWorld().getWindRotationX());
+		System.out.println("wind yaw = " + getWorld().getWindRotationY());
+		System.out.println("wind pitch = " + getWorld().getWindRotationZ());
 		if (value != value) {
 			throw new IllegalArgumentException("NaN pitchrate????");
 		}

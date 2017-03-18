@@ -5,16 +5,18 @@ import DroneAutopilot.DroneAutopilot;
 public class Hover extends Mission{
 	
 	public float[] previousPosition;
+	public float[] target;
 	
 	public Hover(DroneAutopilot droneAutopilot){
 		super(droneAutopilot);
-		this.setPreviousPosition(new float[] {this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ()}); 
 	}
 
 	@Override
 	public void execute() {
-		this.getPhysicsCalculations().updatePosition(this.getPreviousPosition()); //blijf opdezelfde plaats
-		this.setPreviousPosition(new float[] {this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ()});
+		if(this.getDroneAutopilot().isFirstHover()){
+			this.setTarget(new float[] {this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ()});
+		}
+		this.getPhysicsCalculations().updatePosition(this.getTarget()); //blijf opdezelfde plaats
 		//this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());//blijf dezelfde richting kijken
 	}
 
@@ -26,12 +28,12 @@ public class Hover extends Mission{
 	
 	//////////GETTERS & SETTERS//////////
 
-	public float[] getPreviousPosition() {
-		return previousPosition;
+	public float[] getTarget() {
+		return target;
 	}
 
-	public void setPreviousPosition(float[] previousPosition) {
-		this.previousPosition = previousPosition;
+	public void setTarget(float[] target) {
+		this.target = target;
 	}
 	
 	

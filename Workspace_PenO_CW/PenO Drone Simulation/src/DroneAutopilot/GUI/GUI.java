@@ -17,7 +17,23 @@ import javax.swing.JPanel;
 
 public class GUI {
 
+	private final JProgressBar progressBar;
+	public int maxValue;
+	private JFrame frame;
+	private boolean reached;
+	private MissionType missionType;
+	
+	
+	/**
+	 * Create the application.
+	 */
+	public GUI() {
+		this.progressBar = new JProgressBar();
+		this.maxValue = 0;
+		initialize();
+	}
 
+	
 	/**
 	 * Launch the application.
 	 */
@@ -32,15 +48,6 @@ public class GUI {
 				}
 			}
 		});
-	}
-
-	/**
-	 * Create the application.
-	 */
-	public GUI() {
-		this.progressBar = new JProgressBar();
-		this.maxValue = 0;
-		initialize();
 	}
 
 	/**
@@ -62,7 +69,7 @@ public class GUI {
 		select.setFont(font);
 		panel.add(select);
 
-		String[] list = { " ------ Select Mission ------ ", "Fly to red sphere","Fly shortest path","Fly shortest path poly"};
+		String[] list = { " ------ Select Mission ------ ", "Fly to single target", "Fly through all targets", "Fly shortest path poly"/*,"TEST"*/};
 		JComboBox menu = new JComboBox(list);
 		menu.setPreferredSize(new Dimension(250,30));
 		panel.add(menu);
@@ -74,35 +81,16 @@ public class GUI {
 				JComboBox menu = (JComboBox) e.getSource();
 
 				Object selected = menu.getSelectedItem();
-				if (selected.toString().equals("Fly to red sphere")){
-					setLastOrbEnabled(true);
-					setFlyShortest(false);
-					setFlyPoly(false);
-//					test = false;
-				}
-				else if (selected.toString().equals("Fly shortest path")){
-					setFlyShortest(true);
-					setLastOrbEnabled(false);
-					setFlyPoly(false);
-//					test = false;
-				}
-				else if (selected.toString().equals("Fly shortest path poly")){
-					setFlyShortest(false);
-					setLastOrbEnabled(false);
-					setFlyPoly(true);
-//					test = false;
-				}
-//				else if (selected.toString().equals("TEST")){
-//					System.out.println("test");
-//					lastOrbEnabled = false;
-//					flyShortest = false;
-//					test = true;
-//					System.out.println("test: " +test);
-//				}
-				else if(selected.toString().equals(" ")){
-					setLastOrbEnabled(false);
-					setFlyShortest(false);
-//					test = false;
+				if (selected.toString().equals("Fly to single target")){
+					setMissionType(MissionType.SINGLEOBJECT);
+				}else if (selected.toString().equals("Fly through all targets")){
+					setMissionType(MissionType.MULTIPLEOBJECTS);
+				}else if (selected.toString().equals("Fly shortest path poly")){
+					setMissionType(MissionType.POLYHEDRONSCAN);
+//				}else if (selected.toString().equals("TEST")){
+//					setMissionType(MissionType.TEST);
+				}else {
+					setMissionType(MissionType.HOVER);
 				}
 			}
 		});
@@ -155,6 +143,9 @@ public class GUI {
 		}
 	}
 
+	
+	//////////GETTERS & SETTERS//////////
+	
 	public boolean isReached() {
 		return reached;
 	}
@@ -175,30 +166,6 @@ public class GUI {
 		this.maxValue = maxValue;
 	}
 
-	public boolean isLastOrbEnabled() {
-		return lastOrbEnabled;
-	}
-
-	public void setLastOrbEnabled(boolean lastOrbEnabled) {
-		this.lastOrbEnabled = lastOrbEnabled;
-	}
-
-	public boolean isFlyShortest() {
-		return flyShortest;
-	}
-
-	public void setFlyShortest(boolean flyShortest) {
-		this.flyShortest = flyShortest;
-	}
-	
-	public boolean isFlyPoly() {
-		return flyPoly;
-	}
-
-	public void setFlyPoly(boolean flyPoly) {
-		this.flyPoly = flyPoly;
-	}
-
 	public JFrame getFrame() {
 		return frame;
 	}
@@ -207,12 +174,14 @@ public class GUI {
 		this.frame = frame;
 	}
 
-	private final JProgressBar progressBar;
-	public int maxValue;
-	public boolean lastOrbEnabled;
-	public boolean flyShortest;
-	public boolean flyPoly;
-	public boolean test;
-	private JFrame frame;
-	private boolean reached;
+	public MissionType getMissionType() {
+		return missionType;
+	}
+
+	public void setMissionType(MissionType missionType) {
+		this.missionType = missionType;
+	}
+
+	
+	
 }
