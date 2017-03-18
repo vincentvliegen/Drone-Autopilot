@@ -21,7 +21,7 @@ public class NewWorldScan {
 	public NewWorldScan(PhysicsCalculations physicsCalculations) {
 		this.physicsCalc = physicsCalculations;
 		this.drone = getPhysics().getDrone();
-		this.polyCalc = new PolyhedraCalculations();
+		this.polyCalc = new PolyhedraCalculations(drone);
 	}
 
 	/**

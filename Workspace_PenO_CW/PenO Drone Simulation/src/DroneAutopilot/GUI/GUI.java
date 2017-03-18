@@ -30,6 +30,7 @@ public class GUI {
 	public GUI() {
 		this.progressBar = new JProgressBar();
 		this.maxValue = 0;
+		setMissionType(MissionType.HOVER);
 		initialize();
 	}
 

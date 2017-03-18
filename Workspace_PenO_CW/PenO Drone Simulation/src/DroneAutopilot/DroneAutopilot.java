@@ -16,8 +16,8 @@ public class DroneAutopilot implements Autopilot {
 	private final PhysicsCalculations physicsCalculations;//deze mag niet verschillen tussen de missies, omdat de snelheid/positie/wind elk frame moet worden geupdate
 	private final GUI GUI;
 	
-	private final Mission oneSphere;
-	private final Mission severalSpheres;
+//	private final Mission oneSphere;
+//	private final Mission severalSpheres;
 //	private final Mission severalObjects;
 	private final Mission hover;
 	
@@ -29,10 +29,11 @@ public class DroneAutopilot implements Autopilot {
 		this.drone = drone;
 		this.physicsCalculations = new PhysicsCalculations(getDrone());
 		this.GUI = new GUI();
-		this.oneSphere = new OneSphere(this);
-		this.severalSpheres = new SeveralSpheres(this);//TODO execute + updateGUI
+//		this.oneSphere = new OneSphere(this);
+//		this.severalSpheres = new SeveralSpheres(this);//TODO execute + updateGUI
 //		this.severalObjects = new SeveralObjects(this);//TODO execute + updateGUI
 		this.hover = new Hover(this);//TODO updateGUI
+		this.setFirstHover(true);
 	}
 
 	/**
@@ -53,17 +54,17 @@ public class DroneAutopilot implements Autopilot {
 			getHover().execute();
 			setFirstHover(false);
 		}else{
-			if(getGUI().getMissionType() == MissionType.SINGLEOBJECT){
-				this.getOneSphere().execute();
-			}else if(getGUI().getMissionType() == MissionType.MULTIPLEOBJECTS){
-				this.getSeveralSpheres().execute();
+//			if(getGUI().getMissionType() == MissionType.SINGLEOBJECT){
+//				this.getOneSphere().execute();
+//			}else if(getGUI().getMissionType() == MissionType.MULTIPLEOBJECTS){
+//				this.getSeveralSpheres().execute();
 //			}else if(getGUI().getMissionType() == MissionType.POLYHEDRONSCAN){
 //				this.getSeveralObjects().execute();
 //			}else if(getGUI().getMissionType() == MissionType.TEST){
 //			
-			}else{
-				System.out.println("mission does not exist");
-			}
+//			}else{
+//				System.out.println("mission does not exist");
+//			}
 			setFirstHover(true);
 		}
 	}
@@ -83,14 +84,14 @@ public class DroneAutopilot implements Autopilot {
 		return physicsCalculations;
 	}
 
-	public Mission getOneSphere() {
-		return oneSphere;
-	}
-
-	public Mission getSeveralSpheres() {
-		return severalSpheres;
-	}
-
+//	public Mission getOneSphere() {
+//		return oneSphere;
+//	}
+//
+//	public Mission getSeveralSpheres() {
+//		return severalSpheres;
+//	}
+//
 //	public Mission getSeveralObjects() {
 //		return severalObjects;
 //	}
