@@ -11,7 +11,7 @@ public class SomeFigure extends PredefinedPolyhedron{
 	static double[] point4 = { 0, 0.2, 0 }; // upper
 	static double[][] vertices = new double[][]{point1,point2,point3,point4};
 	static int[][] faces = new int[][]{
-		{0,2,1},{0,1,3},{0,3,2},{1,2,3}
+		{1,2,0},{3,1,0},{2,3,0},{3,2,1}
 	};
 
 	
