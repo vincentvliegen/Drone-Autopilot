@@ -19,8 +19,8 @@ public class ThreePeaks extends PredefinedPolyhedron {
 	
 	static double[][] vertices = new double[][]{point1,point2,point3,point4,point5,point6,point7,point8,point9,point10,point11};
 	static int[][] faces = new int[][]{
-		{0,3,2},{0,1,3},{0,2,5},{0,5,4},{1,7,3},{1,6,7},{0,1,8},{1,3,8},{3,2,8},{2,0,8},
-		{4,0,10},{0,2,10},{2,5,10},{5,4,10},{1,6,9},{6,7,9},{7,3,9},{3,1,9}
+		{0,3,2},{0,1,3},{0,2,5},{0,5,4},{1,7,3},{1,6,7},{8,1,0},{8,3,1},{8,2,3},{8,0,2},
+		{10,0,4},{10,2,0},{10,5,2},{10,4,5},{9,6,1},{9,7,6},{9,3,7},{9,1,3}
 	};
 	
 	public ThreePeaks(World world, PolyhedronType type, double[] position) {
