@@ -19,9 +19,9 @@ public class TriangleAPData {
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
-		innerPoint1 = getInnerPoint(getPoint1());
-		innerPoint2 = getInnerPoint(getPoint2());
-		innerPoint3 = getInnerPoint(getPoint3());
+		innerPoint1 = calculateInnerPoint(getPoint1());
+		innerPoint2 = calculateInnerPoint(getPoint2());
+		innerPoint3 = calculateInnerPoint(getPoint3());
 		//TODO colors in which format, might be needed to adjust this
 		this.rgbInner = rgbInner;
 		this.rgbOuter = rgbOuter;
@@ -75,7 +75,7 @@ public class TriangleAPData {
 	}
 
 
-	private double[] getInnerPoint(double[] outerPoint) {
+	private double[] calculateInnerPoint(double[] outerPoint) {
 		return new double[] { (outerPoint[0] - getGravityX()) / Math.sqrt(2) + getGravityX(),
 				(outerPoint[1] - getGravityY()) / Math.sqrt(2) + getGravityY(),
 				(outerPoint[2] - getGravityZ()) / Math.sqrt(2) + getGravityZ() };
