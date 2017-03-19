@@ -81,15 +81,14 @@ public class PolyhedraCalculations {
 					ArrayList<int[]> allCornersL = new ArrayList<int[]>();
 					allCornersL.addAll(targetListLeft.get(colorLeft));
 					ArrayList<int[]> allCornersR = new ArrayList<int[]>();
-					allCornersL.addAll(targetListRight.get(colorRight));
+					allCornersR.addAll(targetListRight.get(colorRight));
 
 					ArrayList<int[]> foundmaxyL = this.findMaxCoordsWithMargin(targetListLeft.get(colorLeft), 1);
 					ArrayList<int[]> foundmaxyR = this.findMaxCoordsWithMargin(targetListRight.get(colorRight), 1);
-
 					ArrayList<int[]> foundminyL = this.findMinCoordsWithMargin(targetListLeft.get(colorLeft), 1);
 					ArrayList<int[]> foundminyR = this.findMinCoordsWithMargin(targetListRight.get(colorRight), 1);
 
-					//bovenste hoekpunt toevoegen
+					//onderste hoekpunt toevoegen
 					if (foundmaxyL.size() == 1 && foundmaxyR.size() == 1) {
 						float[] coordinate = this.getPhysics().calculatePositionObject(
 								intListToFloatList(foundmaxyL.get(0)), intListToFloatList(foundmaxyR.get(0)));
@@ -98,10 +97,11 @@ public class PolyhedraCalculations {
 						allCornersR.remove(foundmaxyR.get(0));
 					}
 
-					//onderste hoekpunt toevoegen
+					//bovenste hoekpunt toevoegen
 					if (foundminyL.size() == 1 && foundminyR.size() == 1) {
 						float[] coordinate = this.getPhysics().calculatePositionObject(
 								intListToFloatList(foundminyL.get(0)), intListToFloatList(foundminyR.get(0)));
+						System.out.println(coordinate);
 						corners.add(coordinate);
 						allCornersL.remove(foundminyL.get(0));
 						allCornersR.remove(foundminyR.get(0));
