@@ -10,6 +10,7 @@ public class KeyboardMovement implements KeyListener{
 	public double x=0,y=0,z=0;
 	public boolean left, right, up, down, front, back;
 	public boolean objFront, objLeft, objRight, objDown, objUp, objBack;
+	private boolean delete;
 	public WorldObject object = null;
 	public KeyboardMovement(){}
 	
@@ -44,6 +45,8 @@ public class KeyboardMovement implements KeyListener{
 			objUp = true;
 		else if((key.getKeyCode()==KeyEvent.VK_O))
 			objDown = true;
+		else if ((key.getKeyCode()==KeyEvent.VK_DELETE))
+			delete = true;
 	}
 
 	@Override
@@ -72,6 +75,8 @@ public class KeyboardMovement implements KeyListener{
 			objUp = false;
 		else if((key.getKeyCode()==KeyEvent.VK_O))
 			objDown = false;
+		else if ((key.getKeyCode()==KeyEvent.VK_DELETE))
+			delete = false;
 	}
 	
 	public void update(float dt){
@@ -120,6 +125,14 @@ public class KeyboardMovement implements KeyListener{
 			} else if (object instanceof Polyhedron) {
 				((Polyhedron)object).translatePolyhedronOver(new double[]{(double)x, (double)y, (double)z});
 			}
+		}
+		if (delete) {
+			if (object == null || !object.getWorld().getWorldObjectList().contains(object))
+				return;
+			if (object instanceof Sphere)
+				object.getWorld().removeSphere((Sphere) object);
+			else if (object instanceof Polyhedron)
+				object.getWorld().removePolyhedron((Polyhedron) object); 
 		}
 	}
 
