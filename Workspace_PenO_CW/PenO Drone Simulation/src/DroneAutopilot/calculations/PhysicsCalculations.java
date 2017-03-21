@@ -111,7 +111,17 @@ public class PhysicsCalculations{
 	}
 
 		private void calculateSpeed(){
-			setSpeed(VectorCalculations.timesScalar(VectorCalculations.sum(this.getPosition(), VectorCalculations.inverse(this.getPreviousPosition())),1/this.getDeltaT()));
+			//a*t^2/2 + v0*t + x0 = x1 
+			float[] a = VectorCalculations.timesScalar(
+							VectorCalculations.sum(
+								VectorCalculations.sum(
+									this.getPosition(), 
+									VectorCalculations.inverse(this.getPreviousPosition())),
+								VectorCalculations.timesScalar(this.getSpeed(), -this.getDeltaT())),
+							2/(this.getDeltaT()*this.getDeltaT()));
+			//v1 = v0 + at
+			float[] vNew = VectorCalculations.sum(this.getSpeed(), VectorCalculations.timesScalar(a, this.getDeltaT()));
+			setSpeed(vNew);
 		}
 
 		private void calculateDirectionOfView(){
