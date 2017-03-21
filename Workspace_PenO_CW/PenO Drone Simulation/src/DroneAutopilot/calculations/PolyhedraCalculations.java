@@ -60,14 +60,16 @@ public class PolyhedraCalculations {
 		HashMap<float[], ArrayList<int[]>> innerTrianglesR = this
 				.findThreePointsTriangles(this.getHashMapTargetInnerColor());
 
+		System.out.println("Outer");
 		HashMap<float[], ArrayList<float[]>> cornersOuter = this.findMatchingCorners(outerTrianglesL,
 				outerTrianglesR);
-		HashMap<float[], ArrayList<float[]>> cornersInner = this.findMatchingCorners(innerTrianglesL,
-				innerTrianglesR);
+//		System.out.println("Innerdriehoekpunten");
+//		HashMap<float[], ArrayList<float[]>> cornersInner = this.findMatchingCorners(innerTrianglesL,
+//				innerTrianglesR);
 
 
 		this.setOuterCorners(cornersOuter);
-		this.setInnerCorners(cornersInner);
+		//this.setInnerCorners(cornersInner);
 	}
 
 	public HashMap<float[], ArrayList<float[]>> findMatchingCorners(HashMap<float[], ArrayList<int[]>> targetListLeft,
@@ -87,12 +89,14 @@ public class PolyhedraCalculations {
 					ArrayList<int[]> foundmaxyR = this.findMaxCoordsWithMargin(targetListRight.get(colorRight), 1);
 					ArrayList<int[]> foundminyL = this.findMinCoordsWithMargin(targetListLeft.get(colorLeft), 1);
 					ArrayList<int[]> foundminyR = this.findMinCoordsWithMargin(targetListRight.get(colorRight), 1);
-
+					
+					this.getPhysics().updateDroneData();
 					//onderste hoekpunt toevoegen
 					if (foundmaxyL.size() == 1 && foundmaxyR.size() == 1) {
 						float[] coordinate = this.getPhysics().calculatePositionObject(
 								intListToFloatList(foundmaxyL.get(0)), intListToFloatList(foundmaxyR.get(0)));
 						corners.add(coordinate);
+						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
 						allCornersL.remove(foundmaxyL.get(0));
 						allCornersR.remove(foundmaxyR.get(0));
 					}
@@ -101,8 +105,8 @@ public class PolyhedraCalculations {
 					if (foundminyL.size() == 1 && foundminyR.size() == 1) {
 						float[] coordinate = this.getPhysics().calculatePositionObject(
 								intListToFloatList(foundminyL.get(0)), intListToFloatList(foundminyR.get(0)));
-						System.out.println(coordinate);
 						corners.add(coordinate);
+						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
 						allCornersL.remove(foundminyL.get(0));
 						allCornersR.remove(foundminyR.get(0));
 					}
@@ -164,6 +168,7 @@ public class PolyhedraCalculations {
 							}
 						}
 						corners.add(coordinate);
+						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
 					
 					}
 					
@@ -171,6 +176,7 @@ public class PolyhedraCalculations {
 					float[] coordinate = this.getPhysics().calculatePositionObject(
 							intListToFloatList(allCornersL.get(0)), intListToFloatList(allCornersR.get(0)));
 					corners.add(coordinate);
+					System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
 
 					result.put(colorLeft, corners);
 				}

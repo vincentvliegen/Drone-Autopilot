@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import org.junit.Before;
 import org.junit.Test;
 
+import DroneAutopilot.calculations.PhysicsCalculations;
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import p_en_o_cw_2016.*;
 
@@ -223,15 +224,15 @@ public class PolyhedraCalculationsTests {
 			}
 			@Override
 			public float getMaxPitchRate() {
-				return 0;
+				return 50;
 			}
 			@Override
 			public float getMaxRollRate() {
-				return 0;
+				return 50;
 			}
 			@Override
 			public float getMaxYawRate() {
-				return 0;
+				return 50;
 			}
 			@Override
 			public float getRoll() {
