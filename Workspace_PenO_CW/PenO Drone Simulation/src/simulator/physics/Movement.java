@@ -21,7 +21,7 @@ public class Movement {
 		velocity[0] += (acceleration[0] * timePassed);
 		velocity[1] += (acceleration[1] * timePassed);
 		velocity[2] += (acceleration[2] * timePassed);
-		/*
+		
 		System.out.println("--------------");
 		System.out.println("Total time passed " + drone.getWorld().getCurrentTime());
 		System.out.println("Time " + timePassed);
@@ -36,7 +36,7 @@ public class Movement {
 		System.out.println("AccelerationZ " + acceleration[2]);
 		System.out.println("Thrust " + drone.getThrust());
 		System.out.println("--------------");
-		*/
+		
 		setCurrentPosition(currentPos);
 		drone.translateDrone(currentPos);
 	}

@@ -3,7 +3,10 @@ package DroneAutopilot.calculations;
 public class VectorCalculations {
 
 	public static float size(float x, float y, float z){
-		return (float) Math.sqrt(x*x+y*y+z*z);
+		double xNew = (double) x;
+		double yNew = (double) y;
+		double zNew = (double) z;
+		return (float) Math.sqrt(xNew*xNew+yNew*yNew+zNew*zNew);
 	}
 
 	public static float size(float[] vector){
@@ -15,7 +18,16 @@ public class VectorCalculations {
 		if (size == 0){
 			return new float[] {0,0,0};
 		}else{
-			return new float[] {x/size, y/size, z/size};
+			float xNorm = x/size;
+			float yNorm = y/size;
+			float zNorm = z/size;
+			if(Math.abs(xNorm) == 1.0f)
+				return new float[] {xNorm,0,0};
+			if(Math.abs(yNorm) == 1.0f)
+				return new float[] {0,yNorm,0};
+			if(Math.abs(zNorm) == 1.0f)
+				return new float[] {0,0,zNorm};
+			return new float[] {xNorm, yNorm, zNorm};
 		}
 	}
 

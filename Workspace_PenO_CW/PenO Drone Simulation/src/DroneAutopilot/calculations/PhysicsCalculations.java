@@ -420,11 +420,11 @@ public class PhysicsCalculations{
 				//we tekenen een xy-vlak, en we leggen lowerLimit volgens de x-as en upperLimit heeft een positieve y-waarde
 				//float[] coordLow = {vectorSize(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
 	
-				float cosLowUp = VectorCalculations.cosinusBetweenVectors(lowerLimit, upperLimit);
+				float cosLowUp = Math.abs(VectorCalculations.cosinusBetweenVectors(lowerLimit, upperLimit));
 				float[] crossPLowUp = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,upperLimit));
 				//float[] coordUp = {vectorSize(upperLimit)*cosLowUp,vectorSize(upperLimit)*((float) Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
 	
-				float cosLowAppDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxDir);
+				float cosLowAppDir = Math.abs(VectorCalculations.cosinusBetweenVectors(lowerLimit, approxDir));
 				if(cosLowAppDir+0>cosLowUp+0){
 					isInside = false;
 				}
@@ -440,10 +440,10 @@ public class PhysicsCalculations{
 				//als binnen dan hoe groot is thrust om exact op approxDir te vliegen
 				//als buiten dan dichter bij upper of lower (om op min of max te zetten)
 				if(isInside){//inside
-					float cosLowGravVec = VectorCalculations.cosinusBetweenVectors(lowerLimit, externalForces);
+					float cosLowGravVec = Math.abs(VectorCalculations.cosinusBetweenVectors(lowerLimit, externalForces));
 					float[] coordGravVec = {VectorCalculations.size(externalForces)*cosLowUp,VectorCalculations.size(externalForces)*((float) Math.sqrt(1-cosLowGravVec*cosLowGravVec))};//coordinaten gravAndWind in xy-vlak
 	
-					float cosLowThrust = VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust);
+					float cosLowThrust = Math.abs(VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust));
 					float[] crossPLowThrust = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,thrust));
 					float signThrust;
 					if(!Arrays.equals(VectorCalculations.sum(crossPLowUp, new float[] {0,0,0}), VectorCalculations.sum(crossPLowThrust, new float[] {0,0,0}))){
@@ -456,7 +456,7 @@ public class PhysicsCalculations{
 					result = 	(coordAppDir[0]*coordGravVec[1]-coordAppDir[1]*coordGravVec[0])/
 							(coordAppDir[1]*coordThrust[0]-coordAppDir[0]*coordThrust[1]);
 				}else{//outside
-					float cosUpAppDir = VectorCalculations.cosinusBetweenVectors(upperLimit, approxDir);
+					float cosUpAppDir = Math.abs(VectorCalculations.cosinusBetweenVectors(upperLimit, approxDir));
 					if(cosLowAppDir+0>cosUpAppDir+0){//dichter bij upperLimit
 						result = -maxThrust;
 					}else{//dichter bij lowerLimit
@@ -474,8 +474,11 @@ public class PhysicsCalculations{
 			float[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(getDirectionDroneToPosition(position)), acceleration*weight);
 	
 			float[] thrustVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(externalForces));
+			if (thrustVector[1] <0){
+				thrustVector = VectorCalculations.inverse(thrustVector);
+			}
 			float[] normal = VectorCalculations.normalise(thrustVector);//normale op het trustvlak, genormaliseerde thrust
-			float[] projDirOnNormal = VectorCalculations.timesScalar(normal , VectorCalculations.dotProduct(forceToPos, normal));
+			float[] projDirOnNormal = VectorCalculations.timesScalar(thrustVector , (float) (VectorCalculations.dotProduct(forceToPos, thrustVector)/Math.pow(VectorCalculations.size(thrustVector), 2)));
 			float[] viewVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(projDirOnNormal));
 			this.setWantedOrientation(new float[][] {thrustVector,viewVector});
 		}
@@ -484,7 +487,7 @@ public class PhysicsCalculations{
 				float distance = this.getDistanceDroneToPosition(position);
 				float speed = this.getSpeedDroneToPosition(position);
 				int minMaxIndex = 1;//accelerate
-				if (distance/speed <= PhysicsCalculations.getDistancespeedfactor()) {//d/v <= i -> te snel -> vertragen
+				if (speed/distance >= PhysicsCalculations.getDistancespeedfactor()) {
 					minMaxIndex = 0;//decelerate
 				} 
 				if (distance <= PhysicsCalculations.getDropdowndistance()){
@@ -540,6 +543,9 @@ public class PhysicsCalculations{
 			float[] externalForces = this.getExternalForces();
 			
 			float[] thrustVector = VectorCalculations.inverse(externalForces);// = hover
+			if (thrustVector[1] <0){
+				thrustVector = VectorCalculations.inverse(thrustVector);
+			}
 			float[] normal = VectorCalculations.normalise(thrustVector);//normale op het trustvlak, genormaliseerde thrust
 			float[] projDirOnNormal = VectorCalculations.timesScalar(normal , VectorCalculations.dotProduct(direction, normal));
 			float[] viewVector = VectorCalculations.sum(direction, VectorCalculations.inverse(projDirOnNormal));
@@ -579,12 +585,29 @@ public class PhysicsCalculations{
 				// Remain angles in 1 frame => 1/Delta * Remain
 				float[] correctAnglesInOneFrames = VectorCalculations.timesScalar(remainingAngles, 1/getDeltaT());
 				//Check vs maxRates
-				if (correctAnglesInOneFrames[0]+0 != 0)
-					this.setYawRate(correctAnglesInOneFrames[0]);
-				if (correctAnglesInOneFrames[1]+0 != 0)
-					this.setPitchRate(correctAnglesInOneFrames[1]);
+				if (correctAnglesInOneFrames[0]+0 != 0) {
+					if (Math.abs(correctAnglesInOneFrames[0]) > Math.abs(maxAngleRates[0])) {
+						this.setYawRate(maxAngleRates[0]*Math.signum(correctAnglesInOneFrames[0]));
+					}
+					else {
+						this.setYawRate(correctAnglesInOneFrames[0]);
+					}
+				}
+				if (correctAnglesInOneFrames[1]+0 != 0){
+					if (Math.abs(correctAnglesInOneFrames[1]) > Math.abs(maxAngleRates[1])) {
+						this.setPitchRate(maxAngleRates[1]*Math.signum(correctAnglesInOneFrames[1]));
+					}
+					else {
+						this.setPitchRate(correctAnglesInOneFrames[1]);
+					}
+				}
 				if (correctAnglesInOneFrames[2]+0 != 0) {
-					this.setRollRate(correctAnglesInOneFrames[2]);
+					if (Math.abs(correctAnglesInOneFrames[2]) > Math.abs(maxAngleRates[2])) {
+						this.setRollRate(maxAngleRates[2]*Math.signum(correctAnglesInOneFrames[2]));
+					}
+					else {
+						this.setRollRate(correctAnglesInOneFrames[2]);
+					}
 				}
 			}else{
 				this.setYawRate(0);
@@ -598,7 +621,13 @@ public class PhysicsCalculations{
 			float weight = this.getDrone().getWeight();
 			float[] externalForces = this.getExternalForces();
 			float[] thrust = VectorCalculations.timesScalar(this.getDirectionOfThrust(), this.getThrust());
-
+			for (float x: getSpeed())
+				System.out.println(x);
+			for (float x: getPosition())
+				System.out.println(x);
+			for (float x: getPreviousPosition())
+				System.out.println(x);
+			System.out.println("-----------");
 			//(T+G+W+D)/(2m) * deltaT^2  {I} +  v0*deltaT + x0  {II} = Xexp
 			float[] part1 = VectorCalculations.timesScalar(VectorCalculations.sum(thrust, externalForces), this.getDeltaT()*this.getDeltaT()/(2*weight));
 			float[] part2 = VectorCalculations.sum(VectorCalculations.timesScalar(this.getSpeed(), this.getDeltaT()), this.getPosition());
