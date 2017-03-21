@@ -1,7 +1,7 @@
 package mission;
 
 
-import DroneAutopilot.MoveToTarget;
+import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.algoritmes.ClosestOrbs;
 import DroneAutopilot.algoritmes.NewWorldScan;
 import DroneAutopilot.calculations.VectorCalculations;
@@ -25,17 +25,17 @@ public class SeveralObjects extends Mission {
 	private float[] currentTarget = null;
 	private float inFrontFactor;
 
-	public SeveralObjects(MoveToTarget moveToTarget, Drone drone) {
-		super(moveToTarget, drone);
-		this.closestObjects = new ClosestOrbs(drone);
-		this.scan = new NewWorldScan(drone);
+	public SeveralObjects(DroneAutopilot droneAutopilot) {
+		super(droneAutopilot);
+		this.closestObjects = new ClosestOrbs(this.getDrone());
+		this.scan = new NewWorldScan(this.getPhysicsCalculations());
 		setRefreshCounter(0);
 		setFirstTime(true);
 	}
 
 	@Override
 	public void execute() {
-		if (!this.getScan().getFinishedScan()) {// als de scanner nog geen
+		if (!this.getScan().isFinished()) {// als de scanner nog geen
 													// object heeft gevonden,
 													// blijf zoeken
 			this.getScan().scan();
@@ -52,7 +52,7 @@ public class SeveralObjects extends Mission {
 			// BEREKENING OBJECTS
 			if (isFirstTime()) {
 				firstTimeSinceScan();
-			} else if (!this.getMoveToTarget().isScanning() && this.getRefreshCounter() >= getTimeToRefresh()) { // TODO
+			} else if (this.getRefreshCounter() >= getTimeToRefresh()) { // TODO
 																													// functie
 																													// otherObjectsFar
 																													// die
@@ -67,7 +67,7 @@ public class SeveralObjects extends Mission {
 			}
 			else {
 				float distance = this.getClosestObjects().getPhysicsCalculations()
-						.getDistanceToPosition(this.getClosestObjects().getClosestObject());
+						.getDistanceDroneToPosition(this.getClosestObjects().getClosestObject());
 
 				if (distance <= getDistancetoarrival()) {
 					ArrivedAtTarget(); // TODO aanpassen voor objects
@@ -286,6 +286,12 @@ public class SeveralObjects extends Mission {
 
 	public NewWorldScan getScan() {
 		return scan;
+	}
+
+	@Override
+	public void updateGUI() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
