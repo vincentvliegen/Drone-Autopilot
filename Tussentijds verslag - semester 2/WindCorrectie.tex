@@ -1,0 +1,26 @@
+\subsubsection{Wind correctie}
+\noindent {\em Auteur: Vincent Vliegen}
+\\
+\\
+De wind zorgt voor een verandering op de positie en ori\"entatie van de drone. Omdat de autopilot wordt opgeroepen onder een constant tijdsinterval, kunnen er voorspellingen worden gemaakt over de ruimtelijke situering van de drone wanneer er een bepaalde hoeveelheid tijd is verlopen.
+\\
+\\
+De autopilot stelt de thrust en de rotatiesnelheden in. Met behulp van de uitwendige krachten en rotaties, kunnen dan de verplaatsingsrichting en verandering van ori\"entatie bepaald worden. Wanneer nu ook het constante tijdsinterval in rekening wordt gebracht, kan de verwachtte positie benaderd worden aan de hand van de bewegingsvergelijking:
+\begin{equation}
+	 \frac{(\vec{T} + \vec{G} + \vec{D} + \vec{W}) }{2m} * (\Delta t)^2 + \vec{v_0} * \Delta t + \vec{x_0} = \vec{x}_{exp}
+\end{equation}
+De verwachtte yaw, pitch en roll, die samen de ori\"entatie bepalen, worden als volgt berekend:
+\begin{equation}
+	\theta_0 + (\omega + \omega_{wind})*\Delta t = \theta_{exp}
+\end{equation}
+\\
+De autopilot kijkt in het begin van elke cyclus of de verwachtte positie en de eigenlijke positie overeenkomen, repsectievelijk de verwachtte en eigenlijke ori\"entatie. Zo niet, is de afwijking te verklaren als een verandering van de windtranslatie en -rotatie. 
+\\
+Het verschil in positie is het gevolg van een onnauwkeurige benadering van de windtranslatie. Deze kan gecorrigeerd worden door de kracht te berekenen die de afwijking heeft veroorzaakt, en dan op te tellen bij de huidige windkracht.
+\begin{equation}
+\frac{(\vec{W}_{corr}) }{2m} * (\Delta t)^2 = \vec{x}-\vec{x}_{exp}
+\end{equation}
+De afwijking in rotatie duidt een rotatieverandering van de wind aan. Ook hier kan een correctie berekend worden voor de yaw, pitch en roll, die vervolgens opgeteld word met de huidige windrotaties.
+\begin{equation}
+\omega_{corr}*\Delta t = \theta-\theta_{exp}
+\end{equation}
