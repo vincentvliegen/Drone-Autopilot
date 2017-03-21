@@ -1,5 +1,5 @@
 %polyhedra beeldverwerking
-\subsubsection{Beeldverwerking Polyhedra}
+\subsection{Beeldverwerking Polyhedra}
 {\em Auteur: Laura Vranken}
 \\
 \\
@@ -27,9 +27,9 @@ Ten eerste worden alle pixels gegroepeerd per kleur. Dan worden de kleuren opges
 \end{table}
 \\
 Om het zwaartepunt van de driehoek te kunnen bepalen, wordt eerst naar de hoekpunten gezocht. Hiervoor bepalen we voor elke zijde van de driehoek de buitenste pixel. Aangezien het kan zijn dat twee hoekpunten op dezelfde lijn pixels liggen, worden twee pixels van elke zijde bepaald (de minimum en maximum pixel). Op deze manier worden acht pixels gevonden. Figuur \ref{fig:DrieGevallenDriehoeken}a geeft een voorbeeld van deze methode. Natuurlijk heeft een driehoek geen acht hoeken, dus worden de overeenkomstige buitenste pixels samengenomen tot één hoekpunt. 
-\\
+\\\\
 Een volledige driehoek behoudt drie hoekpunten. Ook kan een driehoek die evenwijdig met een zijde door een andere polyhedra of door de rand van het beeld afgesneden wordt, drie hoekpunten overhouden. Indien niet evenwijdig met een zijde wordt afgesneden, blijven er vier of meer hoekpunten over. Zie Figuur \ref{fig:DrieGevallenDriehoeken}b voor het eerste geval en Figuur \ref{fig:DrieGevallenDriehoeken}c voor het tweede geval. De figuren met meer dan drie hoekpunten worden niet meer bekeken; ze zijn niet volledig.
-\\
+\\\\
 Om onderscheid te maken tussen volledige driehoeken en afgesneden driehoeken met drie hoekpunten, wordt de buitendriehoek samen met de overeenkomstige binnendriehoek verder onderzocht. Indien hun zwaartepunten samenvallen, zijn ze volledig. Indien hun zwaartepunten niet samenvallen, kan geconcludeerd worden dat een deel van de driehoek is weggevallen. Zwaartepunten worden bepaald door Formule \ref{formule: zwaartepunt}: \begin{equation}
 \label{formule: zwaartepunt}
 (x_{zpt},y_{zpt}) = ( \ \frac{1}{3}(x_1 + x_2 + x_3) , \ \frac{1}{3}(y_1 + y_2 + y_3) \ )
