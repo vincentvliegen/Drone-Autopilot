@@ -201,12 +201,8 @@ public class PhysicsCalculations{
 		}
 		
 		private void calculateXObject(){
-			float deltaX;
-			double angle;
-			float depth;
-			angle = this.getHorizontalAngleDeviation();
-			depth = this.getDepth();
-			deltaX = (float) (Math.tan(Math.toRadians(angle))*depth);
+			//altijd negatief, positieve Z is naar achter
+			float deltaX = this.getDepth();
 			setXObject(deltaX);
 		}
 	
@@ -219,13 +215,19 @@ public class PhysicsCalculations{
 			deltaY = (float) (Math.tan(Math.toRadians(angle))*depth);
 			setYObject(deltaY);
 		}
-	
+
+
 		private void calculateZObject(){
-			//altijd negatief, positieve Z is naar achter
-			float deltaZ = -this.getDepth();
+			float deltaZ;
+			double angle;
+			float depth;
+			angle = this.getHorizontalAngleDeviation();
+			depth = -this.getDepth();
+			deltaZ = (float) (Math.tan(Math.toRadians(angle))*depth);
 			setZObject(deltaZ);
 		}
-	
+
+
 		//TODO check vectorDroneToWorld of het worldtodrone moet zijn
 		private float[] objectPosDroneToWorld(){
 			float[] droneRotated = this.vectorDroneToWorld(getXObject(), getYObject(), getZObject());
