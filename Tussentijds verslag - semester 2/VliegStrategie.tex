@@ -2,14 +2,14 @@
 \noindent {\em Auteur: Vincent Vliegen}
 \\
 \\
-De autopilot maakt gebruik van vectoren om de drone en andere objecten in de ruimte te situeren. Dit maakt het mogelijk om de thrustgrootte en rotatiesnelheden te berekenen, zodat we vliegen volgens een optimaal pad.
+De Autopilot maakt gebruik van vectoren om de drone en andere objecten in de ruimte te situeren. Dit maakt het mogelijk om de thrustgrootte en rotatiesnelheden te berekenen, zodat de drone volgens een optimaal pad kan vliegen.
 \\
 \\
-De drone start met een gegeven positie en ori\"entatie. De autopilot heeft nu twee opties. Oftewel stelt deze in dat de drone naar een andere positie in de ruimte vliegt, oftewel dat de camera's anders geori\"enteerd worden.
+De drone start met een gegeven positie en ori\"entatie. De Autopilot heeft nu twee opties: ofwel stelt deze in dat de drone naar een andere positie in de ruimte vliegt, ofwel dat de camera's anders geori\"enteerd worden.
 \\
-Omwille van de uitwendige krachten op de drone vliegt de drone niet in de richting van de thrustkracht. De zwaartekracht, de drag en de wind, berekend en opgeteld met de thrust, resulteren samen in de verplaatsingsrichting van de drone. Wanneer er een targetpositie is meegegeven, kan de thrustgrootte dan ook zo ingesteld worden, dat de drone zo goed mogelijk in de richting van het doel vliegt.
+Omwille van de uitwendige krachten op de drone, vliegt de drone niet in de richting van de thrustkracht. De zwaartekracht, de drag en de wind, berekend en opgeteld met de thrust, resulteren samen in de verplaatsingsrichting van de drone. Wanneer er een targetpositie is meegegeven, kan de thrustgrootte zo ingesteld worden dat de drone zo goed mogelijk in de richting van het doel blijft vliegen.
 \\
 \\
-Daarna wordt een gewenste ori\"entatie berekend. Hiervoor bestaan meerdere opties. Enerzijds kunnen de camera's een gevraagde richting uit kijken met de thrust zo gericht dat de drone het beste stil hangt. Anderzijds kan de thrust zo ingesteld worden dat de drone met een gewenste versnelling naar een doel vliegt en de camera's dat ze zo goed mogelijk kijken volgens het vliegtraject.
+Daarna wordt een gewenste ori\"entatie berekend. Hiervoor bestaan meerdere opties. Enerzijds kunnen de camera's een gevraagde richting uitkijken met de thrust zo gericht dat de drone quasi stil hangt. Anderzijds kan de thrust zo ingesteld worden dat de drone met een gewenste versnelling naar een doel vliegt met de camera's zo goed mogelijk kijkend volgens het vliegtraject.
 \\
-Wanneer de gewenste ori\"entatie bekend is, kunnen de nodige rotatiesnelheden berekend worden om de drone bij te sturen. Met behulp van de rotatiematrices worden de nog af te leggen rotaties bepaald. Als hierbij het benaderde rotationele effect van de wind mee in rekening word gebracht, kunnen de rotatiesnelheden voor de yaw, pitch en roll vastgelegd worden.
+Wanneer de gewenste ori\"entatie bekend is, kunnen de nodige rotatiesnelheden berekend worden om de drone bij te sturen. Met behulp van de rotatiematrices worden de nog af te leggen rotaties bepaald. Wanneer hierbij het benaderde rotationele effect van de wind mee in rekening wordt gebracht, kunnen de rotatiesnelheden voor de yaw, pitch en roll vastgelegd worden.
