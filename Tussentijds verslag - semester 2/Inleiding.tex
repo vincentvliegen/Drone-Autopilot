@@ -1,2 +1,17 @@
-\noindent {\em Auteurs: ; redactie: Arne Vlietinck}
+% \emph{[In de inleiding schets je de context, probleemstelling en doelstellingen van het project.  Je kunt ook kort aangeven wat er wel en niet in het verslag staat (bij een tussentijds verslag).]} 
+{\em Auteurs: Laura Vranken \& Arne Vlietinck}
+\\\\
+\noindent
+Drones zijn de laatste jaren enorm in populariteit toegenomen en ondervinden bijgevolg ook een evolutie op technologisch vlak. Ze worden tegenwoordig gebruikt voor talloze toepassingen. De bekendste toepassing bevindt zich binnen Defensie, die drones gebruiken om informatie te verkrijgen over vijandelijk gebied zonder mensenlevens te moeten riskeren. Daarnaast hebben ook grote bedrijven (o.a. Amazon\footnote{Amazon Prime Air}) de weg naar deze technologie gevonden. De toekomst brengt echter nog veel meer voordelen. Enkele voorbeelden  \cite{website:microdrones} zijn veiligheidsinspectie van windturbines of elektriciteitslijnen, luchtsteun bij zoek- en reddingsoperaties, bewaking en luchtfotografie.
 \\
+Wanneer een drone autonoom functioneert, is een betrouwbare aansturing door de Autopilot van levensbelang. Hij moet namelijk bestand zijn tegen allerlei externe factoren (bv. wind, obstakels...).
+\\
+\\
+Dit verslag behandelt de autonome aansturing van een drone, meer bepaald een quadcopter. Er wordt uitgegaan van een drone waarop twee voorwaarts gerichte camera's bevestigd zijn. Op basis van deze beelden moeten afstand en positie tegenover het doel ingeschat worden en nieuwe bewegingsopdrachten voor de drone gegenereerd worden. Deze bewegingen worden weergegeven in een Virtual Testbed. Dit is een softwaresysteem dat een fysieke opstelling van een drone en camera's simuleert. De simulator genereert beelden van de drone uit verschillende standpunten a.d.h.v. de verkregen bewegingsopdrachten van de Autopilot. 
+\\
+\\
+De Autopilot en het Virtual Testbed moeten zo ontworpen worden dat de drone in staat is om zijn doel te lokaliseren en er naar toe te vliegen. Dit semester is dat doel een polyhedra, willekeurig gegenereerd door het Testbed, bestaande uit verschillende driehoeken, die voldoen aan de opgegeven HSV combinaties ??VERWIJZING NAAR OPGAVE??. Dit onder invloed van wind in willekeurige richtingen en gecombineerd met het ontwijken van obstakels. Bovendien moet de drone ook rond een object kunnen vliegen en hertekenen wat hij waarneemt. Tenslotte moet er een generator ontwikkeld worden die nieuwe werelden kan inladen en een editor die deze werelden kan bewerken.
+\\
+\\
+De tekst is als volgt opgebouwd:\\
+Eerst wordt het ontwerp van de Autopilot en Virtual Testbed verder uitgediept (sectie \ref{sec:Ontwerp}). Vervolgens wordt er ingegaan op de gebruikte algoritmes (sectie \ref{sec:Algoritmes}) en wordt de opbouw van onze software verduidelijkt (sectie \ref{sec:Software}). Tot slot worden de uitgevoerde testen besproken (sectie \ref{sec:Testen}) en wordt dit aangevuld met een kort besluit. 

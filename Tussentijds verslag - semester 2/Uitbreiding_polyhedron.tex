@@ -1,9 +1,11 @@
 \subsubsection{Toevoeging van Polyhedra}
-
-Het ontwerp van de simulator zorgde ervoor dat de uitbreiding ervan met polyhedrons vrij eenvoudig in te voeren was. Door het nieuwe type Polyhedron dat erft van de WorldObjects, moesten in World zelf slechts enkele extra methodes worden ge\"implementeerd m.b.t. het toevoegen en verwijderen van een Polyhedron aan de bestaande wereld.\\
+\noindent {\em Auteur: Bram}
+\\
+Het ontwerp van de simulator zorgt ervoor dat de uitbreiding ervan met polyhedrons vrij eenvoudig in te voeren is. Door het nieuwe type Polyhedron dat erft van de WorldObjects, moesten in World zelf slechts enkele extra methodes worden ge\"implementeerd m.b.t. het toevoegen en verwijderen van een Polyhedron aan de bestaande wereld.\\
 
 \noindent 
-De Polyhedron is zo ontworpen dat die bestaat uit verschillende Triangles. De tekenfunctie van de Polyhedron draagt elke Triangle die tot de Polyhedron behoort, op om zichzelf te tekenen. Een Triangle bestaat uit coordinaten voor zijn drie hoekpunten en een kleur voor het buitenste gedeelte van de driehoek. Op basis daarvan worden de binnenste hoekpunten berekend en er wordt een kleur afgeleid uit de gegeven kleur zodat de driehoek voldoet aan de gegeven beperkingen m.b.t. de kleur en de oppervlakte.\\
+De Polyhedron is zo ontworpen dat die bestaat uit verschillende Triangles. De tekenfunctie van de Polyhedron draagt elke Triangle die tot de Polyhedron behoort, op om zichzelf te tekenen. Een Triangle bestaat uit coordinaten voor zijn drie hoekpunten en een kleur voor het buitenste gedeelte van de driehoek. Op basis daarvan worden de binnenste hoekpunten berekend en er wordt een kleur afgeleid uit de gegeven kleur zodat de driehoek voldoet aan de gegeven beperkingen m.b.t. de kleur, zie tabel \ref{table: HSVwaarden}, en de oppervlakte.\\
+%TODO voorwaarde oppervlakte uitleggen
 \noindent
 %TODO laten staan?
 Voor het testen van de mogelijkheden van de Autopilot werden verschillende figuren ontworpen, van eenvoudige tot veel complexere.
