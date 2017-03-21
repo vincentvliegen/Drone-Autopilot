@@ -2,11 +2,10 @@
 {\em Auteur: Bram Vandendriessche}\\
 
 \noindent
-Voor het grafisch weergeven van de gescande objecten, kozen we voor een iets andere aanpak dan bij de Polyhedra in het Testbed, om een scheiding te verkrijgen tussen presentatie en representatie. Een TriangleAPData bestaat louter uit de data van een Triangle, d.w.z. de co\"ordinaten van de punten en de kleuren. Een Polyhedron is opgesplitst in een data-object (PolyhedronAPData) dat de data-driehoeken bevat, en een visueel object dat zal zorgen voor het tekenen van de Polyhedron, meer bepaald van diends driehoeken. Het visuele object bevat hiervoor een TriangleDrawer, die d.m.v. zijn draw-methode een meegegeven TriangleAPData-object visueel zal voorstellen.\\
+Voor de grafische weergave van de gescande objecten, is een iets andere aanpak gevolgd dan bij de Polyhedra in het Testbed om een scheiding te verkrijgen tussen presentatie en representatie. \textit{TriangleAPData} bestaat louter uit de data van een Triangle, d.w.z. de co\"ordinaten van de punten en de kleuren. Een Polyhedron is opgesplitst in een data-object (\textit{PolyhedronAPData}) dat de data-driehoeken bevat, en een visueel object dat zal zorgen voor het tekenen van de driehoeken van de Polyhedron. Het visuele object bevat hiervoor een \textit{TriangleDrawer}, die d.m.v. zijn draw-methode een meegegeven \textit{TriangleAPData}-object visueel zal voorstellen.\\
 ~\\
 \noindent
-Net als het Testbed werkt ook de Autopilot met een World, die voor de implementatie van de OpenGL-functies zorgt. De wereld werd opgesplitst in een data-object en een visueel. Dit laatste zal met de gegevens uit de data-wereld een visuele voorstelling kunnen verzorgen.\\
+Net als het Testbed, werkt ook de Autopilot met een World, die voor de implementatie van de OpenGL-functies zorgt. De wereld werd opgesplitst in een data-object en een visueel. Dit laatste zal met de gegevens uit de data-wereld een visuele voorstelling kunnen verzorgen.\\
 ~\\
 \noindent
-Voor het scannen, dat nog niet functioneel is, zullen met behulp van de beeldherkenning %TODO verwijs?
-hoekpunten van de driehoeken omgezet worden in 3D-coördinaten. Op die manier kan een polyhedron worden samengesteld uit alle gescande driehoeken.
+Om te kunnen scannen, wat nog niet functioneel is, zullen de hoekpunten van de driehoeken omgezet worden in 3D-co\"ordinaten met behulp van de beeldherkenning. Op die manier kan een polyhedron worden samengesteld uit alle gescande driehoeken. De beeldherkenning zoekt per kleur de hoekpunten van de buitendriehoek in de linker- en rechtercamera. Om de 3D-co\"ordinaten van de hoekpunten in het wereldassenstelsel te kunnen berekenen, moeten de overeenkomstige hoekpunten uit beide beelden samengenomen worden. Het vinden van die overeenkomstige hoekpunten gebeurt door een algoritme, gelijkend op hetgeen dat controleert of een driehoek volledig is. Het zoekt eveneens naar uiterste punten en kan zo de combinaties terugvinden.  
