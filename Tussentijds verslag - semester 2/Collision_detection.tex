@@ -1,4 +1,6 @@
 \subsubsection{Collision Detection}
+\noindent {\em Auteur: Jef Versyck}
+\\\\
 Aangezien polyhedra geen mooie cirkels kunnen zijn, moet de collision detection veranderd worden. Eerst wordt er vergeleken of de afstand tussen de twee centra van de objecten (een polyhedron en de drone) kleiner is dan beide hun radii opgeteld. De radius van een polyhedron wordt gedefiniëerd als de grootste afstand tussen het centrum van de polyhedra en zijn punten. \\
 \noindent
 Vervolgens wordt er getest of de loodrechte afstand op het vlak van een Triangle vanuit het middelpunt van de drone kleiner is dan de straal van de drone. Hierbij wordt het vlak waarin de Triangle zich bevindt, berekend aan de hand van het kruisproduct van twee vectoren van de Triangle en een hoekpunt ervan. Vervolgens wordt de loodrechte projectie op het vlak bepaald. Dit punt heet P. In formulevorm: 
