@@ -7,9 +7,25 @@ Het ontwerp van het Testbed heeft de grote zwakte dat het erg moeilijk is om ind
 
 \noindent 
 De Polyhedron zelf is zo ontworpen dat die bestaat uit verschillende Triangles. De tekenfunctie van de Polyhedron draagt elke Triangle die tot de Polyhedron behoort, op om zichzelf te tekenen. Een Triangle bestaat uit co\"ordinaten voor zijn drie hoekpunten en een kleur voor het buitenste gedeelte van de driehoek. Op basis daarvan worden de binnenste hoekpunten berekend en er wordt een kleur afgeleid uit de gegeven kleur zodat de driehoek voldoet aan de gegeven beperkingen m.b.t. de kleur, zie tabel \ref{table: HSVwaarden}, en de oppervlakte.\\
-%TODO voorwaarde oppervlakte uitleggen
+
 \noindent
-%TODO laten staan?
+
 Voor het testen van de Autopilot zijn verschillende figuren ontworpen. Zij vallen onder de \textit{PredefinedPolyhedron}, een subklasse van Polyhedron die ook een positie mee kan krijgen bij creatie. Hierdoor kan de figuur op een gewenste positie worden geplaatst. De standaard Polyhedra krijgen geen positie mee. Hun positie wordt gezet op het massapunt van de polyhedron (de gemiddelde 3D-co\"ordinaat van alle hoekpunten). Op die manier wordt gezorgd dat de positie logisch is t.o.v. de hoekpunten en het niet mogelijk is dat een figuur bijvoorbeeld rond (20,0,0) wordt gedefinieerd, maar wel een positie van (0,0,-40) krijgt toegewezen. De figuren vari\"eren van een eenvoudige met vier hoekpunten tot meer complexe zoals een kubus met een opening in, waarbij de Autopilot zal moeten weten dat het voor de drone niet mogelijk is hierdoor te vliegen.
 
-%TODO foto's van de figuren?
+\begin{figure}
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.4\linewidth]{4point.png}
+		\caption{Eenvoudige figuur}
+		\label{fig:sub1}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.4\linewidth]{hollowcube.png}
+		\caption{Complexere figuur}
+		\label{fig:sub2}
+	\end{subfigure}
+	\caption{Voorgedefinieerde polyhedra.}
+	\label{fig:test}
+\end{figure}
