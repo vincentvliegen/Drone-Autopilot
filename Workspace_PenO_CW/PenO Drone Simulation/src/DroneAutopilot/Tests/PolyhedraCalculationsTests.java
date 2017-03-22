@@ -25,18 +25,48 @@ public class PolyhedraCalculationsTests {
 	private Camera camera3b;
 	private Camera camera4;
 	private Camera camera4b;
+	private Camera camera5;
+	private Camera camera5b;
+	private Camera camera6;
+	private Camera camera6b;
+	private Camera camera7;
+	private Camera camera7b;
+	private Camera camera8;
+	private Camera camera8b;
+	private Camera camera9;
+	private Camera camera9b;
 	private BufferedImage poly1;
 	private BufferedImage poly2;
 	private BufferedImage poly3;
 	private BufferedImage poly3b;
 	private BufferedImage poly4;
 	private BufferedImage poly4b;
+	private BufferedImage poly5;
+	private BufferedImage poly5b;
+	private BufferedImage poly6;
+	private BufferedImage poly6b;
+	private BufferedImage poly7;
+	private BufferedImage poly7b;
+	private BufferedImage poly8;
+	private BufferedImage poly8b;
+	private BufferedImage poly9;
+	private BufferedImage poly9b;
 	private int[] polylist1;
 	private int[] polylist2;
 	private int[] polylist3;
 	private int[] polylist3b;
 	private int[] polylist4;
 	private int[] polylist4b;
+	private int[] polylist5;
+	private int[] polylist5b;
+	private int[] polylist6;
+	private int[] polylist6b;
+	private int[] polylist7;
+	private int[] polylist7b;
+	private int[] polylist8;
+	private int[] polylist8b;
+	private int[] polylist9;
+	private int[] polylist9b;
 	
 	private static final int widthCamera = 150;
 	private static final int heightCamera = 100;
@@ -47,11 +77,16 @@ public class PolyhedraCalculationsTests {
 	private static final float droneGravity = -9.81f;
 	private static final float droneWeight = 1.4f;
 	private static final float dronePitch = 0;
-	
+	private static final float cameraSeparation2 = 0.25f;
 	private static final float maxThrust = 50;
 	
 	public void createDrone(Camera cam1, Camera cam2){
 		Drone drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation, cam1, cam2);
+		polyhedraCalc = new PolyhedraCalculations(drone);
+	}
+	
+	public void createDrone2(Camera cam1, Camera cam2){
+		Drone drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation2, cam1, cam2);
 		polyhedraCalc = new PolyhedraCalculations(drone);
 	}
 
@@ -81,6 +116,38 @@ public class PolyhedraCalculationsTests {
 		poly4b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/testsimulator-right.png"));
 		polylist4b = convertImageToIntArray(poly4b,200,200);
 		camera4b = createCameraForTesting(polylist4b, 38.78388f, 45.0f, 200);
+		
+		poly5 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/driehoekLinks.png"));
+		polylist5 = convertImageToIntArray(poly5,628,739);
+		camera5 = createCameraForTesting(polylist5, 38.78388f, 45.0f, 628);
+		
+		poly5b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/driehoekRechts.png"));
+		polylist5b = convertImageToIntArray(poly5b,628,739);
+		camera5b = createCameraForTesting(polylist5b, 38.78388f, 45.0f, 628);
+		
+		poly7 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test1Links.png"));
+		polylist7 = convertImageToIntArray(poly7,200,200);
+		camera7 = createCameraForTesting(polylist7, 38.78388f, 45.0f, 200);
+		
+		poly7b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test1Rechts.png"));
+		polylist7b = convertImageToIntArray(poly7b,200,200);
+		camera7b = createCameraForTesting(polylist7b, 38.78388f, 45.0f, 200);
+		
+		poly8 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test5Links.png"));
+		polylist8 = convertImageToIntArray(poly8,200,200);
+		camera8 = createCameraForTesting(polylist8, 120f, 120f, 200);
+		
+		poly8b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test5Rechts.png"));
+		polylist8b = convertImageToIntArray(poly8b,200,200);
+		camera8b = createCameraForTesting(polylist8b, 120f, 120f, 200);
+		
+		poly9 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test4Links.png"));
+		polylist9 = convertImageToIntArray(poly9,200,200);
+		camera9 = createCameraForTesting(polylist9, 120f, 120f, 200);
+		
+		poly9b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test4Rechts.png"));
+		polylist9b = convertImageToIntArray(poly9b,200,200);
+		camera9b = createCameraForTesting(polylist9b, 120f, 120f, 200);
 
 	}
 	
@@ -156,9 +223,16 @@ public class PolyhedraCalculationsTests {
 	@Test
 	public void testAllCorners() throws IOException{
 		createImage();
-		createDrone(camera3, camera3b);
-		polyhedraCalc.getMatchingCorners(camera3, camera3b);
-		
+//		createDrone(camera3, camera3b);
+//		polyhedraCalc.getMatchingCorners(camera3, camera3b);
+//		createDrone(camera5, camera5b);
+//		polyhedraCalc.getMatchingCorners(camera5, camera5b);
+//		createDrone(camera7, camera7b);
+//		polyhedraCalc.getMatchingCorners(camera7, camera7b);
+		createDrone2(camera8, camera8b);
+		polyhedraCalc.getMatchingCorners(camera8, camera8b);
+		createDrone2(camera9,camera9b);
+		polyhedraCalc.getMatchingCorners(camera9, camera9b);
 	}
 	
 	@Test

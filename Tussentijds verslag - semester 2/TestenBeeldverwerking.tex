@@ -1,7 +1,74 @@
 \subsection{Testen beeldverwerking}
 \noindent {\em Auteur: Laura Vranken}
 \\\\
-Om de beeldverwerking van de polyhedra te testen, zijn verschillende afbeeldingen in het project ingeladen. Hierop zijn de testen uitgevoerd. Er wordt onder andere gecontroleerd of de omzetting van integer waarden naar HSV-waarden juist gebeurt. Bovendien is ook de functie getest die het zwaartepunt van elke zichtbare volledige driehoek teruggeeft. Dit bleek vrij accuraat.
+Om de beeldverwerking van de polyhedra te testen, zijn verschillende afbeeldingen in het project ingeladen. Hierop zijn de testen uitgevoerd. Er werd onder andere gecontroleerd of de omzetting van integer waarden naar HSV-waarden juist gebeurde. Bovendien is ook de functie getest die het zwaartepunt van elke zichtbare volledige driehoek teruggeeft. Dit bleek vrij accuraat.
 \\
 De laatste test controleert of het bepalen van de 3D co\"ordinaten van de hoekpunten juist gebeurt. Dit is geverifieerd met de co\"ordinaten van het Testbed.
 %TODO eventueel wat bewijswaarden? 
+\begin{table}
+	\centering
+\begin{tabular}{l|c|c|c}
+	& x & y & z \\ \hline
+	punt 1 & 1.849 & -0.050 & 0.200 \\
+	punt 2 & 1.849 & -0.050 & -0.200 \\
+	punt 3 & 2.050 & 0.150 & 0
+\end{tabular}
+\begin{tabular}{l|c|c|c}
+	& x & y & z \\ \hline
+	punt 1 & 1.847 & -0.050 & 0.197 \\
+	punt 2 & 1.847 & -0.050 & -0.199 \\
+	punt 3 & 2.041 & 0.146 & 0.001
+\end{tabular}
+\caption{a) Testbed waarden hoge resolutie  b) Autopilot waarden hoge resolutie}
+\end{table}
+\\\\
+\begin{table}
+	\centering
+	\begin{tabular}{l|c|c|c}
+		& x & y & z \\ \hline
+		punt 1 & 2.900 & 0.524 & -0.100 \\
+		punt 2 & 2.900 & -0.175 & -0.100 \\
+		punt 3 & 2.900 & -0.175 & 0.290
+	\end{tabular}
+	\begin{tabular}{l|c|c|c}
+		& x & y & z \\ \hline
+		punt 1 & 2.893 & 0.518 & -0.100 \\
+		punt 2 & 2.893 & -0.171 & -0.100 \\
+		punt 3 & 2.893 & -0.171 & 0.290
+	\end{tabular}
+\caption{a) Testbed waarden hoge resolutie  b) Autopilot waarden hoge resolutie}
+\end{table}
+\\\\
+\begin{table}
+ 	\centering
+ 	\begin{tabular}{l|c|c|c}
+ 		& x & y & z \\ \hline
+ 		punt 1 & 0.925 & -0.525 & -0.4375 \\
+ 		punt 2 & 0.925 & 0.275 & -0.7875 \\
+ 		punt 3 & 0.925 & 0.275 & -0.0375
+ 	\end{tabular}
+ 	\begin{tabular}{l|c|c|c}
+ 		& x & y & z \\ \hline
+ 		punt 1 & 0.800 & -0.43 & -0.458 \\
+ 		punt 2 & 0.759 & 0.220 & -0.756 \\
+ 		punt 3 & 0.800 & 0.236 & -0.055
+ 	\end{tabular}
+\caption{a) Testbed waarden lage resolutie  b) Autopilot waarden lage resolutie}
+\end{table}
+\\\\
+\begin{table}
+	\centering
+	\begin{tabular}{l|c|c|c}
+		& x & y & z \\ \hline
+		punt 1 & 1.125 & 0.600 & 0.363 \\
+		punt 2 & 1.125 & -0.100 & 0.01250 \\
+		punt 3 & 1.125 & -0.100 & 0.763
+	\end{tabular}
+	\begin{tabular}{l|c|c|c}
+		& x & y & z \\ \hline
+		punt 1 & 0.960 & 0.516 & 0.358 \\
+		punt 2 & 0.960 & -0.08 & 0.008 \\
+		punt 3 & 0.960 & -0.08 & 0.725
+	\end{tabular}
+\caption{a) Testbed waarden lage resolutie  b) Autopilot waarden lage resolutie}
+\end{table}
