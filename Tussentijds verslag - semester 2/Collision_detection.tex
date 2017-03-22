@@ -5,20 +5,20 @@ Aangezien polyhedra niet per definitie mooie cirkels zijn, moet de collision det
 \noindent
 Vervolgens wordt er getest of de loodrechte afstand op het vlak van een Triangle vanuit het middelpunt van de drone kleiner is dan de straal van de drone. Hierbij wordt het vlak waarin de Triangle zich bevindt, berekend aan de hand van het kruisproduct van twee vectoren van de Triangle en een hoekpunt ervan. Vervolgens wordt de loodrechte projectie op het vlak bepaald. Dit punt heet P. In formulevorm: 
 \begin{gather*}
-	a*x + b*y + c*z = d \\ 
-	t = -\frac{a * x_{drone} + b * y_{drone} + c * z_{drone} - d}{a^2 + b^2 + c^2}  \\ P =
+	a\cdot x + b\cdot y + c\cdot z = d \\ 
+	t = -\frac{a \cdot x_{drone} + b \cdot y_{drone} + c \cdot z_{drone} - d}{a^2 + b^2 + c^2}  \\ P =
 	\begin{Bmatrix}
-	a*t + x_{drone}\\ 
-	b*t + y_{drone}\\ 
-	c*t + z_{drone}
+	a\cdot t + x_{drone}\\ 
+	b\cdot t + y_{drone}\\ 
+	c\cdot t + z_{drone}
 	\end{Bmatrix}
 \end{gather*}
 
 \noindent
- Dit is echter niet genoeg. De loodrechte projectie van het massacentrum  kan zich buiten de Triangle bevinden en zo een foutief resultaat geven. Om te zien of het punt zich binnen de Triangle bevindt, wordt aan de hand van barycentrische coördinaten gecontroleerd. Het principe hierachter is dat elk punt P in de driehoek geschreven kan worden als een lineaire combinatie van de hoekpunten (A, B en C) van een driehoek. De som van alle coëfficiënten moet gelijk zijn aan 1 en alle coëfficiënten moeten groter zijn dan 0. In formulevorm:
+ Dit is echter niet genoeg. De loodrechte projectie van het massacentrum  kan zich buiten de Triangle bevinden en zo een foutief resultaat geven. Om te zien of het punt zich binnen de Triangle bevindt, wordt aan de hand van barycentrische coördinaten gecontroleerd. Het principe hierachter is dat elk punt P in de driehoek geschreven kan worden als een lineaire combinatie van de hoekpunten (A, B en C) van een driehoek. De som van alle co\"effici\"enten moet gelijk zijn aan één en alle co\"effici\"enten moeten groter zijn dan nul. In formulevorm:
  
  \begin{gather*}
- 	P = u*A + v*B + w*C \\
+ 	P = u\cdot A + v\cdot B + w\cdot C \\
  	0 \le u,v,w \le 1 \\
  	u + v + w = 1
  \end{gather*}
