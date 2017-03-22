@@ -1,18 +1,19 @@
-\subsection{Wind correctie}
+\subsection{Windcorrectie}
 \noindent {\em Auteur: Vincent Vliegen}
 \\
 \\
-De wind zorgt voor een verandering op de positie en ori\"entatie van de drone. Aangezien de Autopilot wordt opgeroepen onder een constant tijdsinterval, kunnen er voorspellingen worden gemaakt over de ruimtelijke situering van de drone, wanneer er een bepaalde hoeveelheid tijd is verlopen.
+De wind zorgt voor een verandering van de positie en ori\"entatie van de drone. Aangezien de Autopilot wordt opgeroepen met een constant tijdsinterval, kunnen er voorspellingen worden gemaakt over de ruimtelijke situering van de drone, wanneer er een bepaalde hoeveelheid tijd is verlopen.
 \\
 \\
-De Autopilot stelt de thrust en de rotatiesnelheden in. Met behulp van de uitwendige krachten en rotaties kunnen de verplaatsingsrichting en verandering van ori\"entatie bepaald worden. Wanneer ook het constante tijdsinterval in rekening wordt gebracht, kan de verwachte positie benaderd worden aan de hand van de bewegingsvergelijking:
+De Autopilot stelt de thrust en rotatiesnelheden in. Met behulp van de uitwendige krachten en rotaties kunnen de verplaatsingsrichting en verandering van ori\"entatie bepaald worden. Wanneer ook het constante tijdsinterval in rekening wordt gebracht, kan de verwachte positie benaderd worden aan de hand van de bewegingsvergelijking (zie Tabel \ref{table: uitlegFormule} voor uitleg symbolen):
 \begin{equation}
 	 \frac{(\vec{T} + \vec{G} + \vec{D} + \vec{W}) }{2m} * (\Delta t)^2 + \vec{v_0} * \Delta t + \vec{x_0} = \vec{x}_{exp}
 \end{equation}
-De verwachtte yaw, pitch en roll, die samen de ori\"entatie bepalen, worden als volgt berekend:
+De verwachte yaw, pitch en roll, die samen de ori\"entatie bepalen, worden als volgt berekend:
 \begin{equation}
 	\theta_0 + (\omega + \omega_{wind})*\Delta t = \theta_{exp}
 \end{equation}
+
 \\
 De Autopilot controleert in het begin van elke cyclus of de verwachte positie en de eigenlijke positie overeenkomen, respectievelijk de verwachte en eigenlijke ori\"entatie. Zo niet, is de afwijking te verklaren als een verandering van de windtranslatie en -rotatie. 
 \\
@@ -24,3 +25,14 @@ De afwijking in rotatie duidt een rotatieverandering van de wind aan. Ook hier k
 \begin{equation}
 	\omega_{corr}*\Delta t = \theta-\theta_{exp}
 \end{equation}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ l|l|l }
+		\(\vec{T}\): Thrust & \(\Delta t\): tijdsverschil tussen twee frames & \(\theta_0\): initi\"ele hoek \\
+		\(\vec{G}\): Gravity & \(\vec{v_0}\): startsnelheid & \(\omega\): hoeksnelheid\\
+		\(\vec{D}\): Drag & \(\vec{x_0}\): beginpositie&\(\omega_{wind}\): windhoeksnelheid\\
+		\(\vec{W}\): Wind & \(\vec{x}_{exp}\): verwachte positie&\(\theta_{exp}\): verwachte hoek\\
+		\(\vec{W}_{corr}\): Windcorrectie & \(\omega_{corr}\): hoeksnelheidscorrectie &\\
+	\end{tabular}
+	\caption{\label{table: uitlegFormule}Verduidelijking van de gebruikte notaties.}
+\end{table}

@@ -3,27 +3,26 @@
 \noindent {\em Auteur: Arne Vlietinck}
 \\\\
 Na een uitgebreide wijziging van de opgave werden de rotatiematrices opnieuw opgesteld. De conventies in de nieuwe opgave komen niet overeen met de algemene conventies in de literatuur. Hierdoor werden de rotatiematrices met extra zorg opgesteld. Het is een cruciaal element voor de ori\"entatie en bewegingen van de drone.
-
-\begin{figure}[h!]
+\begin{table}[h]
 	\centering
 		\(
+		\begin{bmatrix} 
+		cos(r) & sin(r) & 0 \\ 
+		-sin(r) & cos(r) & 0 \\
+		0 & 0 & 1
+		\end{bmatrix}
+		\begin{bmatrix} 
+		1 & 0 & 0 \\ 
+		0 & cos(p) & sin(p) \\
+		0 & -sin(p) & cos(p)
+		\end{bmatrix}
 		\begin{bmatrix} 
 			cos(y) & 0 & -sin(y) \\ 
 			0 & 1 & 0 \\
 			sin(y) & 0 & cos(y)
 		\end{bmatrix}
-		\begin{bmatrix} 
-			1 & 0 & 0 \\ 
-			0 & cos(p) & sin(p) \\
-			0 & -sin(p) & cos(p)
-		\end{bmatrix}
-		\begin{bmatrix} 
-			cos(r) & sin(r) & 0 \\ 
-			-sin(r) & cos(r) & 0 \\
-			0 & 0 & 1
-		\end{bmatrix}
 		\)
 	\caption{Bovenstaande matrixen geven respectievelijk de yaw-, pitch- en rollmatrix weer.}
-\end{figure}
+\end{table}
 \noindent
-Bovenstaande matrices worden vermenigvuldigd in omgekeerde volgorde dit door de conventies van de rotatiematrices. Met deze rotatiematrix kan ook de inverse berekend worden.
+De RPY-matrices worden vermenigvuldigd in omgekeerde volgorde (YPR) dit door de conventies van de rotatiematrices. Ook de inversie rotatiematrix kan berekend worden.
