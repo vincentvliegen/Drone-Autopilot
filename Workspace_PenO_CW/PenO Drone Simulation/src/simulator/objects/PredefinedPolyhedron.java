@@ -1,7 +1,7 @@
 package simulator.objects;
 
 import java.awt.Color;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 
 import simulator.physics.MathCalculations;
 import simulator.world.World;
@@ -17,64 +17,21 @@ public abstract class PredefinedPolyhedron extends Polyhedron {
 	protected abstract void defineTriangles();
 
 	protected void addTriangleWithRandomColor(double[] point1, double[] point2, double[] point3) {
-		int r = 0, g = 0, b = 0;
-		int[] color = { r, g, b };
-		int min = 0;
-		// TODO 256?
-		int max = 255;
-		while ((r == g && r == b) || getWorld().getTriangleColors().contains(color)) {
-			r = ThreadLocalRandom.current().nextInt(min, max + 1);
-			g = ThreadLocalRandom.current().nextInt(min, max + 1);
-			b = ThreadLocalRandom.current().nextInt(min, max + 1);
-			color[0] = r;
-			color[1] = g;
-			color[2] = b;
-		}
-		float[] temp = new float[3];
-		Color.RGBtoHSB(color[0], color[1], color[2], temp);
-
-		// make sure that the outer color has the correct saturation value
-
-		// TODO nodig?
-		boolean hasChanged = false;
-		// TODO niet goed want als S = 0.50, 1-0.5 == 0.5 :(
-		// --> ok nu?
-		if (temp[1] < 0.45) {
-			temp[1] += 0.55;
-			hasChanged = true;
-		} else if (temp[1] < 0.55) {
-			temp[1] += 0.45;
-		}
-
-		// TODO niet goed want als v = 0.50, 1-0.5 == 0.5 :(
-		// --> OK nu?
-		if (getPolyhedronType() == PolyhedronType.OBSTACLE) {
-			if (temp[2] > 0.55) {
-				temp[2] -= 0.55;
-				hasChanged = true;
-			} else if (temp[2] > 0.45) {
-				temp[2] -= 0.45;
-				hasChanged = true;
-			}
-		} else if (getPolyhedronType() == PolyhedronType.TARGET) {
-			if (temp[2] <= 0.45) {
-
-				temp[2] += 0.55;
-				hasChanged = true;
-			} else if (temp[2] < 0.55) {
-				temp[2] += 0.45;
-				hasChanged = true;
-			}
-		}
-
-		// enkel als er iets gewijzigd is, ook effectief kleuren aanpassen,
-		// anders gewoon overhead
-		if (hasChanged) {
-			int inner = Color.HSBtoRGB(temp[0], temp[1], temp[2]);
-			color[0] = ((inner >> 16) & 0xFF);
-			color[1] = ((inner >> 8) & 0xFF);
-			color[2] = (inner & 0xFF);
-		}
+		Random r = new Random();
+		int hueDegrees = r.nextInt(361);
+		float hueRadians = (float)Math.toRadians(hueDegrees);
+		float saturation = r.nextFloat() * 0.45f + 0.55f;
+		float brightness;
+		if (getPolyhedronType() == PolyhedronType.TARGET)
+			brightness = r.nextFloat() * 0.45f + 0.55f;
+		else
+			brightness = r.nextFloat() * 0.45f;
+		int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
+		int[] color = new int[3];
+		color[0] = (rgb >> 16) & 0xFF;
+		color[1] = (rgb >> 8) & 0xFF;
+		color[2] = rgb & 0xFF;
+		
 		addTriangle(new Triangle(getGl(), point1, point2, point3, color));
 	}
 

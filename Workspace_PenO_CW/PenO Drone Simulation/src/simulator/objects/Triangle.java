@@ -2,6 +2,7 @@ package simulator.objects;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.Random;
 
 import com.jogamp.opengl.GL2;
 
@@ -35,10 +36,8 @@ public class Triangle {
 	private void createInnerColor() {
 		float[] temp = new float[3];
 		Color.RGBtoHSB(getIntColor()[0], getIntColor()[1], getIntColor()[2], temp);
-		//TODO niet goed want als s = 0.50, 1-0.5 == 0.5 :(
-//		temp[1] = 1 - temp[1];
-//		TODO met bovenstaande of met deze, want s kan niet onder 0.55 zijn per definitie van triangle
-		temp[1] -= 0.55;
+		Random r = new Random();
+		temp[1] = r.nextFloat()*0.45f;
 		int inner = Color.HSBtoRGB(temp[0], temp[1], temp[2]);
 		this.innerColor = new float[]{((inner>>16)&0xFF)/255f, ((inner>>8)&0xFF)/255f, (inner&0xFF)/255f};
 		
