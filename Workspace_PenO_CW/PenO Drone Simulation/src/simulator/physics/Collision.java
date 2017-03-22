@@ -78,7 +78,7 @@ public class Collision {
 		double v = (dot00 * dot12 - dot01 * dot02) * denominator;
 
 		// Check if point is in triangle
-		return (u >= 0) && (v >= 0) && ((u + v) < 1);
+		return (u >= 0) && (v >= 0) && ((u + v) <= 1);
 	}
 
 	public boolean checkTrianglesForHit(WorldObject polyhedron, SimulationDrone drone) {
