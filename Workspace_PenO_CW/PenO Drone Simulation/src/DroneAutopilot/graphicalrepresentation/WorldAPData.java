@@ -1,6 +1,8 @@
 package DroneAutopilot.graphicalrepresentation;
 
-public class WorldAP {
+import java.util.ArrayList;
+
+public class WorldAPData {
 
 	/*
 	 * Idee: dit als klasse voor openGL (opsplitsing tussen GL-gedeelte en
@@ -15,5 +17,23 @@ public class WorldAP {
 	 * De wereld bevat: lijst met polyhedrons evt een drone functies voor het
 	 * setten van camera een GL-wereld met init etc. ......
 	 */
+	
+	
+	private ArrayList<PolyhedronAPVisual> polyhedrons;
+	
+	
+	public ArrayList<PolyhedronAPVisual> getPolyhedrons() {
+		return polyhedrons;
+	}
+	
+	public void addPolyhedron(PolyhedronAPVisual poly) {
+		this.polyhedrons.add(poly);
+	}
+	
+	
+	
+	
+	
+	
 
 }
