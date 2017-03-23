@@ -12,7 +12,7 @@
 \noindent
 Om naar polyhedra te kunnen vliegen, moet de drone ze eerst kunnen herkennen op de ontvangen beelden. Het analyseren van de beelden gebeurt als volgt. 
 \\
-Ten eerste worden alle pixels gegroepeerd per kleur. Dan worden de kleuren opgesplitst in verschillende lijsten volgens hun soort, nl. binnen- en buitendriehoek van respectievelijk target en obstakel. Zie tabel \ref{table: HSVwaarden} voor de exacte voorwaarden.
+Ten eerste worden alle pixels gegroepeerd per kleur. Dan worden de kleuren opgesplitst in verschillende lijsten volgens hun soort, nl. binnen- en buitendriehoek van respectievelijk target en obstakel. Zie Tabel \ref{table: HSVwaarden} voor de exacte voorwaarden.
 \begin{table}[h]
 	\centering
 \begin{tabular}{ l | c | c | c }
@@ -25,9 +25,9 @@ Ten eerste worden alle pixels gegroepeerd per kleur. Dan worden de kleuren opges
 \caption{\label{table: HSVwaarden}Combinatie HSV-waarden om de verschillende driehoeken te herkennen. Hue-waarde mag willekeurig gekozen worden.}
 \end{table}
 \\
-Om het zwaartepunt van de driehoek te kunnen bepalen, wordt eerst naar de hoekpunten gezocht. Hiervoor worden de buitenste pixels van de driehoek berekend d.m.v een rechthoek rond de driehoek te tekenen. Aangezien het kan zijn dat twee hoekpunten op dezelfde hoogte of breedte liggen, worden twee pixels, de minimum en maximum pixel, van elke zijde van de rechthoek bepaald. Figuur \ref{fig:DrieGevallenDriehoeken}a geeft een voorbeeld van deze methode. Op deze manier worden acht pixels gevonden. Natuurlijk heeft een driehoek geen acht hoeken, dus worden de overeenkomstige buitenste pixels samengenomen tot één hoekpunt. 
+Om het zwaartepunt van de driehoek te kunnen bepalen, wordt eerst naar de hoekpunten gezocht. Hiervoor worden de buitenste pixels van de driehoek berekend door een rechthoek rond de driehoek te tekenen. Aangezien het kan zijn dat twee hoekpunten op dezelfde hoogte of breedte liggen, worden twee pixels, de minimum en maximum pixel, van elke zijde van de rechthoek bepaald. Figuur \ref{fig:DrieGevallenDriehoeken}a geeft een voorbeeld van deze methode. Op deze manier worden acht pixels gevonden. Natuurlijk heeft een driehoek geen acht hoeken, dus worden de overeenkomstige buitenste pixels samengenomen tot één hoekpunt. 
 \\\\
-Een volledige driehoek behoudt drie hoekpunten. Ook kan een driehoek die evenwijdig met een zijde door een andere polyhedron of door de rand van het beeld afgesneden wordt, drie hoekpunten overhouden. Indien niet evenwijdig met een zijde wordt afgesneden, blijven er vier of meer hoekpunten over. Zie Figuur \ref{fig:DrieGevallenDriehoeken}b voor het eerste geval en Figuur \ref{fig:DrieGevallenDriehoeken}c voor het tweede geval. De figuren met meer dan drie hoekpunten worden niet meer bekeken; ze zijn niet volledig.
+Een volledige driehoek behoudt drie hoekpunten. Ook kan een driehoek die evenwijdig met een zijde door een andere polyhedron of door de rand van het beeld afgesneden wordt, drie hoekpunten overhouden. Indien niet evenwijdig met een zijde afgesneden, blijven er vier of meer hoekpunten over. Zie Figuur \ref{fig:DrieGevallenDriehoeken}b voor het eerste geval en Figuur \ref{fig:DrieGevallenDriehoeken}c voor het tweede geval. De figuren met meer dan drie hoekpunten worden niet meer bekeken; ze zijn niet volledig.
 \\\\
 Om onderscheid te maken tussen volledige en afgesneden driehoeken met drie hoekpunten, wordt de buitendriehoek samen met de overeenkomstige binnendriehoek verder onderzocht. Indien hun zwaartepunten samenvallen, zijn ze volledig. Indien ze niet matchen, kan geconcludeerd worden dat een deel van de driehoek is weggevallen. Zwaartepunten kunnen bepaald worden door Formule \ref{formule: zwaartepunt}: \begin{equation}
 \label{formule: zwaartepunt}
