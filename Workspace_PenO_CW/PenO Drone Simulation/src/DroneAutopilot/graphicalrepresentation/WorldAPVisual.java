@@ -8,6 +8,7 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
+@SuppressWarnings("serial")
 public class WorldAPVisual extends GLCanvas implements GLEventListener{
 
 	WorldAPData dataWorld;
@@ -18,19 +19,28 @@ public class WorldAPVisual extends GLCanvas implements GLEventListener{
 	public WorldAPVisual(WorldAPData dataWorld) {
 		this.dataWorld = dataWorld;
 	}
-
+	
+	private WorldAPData getDataWorld() {
+		return dataWorld;
+	}
+	
 	//TODO methodes
 	//TODO camera
-	private float rquad = 0;
+//	private float rquad = 0;
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT );
 		gl.glLoadIdentity();
-		gl.glTranslatef( 0f, 0f, -5.0f ); 
+		
+		for(PolyhedronAPData poly: getDataWorld().getPolyhedrons()) {
+			PolyhedronAPDrawer.draw(poly);
+		}
+		
+//		gl.glTranslatef( 0f, 0f, -5.0f ); 
 
 		// Rotate The Cube On X, Y & Z
-		gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f); 
+//		gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f); 
 	}
 
 	@Override

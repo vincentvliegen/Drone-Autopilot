@@ -19,14 +19,14 @@ public class WorldAPData {
 	 */
 	
 	
-	private ArrayList<PolyhedronAPVisual> polyhedrons;
+	private ArrayList<PolyhedronAPData> polyhedrons;
 	
 	
-	public ArrayList<PolyhedronAPVisual> getPolyhedrons() {
+	public ArrayList<PolyhedronAPData> getPolyhedrons() {
 		return polyhedrons;
 	}
 	
-	public void addPolyhedron(PolyhedronAPVisual poly) {
+	public void addPolyhedron(PolyhedronAPData poly) {
 		this.polyhedrons.add(poly);
 	}
 	
