@@ -15,15 +15,13 @@ Vervolgens wordt er getest of de loodrechte afstand op het vlak van een Triangle
 \end{gather*}
 
 \noindent
- Dit is echter niet genoeg. De loodrechte projectie van het massacentrum  kan zich buiten de Triangle bevinden en zo een foutief resultaat geven. Om te zien of het punt zich binnen de Triangle bevindt, wordt de methode van de barycentrische coördinaten gehanteerd. Het principe hierachter is dat elk punt P in de driehoek geschreven kan worden als een lineaire combinatie van de hoekpunten (A, B en C) van een driehoek. De som van alle co\"effici\"enten moet gelijk zijn aan één en alle co\"effici\"enten moeten groter zijn dan nul. In formulevorm:
+ Dit is echter niet genoeg. De loodrechte projectie van het massacentrum  kan zich buiten de Triangle bevinden en zo een foutief resultaat geven. Om te zien of het punt zich binnen de Triangle bevindt, wordt de methode van de barycentrische coördinaten \cite{website:barycentric-coordinates} gehanteerd. Het principe hierachter is dat elk punt P in de driehoek geschreven kan worden als een lineaire combinatie van de hoekpunten (A, B en C) van een driehoek. De som van alle co\"effici\"enten moet gelijk zijn aan één en alle co\"effici\"enten moeten groter zijn dan nul. In formulevorm:
  
  \begin{gather*}
  	P = u\cdot A + v\cdot B + w\cdot C \\
  	0 \le u,v,w \le 1 \\
  	u + v + w = 1
  \end{gather*}
-
-%TODO https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/barycentric-coordinates hierbij als referentie zetten
 
 \noindent
 Dit lost echter niet alle problemen op. De drone kan de polyhedron raken, maar de loodrechte afstand kan buiten de triangle liggen. Hiervoor werd ten tijde van schrijven nog geen oplossing gevonden. Zie Figuur \ref{fig:CollisionDetectionProbleem} voor verduidelijking. Het snijpunt ligt duidelijk buiten de Triangle, maar toch snijdt de drone de Triangle.
