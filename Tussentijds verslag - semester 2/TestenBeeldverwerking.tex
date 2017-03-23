@@ -2,27 +2,26 @@
 \noindent {\em Auteur: Laura Vranken}
 \\\\
 Om de beeldverwerking van de polyhedra te testen, zijn verschillende afbeeldingen in het project ingeladen. Hierop zijn de testen uitgevoerd. Er werd onder andere gecontroleerd of de omzetting van integer waarden naar HSV-waarden juist gebeurde. Bovendien is ook de functie getest die het zwaartepunt van elke zichtbare volledige driehoek teruggeeft. Dit bleek vrij accuraat.
-\\
-De laatste test controleert of het bepalen van de 3D co\"ordinaten van de hoekpunten juist gebeurt. Dit is geverifieerd met de co\"ordinaten van het Testbed.
-%TODO eventueel wat bewijswaarden? 
-\begin{table}
-	\centering
-\begin{tabular}{l|c|c|c}
-	& x & y & z \\ \hline
-	punt 1 & 1.849 & -0.050 & 0.200 \\
-	punt 2 & 1.849 & -0.050 & -0.200 \\
-	punt 3 & 2.050 & 0.150 & 0
-\end{tabular}
-\begin{tabular}{l|c|c|c}
-	& x & y & z \\ \hline
-	punt 1 & 1.847 & -0.050 & 0.197 \\
-	punt 2 & 1.847 & -0.050 & -0.199 \\
-	punt 3 & 2.041 & 0.146 & 0.001
-\end{tabular}
-\caption{a) Testbed waarden hoge resolutie  b) Autopilot waarden hoge resolutie}
-\end{table}
 \\\\
-\begin{table}
+De laatste test controleert of het bepalen van de 3D co\"ordinaten van de hoekpunten juist gebeurt. Dit is geverifieerd met de co\"ordinaten van het Testbed. Enkele resultaten staan hieronder vermeld, zie Tabellen \ref{table: hogeResolutie1}, \ref{table: hogeResolutie2}, \ref{table: lageResolutie1} en \ref{table: lageResolutie2}. Hieruit kan afgeleid worden dat de positiebepaling uit beelden met hoge resolutie slechts een afwijking heeft van O(0.001) en met lage resolutie een afwijking van O(0.1).
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{l|c|c|c}
+		& x & y & z \\ \hline
+		punt 1 & 1.849 & -0.050 & 0.200 \\
+		punt 2 & 1.849 & -0.050 & -0.200 \\
+		punt 3 & 2.050 & 0.150 & 0
+	\end{tabular}
+	\begin{tabular}{l|c|c|c}
+		& x & y & z \\ \hline
+		punt 1 & 1.847 & -0.050 & 0.197 \\
+		punt 2 & 1.847 & -0.050 & -0.199 \\
+		punt 3 & 2.041 & 0.146 & 0.001
+	\end{tabular}
+\caption{a) Testbed waarden hoge resolutie  b) Autopilot waarden hoge resolutie}
+\label{table: hogeResolutie1}
+\end{table}
+\begin{table}[!h]
 	\centering
 	\begin{tabular}{l|c|c|c}
 		& x & y & z \\ \hline
@@ -37,10 +36,10 @@ De laatste test controleert of het bepalen van de 3D co\"ordinaten van de hoekpu
 		punt 3 & 2.893 & -0.171 & 0.290
 	\end{tabular}
 \caption{a) Testbed waarden hoge resolutie  b) Autopilot waarden hoge resolutie}
+\label{table: hogeResolutie2}
 \end{table}
-\\\\
-\begin{table}
- 	\centering
+\begin{table}[!h]
+	\centering
  	\begin{tabular}{l|c|c|c}
  		& x & y & z \\ \hline
  		punt 1 & 0.925 & -0.525 & -0.4375 \\
@@ -54,9 +53,9 @@ De laatste test controleert of het bepalen van de 3D co\"ordinaten van de hoekpu
  		punt 3 & 0.800 & 0.236 & -0.055
  	\end{tabular}
 \caption{a) Testbed waarden lage resolutie  b) Autopilot waarden lage resolutie}
+\label{table: lageResolutie1}
 \end{table}
-\\\\
-\begin{table}
+\begin{table}[!h]
 	\centering
 	\begin{tabular}{l|c|c|c}
 		& x & y & z \\ \hline
@@ -71,4 +70,6 @@ De laatste test controleert of het bepalen van de 3D co\"ordinaten van de hoekpu
 		punt 3 & 0.960 & -0.08 & 0.725
 	\end{tabular}
 \caption{a) Testbed waarden lage resolutie  b) Autopilot waarden lage resolutie}
+\label{table: lageResolutie2}
 \end{table}
+
