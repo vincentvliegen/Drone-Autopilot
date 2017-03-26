@@ -14,6 +14,11 @@ public class TriangleAPDrawer {
 				this.gl = gl;
 
 	}
+	
+//	int red = (rgb >> 16) & 0xFF;
+//	int green = (rgb >> 8) & 0xFF;
+//	int blue = rgb & 0xFF;
+	
 
 	/**
 	 * Draw the triangle using the data of the TriangleAPData-object
@@ -22,8 +27,8 @@ public class TriangleAPDrawer {
 
 		getGl().glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
 
-		getGl().glColor3f(dataTriangle.getRgbInner()[0], dataTriangle.getRgbInner()[1],
-				dataTriangle.getRgbInner()[2]);
+		getGl().glColor3f(((dataTriangle.getInnerColor() >> 16) & 0xFF)/255f, ((dataTriangle.getInnerColor() >> 8) & 0xFF)/255f,
+				(dataTriangle.getInnerColor() & 0xFF)/255f);
 		getGl().glVertex3d(dataTriangle.getInnerPoint1()[0], dataTriangle.getInnerPoint1()[1],
 				dataTriangle.getInnerPoint1()[2]);
 		getGl().glVertex3d(dataTriangle.getInnerPoint2()[0], dataTriangle.getInnerPoint2()[1],
@@ -35,8 +40,8 @@ public class TriangleAPDrawer {
 
 		getGl().glBegin(GL2.GL_TRIANGLES);
 
-		getGl().glColor3f(dataTriangle.getRgbOuter()[0], dataTriangle.getRgbOuter()[1],
-				dataTriangle.getRgbOuter()[2]);
+		getGl().glColor3f(((dataTriangle.getOuterColor() >> 16) & 0xFF)/255f, ((dataTriangle.getOuterColor() >> 8) & 0xFF)/255f,
+				(dataTriangle.getOuterColor() & 0xFF)/255f);
 
 		getGl().glVertex3d(dataTriangle.getInnerPoint1()[0], dataTriangle.getInnerPoint1()[1],
 				dataTriangle.getInnerPoint1()[2]);

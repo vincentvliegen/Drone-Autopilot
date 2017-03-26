@@ -9,13 +9,13 @@ public class TriangleAPData {
 	private double[] p1;
 	private double[] p2;
 	private double[] p3;
-	private int[] rgbInner;
-	private int[] rgbOuter;
+	private int innerColor;
+	private int outerColor;
 	private double[] innerPoint1;
 	private double[] innerPoint2;
 	private double[] innerPoint3;
 
-	public TriangleAPData(double[] p1, double[] p2, double[] p3, int[] rgbInner, int[] rgbOuter) {
+	public TriangleAPData(double[] p1, double[] p2, double[] p3, int rgbInner, int rgbOuter) {
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
@@ -23,8 +23,9 @@ public class TriangleAPData {
 		innerPoint2 = calculateInnerPoint(getPoint2());
 		innerPoint3 = calculateInnerPoint(getPoint3());
 		//TODO colors in which format, might be needed to adjust this
-		this.rgbInner = rgbInner;
-		this.rgbOuter = rgbOuter;
+		this.innerColor = rgbInner;
+		this.outerColor = rgbOuter;
+		//eigenlijk afdwingen dat dit er maar 3 kunnen zijn
 	}
 
 	public double[] getPoint1() {
@@ -39,12 +40,20 @@ public class TriangleAPData {
 		return p3;
 	}
 	
-	public int[] getRgbInner() {
-		return rgbInner;
+	/**
+	 * 
+	 * @return the inner color of the Triangle in RGB-format
+	 */
+	public int getInnerColor() {
+		return innerColor;
 	}
 	
-	public int[] getRgbOuter() {
-		return rgbOuter;
+	/**
+	 * 
+	 * @return the outer color of the Triangle in RGB-format
+	 */
+	public int getOuterColor() {
+		return outerColor;
 	}
 	
 	public double[] getInnerPoint1() {

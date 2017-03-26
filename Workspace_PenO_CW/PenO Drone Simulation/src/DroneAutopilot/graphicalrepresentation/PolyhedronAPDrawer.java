@@ -23,8 +23,9 @@ public class PolyhedronAPDrawer {
 		
 	
 	public static void draw(PolyhedronAPData datapoly) {
-		for(TriangleAPData tri: datapoly.getListOfTriangles()) {
-			getTriangleDrawer().draw(tri);
+		for(Integer key: datapoly.getListOfTriangles().keySet()) {
+			getTriangleDrawer().draw(datapoly.getListOfTriangles().get(key));
+			
 		}
 		
 	}
