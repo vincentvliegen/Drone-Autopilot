@@ -6,16 +6,18 @@ package DroneAutopilot.graphicalrepresentation;
  */
 public class TriangleAPData {
 	
-	private double[] p1;
-	private double[] p2;
-	private double[] p3;
+	
+	//TODO floats?
+	private float[] p1;
+	private float[] p2;
+	private float[] p3;
 	private int innerColor;
 	private int outerColor;
-	private double[] innerPoint1;
-	private double[] innerPoint2;
-	private double[] innerPoint3;
+	private float[] innerPoint1;
+	private float[] innerPoint2;
+	private float[] innerPoint3;
 
-	public TriangleAPData(double[] p1, double[] p2, double[] p3, int rgbInner, int rgbOuter) {
+	public TriangleAPData(float[] p1, float[] p2, float[] p3, int rgbInner, int rgbOuter) {
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
@@ -28,15 +30,15 @@ public class TriangleAPData {
 		//eigenlijk afdwingen dat dit er maar 3 kunnen zijn
 	}
 
-	public double[] getPoint1() {
+	public float[] getPoint1() {
 		return p1;
 	}
 	
-	public double[] getPoint2() {
+	public float[] getPoint2() {
 		return p2;
 	}
 	
-	public double[] getPoint3() {
+	public float[] getPoint3() {
 		return p3;
 	}
 	
@@ -56,38 +58,38 @@ public class TriangleAPData {
 		return outerColor;
 	}
 	
-	public double[] getInnerPoint1() {
+	public float[] getInnerPoint1() {
 		return innerPoint1;
 	}
 
-	public double[] getInnerPoint2() {
+	public float[] getInnerPoint2() {
 		return innerPoint2;
 	}
 
-	public double[] getInnerPoint3() {
+	public float[] getInnerPoint3() {
 		return innerPoint3;
 	}
 	
-	private double getGravityX() {
+	private float getGravityX() {
 		return (getPoint1()[0] + getPoint2()[0] + getPoint3()[0]) / 3;
 
 	}
 
-	private double getGravityY() {
+	private float getGravityY() {
 		return (getPoint1()[1] + getPoint2()[1] + getPoint3()[1]) / 3;
 
 	}
 
-	private double getGravityZ() {
+	private float getGravityZ() {
 		return (getPoint1()[2] + getPoint2()[2] + getPoint3()[2]) / 3;
 
 	}
 
 
-	private double[] calculateInnerPoint(double[] outerPoint) {
-		return new double[] { (outerPoint[0] - getGravityX()) / Math.sqrt(2) + getGravityX(),
-				(outerPoint[1] - getGravityY()) / Math.sqrt(2) + getGravityY(),
-				(outerPoint[2] - getGravityZ()) / Math.sqrt(2) + getGravityZ() };
+	private float[] calculateInnerPoint(float[] outerPoint) {
+		return new float[] { (float) ((outerPoint[0] - getGravityX()) / Math.sqrt(2) + getGravityX()),
+				(float) ((outerPoint[1] - getGravityY()) / Math.sqrt(2) + getGravityY()),
+				(float) ((outerPoint[2] - getGravityZ()) / Math.sqrt(2) + getGravityZ()) };
 	}
 	
 	

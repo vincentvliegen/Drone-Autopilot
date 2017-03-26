@@ -4,27 +4,22 @@ import com.jogamp.opengl.GL2;
 
 public class PolyhedronAPDrawer {
 	
-	public PolyhedronAPDrawer(GL2 gl) {
-		this.gl = gl;
-		triangleDrawer =  new TriangleAPDrawer(getGl());
+	public PolyhedronAPDrawer() {
 	}
 	
-	static TriangleAPDrawer triangleDrawer;
+	static TriangleAPDrawer triangleDrawer =  new TriangleAPDrawer();
+
 	
-	private GL2 gl;
-	
-	private GL2 getGl() {
-		return gl;
-	}
 	
 	private static TriangleAPDrawer getTriangleDrawer() {
 		return triangleDrawer;
 	}
 		
 	
-	public static void draw(PolyhedronAPData datapoly) {
+	public static void draw(PolyhedronAPData datapoly, GL2 gl) {
 		for(Integer key: datapoly.getListOfTriangles().keySet()) {
-			getTriangleDrawer().draw(datapoly.getListOfTriangles().get(key));
+			System.out.println(getTriangleDrawer() == null);
+			getTriangleDrawer().draw(datapoly.getListOfTriangles().get(key), gl);
 			
 		}
 		

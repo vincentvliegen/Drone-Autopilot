@@ -19,7 +19,7 @@ public class WorldAPData {
 	 */
 	
 	
-	private ArrayList<PolyhedronAPData> polyhedrons;
+	private ArrayList<PolyhedronAPData> polyhedrons = new ArrayList<PolyhedronAPData>();
 	
 	
 	public ArrayList<PolyhedronAPData> getPolyhedrons() {
