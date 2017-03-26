@@ -355,7 +355,7 @@ public class PhysicsCalculations{
 			float gravity = this.getDrone().getGravity();//gravity is negatief
 			float drag = this.getDrone().getDrag();
 			float[] gravityForce = VectorCalculations.timesScalar(new float[] {0, 1, 0}, weight*gravity);//vector is positief, want gravity is negatief
-			System.out.println("------");
+			System.out.println("---AUTOPILOT---");
 			System.out.println("gravity: ");
 			for (float x: gravityForce)
 				System.out.println(x);
@@ -631,10 +631,13 @@ public class PhysicsCalculations{
 			float weight = this.getDrone().getWeight();
 			float[] externalForces = this.getExternalForces();
 			float[] thrust = VectorCalculations.timesScalar(this.getDirectionOfThrust(), this.getThrust());
+			System.out.println("Speed: ");
 			for (float x: getSpeed())
 				System.out.println(x);
+			System.out.println("Position: ");
 			for (float x: getPosition())
 				System.out.println(x);
+			System.out.println("prevPos: ");
 			for (float x: getPreviousPosition())
 				System.out.println(x);
 			System.out.println("-----------");
