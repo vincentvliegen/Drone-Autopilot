@@ -346,8 +346,8 @@ public class PhysicsCalculations{
 		private void correctWindRotation(){
 			float[] droneAngles = {this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll()};
 			float[] deviation = VectorCalculations.sum(droneAngles,VectorCalculations.inverse(this.getExpectedOrientation()));
-			float[] rate = VectorCalculations.timesScalar(deviation, 1/this.getDeltaT());
-			this.setWindRotation(VectorCalculations.sum(rate, this.getWindRotation()));
+//			float[] rate = VectorCalculations.timesScalar(deviation, 1/this.getDeltaT());
+			this.setWindRotation(VectorCalculations.sum(deviation, this.getWindRotation()));
 		}
 	
 		private void calculateExternalForces(){
