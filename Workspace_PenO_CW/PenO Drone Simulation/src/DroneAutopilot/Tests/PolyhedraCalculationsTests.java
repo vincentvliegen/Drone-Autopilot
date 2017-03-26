@@ -125,11 +125,11 @@ public class PolyhedraCalculationsTests {
 		polylist5b = convertImageToIntArray(poly5b,628,739);
 		camera5b = createCameraForTesting(polylist5b, 38.78388f, 45.0f, 628);
 		
-		poly7 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test1Links.png"));
+		poly7 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test2Links.png"));
 		polylist7 = convertImageToIntArray(poly7,200,200);
 		camera7 = createCameraForTesting(polylist7, 38.78388f, 45.0f, 200);
 		
-		poly7b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test1Rechts.png"));
+		poly7b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/test2Rechts.png"));
 		polylist7b = convertImageToIntArray(poly7b,200,200);
 		camera7b = createCameraForTesting(polylist7b, 38.78388f, 45.0f, 200);
 		
@@ -231,8 +231,8 @@ public class PolyhedraCalculationsTests {
 //		polyhedraCalc.getMatchingCorners(camera7, camera7b);
 		createDrone2(camera8, camera8b);
 		polyhedraCalc.getMatchingCorners(camera8, camera8b);
-		createDrone2(camera9,camera9b);
-		polyhedraCalc.getMatchingCorners(camera9, camera9b);
+//		createDrone2(camera9,camera9b);
+//		polyhedraCalc.getMatchingCorners(camera9, camera9b);
 	}
 	
 	@Test

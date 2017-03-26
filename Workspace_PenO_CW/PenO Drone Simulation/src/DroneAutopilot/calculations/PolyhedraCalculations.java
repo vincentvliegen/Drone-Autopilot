@@ -48,7 +48,7 @@ public class PolyhedraCalculations {
 		return COGS;
 	}
 
-	public void getMatchingCorners(Camera leftCamera, Camera rightCamera) {
+	public HashMap<float[], ArrayList<float[]>> getMatchingCorners(Camera leftCamera, Camera rightCamera) {
 		this.SeparateTargetsAndObstacles(leftCamera);
 		HashMap<float[], ArrayList<int[]>> outerTrianglesL = this
 				.findThreePointsTriangles(this.getHashMapTargetOuterColor());
@@ -63,13 +63,16 @@ public class PolyhedraCalculations {
 		System.out.println("Outer");
 		HashMap<float[], ArrayList<float[]>> cornersOuter = this.findMatchingCorners(outerTrianglesL,
 				outerTrianglesR);
-//		System.out.println("Innerdriehoekpunten");
-//		HashMap<float[], ArrayList<float[]>> cornersInner = this.findMatchingCorners(innerTrianglesL,
-//				innerTrianglesR);
-
-
-		this.setOuterCorners(cornersOuter);
-		//this.setInnerCorners(cornersInner);
+		System.out.println("Innerdriehoekpunten");
+		HashMap<float[], ArrayList<float[]>> cornersInner = this.findMatchingCorners(innerTrianglesL,
+				innerTrianglesR);
+		HashMap<float[],float[]> combinedColors = this.matchInnerAndOuterColor(cornersOuter, cornersInner);
+		
+		for( float[] color: cornersOuter.keySet()){
+			float[] inner = combinedColors.get(color);
+			cornersOuter.get(color).add(inner);
+		}
+		return cornersOuter;
 	}
 
 	public HashMap<float[], ArrayList<float[]>> findMatchingCorners(HashMap<float[], ArrayList<int[]>> targetListLeft,
@@ -184,9 +187,32 @@ public class PolyhedraCalculations {
 		}
 		return result;
 	}
-
+	
 	private float[] intListToFloatList(int[] a) {
 		return new float[] { a[0], a[1] };
+	}
+	
+	private HashMap<float[],float[]> matchInnerAndOuterColor(HashMap<float[], ArrayList<float[]>> cornersOuter,
+			HashMap<float[], ArrayList<float[]>> cornersInner){
+		HashMap<float[],float[]> result = new HashMap<float[],float[]>();
+		for(float[] outerColor: cornersOuter.keySet()){
+			ArrayList<float[]> Ocorners = cornersOuter.get(outerColor);
+			float xO = (Ocorners.get(0)[0] + Ocorners.get(1)[0] + Ocorners.get(2)[0])/3;
+			float yO = (Ocorners.get(0)[1] + Ocorners.get(1)[1] + Ocorners.get(2)[1])/3;
+			float zO = (Ocorners.get(0)[2] + Ocorners.get(1)[2] + Ocorners.get(2)[2])/3;
+			for(float[] innerColor: cornersInner.keySet()){
+				ArrayList<float[]> Icorners = cornersInner.get(innerColor);
+				float xI = (Icorners.get(0)[0] + Icorners.get(1)[0] + Icorners.get(2)[0])/3;
+				float yI = (Icorners.get(0)[1] + Icorners.get(1)[1] + Icorners.get(2)[1])/3;
+				float zI = (Icorners.get(0)[2] + Icorners.get(1)[2] + Icorners.get(2)[2])/3;
+				
+				if(xO>= xI-0.1 && xO<= xI+0.1 && yO>=yI-0.1 && yO<=yI+0.1 && zO>=zI-0.1 && zO<=zI+0.1){
+					result.put(outerColor, innerColor);
+					break;
+				}
+			}
+		}
+		return result;
 	}
 
 	// [i] -> (x,y)
