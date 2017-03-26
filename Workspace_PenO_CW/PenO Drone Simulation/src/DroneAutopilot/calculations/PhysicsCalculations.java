@@ -565,12 +565,18 @@ public class PhysicsCalculations{
 		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll
 		private void calculateRemainingAnglesToObject() throws ArithmeticException{
 			float[] thrustWanted = VectorCalculations.normalise(this.getWantedOrientation()[0]);
+			float[] thrustWantedDrone = this.vectorWorldToDrone(thrustWanted);
 			float[] viewWanted = VectorCalculations.normalise(this.getWantedOrientation()[1]);
+			float[] viewWantedDrone = this.vectorWorldToDrone(viewWanted);
+			//DroneAngles gaan niet meer nodig zijn, aangezien we gwn de nodige hoek berekenen. //TODO
 			float[] inverseDroneAngles = new float[] {-this.getDrone().getHeading(), -this.getDrone().getPitch(), -this.getDrone().getRoll()};
+			
+			// TODO: Hoek tussen de projectie van de viewvector op het YZ vlak en negatieve z as. 
 			float pitchWanted = (float) Math.toDegrees(Math.asin(thrustWanted[2]));
 			if (pitchWanted == Math.PI){
 				throw new ArithmeticException("pitchWanted is PI, division by zero");
 			}
+			//TODO: Roll: Hoek tussen de projectie van de thrustvector op het XY vlak vd drone en de y-as.
 			//float rollWanted = (float) Math.toDegrees(-Math.acos(thrustWanted[1]/Math.cos(Math.toRadians(pitchWanted))));  Alles in stukken gehakt, waardoor geen NaN meer.
 				float value1 = (float) Math.cos(Math.toRadians(pitchWanted));
 				float value2 = (float) (thrustWanted[1]/value1);
@@ -580,6 +586,7 @@ public class PhysicsCalculations{
 				} else {
 					value3 = (float) -Math.acos(value2);}
 				float rollWanted = (float) Math.toDegrees(value3);
+			//TODO: Yaw: Hoek tussen de projectie van de viewvector op XZ vlak vd drone en de negatieve z-as (kijkrichting vd drone).
 			float yawWanted = (float) Math.toDegrees(Math.acos(-viewWanted[2]/Math.cos(Math.toRadians(pitchWanted))));
 			float[] wantedDroneAngles = new float[] {yawWanted, pitchWanted, rollWanted};
 			float[] remainingAngles = VectorCalculations.sum(inverseDroneAngles, wantedDroneAngles);
