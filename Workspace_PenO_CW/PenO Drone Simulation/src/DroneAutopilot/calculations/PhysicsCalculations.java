@@ -598,33 +598,31 @@ public class PhysicsCalculations{
 				if (correctAnglesInOneFrames[0]+0 != 0) {
 					if (Math.abs(correctAnglesInOneFrames[0]) > Math.abs(maxAngleRates[0])) {
 						this.setYawRate(maxAngleRates[0]*Math.signum(correctAnglesInOneFrames[0]));
-					}
-					else {
+					}else {
 						this.setYawRate(correctAnglesInOneFrames[0]);
 					}
+				}else{
+					this.setYawRate(0);
 				}
 				if (correctAnglesInOneFrames[1]+0 != 0){
 					if (Math.abs(correctAnglesInOneFrames[1]) > Math.abs(maxAngleRates[1])) {
 						this.setPitchRate(maxAngleRates[1]*Math.signum(correctAnglesInOneFrames[1]));
-					}
-					else {
+					}else {
 						this.setPitchRate(correctAnglesInOneFrames[1]);
 					}
+				}else{
+					this.setPitchRate(0);
 				}
 				if (correctAnglesInOneFrames[2]+0 != 0) {
 					if (Math.abs(correctAnglesInOneFrames[2]) > Math.abs(maxAngleRates[2])) {
 						this.setRollRate(maxAngleRates[2]*Math.signum(correctAnglesInOneFrames[2]));
-					}
-					else {
+					}else {
 						this.setRollRate(correctAnglesInOneFrames[2]);
 					}
+				}else{
+					this.setRollRate(0);
 				}
-			}else{
-				this.setYawRate(0);
-				this.setPitchRate(0);
-				this.setRollRate(0);
 			}
-			
 		}
 		
 		private void calculateExpectedPosition(){
