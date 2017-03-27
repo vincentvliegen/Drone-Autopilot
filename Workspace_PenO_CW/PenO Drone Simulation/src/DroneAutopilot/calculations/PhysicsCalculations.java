@@ -121,6 +121,9 @@ public class PhysicsCalculations{
 							2/(this.getDeltaT()*this.getDeltaT()));
 			//v1 = v0 + at
 			float[] vNew = VectorCalculations.sum(this.getSpeed(), VectorCalculations.timesScalar(a, this.getDeltaT()));
+			System.out.println("speed:");
+			for(float x:vNew)
+				System.out.println(x);
 			setSpeed(vNew);
 		}
 
@@ -275,7 +278,7 @@ public class PhysicsCalculations{
 			calculateRotationRates();
 		
 			this.getDrone().setThrust(this.getThrust());
-			this.getDrone().setYawRate(0);
+			this.getDrone().setYawRate(this.getYawRate());
 			this.getDrone().setPitchRate(0);
 			this.getDrone().setRollRate(0);
 		
@@ -603,6 +606,9 @@ public class PhysicsCalculations{
 			}
 			float[] wantedDroneAngles = new float[] {yawWanted, pitchWanted, rollWanted};
 			float[] remainingAngles = VectorCalculations.sum(inverseDroneAngles, wantedDroneAngles);
+			System.out.println("heading: "+getDrone().getHeading());
+			System.out.println("yawWanted: " + yawWanted);
+			System.out.println("remaining yaw: " + remainingAngles[0]);
 			this.setRemainingAngles(remainingAngles);
 		}
 	
@@ -624,6 +630,8 @@ public class PhysicsCalculations{
 				}else{
 					this.setYawRate(0);
 				}
+				System.out.println("yawRate" + this.getYawRate());
+				System.out.println("----------------");
 				if (correctAnglesInOneFrames[1]+0 != 0){
 					if (Math.abs(correctAnglesInOneFrames[1]) > Math.abs(maxAngleRates[1])) {
 						this.setPitchRate(maxAngleRates[1]*Math.signum(correctAnglesInOneFrames[1]));
