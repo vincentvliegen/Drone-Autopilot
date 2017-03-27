@@ -266,7 +266,7 @@ public class PhysicsCalculations{
 	public void updatePosition(float[] targetPosition){
 		if(!isFirstMovement()){
 			correctWindTranslation();
-			correctWindRotation();
+//			correctWindRotation();
 		
 			calculateExternalForces();
 			calculateThrust(targetPosition);
@@ -275,9 +275,9 @@ public class PhysicsCalculations{
 			calculateRotationRates();
 		
 			this.getDrone().setThrust(this.getThrust());
-			this.getDrone().setYawRate(this.getYawRate());
-			this.getDrone().setPitchRate(this.getPitchRate());
-			this.getDrone().setRollRate(this.getRollRate());
+			this.getDrone().setYawRate(0);
+			this.getDrone().setPitchRate(0);
+			this.getDrone().setRollRate(0);
 		
 			calculateExpectedPosition();
 			calculateExpectedOrientation();
@@ -302,7 +302,7 @@ public class PhysicsCalculations{
 	public void updateOrientation(float[] direction){
 		if(!isFirstMovement()){
 			correctWindTranslation();
-			correctWindRotation();
+//			correctWindRotation();
 		
 			calculateExternalForces();
 			calculateThrust(this.getPosition());
@@ -345,7 +345,9 @@ public class PhysicsCalculations{
 		private void correctWindRotation(){
 			float[] droneAngles = {this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll()};
 			float[] deviation = VectorCalculations.sum(droneAngles,VectorCalculations.inverse(this.getExpectedOrientation()));
-//			float[] rate = VectorCalculations.timesScalar(deviation, 1/this.getDeltaT());
+			System.out.println("WindRotation: ");
+			for (float x: deviation)
+				System.out.println(x);
 			this.setWindRotation(VectorCalculations.sum(deviation, this.getWindRotation()));
 		}
 	
@@ -427,13 +429,13 @@ public class PhysicsCalculations{
 				//ligt approxDir binnen of buiten de kleine hoek gevormd door upperLimit en lowerLimit?
 				boolean isInside = true;
 				//we tekenen een xy-vlak, en we leggen lowerLimit volgens de x-as en upperLimit heeft een positieve y-waarde
-				//float[] coordLow = {vectorSize(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
+				float[] coordLow = {VectorCalculations.size(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
 	
-				float cosLowUp = Math.abs(VectorCalculations.cosinusBetweenVectors(lowerLimit, upperLimit));
+				float cosLowUp = VectorCalculations.cosinusBetweenVectors(lowerLimit, upperLimit);
 				float[] crossPLowUp = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,upperLimit));
-				//float[] coordUp = {vectorSize(upperLimit)*cosLowUp,vectorSize(upperLimit)*((float) Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
+				float[] coordUp = {VectorCalculations.size(upperLimit)*cosLowUp,VectorCalculations.size(upperLimit)*((float) Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
 	
-				float cosLowAppDir = Math.abs(VectorCalculations.cosinusBetweenVectors(lowerLimit, approxDir));
+				float cosLowAppDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxDir);
 				if(cosLowAppDir+0>cosLowUp+0){
 					isInside = false;
 				}
@@ -449,10 +451,10 @@ public class PhysicsCalculations{
 				//als binnen dan hoe groot is thrust om exact op approxDir te vliegen
 				//als buiten dan dichter bij upper of lower (om op min of max te zetten)
 				if(isInside){//inside
-					float cosLowGravVec = Math.abs(VectorCalculations.cosinusBetweenVectors(lowerLimit, externalForces));
+					float cosLowGravVec = VectorCalculations.cosinusBetweenVectors(lowerLimit, externalForces);
 					float[] coordGravVec = {VectorCalculations.size(externalForces)*cosLowUp,VectorCalculations.size(externalForces)*((float) Math.sqrt(1-cosLowGravVec*cosLowGravVec))};//coordinaten gravAndWind in xy-vlak
 	
-					float cosLowThrust = Math.abs(VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust));
+					float cosLowThrust = VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust);
 					float[] crossPLowThrust = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,thrust));
 					float signThrust;
 					if(!Arrays.equals(VectorCalculations.sum(crossPLowUp, new float[] {0,0,0}), VectorCalculations.sum(crossPLowThrust, new float[] {0,0,0}))){
@@ -465,7 +467,7 @@ public class PhysicsCalculations{
 					result = 	(coordAppDir[0]*coordGravVec[1]-coordAppDir[1]*coordGravVec[0])/
 							(coordAppDir[1]*coordThrust[0]-coordAppDir[0]*coordThrust[1]);
 				}else{//outside
-					float cosUpAppDir = Math.abs(VectorCalculations.cosinusBetweenVectors(upperLimit, approxDir));
+					float cosUpAppDir = VectorCalculations.cosinusBetweenVectors(upperLimit, approxDir);
 					if(cosLowAppDir+0>cosUpAppDir+0){//dichter bij upperLimit
 						result = -maxThrust;
 					}else{//dichter bij lowerLimit
@@ -667,6 +669,8 @@ public class PhysicsCalculations{
 			float yawRate = this.getYawRate();
 			float pitchRate = this.getPitchRate();
 			float rollRate = this.getRollRate();
+//			pitch = 180 * atan (accelerationX/sqrt(accelerationY*accelerationY + accelerationZ*accelerationZ))/M_PI;
+			
 			float[] droneAngles = {this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll()};
 			float[] AnglesDev = {this.getDeltaT()*yawRate+this.getWindRotation()[0], this.getDeltaT()*pitchRate+this.getWindRotation()[1], this.getDeltaT()*rollRate+this.getWindRotation()[2]};
 			this.setExpectedOrientation(VectorCalculations.sum(droneAngles, AnglesDev));
