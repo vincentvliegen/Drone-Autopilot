@@ -333,7 +333,6 @@ public class PhysicsCalculations{
 	
 		private void correctWindTranslation(){
 			float[] deviation = VectorCalculations.sum(this.getPosition(),VectorCalculations.inverse(this.getExpectedPosition()));
-			this.getDrone().setPitchRate(this.getPitchRate());
 			float weight = this.getDrone().getWeight();
 			//De voorspelde versnelling (som van thrust, gravity en wind) blijkt niet juist te zijn. 
 			//De wind kan afwijken (onnauwkeurigheid,verandering van de wind,...) en zorgt ervoor dat de drone ergens anders heen vliegt dan voorspeld.
@@ -585,6 +584,21 @@ public class PhysicsCalculations{
 					value2 = 1*Math.signum(value2);
 				}
 			float yawWanted = (float) Math.toDegrees(Math.acos(value2));
+			//richting yaw/roll
+			//yaw:
+			float[] viewWantedDrone = this.vectorDroneToWorld(viewWanted);
+			viewWantedDrone[1] = 0;
+			float cosView = VectorCalculations.cosinusBetweenVectors(viewWantedDrone, new float[] {0,0,-1});
+			if(cosView < 0){//cos is altijd positief (grootte)
+				yawWanted *= -1;
+			}	
+			//thrust:
+			float[] thrustWantedDrone = this.vectorDroneToWorld(thrustWanted);
+			thrustWantedDrone[2] = 0;
+			float cosThrust = VectorCalculations.cosinusBetweenVectors(thrustWantedDrone, new float[] {0,1,0});
+			if(cosThrust < 0){
+				rollWanted *= -1;
+			}
 			float[] wantedDroneAngles = new float[] {yawWanted, pitchWanted, rollWanted};
 			float[] remainingAngles = VectorCalculations.sum(inverseDroneAngles, wantedDroneAngles);
 			this.setRemainingAngles(remainingAngles);
@@ -633,16 +647,16 @@ public class PhysicsCalculations{
 			float weight = this.getDrone().getWeight();
 			float[] externalForces = this.getExternalForces();
 			float[] thrust = VectorCalculations.timesScalar(this.getDirectionOfThrust(), this.getThrust());
-			System.out.println("Speed: ");
-			for (float x: getSpeed())
-				System.out.println(x);
-			System.out.println("Position: ");
-			for (float x: getPosition())
-				System.out.println(x);
-			System.out.println("prevPos: ");
-			for (float x: getPreviousPosition())
-				System.out.println(x);
-			System.out.println("-----------");
+//			System.out.println("Speed: ");
+//			for (float x: getSpeed())
+//				System.out.println(x);
+//			System.out.println("Position: ");
+//			for (float x: getPosition())
+//				System.out.println(x);
+//			System.out.println("prevPos: ");
+//			for (float x: getPreviousPosition())
+//				System.out.println(x);
+//			System.out.println("-----------");
 			//(T+G+W+D)/(2m) * deltaT^2  {I} +  v0*deltaT + x0  {II} = Xexp
 			float[] part1 = VectorCalculations.timesScalar(VectorCalculations.sum(thrust, externalForces), this.getDeltaT()*this.getDeltaT()/(2*weight));
 			float[] part2 = VectorCalculations.sum(VectorCalculations.timesScalar(this.getSpeed(), this.getDeltaT()), this.getPosition());
