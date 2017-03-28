@@ -1,6 +1,5 @@
 package DroneAutopilot.calculations;
 
-import java.util.Arrays;
 
 import p_en_o_cw_2016.Drone;
 
@@ -48,7 +47,7 @@ public class PhysicsCalculations{
 	private static final float[] maxWindRotationRate = new float[]{(float) 0.5,(float) 0.5,(float) 0.5};
 	private boolean firstMovement;
 	private final static float distanceSpeedFactor = 0.5f;
-	private final static float dropdownDistance = 0.5f;
+	private final static float dropdownDistance = 3f;
 	
 	//Vector Rotations
 	private float[][] rotationMatrix;
@@ -121,9 +120,9 @@ public class PhysicsCalculations{
 							2/(this.getDeltaT()*this.getDeltaT()));
 			//v1 = v0 + at
 			float[] vNew = VectorCalculations.sum(this.getSpeed(), VectorCalculations.timesScalar(a, this.getDeltaT()));
-			System.out.println("speed:");
-			for(float x:vNew)
-				System.out.println(x);
+//			System.out.println("speed:");
+//			for(float x:vNew)
+//				System.out.println(x);
 			setSpeed(vNew);
 		}
 
@@ -213,10 +212,10 @@ public class PhysicsCalculations{
 			setVerticalAngleDeviation((float) Math.toDegrees(Math.atan(this.getY() / this.getFocalDistance())));
 		}
 		
-		private void calculateXObject(){
+		private void calculateZObject(){
 			//altijd negatief, positieve Z is naar achter
-			float deltaX = this.getDepth();
-			setXObject(deltaX);
+			float deltaZ = this.getDepth();
+			setZObject(deltaZ);
 		}
 	
 		private void calculateYObject(){
@@ -230,14 +229,14 @@ public class PhysicsCalculations{
 		}
 
 
-		private void calculateZObject(){
-			float deltaZ;
+		private void calculateXObject(){
+			float deltaX;
 			double angle;
 			float depth;
 			angle = this.getHorizontalAngleDeviation();
-			depth = -this.getDepth();
-			deltaZ = (float) (Math.tan(Math.toRadians(angle))*depth);
-			setZObject(deltaZ);
+			depth = this.getDepth();
+			deltaX = (float) (Math.tan(Math.toRadians(angle))*depth);
+			setXObject(deltaX);
 		}
 
 
@@ -279,8 +278,8 @@ public class PhysicsCalculations{
 		
 			this.getDrone().setThrust(this.getThrust());
 			this.getDrone().setYawRate(this.getYawRate());
-			this.getDrone().setPitchRate(0);
-			this.getDrone().setRollRate(0);
+			this.getDrone().setPitchRate(this.getPitchRate());
+			this.getDrone().setRollRate(this.getRollRate());
 		
 			calculateExpectedPosition();
 			calculateExpectedOrientation();
@@ -348,9 +347,9 @@ public class PhysicsCalculations{
 		private void correctWindRotation(){
 			float[] droneAngles = {this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll()};
 			float[] deviation = VectorCalculations.sum(droneAngles,VectorCalculations.inverse(this.getExpectedOrientation()));
-			System.out.println("WindRotation: ");
-			for (float x: deviation)
-				System.out.println(x);
+//			System.out.println("WindRotation: ");
+//			for (float x: deviation)
+//				System.out.println(x);
 			this.setWindRotation(VectorCalculations.sum(deviation, this.getWindRotation()));
 		}
 	
@@ -359,19 +358,18 @@ public class PhysicsCalculations{
 			float gravity = this.getDrone().getGravity();//gravity is negatief
 			float drag = this.getDrone().getDrag();
 			float[] gravityForce = VectorCalculations.timesScalar(new float[] {0, 1, 0}, weight*gravity);//vector is positief, want gravity is negatief
-			System.out.println("---AUTOPILOT---");
-			System.out.println("gravity: ");
-			for (float x: gravityForce)
-				System.out.println(x);
+//			System.out.println("------AUTOPILOT------");
+//			System.out.println("gravity1");
+//			for (float x: gravityForce)
+//				System.out.println(x);
 			float[] windForce = this.getWindTranslation();
-			System.out.println("wind: ");
-			for (float x: windForce)
-				System.out.println(x);
+//			System.out.println("wind1");
+//			for (float x: windForce)
+//				System.out.println(x);
 			float[] dragForce = VectorCalculations.timesScalar(this.getSpeed(),-drag);//- drag want tegengesteld aan de snelheidsvector
-			System.out.println("drag: ");
-			for (float x: dragForce)
-				System.out.println(x);
-			System.out.println("------");
+//			System.out.println("drag1");
+//			for (float x: dragForce)
+//				System.out.println(x);
 			float[] totalExternalForce = VectorCalculations.sum(VectorCalculations.sum(gravityForce, windForce), dragForce);
 			setExternalForces(totalExternalForce);
 		}
@@ -387,19 +385,19 @@ public class PhysicsCalculations{
 			float[] dirToPos = VectorCalculations.normalise(getDirectionDroneToPosition(position));
 	
 			float result;
-			if(Arrays.equals(VectorCalculations.sum(position, new float[] {0,0,0}), VectorCalculations.sum(getPosition(), new float[] {0,0,0}))){//als het doel de huidige positie van de drone is
+			if(VectorCalculations.compareVectors(position, this.getPosition())){//als het doel de huidige positie van de drone is
 				float[] projectionGravVecOnThrustAxis = VectorCalculations.timesScalar(thrust, VectorCalculations.dotProduct(externalForces, thrust));//thrust is genormaliseerd
 				float signThrustGrav;
-				if(Arrays.equals(VectorCalculations.sum(thrust, new float[] {0,0,0}), VectorCalculations.sum(VectorCalculations.normalise(projectionGravVecOnThrustAxis), new float[] {0,0,0}))){//de gravity+wind staat volgens positieve thrust
+				if(VectorCalculations.compareVectors(thrust,VectorCalculations.normalise(projectionGravVecOnThrustAxis))){//de gravity+wind staat volgens positieve thrust
 					signThrustGrav = -1;
 				}else{
 					signThrustGrav = 1;
 				}
 				result = VectorCalculations.size(projectionGravVecOnThrustAxis)*signThrustGrav;
-			} else if(Arrays.equals(VectorCalculations.sum(normal, new float[] {0,0,0}), new float[] {0,0,0})){//als normal = {0,0,0} (drone is gericht volgens de gravity+wind)
+			} else if(VectorCalculations.compareVectors(normal,new float[] {0,0,0})){//als normal = {0,0,0} (drone is gericht volgens de gravity+wind)
 				//positieve of negatieve thrust ter compensatie vd gravity+wind?
 				float signThrustGrav;
-				if(Arrays.equals(VectorCalculations.sum(thrust, new float[] {0,0,0}), VectorCalculations.sum(VectorCalculations.normalise(externalForces), new float[] {0,0,0}))){//de gravity+wind staat volgens positieve thrust
+				if(VectorCalculations.compareVectors(thrust, VectorCalculations.normalise(externalForces))){//de gravity+wind staat volgens positieve thrust
 					signThrustGrav = -1;
 				}else{
 					signThrustGrav = 1;
@@ -412,7 +410,7 @@ public class PhysicsCalculations{
 				float signThrustDir;
 				if(sizeProjectionDirectionOnGravWindAxis+0 == 0){// geen compensatie wanneer direction in vlak met normaal grav+wind
 					signThrustDir = 0;
-				}else if(Arrays.equals(VectorCalculations.sum(thrust, new float[] {0,0,0}), VectorCalculations.sum(VectorCalculations.normalise(projectionDirectionOnThrustAxis), new float[] {0,0,0}))){//de richting staat volgens positieve thrust
+				}else if(VectorCalculations.compareVectors(thrust, VectorCalculations.normalise(projectionDirectionOnThrustAxis))){//de richting staat volgens positieve thrust
 					signThrustDir = 1;
 				}else{
 					signThrustDir = -1;
@@ -444,7 +442,7 @@ public class PhysicsCalculations{
 				}
 				float[] crossPLowAppDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxDir));
 				float signAppDir;
-				if(!Arrays.equals(VectorCalculations.sum(crossPLowUp, new float[] {0,0,0}), VectorCalculations.sum(crossPLowAppDir, new float[] {0,0,0}))){
+				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppDir)){
 					isInside = false;
 					signAppDir = -1;
 				}else{
@@ -460,7 +458,7 @@ public class PhysicsCalculations{
 					float cosLowThrust = VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust);
 					float[] crossPLowThrust = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,thrust));
 					float signThrust;
-					if(!Arrays.equals(VectorCalculations.sum(crossPLowUp, new float[] {0,0,0}), VectorCalculations.sum(crossPLowThrust, new float[] {0,0,0}))){
+					if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowThrust)){
 						signThrust = -1;
 					}else{
 						signThrust = 1;
@@ -472,12 +470,18 @@ public class PhysicsCalculations{
 				}else{//outside
 					float cosUpAppDir = VectorCalculations.cosinusBetweenVectors(upperLimit, approxDir);
 					if(cosLowAppDir+0>cosUpAppDir+0){//dichter bij upperLimit
-						result = -maxThrust;
+//						result = -maxThrust;
+						result = (float) (-1.25*9.81);
 					}else{//dichter bij lowerLimit
-						result = maxThrust;
+//						result = maxThrust;
+						result = (float) (1.25*9.81);
 					}
 				}
 			}
+//			System.out.println("thrust1");
+//			float[] thrustWithSize = VectorCalculations.timesScalar(thrust,result);
+//			for(float x : thrustWithSize)
+//				System.out.println(x);
 			this.setThrust(result);
 		}	
 	
@@ -485,14 +489,14 @@ public class PhysicsCalculations{
 			float acceleration = this.determineAcceleration(position);
 			float weight = this.getDrone().getWeight();
 			float[] externalForces = this.getExternalForces();
-			float[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(getDirectionDroneToPosition(position)), acceleration*weight);
+			float[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(getDirectionDroneToPosition(position)), Math.abs(acceleration)*weight);
 	
 			float[] thrustVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(externalForces));
 			if (thrustVector[1] <0){
 				thrustVector = VectorCalculations.inverse(thrustVector);
 			}
 			float[] normal = VectorCalculations.normalise(thrustVector);//normale op het trustvlak, genormaliseerde thrust
-			float[] projDirOnNormal = VectorCalculations.timesScalar(thrustVector , (float) (VectorCalculations.dotProduct(forceToPos, thrustVector)/Math.pow(VectorCalculations.size(thrustVector), 2)));
+			float[] projDirOnNormal = VectorCalculations.timesScalar(normal , (float) (VectorCalculations.dotProduct(forceToPos, normal)/Math.pow(VectorCalculations.size(thrustVector), 2)));
 			float[] viewVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(projDirOnNormal));
 			this.setWantedOrientation(new float[][] {thrustVector,viewVector});
 		}
@@ -591,31 +595,48 @@ public class PhysicsCalculations{
 			float yawWanted = (float) Math.toDegrees(Math.acos(value2));
 			//richting yaw/roll
 			//yaw:
-			float[] viewWantedDrone = this.vectorDroneToWorld(viewWanted);
-			viewWantedDrone[1] = 0;
-			float cosView = VectorCalculations.cosinusBetweenVectors(viewWantedDrone, new float[] {0,0,-1});
-			if(cosView < 0){//cos is altijd positief (grootte)
+			boolean samehalf = true;
+			boolean posheading = true;
+			float[] projectionViewWantedOnView = VectorCalculations.normalise(VectorCalculations.timesScalar(this.getDirectionOfView() , VectorCalculations.dotProduct(viewWanted,this.getDirectionOfView())));
+			if(!VectorCalculations.compareVectors(projectionViewWantedOnView, this.getDirectionOfView())){
+				samehalf = false;
+			}
+			if (this.getDrone().getHeading() < 0) {
+				posheading = false;
+			}
+			if((samehalf && !posheading) || (!samehalf && posheading)) {
 				yawWanted *= -1;
-			}	
-			//thrust:
-			float[] thrustWantedDrone = this.vectorDroneToWorld(thrustWanted);
-			thrustWantedDrone[2] = 0;
-			float cosThrust = VectorCalculations.cosinusBetweenVectors(thrustWantedDrone, new float[] {0,1,0});
-			if(cosThrust < 0){
+			}
+				
+			//roll:
+			boolean samehalfroll = true;
+			boolean posroll = true;
+			float[] projectionThrustWantedOnThrust = VectorCalculations.normalise(VectorCalculations.timesScalar(this.getDirectionOfThrust() , VectorCalculations.dotProduct(thrustWanted,this.getDirectionOfThrust())));
+			if(!VectorCalculations.compareVectors(projectionThrustWantedOnThrust, this.getDirectionOfThrust())){
+				samehalfroll = false;
+			}
+			if (this.getDrone().getRoll() < 0) {
+				posroll = false;
+			}
+			if((samehalfroll && !posroll) || (!samehalfroll && posroll)) {
 				rollWanted *= -1;
 			}
+			
 			float[] wantedDroneAngles = new float[] {yawWanted, pitchWanted, rollWanted};
 			float[] remainingAngles = VectorCalculations.sum(inverseDroneAngles, wantedDroneAngles);
-			System.out.println("heading: "+getDrone().getHeading());
-			System.out.println("yawWanted: " + yawWanted);
-			System.out.println("remaining yaw: " + remainingAngles[0]);
+//			System.out.println("viewWanted");
+//			for(float x: viewWanted)
+//				System.out.println(x);
+//			System.out.println("heading: "+getDrone().getHeading());
+//			System.out.println("yawWanted: " + yawWanted);
+//			System.out.println("remaining yaw: " + remainingAngles[0]);
 			this.setRemainingAngles(remainingAngles);
 		}
 	
 		//Geeft de nodige rotatieRates om in bepaalde tijd de remainingAngles te overbruggen.
 		private void calculateRotationRates(){
 			float[] remainingAngles = this.getRemainingAngles();
-			if(!Arrays.equals(VectorCalculations.sum(remainingAngles, new float[] {0,0,0}),new float[] {0,0,0})){
+			if(!VectorCalculations.compareVectors(remainingAngles, new float[] {0,0,0})){
 				float[] maxAngleRates = new float[]{this.getDrone().getMaxYawRate(), this.getDrone().getMaxPitchRate(), this.getDrone().getMaxRollRate()};
 				//Gecorrigeerde waarde ifv de maxwindrates.
 				// Remain angles in 1 frame => 1/Delta * Remain
@@ -630,8 +651,8 @@ public class PhysicsCalculations{
 				}else{
 					this.setYawRate(0);
 				}
-				System.out.println("yawRate" + this.getYawRate());
-				System.out.println("----------------");
+//				System.out.println("yawRate: " + this.getYawRate());
+//				System.out.println("----------------");
 				if (correctAnglesInOneFrames[1]+0 != 0){
 					if (Math.abs(correctAnglesInOneFrames[1]) > Math.abs(maxAngleRates[1])) {
 						this.setPitchRate(maxAngleRates[1]*Math.signum(correctAnglesInOneFrames[1]));
@@ -657,7 +678,8 @@ public class PhysicsCalculations{
 			float weight = this.getDrone().getWeight();
 			float[] externalForces = this.getExternalForces();
 			float[] thrust = VectorCalculations.timesScalar(this.getDirectionOfThrust(), this.getThrust());
-//			System.out.println("Speed: ");
+//			System.out.println("---");
+//			System.out.println("speed1");
 //			for (float x: getSpeed())
 //				System.out.println(x);
 //			System.out.println("Position: ");
@@ -669,8 +691,16 @@ public class PhysicsCalculations{
 //			System.out.println("-----------");
 			//(T+G+W+D)/(2m) * deltaT^2  {I} +  v0*deltaT + x0  {II} = Xexp
 			float[] part1 = VectorCalculations.timesScalar(VectorCalculations.sum(thrust, externalForces), this.getDeltaT()*this.getDeltaT()/(2*weight));
+			float[] acc = VectorCalculations.timesScalar(VectorCalculations.sum(thrust, externalForces), weight);
+//			System.out.println("acceleration1");
+//			for(float x:acc)
+//				System.out.println(x);
 			float[] part2 = VectorCalculations.sum(VectorCalculations.timesScalar(this.getSpeed(), this.getDeltaT()), this.getPosition());
-			this.setExpectedPosition(VectorCalculations.sum(part1, part2));
+			float[] expectedPos = VectorCalculations.sum(part1, part2);
+//			System.out.println("expected position");
+//			for(float x:expectedPos)
+//				System.out.println(x);
+			this.setExpectedPosition(expectedPos);
 		}
 	
 		private void calculateExpectedOrientation(){

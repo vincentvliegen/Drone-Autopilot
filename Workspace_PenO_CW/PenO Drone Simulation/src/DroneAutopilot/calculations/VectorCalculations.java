@@ -133,4 +133,12 @@ public class VectorCalculations {
 		return new float[] {xRotated, yRotated, zRotated};
 	}
 	
+	public static boolean compareVectors(float[] vector1, float[] vector2){
+		for( int i = 0; i<3; i++){
+			if(Math.abs(vector1[i]-vector2[i]) > 0.00001)
+				return false;
+		}
+		return true;
+	}
+	
 }

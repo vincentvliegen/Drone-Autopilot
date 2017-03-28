@@ -59,6 +59,24 @@ public class Physics {
 		Force gravity = new Force(0, drone.getGravity() * drone.getWeight(), 0);
 		Force drag = new Force(-drone.getDrag()*drone.getMovement().getVelocity()[0], -drone.getDrag()*drone.getMovement().getVelocity()[1],-drone.getDrag()*drone.getMovement().getVelocity()[2]);
 		Force wind = new Force((float)(drone.getDrag()*world.getWindSpeedX()), (float)(drone.getDrag()*world.getWindSpeedY()), (float)(drone.getDrag()*world.getWindSpeedZ()));
+//		System.out.println("------SIMULATOR--------");
+//		System.out.println("gravity2");
+//		System.out.println(gravity.getXNewton());
+//		System.out.println(gravity.getYNewton());
+//		System.out.println(gravity.getZNewton());
+//		System.out.println("wind2");
+//		System.out.println(wind.getXNewton());
+//		System.out.println(wind.getYNewton());
+//		System.out.println(wind.getZNewton());
+//		System.out.println("drag2");
+//		System.out.println(drag.getXNewton());
+//		System.out.println(drag.getYNewton());
+//		System.out.println(drag.getZNewton());
+//		System.out.println("thrust2");
+//		System.out.println(thrustForce.getXNewton());
+//		System.out.println(thrustForce.getYNewton());
+//		System.out.println(thrustForce.getZNewton());
+		
 		forces.add(thrustForce);
 		forces.add(gravity);
 		forces.add(drag);
