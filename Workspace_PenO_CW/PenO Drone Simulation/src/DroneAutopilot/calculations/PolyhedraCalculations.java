@@ -75,7 +75,7 @@ public class PolyhedraCalculations {
 		return cornersOuter;
 	}
 
-	public HashMap<float[], ArrayList<float[]>> findMatchingCorners(HashMap<float[], ArrayList<int[]>> targetListLeft,
+	private HashMap<float[], ArrayList<float[]>> findMatchingCorners(HashMap<float[], ArrayList<int[]>> targetListLeft,
 			HashMap<float[], ArrayList<int[]>> targetListRight) {
 		HashMap<float[], ArrayList<float[]>> result = new HashMap<float[], ArrayList<float[]>>();
 		for (float[] colorLeft : targetListLeft.keySet()) {
