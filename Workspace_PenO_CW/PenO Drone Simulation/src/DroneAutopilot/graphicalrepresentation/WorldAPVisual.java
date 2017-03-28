@@ -8,7 +8,7 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
-
+//TODO enkel tekenen als nodig, niet gewoon standaard
 @SuppressWarnings("serial")
 public class WorldAPVisual extends GLCanvas implements GLEventListener{
 
@@ -88,7 +88,7 @@ public class WorldAPVisual extends GLCanvas implements GLEventListener{
 		// Perspective.
 		float widthHeightRatio = (float) width / (float) height;
 		glu.gluPerspective(45, widthHeightRatio, 0.01, 500);
-		glu.gluLookAt(0, 0, 0, 2, 0, 0, 0, 1, 0);
+		glu.gluLookAt(5, 0, 0, 0, 0, 0, 0, 1, 0);
 
 	
 		// Change back to model view matrix.

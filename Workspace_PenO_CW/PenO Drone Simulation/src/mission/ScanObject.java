@@ -1,6 +1,7 @@
 package mission;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,7 +32,6 @@ public class ScanObject extends Mission{
 		frame.getContentPane().add(world, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		
 		frame.setSize(1024, 768); // width, height
 		frame.setResizable(false); //Not resizable
 		world.requestFocus();
@@ -56,13 +56,13 @@ public class ScanObject extends Mission{
 //		}
 //		this.getPhysicsCalculations().updatePosition(this.getTarget()); //blijf opdezelfde plaats
 //		//this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());//blijf dezelfde richting kijken
-		polycalc.getMatchingCorners(getDrone().getLeftCamera(), getDrone().getRightCamera());
-		HashMap<float[], ArrayList<float[]>> outerCorners = polycalc.getOuterCorners();
+		
+		HashMap<float[], ArrayList<float[]>> outerCorners = polycalc.getMatchingCorners(getDrone().getLeftCamera(), getDrone().getRightCamera());
+		System.out.println(outerCorners == null);
 		for(float[] key: outerCorners.keySet()) {
-			int rgb = Math.round(key[0]);
-			rgb = (rgb << 8) + Math.round(key[1]);
-			rgb = (rgb << 8) + Math.round(key[2]);
-			datapoly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0), outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgb, rgb));
+			int rgb = Color.HSBtoRGB(key[0], key[1], key[2]);
+			int rgbinner = Color.HSBtoRGB(outerCorners.get(key).get(3)[0], outerCorners.get(key).get(3)[1], outerCorners.get(key).get(3)[2]);
+			datapoly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0), outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
 		}
 		
 	}
