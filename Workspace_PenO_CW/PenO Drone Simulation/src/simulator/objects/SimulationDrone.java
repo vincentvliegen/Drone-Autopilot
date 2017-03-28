@@ -420,9 +420,9 @@ public class SimulationDrone extends WorldObject implements Drone {
 	@Override
 	public void setPitchRate(float value) {
 		System.out.println("Wind");
-		System.out.println("windx = " + getWorld().getWindSpeedX());
-		System.out.println("windy = " + getWorld().getWindSpeedY());
-		System.out.println("windz = " + getWorld().getWindSpeedZ());
+		System.out.println("windx = " + getWorld().getWindSpeedX()*this.getDrag());
+		System.out.println("windy = " + getWorld().getWindSpeedY()*this.getDrag());
+		System.out.println("windz = " + getWorld().getWindSpeedZ()*this.getDrag());
 		System.out.println("wind roll = " + getWorld().getWindRotationX());
 		System.out.println("wind yaw = " + getWorld().getWindRotationY());
 		System.out.println("wind pitch = " + getWorld().getWindRotationZ());
@@ -625,7 +625,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	@Override
 	public float getHeading() {
-		float newYaw = 90 - yaw;
+		float newYaw = 90 + yaw;
 		if (Math.abs(newYaw) > 180)
 			newYaw -= Math.signum(newYaw) * 360;
 		return newYaw;
