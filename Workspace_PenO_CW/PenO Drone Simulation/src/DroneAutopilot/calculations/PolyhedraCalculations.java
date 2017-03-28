@@ -345,7 +345,7 @@ public class PolyhedraCalculations {
 				high2 = coordinate;
 			}
 		}
-		maxEqualCoord.add(high2);
+		maxEqualCoord.add(high1);
 		if (high1[choice] - high2[choice] < 3) {
 			maxEqualCoord.add(high2);
 		} 
@@ -365,7 +365,7 @@ public class PolyhedraCalculations {
 				low2 = coordinate;
 			}
 		}
-		minEqualCoord.add(low2);
+		minEqualCoord.add(low1);
 		if (low2[choice] - low1[choice] < 3) {
 			minEqualCoord.add(low2);
 		} 
@@ -491,8 +491,8 @@ public class PolyhedraCalculations {
 	}
 
 	private boolean equalPixelCorner(ArrayList<int[]> list1, ArrayList<int[]> list2) {
-		if (list1.get(0)[0] <= list2.get(0)[0] + 3 && list1.get(0)[0] >= list2.get(0)[0] - 3
-				&& list1.get(0)[1] <= list2.get(0)[1] + 3 && list1.get(0)[1] >= list2.get(0)[1] - 3) {
+		if (list1.get(0)[0] <= list2.get(0)[0] + 5 && list1.get(0)[0] >= list2.get(0)[0] - 5
+				&& list1.get(0)[1] <= list2.get(0)[1] + 5 && list1.get(0)[1] >= list2.get(0)[1] - 5) {
 			return true;
 		}
 		return false;
