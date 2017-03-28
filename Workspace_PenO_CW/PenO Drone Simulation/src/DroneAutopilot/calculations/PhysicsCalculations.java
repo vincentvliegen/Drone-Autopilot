@@ -490,15 +490,21 @@ public class PhysicsCalculations{
 			float weight = this.getDrone().getWeight();
 			float[] externalForces = this.getExternalForces();
 			float[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(getDirectionDroneToPosition(position)), Math.abs(acceleration)*weight);
-	
 			float[] thrustVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(externalForces));
 			if (thrustVector[1] <0){
 				thrustVector = VectorCalculations.inverse(thrustVector);
 			}
 			float[] normal = VectorCalculations.normalise(thrustVector);//normale op het trustvlak, genormaliseerde thrust
-			float[] projDirOnNormal = VectorCalculations.timesScalar(normal , (float) (VectorCalculations.dotProduct(forceToPos, normal)/Math.pow(VectorCalculations.size(thrustVector), 2)));
-			float[] viewVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(projDirOnNormal));
+			float[] viewVector;
+			if(!VectorCalculations.compareVectors(forceToPos, new float[] {0,0,0})){
+				float[] projDirOnNormal = VectorCalculations.timesScalar(normal , VectorCalculations.dotProduct(forceToPos, normal));
+				viewVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(projDirOnNormal));
+			}else{
+				float[] projCurViewOnNormal = VectorCalculations.timesScalar(normal , VectorCalculations.dotProduct(this.getDirectionOfView(), normal));
+				viewVector = VectorCalculations.sum(this.getDirectionOfView(), VectorCalculations.inverse(projCurViewOnNormal));
+			}
 			this.setWantedOrientation(new float[][] {thrustVector,viewVector});
+
 		}
 
 			private float determineAcceleration(float[] position) {
