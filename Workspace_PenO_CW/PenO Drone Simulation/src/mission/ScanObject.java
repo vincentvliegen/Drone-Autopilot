@@ -61,12 +61,17 @@ public class ScanObject extends Mission{
 		HashMap<float[], ArrayList<float[]>> outerCorners = polycalc.getMatchingCorners(getDrone().getLeftCamera(), getDrone().getRightCamera());
 		System.out.println(outerCorners == null);
 		for(float[] key: outerCorners.keySet()) {
-			if(!drawnTriangles.contains(key)){
-				int rgb = Color.HSBtoRGB(key[0], key[1], key[2]);
-				int rgbinner = Color.HSBtoRGB(outerCorners.get(key).get(3)[0], outerCorners.get(key).get(3)[1], outerCorners.get(key).get(3)[2]);
-				datapoly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0), outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
-				drawnTriangles.add(key);
+			try{
+				if(!drawnTriangles.contains(key)){
+					int rgb = Color.HSBtoRGB(key[0], key[1], key[2]);
+					int rgbinner = Color.HSBtoRGB(outerCorners.get(key).get(3)[0], outerCorners.get(key).get(3)[1], outerCorners.get(key).get(3)[2]);
+					datapoly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0), outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
+					drawnTriangles.add(key);
+				}
 			}
+			catch(Exception e) {
+			}
+
 		}
 
 	}
