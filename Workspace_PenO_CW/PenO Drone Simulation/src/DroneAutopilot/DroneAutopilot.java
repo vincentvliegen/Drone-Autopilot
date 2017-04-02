@@ -22,13 +22,15 @@ public class DroneAutopilot implements Autopilot {
 	private final Mission hover;
 	
 	private boolean firstHover;
-	
+	private ScanObject polyhedronScan;
+	 
 	private final static int RED = 16711680;
 
 	public DroneAutopilot(Drone drone) {
 		this.drone = drone;
 		this.physicsCalculations = new PhysicsCalculations(getDrone());
 		this.GUI = new GUI();
+		polyhedronScan = new ScanObject(this);
 //		this.oneSphere = new OneSphere(this);
 //		this.severalSpheres = new SeveralSpheres(this);//TODO execute + updateGUI
 //		this.severalObjects = new SeveralObjects(this);//TODO execute + updateGUI
@@ -53,7 +55,14 @@ public class DroneAutopilot implements Autopilot {
 		if (getGUI().getMissionType() == MissionType.HOVER) {
 			getHover().execute();
 			setFirstHover(false);
-		}else{
+			
+		}
+		else if(getGUI().getMissionType() == MissionType.POLYHEDRONSCAN) {
+			  polyhedronScan.execute();
+//			  getHover().execute();
+			  
+			}
+		else{
 //			if(getGUI().getMissionType() == MissionType.SINGLEOBJECT){
 //				this.getOneSphere().execute();
 //			}else if(getGUI().getMissionType() == MissionType.MULTIPLEOBJECTS){

@@ -16,6 +16,7 @@ import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.editor.WorldEditor;
 import simulator.movement.KeyboardMovement;
+import simulator.objects.LetterLPolyhedron;
 import simulator.objects.ObstacleSphere;
 import simulator.objects.Polyhedron;
 import simulator.objects.PolyhedronType;
@@ -340,9 +341,11 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
 		setup();
-		 SomeFigure fig = new SomeFigure(this, PolyhedronType.TARGET, new
-		 double[]{2,0,0});
-		 getWorldObjectList().add(fig);
+//		SomeFigure fig = new SomeFigure(this, PolyhedronType.TARGET, new double[]{2,0,0});
+//		getWorldObjectList().add(fig);
+//		LetterLPolyhedron figL = new LetterLPolyhedron(this, PolyhedronType.TARGET, new double[]{2,0,0});
+//		getWorldObjectList().add(figL);
+
 		// Start animator.
 		gl.setSwapInterval(1);
 		animator = new FPSAnimator(this, fps);
