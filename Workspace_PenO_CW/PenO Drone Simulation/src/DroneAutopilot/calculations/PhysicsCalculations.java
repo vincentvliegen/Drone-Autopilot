@@ -214,7 +214,7 @@ public class PhysicsCalculations{
 		
 		private void calculateZObject(){
 			//altijd negatief, positieve Z is naar achter
-			float deltaZ = this.getDepth();
+			float deltaZ = -this.getDepth();
 			setZObject(deltaZ);
 		}
 	
