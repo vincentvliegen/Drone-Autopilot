@@ -15,6 +15,8 @@ public class Generator_V2 {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		String path = "inputFiles/GeneratorV2Test.txt";
+		boolean windOn = true;
+		boolean obstaclesOn = true;
 
 		File f = new File(path);
 		OutputStream fileStream = new FileOutputStream(f);
@@ -46,6 +48,7 @@ public class Generator_V2 {
 			// Wind
 			PriorityQueue<Float> newQueue = new PriorityQueue<>();
 
+			if (windOn) {
 			for (int i = 0; i < 6; i++) {
 				stream.writeShort(6);
 				for (int j = 0; j < 6; j++) {
@@ -63,13 +66,23 @@ public class Generator_V2 {
 					}
 				}
 			}
+			} else {
+				for (int i = 0; i<6; i++) {
+					stream.writeShort(1);
+					stream.writeFloat(1.0f);
+					stream.writeFloat(0.0f);
+				}
+			}
 
 			// Objects
-			int numberOfObjects = r.nextInt(7) + 5;
+			int numberOfObjects = r.nextInt(7) + 10;
 			int numberOfObstacles = numberOfObjects / 2;
 			int numberOfTargets = numberOfObjects - numberOfObstacles;
-			stream.writeShort(numberOfObjects);
-			
+			if (obstaclesOn) {
+				stream.writeShort(numberOfObjects);
+			} else {
+				stream.writeShort(numberOfObstacles);
+			}
 			// Calculate all positions
 			List<double[]> positionList = new ArrayList<>();
 			positionList.add(new double[] { 0, 0, 0 });
@@ -190,6 +203,7 @@ public class Generator_V2 {
 
 			
 			// Obstacle
+			if (obstaclesOn) {
 			for (int i = 0; i < numberOfObstacles; i++) {
 				float x = (float) positionList.get(currentPosIndex)[0];
 				float y = (float) positionList.get(currentPosIndex)[1];
@@ -261,6 +275,7 @@ public class Generator_V2 {
 					stream.writeByte(currentColor[2]);
 				}
 				colorListRGB.clear();
+			}
 			}
 			stream.close();
 		} catch (Exception e) {
