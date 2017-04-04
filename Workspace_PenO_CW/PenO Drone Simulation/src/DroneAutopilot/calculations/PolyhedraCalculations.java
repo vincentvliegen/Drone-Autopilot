@@ -17,8 +17,6 @@ public class PolyhedraCalculations {
 	private HashMap<float[], ArrayList<int[]>> hashMapOuterColor;
 	private HashMap<float[], ArrayList<int[]>> hashMapInnerColor;
 	private HashMap<float[], ArrayList<int[]>> hashMapObstacle;
-	private HashMap<float[], ArrayList<float[]>> outerCorners;
-	private HashMap<float[], ArrayList<float[]>> innerCorners;
 
 	public PolyhedraCalculations(Drone drone) {
 		this.physicsCalc = new PhysicsCalculations(drone);
@@ -206,7 +204,7 @@ public class PolyhedraCalculations {
 				float yI = (Icorners.get(0)[1] + Icorners.get(1)[1] + Icorners.get(2)[1])/3;
 				float zI = (Icorners.get(0)[2] + Icorners.get(1)[2] + Icorners.get(2)[2])/3;
 				
-				if(xO>= xI-0.1 && xO<= xI+0.1 && yO>=yI-0.1 && yO<=yI+0.1 && zO>=zI-0.1 && zO<=zI+0.1){
+				if(xO>= xI-0.15 && xO<= xI+0.15 && yO>=yI-0.15 && yO<=yI+0.15 && zO>=zI-0.15 && zO<=zI+0.15){
 					result.put(outerColor, innerColor);
 					break;
 				}
@@ -386,50 +384,34 @@ public class PolyhedraCalculations {
 			// linker boven
 			ArrayList<int[]> links = this.findMinimumCoordinates(coordinates, 0);
 			ArrayList<int[]> linksBoven = this.findMinimumCoordinates(links, 1);
-			// System.out.println("linksboven" + linksBoven.get(0)[0] + " " +
-			// linksBoven.get(0)[1]);
 			possibleCorners.add(linksBoven.get(0));
 			// linker onder
 			ArrayList<int[]> links2 = this.findMinimumCoordinates(coordinates, 0);
 			ArrayList<int[]> linksOnder = this.findMaximumCoordinates(links2, 1);
-			// System.out.println("linksonder" + linksOnder.get(0)[0] + " " +
-			// linksOnder.get(0)[1]);
 			possibleCorners.add(linksOnder.get(0));
 			// rechts boven
 			ArrayList<int[]> rechts = this.findMaximumCoordinates(coordinates, 0);
 			ArrayList<int[]> rechtsBoven = this.findMinimumCoordinates(rechts, 1);
-			// System.out.println("rechtsboven" + rechtsBoven.get(0)[0] + " " +
-			// rechtsBoven.get(0)[1]);
 			possibleCorners.add(rechtsBoven.get(0));
 			// rechts onder
 			ArrayList<int[]> rechts2 = this.findMaximumCoordinates(coordinates, 0);
 			ArrayList<int[]> rechtsOnder = this.findMaximumCoordinates(rechts2, 1);
-			// System.out.println("rechtsonder" + rechtsOnder.get(0)[0] + " " +
-			// rechtsOnder.get(0)[1]);
 			possibleCorners.add(rechtsOnder.get(0));
 			// boven links
 			ArrayList<int[]> boven = this.findMinimumCoordinates(coordinates, 1);
 			ArrayList<int[]> bovenLinks = this.findMinimumCoordinates(boven, 0);
-			// System.out.println("bovenLinks" + bovenLinks.get(0)[0] + " " +
-			// bovenLinks.get(0)[1]);
 			possibleCorners.add(bovenLinks.get(0));
 			// boven rechts
 			ArrayList<int[]> boven2 = this.findMinimumCoordinates(coordinates, 1);
 			ArrayList<int[]> bovenRechts = this.findMaximumCoordinates(boven2, 0);
-			// System.out.println("bovenRechts" + bovenRechts.get(0)[0] + " " +
-			// bovenRechts.get(0)[1]);
 			possibleCorners.add(bovenRechts.get(0));
 			// onder links
 			ArrayList<int[]> onder = this.findMaximumCoordinates(coordinates, 1);
 			ArrayList<int[]> onderLinks = this.findMinimumCoordinates(onder, 0);
-			// System.out.println("onderLinks" + onderLinks.get(0)[0] + " " +
-			// onderLinks.get(0)[1]);
 			possibleCorners.add(onderLinks.get(0));
 			// onder rechts
 			ArrayList<int[]> onder2 = this.findMaximumCoordinates(coordinates, 1);
 			ArrayList<int[]> onderRechts = this.findMaximumCoordinates(onder2, 0);
-			// System.out.println("onderRechts" + onderRechts.get(0)[0] + " " +
-			// onderRechts.get(0)[1]);
 			possibleCorners.add(onderRechts.get(0));
 
 			boolean boolLinks = false;
@@ -539,22 +521,6 @@ public class PolyhedraCalculations {
 			}
 		}
 		return resultingOuterTriangleCOGs;
-	}
-
-	public HashMap<float[], ArrayList<float[]>> getInnerCorners() {
-		return this.innerCorners;
-	}
-
-	private void setInnerCorners(HashMap<float[], ArrayList<float[]>> innercorner) {
-		this.innerCorners = innercorner;
-	}
-
-	public HashMap<float[], ArrayList<float[]>> getOuterCorners() {
-		return this.outerCorners;
-	}
-
-	private void setOuterCorners(HashMap<float[], ArrayList<float[]>> outercorner) {
-		this.outerCorners = outercorner;
 	}
 
 	public HashMap<float[], ArrayList<int[]>> getHashMapTargetOuterColor() {
