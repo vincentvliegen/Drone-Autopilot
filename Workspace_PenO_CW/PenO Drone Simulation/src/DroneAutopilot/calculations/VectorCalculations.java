@@ -95,19 +95,19 @@ public class VectorCalculations {
 	}
 
 	public static float[][] createInverseRotationMatrix(float yaw, float pitch, float roll){	
-		float[][] rotatonMatrix = createRotationMatrix(yaw, pitch, roll);
+		float[][] rotationMatrix = createRotationMatrix(yaw, pitch, roll);
 		
-		float r11 = rotatonMatrix[0][0];
-		float r12 = rotatonMatrix[1][0];
-		float r13 = rotatonMatrix[2][0];
+		float r11 = rotationMatrix[0][0];
+		float r12 = rotationMatrix[1][0];
+		float r13 = rotationMatrix[2][0];
 		
-		float r21 = rotatonMatrix[0][1];
-		float r22 = rotatonMatrix[1][1];
-		float r23 = rotatonMatrix[2][1];
+		float r21 = rotationMatrix[0][1];
+		float r22 = rotationMatrix[1][1];
+		float r23 = rotationMatrix[2][1];
 
-		float r31 = rotatonMatrix[0][2];
-		float r32 = rotatonMatrix[1][2];
-		float r33 = rotatonMatrix[2][2];
+		float r31 = rotationMatrix[0][2];
+		float r32 = rotationMatrix[1][2];
+		float r33 = rotationMatrix[2][2];
 		
 		return new float[][] {{r11,r12,r13},{r21,r22,r23},{r31,r32,r33}};
 	}

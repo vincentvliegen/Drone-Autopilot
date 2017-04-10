@@ -35,8 +35,6 @@ public class PhysicsCalculationsTest {
 	private float[] depthXY1;
 	private float[] depthXY2;
 	
-	
-	
 	@Before
 	public void setUp() {
 		verticalAngleOfView = (float) (2*Math.toDegrees(Math.atan((((double) heightCamera/ (double) widthCamera)*Math.tan(Math.toRadians(horizontalAngleOfView/2))))));
@@ -182,52 +180,43 @@ public class PhysicsCalculationsTest {
 	//TESTS
 	
 	@Test
-    public void X1Test() {
-		assertEquals(-74,calc.getX1(cOG1),0.0001);
-		assertEquals(-70,calc.getX1(cOG2),0.0001);
-		assertEquals(52,calc.getX1(cOG3),0.0001);
-    }
+	public void calculatePositionObjectTest1(){
+		calc.updateDroneData();
+		calc.calculatePositionObject(cOG1, cOG2);
+		assertEquals(-74, calc.getX1(), 0.0001);
+		assertEquals(-70, calc.getX2(), 0.0001);
+		assertEquals(49, calc.getY(), 0.0001);
+		//TODO: Werken met eventueel gegenereerde afbeeldingen vn generator met juiste afmetingen.
+		//assertEquals(20, calc.getDepth(), 0.0001);
+		//assertEquals(Math.toDegrees(Math.atan(0.1)), calc.getHorizontalAngleDeviation(), 0.0001);
+		//assertEquals(Math.toDegrees(Math.atan(-0.4)), calc.getHorizontalAngleDeviation(), 0.0001);
+	}
 	
 	@Test
-    public void X2Test() {
-		assertEquals(-74,calc.getX2(cOG1),0.0001);
-		assertEquals(-70,calc.getX2(cOG2),0.0001);
-		assertEquals(52,calc.getX2(cOG3),0.0001);
-    }
-	
-	@Test
-    public void YTest() {
-		float y = calc.getY(cOG1);
-		assertEquals(49,y,0.0001);
-		assertEquals(-30,calc.getY(cOG2),0.0001);
-		assertEquals(17,calc.getY(cOG3),0.0001);
-    }
+	public void calculatePositionObjectTest2(){
+		calc.updateDroneData();
+		calc.calculatePositionObject(cOG2, cOG3);
+		assertEquals(-70, calc.getX1(), 0.0001);
+		assertEquals(52, calc.getX2(), 0.0001);
+		assertEquals(-30, calc.getY(), 0.0001);
+	}
 	
 	@Test
 	public void cameraHeightTest(){
-		assertEquals(100,calc.getCameraHeight());
+		assertEquals(100, calc.getCameraHeight());
 	}
 	
 	@Test
 	public void focalDistanceTest(){
-		assertEquals(75,calc.getFocalDistance(),0.00001);
+		assertEquals(75, calc.getFocalDistance(),0.00001);
 	}
 	
-	@Test
-	public void depthTest(){
-		assertEquals(20,calc.getDepth(depthXY1, depthXY2), 0.00001);
-	}
 	
-	@Test
-	public void horAngleDevTest(){
-		assertEquals(Math.toDegrees(Math.atan(0.1)),calc.horizontalAngleDeviation(depthXY1, depthXY2),0.00001);
-	}
 	
-	@Test
-	public void verAngleDevTest(){
-		assertEquals(Math.toDegrees(Math.atan(-0.4)),calc.verticalAngleDeviation(depthXY1),0.00001);
-	}
 	
+	
+	/*
+	 *TODO: calculateThrust
 	@Test
 	public void thrustTest(){
 		assertEquals(8.623982,calc.getThrust(depthXY1),0.00001);
@@ -258,5 +247,5 @@ public class PhysicsCalculationsTest {
 //		System.out.println("wo: thrust = { "+wo[0][0] + ", " + wo[0][1] + ", " + wo[0][2] + "}, view =  " + "{ "+wo[1][0] + ", " + wo[1][1] + ", " + wo[1][2] + "} ");
 //		System.out.println("sizeThrust = " + VectorCalculations.size(wo[0]));
 //	}
-	
+*/	
 }
