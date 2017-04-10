@@ -28,9 +28,9 @@ public class PhysicsCalculationsTest {
 	private PhysicsCalculations calc, calc1;
 	private Drone drone, drone1;
 	
-	private float[] cOG1;
-	private float[] cOG2;
-	private float[] cOG3;
+	private double[] cOG1;
+	private double[] cOG2;
+	private double[] cOG3;
 	
 	private float[] depthXY1;
 	private float[] depthXY2;
@@ -46,9 +46,9 @@ public class PhysicsCalculationsTest {
 		
 		//calc1.setWindTranslation(0,(float) 0.5, 0);
 
-		cOG1 = new float[] {1,1};
-		cOG2 = new float[] {5,80};
-		cOG3 = new float[] {127,33};
+		cOG1 = new double[] {1,1};
+		cOG2 = new double[] {5,80};
+		cOG3 = new double[] {127,33};
 		
 		depthXY1 = new float[] {120,80};
 		depthXY2 = new float[] {45,80};
@@ -203,17 +203,13 @@ public class PhysicsCalculationsTest {
 	
 	@Test
 	public void cameraHeightTest(){
-		assertEquals(100, calc.getCameraHeight());
+		assertEquals(100, calc.getCameraHeight(), 0.0001);
 	}
 	
 	@Test
 	public void focalDistanceTest(){
-		assertEquals(75, calc.getFocalDistance(),0.00001);
+		assertEquals(75, calc.getFocalDistance(), 0.0001);
 	}
-	
-	
-	
-	
 	
 	/*
 	 *TODO: calculateThrust
