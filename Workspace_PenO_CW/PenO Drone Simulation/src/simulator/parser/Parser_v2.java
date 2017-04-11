@@ -16,7 +16,6 @@ public class Parser_v2 extends Parser{
 
 	int [] magic = new int[4];
 	int version;
-	float cameraSeparation;
     ArrayList<Polyhedron> objects;
 
 	public Parser_v2(World world) {

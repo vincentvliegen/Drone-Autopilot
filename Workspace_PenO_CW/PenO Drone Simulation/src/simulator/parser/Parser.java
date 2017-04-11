@@ -25,7 +25,7 @@ public abstract class Parser {
 	double verticalAngleOfView;
 	int imageWidth;
 	int imageHeight;
-	double cameraSeparation; 
+	float cameraSeparation; 
 	double weight ;
 	double gravity; 
 	double drag ;
@@ -64,7 +64,7 @@ public abstract class Parser {
 		return imageHeight;
 	}
 
-	public double getCameraSeparation() {
+	public float getCameraSeparation() {
 		return cameraSeparation;
 	}
 
