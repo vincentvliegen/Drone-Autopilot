@@ -14,6 +14,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES3;
 
+import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.DroneAutopilotFactory;
 import simulator.camera.DroneCamera;
 import simulator.camera.DroneCameraPlace;
@@ -65,14 +66,15 @@ public class SimulationDrone extends WorldObject implements Drone {
 				+ Math.pow(width / 2, 2) + Math.pow(depth / 2, 2));
 	}
 
-	// TODO afmetingen (voor collision detection)
-
 	public SimulationDrone(GL2 gl, float height, float width, float depth,
 			float[] color, World world) {
 		this(gl, height, width, depth, color, standardTranslate, world);
 	}
 
-	// TODO afmetingen (voor collision detection)
+	public Autopilot getAutopilot() {
+		return autopilot;
+	}
+	
 
 	public void draw() {
 		gl.glEnable(GL.GL_CULL_FACE);
@@ -231,7 +233,6 @@ public class SimulationDrone extends WorldObject implements Drone {
 						.toRadians(yaw))));
 	}
 
-	// TODO afmetingen (voor collision detection)
 
 	public void translateDrone(double[] translate) {
 		gl.glTranslated(translate[0], translate[1], translate[2]);
@@ -353,9 +354,6 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	private void generateDroneCameras() {
 
-		// TODO
-		// lookat moet recht vooruit zijn
-		// dus X moet zelfde zijn, Y ook, Z iets verder
 
 		float commonY = 0;
 		float commonX = 0;
@@ -598,7 +596,6 @@ public class SimulationDrone extends WorldObject implements Drone {
 		return middleCamera;
 	}
 
-	// TODO Dit aanpassen, wanneer de juiste representatie van de camera er is!
 	@Override
 	public float getX() {
 		// float xCo = (getLeftDroneCamera().getEyeX() +
@@ -634,4 +631,13 @@ public class SimulationDrone extends WorldObject implements Drone {
 	public List<Double> getInverseRotateMatrix() {
 		return inverseRotateMatrix;
 	}
+
+	/**
+	 * May only be used for testing purposes!
+	 */
+	public void setAutopilot(Autopilot autopilot) {
+		this.autopilot = autopilot;
+	}
+
+	
 	}
