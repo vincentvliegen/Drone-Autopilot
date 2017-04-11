@@ -24,6 +24,8 @@ public class WorldForTester extends WorldParser_v2 {
 		ap = testFactory.create(drone);
 		drone.setAutopilot(ap);
 		getDrones().add(drone);
+		getWorldObjectList().add(drone);
+
 
 		
 	}
@@ -31,6 +33,7 @@ public class WorldForTester extends WorldParser_v2 {
 	public DroneAutopilot getAp() {
 		return ap;
 	}
+	
 	@Override
 	public void addSimulationDrone(SimulationDrone drone) {
 	}

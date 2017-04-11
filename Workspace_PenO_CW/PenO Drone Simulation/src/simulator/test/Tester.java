@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import DroneAutopilot.DroneAutopilotFactory;
@@ -19,13 +20,14 @@ import simulator.world.WorldParser;
 
 public class Tester {
 
-	WorldForTester world;
-	DroneAutopilotFactory factory;
-	private JFrame frame;
-	private GUI gui;
+	static WorldForTester world;
+	static DroneAutopilotFactory factory;
+	private static JFrame frame;
+	private static GUI gui;
 
-	@Before
-	public void init() {
+	
+	@BeforeClass
+	public static void init() {
 		factory = new DroneAutopilotFactory();
 		world = new WorldForTester(factory);
 
@@ -47,15 +49,18 @@ public class Tester {
 		frame.setVisible(true);
 
 		waitForAMoment(3);
+		pauseExec();
 
 	}
 
-	private void pauseExec() {
+	private static void pauseExec() {
 		world.getAnimator().pause();
+		System.out.println("-------------------");
 		System.out.println("paused");
+		System.out.println("-------------------");
 	}
 
-	private void waitForAMoment(int i) {
+	private static void waitForAMoment(int i) {
 		try {
 			TimeUnit.SECONDS.sleep(i);
 		} catch (InterruptedException e) {
@@ -65,16 +70,33 @@ public class Tester {
 	}
 
 	@Test
-	public void testje() {
+	public void testSpeed() {
+		System.out.println("Speed:");
 		System.out.println(Arrays.toString(world.getDrones().get(0).getMovement().getVelocity()));
 		System.out.println(Arrays.toString(world.getAp().getPhysicsCalculations().getSpeed()));
-		for(int i = 0; i < world.getDrones().get(0).getMovement().getVelocity().length; i ++) {
+		for (int i = 0; i < world.getDrones().get(0).getMovement().getVelocity().length; i++) {
 			float v1 = world.getDrones().get(0).getMovement().getVelocity()[i];
 			float v2 = (float) world.getAp().getPhysicsCalculations().getSpeed()[i];
 			System.out.println((double) Math.abs(v1 - v2));
-			assert((double) Math.abs(v1 - v2) < 0.00001);
-			//TODO dit klopt altijd, heeft wss iets met types te maken!
+			assertTrue( Math.abs(v1 - v2) < 0.00001);
 		}
 
 	}
+
+	@Test
+	public void testForces() {
+		System.out.println("Forces:");
+		System.out.println(Arrays.toString(world.getPhysics().getAcceleration(world.getDrones().get(0))));
+		System.out.println(Arrays.toString(world.getAp().getPhysicsCalculations().getExternalForces()));
+		for (int i = 0; i < world.getDrones().get(0).getMovement().getVelocity().length; i++) {
+			float v1 = world.getPhysics().getAcceleration(world.getDrones().get(0))[i];
+			float v2 = (float) world.getAp().getPhysicsCalculations().getExternalForces()[i];
+			System.out.println(v2);
+			System.out.println(Math.abs(v1 - v2));
+			assertTrue( Math.abs(v1 - v2) < 0.00001);
+			
+
+		}
+	}
+
 }
