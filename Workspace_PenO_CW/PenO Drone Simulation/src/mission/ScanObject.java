@@ -65,15 +65,17 @@ public class ScanObject extends Mission{
 		}
 		
 		this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());//blijf dezelfde richting kijkenen
-		HashMap<float[], ArrayList<float[]>> outerCorners = polycalc.getMatchingCorners(getDrone().getLeftCamera() , getDrone().getRightCamera());
+		HashMap<ArrayList<float[]>, ArrayList<double[]>> outerCorners = polycalc.getMatchingCorners(getDrone().getLeftCamera() , getDrone().getRightCamera());
 		System.out.println(outerCorners == null);
-		for(float[] key: outerCorners.keySet()) {
+		for(ArrayList<float[]> key: outerCorners.keySet()) {
+			float[] outerkey = key.get(0);
+			float[] innerkey = key.get(1);
 			try{
-				if(!drawnTriangles.contains(key)) {
-					int rgb = Color.HSBtoRGB(key[0], key[1], key[2]);
-					int rgbinner = Color.HSBtoRGB(outerCorners.get(key).get(3)[0], outerCorners.get(key).get(3)[1] , outerCorners.get(key).get(3)[2]);
+				if(!drawnTriangles.contains(outerkey)) {
+					int rgb = Color.HSBtoRGB(outerkey[0], outerkey[1], outerkey[2]);
+					int rgbinner = Color.HSBtoRGB(innerkey[0], innerkey[1] , innerkey[2]);
 					datapolyly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0) , outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
-					drawnTriangles.add(key);
+					drawnTriangles.add(outerkey);
 				} }
 
 				catch(Exception e) {

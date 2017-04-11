@@ -8,16 +8,16 @@ public class TriangleAPData {
 	
 	
 	//TODO floats?
-	private float[] p1;
-	private float[] p2;
-	private float[] p3;
+	private double[] p1;
+	private double[] p2;
+	private double[] p3;
 	private int innerColor;
 	private int outerColor;
 	private float[] innerPoint1;
 	private float[] innerPoint2;
 	private float[] innerPoint3;
 
-	public TriangleAPData(float[] p1, float[] p2, float[] p3, int rgbInner, int rgbOuter) {
+	public TriangleAPData(double[] p1, double[] p2, double[] p3, int rgbInner, int rgbOuter) {
 		this.p1 = p1;
 		this.p2 = p2;
 		this.p3 = p3;
@@ -30,15 +30,15 @@ public class TriangleAPData {
 		//eigenlijk afdwingen dat dit er maar 3 kunnen zijn
 	}
 
-	public float[] getPoint1() {
+	public double[] getPoint1() {
 		return p1;
 	}
 	
-	public float[] getPoint2() {
+	public double[] getPoint2() {
 		return p2;
 	}
 	
-	public float[] getPoint3() {
+	public double[] getPoint3() {
 		return p3;
 	}
 	
@@ -70,23 +70,23 @@ public class TriangleAPData {
 		return innerPoint3;
 	}
 	
-	private float getGravityX() {
+	private double getGravityX() {
 		return (getPoint1()[0] + getPoint2()[0] + getPoint3()[0]) / 3;
 
 	}
 
-	private float getGravityY() {
+	private double getGravityY() {
 		return (getPoint1()[1] + getPoint2()[1] + getPoint3()[1]) / 3;
 
 	}
 
-	private float getGravityZ() {
+	private double getGravityZ() {
 		return (getPoint1()[2] + getPoint2()[2] + getPoint3()[2]) / 3;
 
 	}
 
 
-	private float[] calculateInnerPoint(float[] outerPoint) {
+	private float[] calculateInnerPoint(double[] outerPoint) {
 		return new float[] { (float) ((outerPoint[0] - getGravityX()) / Math.sqrt(2) + getGravityX()),
 				(float) ((outerPoint[1] - getGravityY()) / Math.sqrt(2) + getGravityY()),
 				(float) ((outerPoint[2] - getGravityZ()) / Math.sqrt(2) + getGravityZ()) };
