@@ -91,6 +91,15 @@ public class TriangleAPData {
 				(float) ((outerPoint[1] - getGravityY()) / Math.sqrt(2) + getGravityY()),
 				(float) ((outerPoint[2] - getGravityZ()) / Math.sqrt(2) + getGravityZ()) };
 	}
+
+	public float[] getRgbInner() {
+		return new float[]{(getInnerColor() >> 16) & 0xFF, (getInnerColor() >> 8) & 0xFF, getInnerColor() & 0xFF};
+	}
+	
+	
+	public float[] getRgbOuter() {
+		return new float[]{(getOuterColor() >> 16) & 0xFF, (getOuterColor() >> 8) & 0xFF, getOuterColor() & 0xFF};
+	}
 	
 	
 }
