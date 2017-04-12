@@ -141,4 +141,16 @@ public class VectorCalculations {
 		return true;
 	}
 	
+	public static double[] projectOnAxis(double[] vector, double[] axis){
+		double sizeAxis = size(axis);
+		double[] result = timesScalar(axis, VectorCalculations.dotProduct(vector, axis)/(sizeAxis*sizeAxis));
+		return result;
+	}
+	
+	public static double[] projectOnPlane(double[] vector, double[] normal){
+		double[] projection = projectOnAxis(vector, normal);
+		double[] result = sum(vector, inverse(projection));
+		return result;
+	}
+	
 }
