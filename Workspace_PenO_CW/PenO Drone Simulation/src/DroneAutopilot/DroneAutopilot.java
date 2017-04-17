@@ -9,32 +9,33 @@ import p_en_o_cw_2016.Drone;
 
 public class DroneAutopilot implements Autopilot {
 
-	/**
-	 * Variable registering the drone linked to the Autopilot.
-	 */
 	private final Drone drone;
 	private final PhysicsCalculations physicsCalculations;//deze mag niet verschillen tussen de missies, omdat de snelheid/positie/wind elk frame moet worden geupdate
 	private final GUI GUI;
 	
+	private final Mission hover;
+	private final Mission flyToPosition;
+	private final Mission scanObject;
 //	private final Mission oneSphere;
 //	private final Mission severalSpheres;
 //	private final Mission severalObjects;
-	private final Mission hover;
 	
 	private boolean firstHover;
-	private ScanObject polyhedronScan;
-	 
+	
 	private final static int RED = 16711680;
 
+	
+	
 	public DroneAutopilot(Drone drone) {
 		this.drone = drone;
 		this.physicsCalculations = new PhysicsCalculations(getDrone());
 		this.GUI = new GUI();
-		polyhedronScan = new ScanObject(this);
+		this.scanObject = new ScanObject(this);
 //		this.oneSphere = new OneSphere(this);
 //		this.severalSpheres = new SeveralSpheres(this);//TODO execute + updateGUI
 //		this.severalObjects = new SeveralObjects(this);//TODO execute + updateGUI
 		this.hover = new Hover(this);//TODO updateGUI
+		this.flyToPosition = new FlyToPosition(this);
 		this.setFirstHover(true);
 	}
 
@@ -55,25 +56,23 @@ public class DroneAutopilot implements Autopilot {
 		if (getGUI().getMissionType() == MissionType.HOVER) {
 			getHover().execute();
 			setFirstHover(false);
-			
 		}
-		else if(getGUI().getMissionType() == MissionType.POLYHEDRONSCAN) {
-			  polyhedronScan.execute();
-//			  getHover().execute();
-			  
-			}
 		else{
-//			if(getGUI().getMissionType() == MissionType.SINGLEOBJECT){
-//				this.getOneSphere().execute();
+			if(getGUI().getMissionType() == MissionType.FLYTOPOSITION){
+				this.getFlyToPosition().execute();
+			}else if(getGUI().getMissionType() == MissionType.SINGLEOBJECT){
+				//this.getOneSphere().execute();
 //			}else if(getGUI().getMissionType() == MissionType.MULTIPLEOBJECTS){
 //				this.getSeveralSpheres().execute();
 //			}else if(getGUI().getMissionType() == MissionType.POLYHEDRONSCAN){
 //				this.getSeveralObjects().execute();
-//			}else if(getGUI().getMissionType() == MissionType.TEST){
-//			
-//			}else{
-//				System.out.println("mission does not exist");
-//			}
+			}else if(getGUI().getMissionType() == MissionType.TEST){
+			//iets
+			}else if(getGUI().getMissionType() == MissionType.SCANOBJECT) {
+				this.getScanObject().execute();
+			}else{
+				System.out.println("mission does not exist");
+			}
 			setFirstHover(true);
 		}
 	}
@@ -125,5 +124,12 @@ public class DroneAutopilot implements Autopilot {
 		this.firstHover = firstHover;
 	}
 
+	public Mission getFlyToPosition() {
+		return flyToPosition;
+	}
+
+	public Mission getScanObject() {
+		return scanObject;
+	}
 
 }

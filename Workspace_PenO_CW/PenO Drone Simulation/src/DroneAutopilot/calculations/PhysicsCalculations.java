@@ -440,7 +440,7 @@ public class PhysicsCalculations{
 //				double[] coordUp = {VectorCalculations.size(upperLimit)*cosLowUp,VectorCalculations.size(upperLimit)*(Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
 	
 				double cosLowAppDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxDir);
-				if(cosLowAppDir+0>cosLowUp+0){
+				if(cosLowAppDir+0<cosLowUp+0){
 					isInside = false;
 				}
 				double[] crossPLowAppDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxDir));
@@ -456,7 +456,7 @@ public class PhysicsCalculations{
 				//als buiten dan dichter bij upper of lower (om op min of max te zetten)
 				if(isInside){//inside
 					double cosLowExtForce = VectorCalculations.cosinusBetweenVectors(lowerLimit, externalForces);
-					double[] coordExtForce = {VectorCalculations.size(externalForces)*cosLowUp,VectorCalculations.size(externalForces)*(Math.sqrt(1-cosLowExtForce*cosLowExtForce))};//coordinaten externalForces in xy-vlak
+					double[] coordExtForce = {VectorCalculations.size(externalForces)*cosLowExtForce,VectorCalculations.size(externalForces)*(Math.sqrt(1-cosLowExtForce*cosLowExtForce))};//coordinaten externalForces in xy-vlak
 	
 					double cosLowThrust = VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust);
 					double[] crossPLowThrust = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,thrust));
@@ -467,7 +467,7 @@ public class PhysicsCalculations{
 					}else{
 						signThrust = 1;
 					}
-					double[] coordThrust = {VectorCalculations.size(thrust)*cosLowAppDir,signThrust*VectorCalculations.size(thrust)*(Math.sqrt(1-cosLowThrust*cosLowThrust))};//coordinaten thrust in xy-vlak
+					double[] coordThrust = {VectorCalculations.size(thrust)*cosLowThrust,signThrust*VectorCalculations.size(thrust)*(Math.sqrt(1-cosLowThrust*cosLowThrust))};//coordinaten thrust in xy-vlak
 					//grootte + zin
 					result =	(coordAppDir[0]*coordExtForce[1]-coordAppDir[1]*coordExtForce[0])/
 								(coordAppDir[1]* coordThrust[0] -coordAppDir[0]* coordThrust[1] );

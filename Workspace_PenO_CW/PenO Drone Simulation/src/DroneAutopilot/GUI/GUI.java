@@ -70,7 +70,7 @@ public class GUI {
 		select.setFont(font);
 		panel.add(select);
 
-		String[] list = { " ------ Select Mission ------ ", "Fly to single target", "Fly through all targets", "Fly shortest path poly", "Scan objects"/*,"TEST"*/};
+		String[] list = { " ------ Select Mission ------ ", "Fly to position", "Fly to single target", "Scan object", "TEST"};
 		JComboBox menu = new JComboBox(list);
 		menu.setPreferredSize(new Dimension(250,30));
 		panel.add(menu);
@@ -84,15 +84,12 @@ public class GUI {
 				Object selected = menu.getSelectedItem();
 				if (selected.toString().equals("Fly to single target")){
 					setMissionType(MissionType.SINGLEOBJECT);
-				}else if(selected.toString().equals("Scan objects")) {
-					setMissionType(MissionType.POLYHEDRONSCAN);
-				}else if (selected.toString().equals("Fly through all targets")){
-					setMissionType(MissionType.MULTIPLEOBJECTS);
-				}else if (selected.toString().equals("Fly shortest path poly")){
-					setMissionType(MissionType.POLYHEDRONSCAN);
-//				}else if (selected.toString().equals("TEST")){
-					
-//					setMissionType(MissionType.TEST);
+				}else if(selected.toString().equals("Scan object")) {
+					setMissionType(MissionType.SCANOBJECT);
+				}else if (selected.toString().equals("TEST")){					
+					setMissionType(MissionType.TEST);
+				}else if (selected.toString().equals("Fly to position")){					
+					setMissionType(MissionType.FLYTOPOSITION);
 				}else {
 					setMissionType(MissionType.HOVER);
 				}
