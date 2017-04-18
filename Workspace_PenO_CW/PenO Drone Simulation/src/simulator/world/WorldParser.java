@@ -245,7 +245,7 @@ public class WorldParser extends World {
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = getGL().getGL2();
 		if (crash) {
-			gl.glClearColor(1, 0, 0, 0.5f);
+			gl.glClearColor(1, 1, 1, 0.5f);
 		} else {
 			updateFrames();
 			getPhysics().run((float) 1 / 60);
