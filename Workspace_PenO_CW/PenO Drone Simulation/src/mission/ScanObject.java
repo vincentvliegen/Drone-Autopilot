@@ -14,7 +14,7 @@ import DroneAutopilot.graphicalrepresentation.TriangleAPData;
 import DroneAutopilot.graphicalrepresentation.WorldAPData;
 import DroneAutopilot.graphicalrepresentation.WorldAPVisual;
 
-public class ScanObject extends Mission{
+public class ScanObject extends Mission {
 
 	public float[] previousPosition;
 	public float[] target;
@@ -22,11 +22,14 @@ public class ScanObject extends Mission{
 
 	private PolyhedraCalculations polycalc = new PolyhedraCalculations(getDrone());
 
+	private final float quadraticMargin = 0.25f;
+	private ArrayList<ArrayList<double[]>> scannedLines = new ArrayList<ArrayList<double[]>>();
+
 	JFrame frame;
-	public ScanObject(DroneAutopilot droneAutopilot){
+
+	public ScanObject(DroneAutopilot droneAutopilot) {
 		super(droneAutopilot);
 	}
-
 
 	WorldAPData dataWorld = new WorldAPData();
 	WorldAPVisual world = new WorldAPVisual(dataWorld);
@@ -40,7 +43,7 @@ public class ScanObject extends Mission{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.setSize(1024, 768); // width, height
-		frame.setResizable(false); //Not resizable
+		frame.setResizable(false); // Not resizable
 		world.requestFocus();
 		frame.setVisible(true);
 		dataWorld.addPolyhedron(datapolyly);
@@ -48,64 +51,157 @@ public class ScanObject extends Mission{
 	}
 
 	private boolean isSetup = false;
+
 	@Override
-	public void execute() {		
-		
-		
-/*		if(this.getDroneAutopilot().isFirstHover()){
-			this.setTarget(new float[] {this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ()});
-		}
-		this.getPhysicsCalculations().updatePosition(this.getTarget()); //blijf opdezelfde plaats
-*/		
-		
-		
-		
-		if(!isSetup) {
+	public void execute() {
+
+		/*
+		 * if(this.getDroneAutopilot().isFirstHover()){ this.setTarget(new
+		 * float[] {this.getDrone().getX(), this.getDrone().getY(),
+		 * this.getDrone().getZ()}); }
+		 * this.getPhysicsCalculations().updatePosition(this.getTarget());
+		 * //blijf opdezelfde plaats
+		 */
+
+		if (!isSetup) {
 			init();
 		}
-		
-		this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());//blijf dezelfde richting kijkenen
-		HashMap<ArrayList<float[]>, ArrayList<double[]>> outerCorners = polycalc.getMatchingCorners(getDrone().getLeftCamera() , getDrone().getRightCamera());
+
+		this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());// blijf
+																											// dezelfde
+																											// richting
+																											// kijkenen
+		HashMap<ArrayList<float[]>, ArrayList<double[]>> outerCorners = polycalc
+				.getMatchingCorners(getDrone().getLeftCamera(), getDrone().getRightCamera());
 		System.out.println(outerCorners == null);
-		for(ArrayList<float[]> key: outerCorners.keySet()) {
+		for (ArrayList<float[]> key : outerCorners.keySet()) {
 			float[] outerkey = key.get(0);
 			float[] innerkey = key.get(1);
-			try{
-				if(!drawnTriangles.contains(outerkey)) {
+			try {
+				if (!drawnTriangles.contains(outerkey)) {
 					int rgb = Color.HSBtoRGB(outerkey[0], outerkey[1], outerkey[2]);
-					int rgbinner = Color.HSBtoRGB(innerkey[0], innerkey[1] , innerkey[2]);
-					datapolyly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0) , outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
+					int rgbinner = Color.HSBtoRGB(innerkey[0], innerkey[1], innerkey[2]);
+					datapolyly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0),
+							outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
 					drawnTriangles.add(outerkey);
-				} }
-
-				catch(Exception e) {
 				}
+			}
 
+			catch (Exception e) {
 			}
 
 		}
 
-		@Override
-		public void updateGUI() {
-			world.display();
+	}
 
-		}
-
-
-
-
-
-		//////////GETTERS & SETTERS//////////
-
-		public float[] getTarget() {
-			return target;
-		}
-
-		public void setTarget(float[] target) {
-			this.target = target;
-
-		}
-
-
+	@Override
+	public void updateGUI() {
+		world.display();
 
 	}
+
+	public void addScannedLines(HashMap<ArrayList<float[]>, ArrayList<double[]>> corners) {
+		for (ArrayList<float[]> key : corners.keySet()) {
+			double[] corner1 = corners.get(key).get(0);
+			double[] corner2 = corners.get(key).get(1);
+			double[] corner3 = corners.get(key).get(2);
+			boolean[] linePrevFound = { false, false, false }; // lijn12,lijn13,lijn23
+
+			for (ArrayList<double[]> line : scannedLines) {
+				// if corner1 binnen marge 1e punt lijn
+				if (Math.pow(line.get(0)[0] - corner1[0], 2) + Math.pow(line.get(0)[1] - corner1[0], 2) < this
+						.getQuadraticMargin()) {
+					// if corner2 binnen marge 2e punt lijn
+					if (Math.pow(line.get(1)[0] - corner2[0], 2) + Math.pow(line.get(1)[1] - corner2[0], 2) < this
+							.getQuadraticMargin()) {
+						linePrevFound[0] = true;
+						scannedLines.remove(line);
+						break;
+					}
+					// if corner3 binnen marge 3e punt lijn
+					else if (Math.pow(line.get(1)[0] - corner2[0], 2) + Math.pow(line.get(1)[1] - corner2[0], 2) < this
+							.getQuadraticMargin()) {
+						linePrevFound[1] = true;
+						scannedLines.remove(line);
+						break;
+					}
+
+				}
+				// if corner2 binnen marge 1e punt lijn
+				else if (Math.pow(line.get(0)[0] - corner2[0], 2) + Math.pow(line.get(0)[1] - corner2[0], 2) < this
+						.getQuadraticMargin()) {
+					// if corner1 binnen marge 2e punt lijn
+					if (Math.pow(line.get(1)[0] - corner1[0], 2) + Math.pow(line.get(1)[1] - corner1[0], 2) < this
+							.getQuadraticMargin()) {
+						linePrevFound[0] = true;
+						scannedLines.remove(line);
+						break;
+					}
+					// if corner3 binnen marge 2e punt lijn
+					else if (Math.pow(line.get(1)[0] - corner3[0], 2) + Math.pow(line.get(1)[1] - corner3[0], 2) < this
+							.getQuadraticMargin()) {
+						linePrevFound[2] = true;
+						scannedLines.remove(line);
+						break;
+					}
+
+				}
+				// if corner3 binnen marge 1e punt lijn
+				else if (Math.pow(line.get(0)[0] - corner3[0], 2) + Math.pow(line.get(0)[1] - corner3[0], 2) < this
+						.getQuadraticMargin()) {
+					// if corner1 binnen marge 2e punt lijn
+					if (Math.pow(line.get(1)[0] - corner1[0], 2) + Math.pow(line.get(1)[1] - corner1[0], 2) < this
+							.getQuadraticMargin()) {
+						linePrevFound[0] = true;
+						scannedLines.remove(line);
+						break;
+					}
+					// if corner2 binnen marge 2e punt lijn
+					else if (Math.pow(line.get(1)[0] - corner2[0], 2) + Math.pow(line.get(1)[1] - corner2[0], 2) < this
+							.getQuadraticMargin()) {
+						linePrevFound[2] = true;
+						scannedLines.remove(line);
+						break;
+					}
+
+				}
+			}
+			if (!linePrevFound[0]) {
+				ArrayList<double[]> line = new ArrayList<double[]>();
+				line.add(corners.get(key).get(0));
+				line.add(corners.get(key).get(1));
+				scannedLines.add(line);
+			}
+			if (!linePrevFound[1]) {
+				ArrayList<double[]> line = new ArrayList<double[]>();
+				line.add(corners.get(key).get(0));
+				line.add(corners.get(key).get(2));
+				scannedLines.add(line);
+			}
+			if (!linePrevFound[2]) {
+				ArrayList<double[]> line = new ArrayList<double[]>();
+				line.add(corners.get(key).get(1));
+				line.add(corners.get(key).get(2));
+				scannedLines.add(line);
+			}
+		}
+	}
+
+	
+
+	////////// GETTERS & SETTERS//////////
+
+	public float[] getTarget() {
+		return target;
+	}
+
+	public void setTarget(float[] target) {
+		this.target = target;
+
+	}
+
+	public float getQuadraticMargin() {
+		return quadraticMargin;
+	}
+
+}

@@ -2,14 +2,14 @@ package mission;
 
 
 import DroneAutopilot.DroneAutopilot;
-import DroneAutopilot.algoritmes.ClosestOrbs;
+import DroneAutopilot.algoritmes.ClosestObjects;
 import DroneAutopilot.algoritmes.NewWorldScan;
 import DroneAutopilot.calculations.VectorCalculations;
 import p_en_o_cw_2016.Drone;
 
 public class SeveralObjects extends Mission {
 
-	private final ClosestOrbs closestObjects;
+	private final ClosestObjects closestObjects;
 	private int refreshCounter;
 	private final static int timeToRefresh = 10;
 	private boolean firstTime;
@@ -22,12 +22,12 @@ public class SeveralObjects extends Mission {
 
 	private final NewWorldScan scan;
 	private int targetLostCounter = 0;
-	private float[] currentTarget = null;
+	private double[] currentTarget = null;
 	private float inFrontFactor;
 
 	public SeveralObjects(DroneAutopilot droneAutopilot) {
 		super(droneAutopilot);
-		this.closestObjects = new ClosestOrbs(this.getDrone());
+		this.closestObjects = new ClosestObjects(this.getDrone());
 		this.scan = new NewWorldScan(this.getPhysicsCalculations());
 		setRefreshCounter(0);
 		setFirstTime(true);
@@ -66,8 +66,7 @@ public class SeveralObjects extends Mission {
 				refreshWhenFlying();
 			}
 			else {
-				float distance = this.getClosestObjects().getPhysicsCalculations()
-						.getDistanceDroneToPosition(this.getClosestObjects().getClosestObject());
+				double distance = this.getPhysicsCalculations().getDistanceDroneToPosition(this.getClosestObjects().getClosestObject());
 
 				if (distance <= getDistancetoarrival()) {
 					ArrivedAtTarget(); // TODO aanpassen voor objects
@@ -151,14 +150,14 @@ public class SeveralObjects extends Mission {
 		this.setRefreshCounter(0);
 		this.getClosestObjects().addVisibleObjects();
 		try {
-			float[] previousFirst = this.getClosestObjects().getClosestObject();
+			double[] previousFirst = this.getClosestObjects().getClosestObject();
 			this.getClosestObjects().determineClosestObject();
 
 			if (this.getClosestObjects().getClosestObject() == previousFirst) {
 
 				if (isSecondObjectAcquired()) {
-					float[] previousSecond = this.getClosestObjects().getSecondObject();
-					float previousDistance = VectorCalculations.calculateDistanceBetweenCoords(previousFirst,
+					double[] previousSecond = this.getClosestObjects().getSecondObject();
+					double previousDistance = VectorCalculations.calculateDistanceBetweenCoords(previousFirst,
 							previousSecond);
 					try {
 						this.getClosestObjects().determineSecondObject();
@@ -240,7 +239,7 @@ public class SeveralObjects extends Mission {
 		return factorD;
 	}
 
-	public ClosestOrbs getClosestObjects() {
+	public ClosestObjects getClosestObjects() {
 		return closestObjects;
 	}
 
@@ -268,11 +267,11 @@ public class SeveralObjects extends Mission {
 		this.targetLostCounter = targetLostCounter;
 	}
 
-	public float[] getCurrentTarget() {
+	public double[] getCurrentTarget() {
 		return currentTarget;
 	}
 
-	public void setCurrentTarget(float[] currentTarget) {
+	public void setCurrentTarget(double[] currentTarget) {
 		this.currentTarget = currentTarget;
 	}
 

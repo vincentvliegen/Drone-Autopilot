@@ -27,15 +27,12 @@ public class ClosestOrbs {
 	private float distanceSecondOrb;
 	private HashMap<Integer, ArrayList<int[]>> allPixelsImage;
 	private HashMap<Integer, float[][]> closestOrbs;// <color,[[cogL],[cogr]]>
-	private final float minDistance = 1;
-	private float[] closestObject;
-	private float[] secondObject;
 
 	public ClosestOrbs(Drone drone) {
 		this.drone = drone;
 		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = new PhysicsCalculations(drone);
-		this.polyhedraCalculations = new PolyhedraCalculations();
+		this.polyhedraCalculations = new PolyhedraCalculations(drone);
 
 	}
 
@@ -96,7 +93,8 @@ public class ClosestOrbs {
 		}
 		return colorList;
 	}
-
+	
+/*
 	// Geeft n grootste kleuren van bollen (of minder als er geen n bollen zijn)
 	// checken voor twee camera's -> niet in beide beelden -> laten vallen
 	// Left en Right hashmap parameters maken
@@ -172,16 +170,16 @@ public class ClosestOrbs {
 	//
 	// return colorListLeft;
 	// }
-
+*/
 	// geeft kleur terug van dichtstbijzijnde
 	public void calculateFirstOrb() throws NullPointerException {
 		int size = getClosestOrbs().size();
 		if (size != 0) {
-			float[] distances = new float[size];
+			double[] distances = new double[size];
 			int[] keys = new int[size];
 			int i = 0;
 			for (int key : getClosestOrbs().keySet()) {
-				distances[i] = this.getPhysicsCalculations().getDistance(getClosestOrbs().get(key)[0],
+				distances[i] = VectorCalculations.calculateDistanceBetweenCoords(getClosestOrbs().get(key)[0],
 						getClosestOrbs().get(key)[1]);
 				keys[i] = key;
 				i++;
@@ -193,7 +191,7 @@ public class ClosestOrbs {
 		}
 	}
 
-	public int indexMinValueArray(float[] array) {
+	public int indexMinValueArray(double[] array) {
 		int index = 0;
 		for (int i = 0; i < array.length; i++) {
 			if (array[i] < array[index]) {
@@ -201,69 +199,6 @@ public class ClosestOrbs {
 			}
 		}
 		return index;
-	}
-
-	/*
-	 * Berekent twee hoogste values van array en geeft hiervan (afhankelijk van de argumenten) de waarde of index van terug
-	 */
-	public float twoHighestValues(float[] array, int value, boolean index) {
-		float high1 = 0;
-		float high2 = 0;
-		int index1 = 0;
-		int index2 = 0;
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] >= high1) {
-				high2 = high1;
-				index2 = index1;
-				high1 = array[i];
-				index1 = i;
-			} else if (array[i] >= high2) {
-				high2 = array[i];
-				index2 = i;
-			}
-		}
-		if (value == 1) {
-			if (index) {
-				return (float)index1;
-			} else {
-				return high1;
-			}
-		} else if (value == 2) {
-			if (index) {
-				return (float)index2;
-			} else {
-				return high2;
-			}
-		}
-		return -1;
-	}
-	
-	public void determineClosestObject() {
-		int size = this.getObjectList().size();
-		if (size != 0) {
-			float[] distances = new float[size];
-			int i = 0;
-			for (float[] coord : this.getObjectList()) {
-				distances[i] = this.getPhysicsCalculations().getDistanceToPosition(coord);
-				i++;
-			}
-			int index = this.indexMinValueArray(distances);
-			this.setClosestObject(this.getObjectList().get(index));
-		}
-	}
-
-	public void determineSecondObject() throws NullPointerException {
-		int size = this.getObjectList().size() - 1;
-		if (size != 0) {
-			float[] distances = new float[size];
-			int i = 0;
-			for (float[] coord : this.getObjectList()) {
-				distances[i] = VectorCalculations.calculateDistanceBetweenCoords(coord,this.getClosestObject());
-				i++;
-			}
-			int index = (int) this.twoHighestValues(distances, 2, true);
-			this.setSecondObject(this.getObjectList().get(index));
-		}
 	}
 	
 	// kleur bol dichtst bij bol 1
@@ -311,25 +246,6 @@ public class ClosestOrbs {
 		float distance = (float) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2) + Math.pow((z1 - z2), 2));
 		return distance;
 	}
-
-	// functie die controleert of object van geg coordinaten al eerder
-	// gedetecteerd is
-	public void updateObjectList(float[] coords) {
-		for (float[] checkcoords : this.getObjectList()) {
-			if (VectorCalculations.calculateDistanceBetweenCoords(coords, checkcoords) >= this.getMinDistance()) {
-				this.getObjectList().add(coords);
-			}
-		}
-	}
-	
-	public void addVisibleObjects() {//[0] links [1] rechts
-		HashMap<float[], ArrayList<float[]>> visibleCogs = this.getPolyhedraCalculations().execute(this.getDrone().getLeftCamera(),this.getDrone().getRightCamera());
-		for (float[] color : visibleCogs.keySet()) {
-				this.updateObjectList(this.getPhysicsCalculations().calculatePositionObject(visibleCogs.get(color).get(0), visibleCogs.get(color).get(1)));
-			
-		}
-	}
-
 
 	public ImageCalculations getImageCalculations() {
 		return imageCalculations;
@@ -381,36 +297,6 @@ public class ClosestOrbs {
 
 	public void setClosestOrbs(HashMap<Integer, float[][]> closestOrbs) {
 		this.closestOrbs = closestOrbs;
-	}
-
-	public List<float[]> getObjectList() {
-		return objectList;
-	}
-
-	public void setObjectList(List<float[]> objectList) {
-		this.objectList = objectList;
-	}
-
-	private List<float[]> objectList = new ArrayList<float[]>();
-
-	public float getMinDistance() {
-		return minDistance;
-	}
-
-	public float[] getClosestObject() {
-		return closestObject;
-	}
-
-	public void setClosestObject(float[] closestObject) {
-		this.closestObject = closestObject;
-	}
-	
-	public float[] getSecondObject() {
-		return secondObject;
-	}
-
-	public void setSecondObject(float[] secondObject) {
-		this.secondObject = secondObject;
 	}
 
 	/**

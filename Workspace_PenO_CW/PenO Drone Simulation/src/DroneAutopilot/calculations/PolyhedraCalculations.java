@@ -14,7 +14,7 @@ public class PolyhedraCalculations {
 	public final static int white = 16777215;
 
 	private final PhysicsCalculations physicsCalc;
-	
+
 	private HashMap<float[], ArrayList<int[]>> hashMapOuterColor;
 	private HashMap<float[], ArrayList<int[]>> hashMapInnerColor;
 	private HashMap<float[], ArrayList<int[]>> hashMapObstacle;
@@ -23,20 +23,21 @@ public class PolyhedraCalculations {
 		this.physicsCalc = new PhysicsCalculations(drone);
 
 	}
-	public HashMap<float[], ArrayList<float[]>> findAllCOGs(Camera leftCamera, Camera rightCamera) {
-		HashMap<float[], ArrayList<float[]>> COGS = new HashMap<float[], ArrayList<float[]>>();
+
+	public HashMap<float[], ArrayList<double[]>> findAllCOGs(Camera leftCamera, Camera rightCamera) {
+		HashMap<float[], ArrayList<double[]>> COGS = new HashMap<float[], ArrayList<double[]>>();
 		this.SeparateTargetsAndObstacles(leftCamera);
-		HashMap<float[], float[]> leftCOGS = this.findCornersOfFullTrianglesViaCOG();
+		HashMap<float[], double[]> leftCOGS = this.findCornersOfFullTrianglesViaCOG();
 		// System.out.println("foundL " + leftCOGS.keySet());
 
 		this.SeparateTargetsAndObstacles(rightCamera);
-		HashMap<float[], float[]> rightCOGS = this.findCornersOfFullTrianglesViaCOG();
+		HashMap<float[], double[]> rightCOGS = this.findCornersOfFullTrianglesViaCOG();
 		// System.out.println("foundR "+rightCOGS.keySet());
 
 		for (float[] colorLeft : leftCOGS.keySet()) {
 			for (float[] colorRight : rightCOGS.keySet()) {
 				if (colorLeft[0] == colorRight[0] && colorLeft[1] == colorRight[1] && colorLeft[2] == colorRight[2]) {
-					ArrayList<float[]> COG = new ArrayList<float[]>();
+					ArrayList<double[]> COG = new ArrayList<double[]>();
 					COG.add(leftCOGS.get(colorLeft));
 					COG.add(rightCOGS.get(colorRight));
 					COGS.put(colorLeft, COG);
@@ -60,18 +61,16 @@ public class PolyhedraCalculations {
 				.findThreePointsTriangles(this.getHashMapTargetInnerColor());
 
 		System.out.println("Outer");
-		HashMap<float[], ArrayList<double[]>> cornersOuter = this.findMatchingCorners(outerTrianglesL,
-				outerTrianglesR);
+		HashMap<float[], ArrayList<double[]>> cornersOuter = this.findMatchingCorners(outerTrianglesL, outerTrianglesR);
 		System.out.println("Innerdriehoekpunten");
-		HashMap<float[], ArrayList<double[]>> cornersInner = this.findMatchingCorners(innerTrianglesL,
-				innerTrianglesR);
-		HashMap<float[],float[]> combinedColors = this.matchInnerAndOuterColor(cornersOuter, cornersInner);
-		
+		HashMap<float[], ArrayList<double[]>> cornersInner = this.findMatchingCorners(innerTrianglesL, innerTrianglesR);
+		HashMap<float[], float[]> combinedColors = this.matchInnerAndOuterColor(cornersOuter, cornersInner);
+
 		HashMap<ArrayList<float[]>, ArrayList<double[]>> result = new HashMap<ArrayList<float[]>, ArrayList<double[]>>();
 		ArrayList<float[]> augmentedColor = new ArrayList<float[]>();
-		for( float[] color: cornersOuter.keySet()){
+		for (float[] color : cornersOuter.keySet()) {
 			float[] inner = combinedColors.get(color);
-			if (inner != null){
+			if (inner != null) {
 				augmentedColor.add(color);
 				augmentedColor.add(inner);
 			}
@@ -97,9 +96,9 @@ public class PolyhedraCalculations {
 					ArrayList<int[]> foundmaxyR = this.findMaxCoordsWithMargin(targetListRight.get(colorRight), 1);
 					ArrayList<int[]> foundminyL = this.findMinCoordsWithMargin(targetListLeft.get(colorLeft), 1);
 					ArrayList<int[]> foundminyR = this.findMinCoordsWithMargin(targetListRight.get(colorRight), 1);
-					
+
 					this.getPhysics().updateDroneData();
-					//onderste hoekpunt toevoegen
+					// onderste hoekpunt toevoegen
 					if (foundmaxyL.size() == 1 && foundmaxyR.size() == 1) {
 						double[] coordinate = this.getPhysics().calculatePositionObject(
 								intListToDoubleList(foundmaxyL.get(0)), intListToDoubleList(foundmaxyR.get(0)));
@@ -109,7 +108,7 @@ public class PolyhedraCalculations {
 						allCornersR.remove(foundmaxyR.get(0));
 					}
 
-					//bovenste hoekpunt toevoegen
+					// bovenste hoekpunt toevoegen
 					if (foundminyL.size() == 1 && foundminyR.size() == 1) {
 						double[] coordinate = this.getPhysics().calculatePositionObject(
 								intListToDoubleList(foundminyL.get(0)), intListToDoubleList(foundminyR.get(0)));
@@ -118,56 +117,53 @@ public class PolyhedraCalculations {
 						allCornersL.remove(foundminyL.get(0));
 						allCornersR.remove(foundminyR.get(0));
 					}
-					
-					//als 2 onderste of bovenste zijn het meest linkse toevoegen
+
+					// als 2 onderste of bovenste zijn het meest linkse
+					// toevoegen
 					if (allCornersL.size() > 1 && allCornersR.size() > 1) {
 						ArrayList<int[]> foundmaxxL = new ArrayList<int[]>();
 						ArrayList<int[]> foundmaxxR = new ArrayList<int[]>();
-						double[] coordinate ={};
-						if(foundmaxyL.size() > 1 && foundmaxyR.size() > 1) {
+						double[] coordinate = {};
+						if (foundmaxyL.size() > 1 && foundmaxyR.size() > 1) {
 							foundmaxxL = this.findMaxCoordsWithMargin(foundmaxyL, 0);
 							foundmaxxR = this.findMaxCoordsWithMargin(foundmaxyR, 0);
 							coordinate = this.getPhysics().calculatePositionObject(
 									intListToDoubleList(foundmaxxL.get(0)), intListToDoubleList(foundmaxxR.get(0)));
 							allCornersL.remove(foundmaxxL.get(0));
 							allCornersR.remove(foundmaxxR.get(0));
-							
-						}
-						else if (foundmaxyL.size() > 1) {
+
+						} else if (foundmaxyL.size() > 1) {
 							foundmaxxL = this.findMaxCoordsWithMargin(foundmaxyL, 0);
 							coordinate = this.getPhysics().calculatePositionObject(
 									intListToDoubleList(foundmaxxL.get(0)), intListToDoubleList(foundmaxyR.get(0)));
 							allCornersL.remove(foundmaxxL.get(0));
 							allCornersR.remove(foundmaxyR.get(0));
-						}
-						else if (foundmaxyR.size() > 1) {
+						} else if (foundmaxyR.size() > 1) {
 							foundmaxxR = this.findMaxCoordsWithMargin(foundmaxyR, 0);
 							coordinate = this.getPhysics().calculatePositionObject(
 									intListToDoubleList(foundmaxyL.get(0)), intListToDoubleList(foundmaxxR.get(0)));
 							allCornersL.remove(foundmaxyL.get(0));
 							allCornersR.remove(foundmaxxR.get(0));
 						}
-						
+
 						else {
 							ArrayList<int[]> foundminxL = new ArrayList<int[]>();
 							ArrayList<int[]> foundminxR = new ArrayList<int[]>();
-							if(foundminyL.size() > 1 && foundminyR.size() > 1) {
+							if (foundminyL.size() > 1 && foundminyR.size() > 1) {
 								foundminxL = this.findMinCoordsWithMargin(foundminyL, 0);
 								foundminxR = this.findMinCoordsWithMargin(foundminyR, 0);
 								coordinate = this.getPhysics().calculatePositionObject(
 										intListToDoubleList(foundminxL.get(0)), intListToDoubleList(foundminxR.get(0)));
 								allCornersL.remove(foundminxL.get(0));
 								allCornersR.remove(foundminxR.get(0));
-								
-							}
-							else if (foundminyL.size() > 1) {
+
+							} else if (foundminyL.size() > 1) {
 								foundmaxxL = this.findMinCoordsWithMargin(foundminyL, 0);
 								coordinate = this.getPhysics().calculatePositionObject(
 										intListToDoubleList(foundminxL.get(0)), intListToDoubleList(foundminyR.get(0)));
 								allCornersL.remove(foundminxL.get(0));
 								allCornersR.remove(foundminyR.get(0));
-							}
-							else if (foundminyR.size() > 1) {
+							} else if (foundminyR.size() > 1) {
 								foundminxR = this.findMinCoordsWithMargin(foundminyR, 0);
 								coordinate = this.getPhysics().calculatePositionObject(
 										intListToDoubleList(foundminyL.get(0)), intListToDoubleList(foundminxR.get(0)));
@@ -177,10 +173,10 @@ public class PolyhedraCalculations {
 						}
 						corners.add(coordinate);
 						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
-					
+
 					}
-					
-					//middelste hoekpunt toevoegen
+
+					// middelste hoekpunt toevoegen
 					double[] coordinate = this.getPhysics().calculatePositionObject(
 							intListToDoubleList(allCornersL.get(0)), intListToDoubleList(allCornersR.get(0)));
 					corners.add(coordinate);
@@ -192,28 +188,33 @@ public class PolyhedraCalculations {
 		}
 		return result;
 	}
-	
+
 	private double[] intListToDoubleList(int[] a) {
 		return new double[] { a[0], a[1] };
 	}
-	
-	private HashMap<float[],float[]> matchInnerAndOuterColor(HashMap<float[], ArrayList<double[]>> cornersOuter,
-			HashMap<float[], ArrayList<double[]>> cornersInner){
-		HashMap<float[],float[]> result = new HashMap<float[],float[]>();
-		for(float[] outerColor: cornersOuter.keySet()){
+
+	private HashMap<float[], float[]> matchInnerAndOuterColor(HashMap<float[], ArrayList<double[]>> cornersOuter,
+			HashMap<float[], ArrayList<double[]>> cornersInner) {
+		HashMap<float[], float[]> result = new HashMap<float[], float[]>();
+		for (float[] outerColor : cornersOuter.keySet()) {
 			ArrayList<double[]> Ocorners = cornersOuter.get(outerColor);
-			double xO = (Ocorners.get(0)[0] + Ocorners.get(1)[0] + Ocorners.get(2)[0])/3;
-			double yO = (Ocorners.get(0)[1] + Ocorners.get(1)[1] + Ocorners.get(2)[1])/3;
-			double zO = (Ocorners.get(0)[2] + Ocorners.get(1)[2] + Ocorners.get(2)[2])/3;
-			for(float[] innerColor: cornersInner.keySet()){
-				ArrayList<double[]> Icorners = cornersInner.get(innerColor);
-				double xI = (Icorners.get(0)[0] + Icorners.get(1)[0] + Icorners.get(2)[0])/3;
-				double yI = (Icorners.get(0)[1] + Icorners.get(1)[1] + Icorners.get(2)[1])/3;
-				double zI = (Icorners.get(0)[2] + Icorners.get(1)[2] + Icorners.get(2)[2])/3;
-				
-				if(xO>= xI-0.15 && xO<= xI+0.15 && yO>=yI-0.15 && yO<=yI+0.15 && zO>=zI-0.15 && zO<=zI+0.15){
-					result.put(outerColor, innerColor);
-					break;
+			if (Ocorners.size() == 3) {
+				double xO = (Ocorners.get(0)[0] + Ocorners.get(1)[0] + Ocorners.get(2)[0]) / 3;
+				double yO = (Ocorners.get(0)[1] + Ocorners.get(1)[1] + Ocorners.get(2)[1]) / 3;
+				double zO = (Ocorners.get(0)[2] + Ocorners.get(1)[2] + Ocorners.get(2)[2]) / 3;
+				for (float[] innerColor : cornersInner.keySet()) {
+					ArrayList<double[]> Icorners = cornersInner.get(innerColor);
+					if (Ocorners.size() == 3) {
+						double xI = (Icorners.get(0)[0] + Icorners.get(1)[0] + Icorners.get(2)[0]) / 3;
+						double yI = (Icorners.get(0)[1] + Icorners.get(1)[1] + Icorners.get(2)[1]) / 3;
+						double zI = (Icorners.get(0)[2] + Icorners.get(1)[2] + Icorners.get(2)[2]) / 3;
+
+						if (xO >= xI - 0.15 && xO <= xI + 0.15 && yO >= yI - 0.15 && yO <= yI + 0.15 && zO >= zI - 0.15
+								&& zO <= zI + 0.15) {
+							result.put(outerColor, innerColor);
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -339,10 +340,10 @@ public class PolyhedraCalculations {
 
 	public ArrayList<int[]> findMaxCoordsWithMargin(ArrayList<int[]> coordinates, int choice) {
 		ArrayList<int[]> maxEqualCoord = new ArrayList<int[]>();
-		int[] high1 = {0,0};
-		int[] high2 = {0,0};
-		
-		for (int[] coordinate:coordinates) {
+		int[] high1 = { 0, 0 };
+		int[] high2 = { 0, 0 };
+
+		for (int[] coordinate : coordinates) {
 			if (coordinate[choice] > high1[choice]) {
 				high2 = high1;
 				high1 = coordinate;
@@ -353,16 +354,16 @@ public class PolyhedraCalculations {
 		maxEqualCoord.add(high1);
 		if (high1[choice] - high2[choice] < 3) {
 			maxEqualCoord.add(high2);
-		} 
+		}
 		return maxEqualCoord;
 	}
-	
+
 	public ArrayList<int[]> findMinCoordsWithMargin(ArrayList<int[]> coordinates, int choice) {
 		ArrayList<int[]> minEqualCoord = new ArrayList<int[]>();
-		int[] low1 = {(int) Double.MAX_VALUE,(int) Double.MAX_VALUE};
-		int[] low2 = {(int) Double.MAX_VALUE,(int) Double.MAX_VALUE};
-		
-		for (int[] coordinate:coordinates) {
+		int[] low1 = { (int) Double.MAX_VALUE, (int) Double.MAX_VALUE };
+		int[] low2 = { (int) Double.MAX_VALUE, (int) Double.MAX_VALUE };
+
+		for (int[] coordinate : coordinates) {
 			if (coordinate[choice] < low1[choice]) {
 				low2 = low1;
 				low1 = coordinate;
@@ -373,7 +374,7 @@ public class PolyhedraCalculations {
 		minEqualCoord.add(low1);
 		if (low2[choice] - low1[choice] < 3) {
 			minEqualCoord.add(low2);
-		} 
+		}
 		return minEqualCoord;
 	}
 
@@ -487,38 +488,38 @@ public class PolyhedraCalculations {
 		return false;
 	}
 
-	private HashMap<float[], float[]> findCOGOfAllColors(HashMap<float[], ArrayList<int[]>> hashMapCorners) {
-		HashMap<float[], float[]> COGHashMap = new HashMap<float[], float[]>();
+	private HashMap<float[], double[]> findCOGOfAllColors(HashMap<float[], ArrayList<int[]>> hashMapCorners) {
+		HashMap<float[], double[]> COGHashMap = new HashMap<float[], double[]>();
 		Set<float[]> colors = hashMapCorners.keySet();
 		for (float[] color : colors) {
 			ArrayList<int[]> corners = hashMapCorners.get(color);
 			// bereken zp
-			float x = (corners.get(0)[0] + corners.get(1)[0] + corners.get(2)[0]) / 3;
-			float y = (corners.get(0)[1] + corners.get(1)[1] + corners.get(2)[1]) / 3;
+			double x = (corners.get(0)[0] + corners.get(1)[0] + corners.get(2)[0]) / 3;
+			double y = (corners.get(0)[1] + corners.get(1)[1] + corners.get(2)[1]) / 3;
 			// System.out.println("cog" + x + " " + y);
-			float[] COG = { x, y };
+			double[] COG = { x, y };
 			COGHashMap.put(color, COG);
 		}
 		return COGHashMap;
 	}
 
-	private HashMap<float[], float[]> findCornersOfFullTrianglesViaCOG() {
+	private HashMap<float[], double[]> findCornersOfFullTrianglesViaCOG() {
 		HashMap<float[], ArrayList<int[]>> outerTriangles = this
 				.findThreePointsTriangles(this.getHashMapTargetOuterColor());
 		HashMap<float[], ArrayList<int[]>> innerTriangles = this
 				.findThreePointsTriangles(this.getHashMapTargetInnerColor());
 
-		HashMap<float[], float[]> outerTrianglesCOG = this.findCOGOfAllColors(outerTriangles);
+		HashMap<float[], double[]> outerTrianglesCOG = this.findCOGOfAllColors(outerTriangles);
 		Set<float[]> setOuterCOG = outerTrianglesCOG.keySet();
-		HashMap<float[], float[]> innerTrianglesCOG = this.findCOGOfAllColors(innerTriangles);
+		HashMap<float[], double[]> innerTrianglesCOG = this.findCOGOfAllColors(innerTriangles);
 		Set<float[]> setInnerCOG = innerTrianglesCOG.keySet();
 
-		HashMap<float[], float[]> resultingOuterTriangleCOGs = new HashMap<float[], float[]>();
+		HashMap<float[], double[]> resultingOuterTriangleCOGs = new HashMap<float[], double[]>();
 
 		for (float[] outercolor : setOuterCOG) {
 			for (float[] innercolor : setInnerCOG) {
-				float[] outerCOG = outerTrianglesCOG.get(outercolor);
-				float[] innerCOG = innerTrianglesCOG.get(innercolor);
+				double[] outerCOG = outerTrianglesCOG.get(outercolor);
+				double[] innerCOG = innerTrianglesCOG.get(innercolor);
 				// afwijking zwaaartepunten hier aanpassen
 				if (outerCOG[0] <= innerCOG[0] + 3 && outerCOG[0] >= innerCOG[0] - 3 && outerCOG[1] <= innerCOG[1] + 3
 						&& outerCOG[1] >= innerCOG[1] - 3) {

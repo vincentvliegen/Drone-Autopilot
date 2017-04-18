@@ -58,13 +58,13 @@ public class GUI {
 		this.frame = new JFrame();
 		this.getFrame().setTitle("AUTOPILOT GUI");
 		this.getFrame().setAlwaysOnTop(true);
-		this.getFrame().setBounds(100, 100, 530, 115);
-		this.getFrame().setMinimumSize(new Dimension(530,115));
+		this.getFrame().setBounds(100, 100, 530, 80);
+		this.getFrame().setMinimumSize(new Dimension(530,80));
 		this.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Font font = new Font("Tahoma", Font.PLAIN, 18);
 		JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		JPanel panel = new JPanel(new GridLayout(2,2));
+		JPanel panel = new JPanel(new GridLayout(1,2));
 
 		JLabel select = new JLabel("Select mission: ");
 		select.setFont(font);
@@ -96,17 +96,17 @@ public class GUI {
 			}
 		});
 
-		JLabel progress = new JLabel("Progress to next sphere: ");
-		progress.setFont(font);
+//		JLabel progress = new JLabel("Progress to next sphere: ");
+//		progress.setFont(font);
 		//		progress.setPreferredSize(new Dimension(80, 30));
-		panel.add(progress);
+//		panel.add(progress);
+//
+//		this.getProgressBar().setPreferredSize(new Dimension(250, 30));
+//		this.getProgressBar().setStringPainted(true);
+//		this.getProgressBar().setString("0%");
+//		this.getProgressBar().setFont(font);
 
-		this.getProgressBar().setPreferredSize(new Dimension(250, 30));
-		this.getProgressBar().setStringPainted(true);
-		this.getProgressBar().setString("0%");
-		this.getProgressBar().setFont(font);
-
-		panel.add(this.getProgressBar());
+//		panel.add(this.getProgressBar());
 
 		panel2.add(panel);
 		this.getFrame().getContentPane().add(panel2);
@@ -114,35 +114,35 @@ public class GUI {
 
 	}
 
-	public void update(float dist,int colorint) {
-		int distance = (int) (dist*100);
-		Color color = new Color(colorint);
-		if (color.getRGB() != this.getProgressBar().getForeground().getRGB()){
-			this.setMaxValue(distance);
-			this.getProgressBar().setMaximum(distance);
-			this.setReached(false);
-		};
-		this.getProgressBar().setForeground(color);
-		if(this.isReached()){
-			this.getProgressBar().setString("100%");
-		}else{
-			if (distance > this.getMaxValue()) {
-				this.setMaxValue(distance);
-				this.getProgressBar().setMaximum(distance);
-			} else {
-				this.getProgressBar().setValue(this.getMaxValue() - distance);
-			}
-			if (this.getMaxValue() > 0){
-				this.getProgressBar().setString((Math.round(((this.getMaxValue() - distance)*100) / (float)this.getMaxValue())) + "%");
-				if((Math.round(((this.getMaxValue() - distance)*100) / (float)this.getMaxValue()))==100){
-					this.setReached(true);
-				}
-			} else {
-				this.getProgressBar().setString("100%");
-				this.setReached(true);
-			}
-		}
-	}
+//	public void update(float dist,int colorint) {
+//		int distance = (int) (dist*100);
+//		Color color = new Color(colorint);
+//		if (color.getRGB() != this.getProgressBar().getForeground().getRGB()){
+//			this.setMaxValue(distance);
+//			this.getProgressBar().setMaximum(distance);
+//			this.setReached(false);
+//		};
+//		this.getProgressBar().setForeground(color);
+//		if(this.isReached()){
+//			this.getProgressBar().setString("100%");
+//		}else{
+//			if (distance > this.getMaxValue()) {
+//				this.setMaxValue(distance);
+//				this.getProgressBar().setMaximum(distance);
+//			} else {
+//				this.getProgressBar().setValue(this.getMaxValue() - distance);
+//			}
+//			if (this.getMaxValue() > 0){
+//				this.getProgressBar().setString((Math.round(((this.getMaxValue() - distance)*100) / (float)this.getMaxValue())) + "%");
+//				if((Math.round(((this.getMaxValue() - distance)*100) / (float)this.getMaxValue()))==100){
+//					this.setReached(true);
+//				}
+//			} else {
+//				this.getProgressBar().setString("100%");
+//				this.setReached(true);
+//			}
+//		}
+//	}
 
 	
 	//////////GETTERS & SETTERS//////////
