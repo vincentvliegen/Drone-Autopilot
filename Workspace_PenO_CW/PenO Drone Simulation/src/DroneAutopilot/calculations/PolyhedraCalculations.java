@@ -158,7 +158,7 @@ public class PolyhedraCalculations {
 								allCornersR.remove(foundminxR.get(0));
 
 							} else if (foundminyL.size() > 1) {
-								foundmaxxL = this.findMinCoordsWithMargin(foundminyL, 0);
+								foundminxL = this.findMinCoordsWithMargin(foundminyL, 0);
 								coordinate = this.getPhysics().calculatePositionObject(
 										intListToDoubleList(foundminxL.get(0)), intListToDoubleList(foundminyR.get(0)));
 								allCornersL.remove(foundminxL.get(0));
