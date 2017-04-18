@@ -243,8 +243,9 @@ public class WorldParser extends World {
 	}
 
 	public void display(GLAutoDrawable drawable) {
+		GL2 gl = getGL().getGL2();
 		if (crash) {
-			// Do something for when it hits obstacle
+			gl.glClearColor(1, 0, 0, 0.5f);
 		} else {
 			updateFrames();
 			getPhysics().run((float) 1 / 60);
@@ -259,7 +260,7 @@ public class WorldParser extends World {
 			if (!super.getAnimator().isAnimating()) {
 				return;
 			}
-			GL2 gl = getGL().getGL2();
+			
 			
 			// voor scherm
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);

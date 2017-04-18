@@ -161,7 +161,7 @@ public class Parser_v2 extends Parser{
 	    	//TODO kijk naar type van Polyhedron
 	    	//TODO definieer binnenkleur voor driehoeken
 	    	PolyhedronType type;
-	    	if(hsv[1] < 0.45) {
+	    	if(hsv[2] < 0.45) {
 	    		type = PolyhedronType.OBSTACLE;
 	    	}
 	    	//TODO else if > 0.55, else throw exception

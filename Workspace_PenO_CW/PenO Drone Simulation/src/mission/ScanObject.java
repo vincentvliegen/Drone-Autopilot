@@ -74,7 +74,7 @@ public class ScanObject extends Mission {
 																											// kijkenen
 		HashMap<ArrayList<float[]>, ArrayList<double[]>> outerCorners = polycalc
 				.getMatchingCorners(getDrone().getLeftCamera(), getDrone().getRightCamera());
-		System.out.println(outerCorners == null);
+//		System.out.println(outerCorners == null);
 		for (ArrayList<float[]> key : outerCorners.keySet()) {
 			float[] outerkey = key.get(0);
 			float[] innerkey = key.get(1);
