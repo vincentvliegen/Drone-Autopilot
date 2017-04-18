@@ -204,7 +204,7 @@ public class PolyhedraCalculations {
 				double zO = (Ocorners.get(0)[2] + Ocorners.get(1)[2] + Ocorners.get(2)[2]) / 3;
 				for (float[] innerColor : cornersInner.keySet()) {
 					ArrayList<double[]> Icorners = cornersInner.get(innerColor);
-					if (Ocorners.size() == 3) {
+					if (Icorners.size() == 3) {
 						double xI = (Icorners.get(0)[0] + Icorners.get(1)[0] + Icorners.get(2)[0]) / 3;
 						double yI = (Icorners.get(0)[1] + Icorners.get(1)[1] + Icorners.get(2)[1]) / 3;
 						double zI = (Icorners.get(0)[2] + Icorners.get(1)[2] + Icorners.get(2)[2]) / 3;
@@ -292,10 +292,12 @@ public class PolyhedraCalculations {
 					ArrayList<int[]> coordinateList = hashMapDifferentColors.get(colorIntValuesArray.get(i));
 					hashMapOuterColor.put(HSV, coordinateList);
 				} else {
-					throw new IllegalArgumentException();
+					System.out.println(HSV[1]);
+					throw new IllegalArgumentException("Foute Sat " + HSV[1]);
 				}
 			} else {
-				throw new IllegalArgumentException();
+				System.out.println(HSV[2]);
+				throw new IllegalArgumentException("Foute Value " + HSV[2]);
 			}
 		}
 		// System.out.println("outerTargetColors =" + hashMapOuterColor.size());
