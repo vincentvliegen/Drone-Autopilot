@@ -33,16 +33,47 @@ public class Triangle {
 		updatePoints(new double[]{0,0,0});
 	}
 
+	public int getIntFromColor(int Red, int Green, int Blue){
+		
+	    Red = (Red << 16) & 0x00FF0000; //Shift red 16-bits and mask out other stuff
+	    Green = (Green << 8) & 0x0000FF00; //Shift Green 8-bits and mask out other stuff
+	    Blue = Blue & 0x000000FF; //Mask out anything not blue.
+
+	    return 0xFF000000 | Red | Green | Blue; //0xFF000000 for 100% Alpha. Bitwise OR everything together.
+	}
+	
 	private void createInnerColor() {
 		float[] temp = new float[3];
 		Color.RGBtoHSB(getIntColor()[0], getIntColor()[1], getIntColor()[2], temp);
 		Random r = new Random();
 		temp[1] = r.nextFloat()*0.45f;
-		int inner = Color.HSBtoRGB(temp[0], temp[1], temp[2]);
+		inner = Color.HSBtoRGB(temp[0], temp[1], temp[2]);
 		this.innerColor = new float[]{((inner>>16)&0xFF)/255f, ((inner>>8)&0xFF)/255f, (inner&0xFF)/255f};
 		
 		
 	}
+	private int inner;
+	
+	public void printTriangle() {
+		System.out.println("--------------------");
+		System.out.println("Triangle");
+		System.out.println("Outer points:");
+		System.out.println(Arrays.toString(getPoint1()));
+		System.out.println(Arrays.toString(getPoint2()));
+		System.out.println(Arrays.toString(getPoint3()));
+		System.out.println("Inner points:");
+		System.out.println(Arrays.toString(getInnerPoint1()));
+		System.out.println(Arrays.toString(getInnerPoint2()));
+		System.out.println(Arrays.toString(getInnerPoint3()));
+		System.out.println("Inner color (int) :" + inner);
+		System.out.println("Outer color (int) :" + getIntFromColor(getIntColor()[0], getIntColor()[1], getIntColor()[2]));
+		System.out.println(" end of Triangle");
+		System.out.println("--------------------");
+
+		
+
+	}
+
 
 	public double[] getPoint1() {
 		return point1;

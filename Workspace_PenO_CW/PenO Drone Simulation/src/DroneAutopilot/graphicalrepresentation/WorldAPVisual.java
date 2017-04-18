@@ -88,7 +88,7 @@ public class WorldAPVisual extends GLCanvas implements GLEventListener{
 		// Perspective.
 		float widthHeightRatio = (float) width / (float) height;
 		glu.gluPerspective(45, widthHeightRatio, 0.01, 500);
-		glu.gluLookAt(5, 0, 0, 0, 0, 0, 0, 1, 0);
+		glu.gluLookAt(0, 0, 0, 5, 0, 0, 0, 1, 0);
 
 	
 		// Change back to model view matrix.

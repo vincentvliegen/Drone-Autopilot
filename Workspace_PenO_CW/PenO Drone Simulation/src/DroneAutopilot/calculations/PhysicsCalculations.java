@@ -240,7 +240,7 @@ public class PhysicsCalculations{
 		}
 
 		private double[] objectPosDroneToWorld(){
-			double[] droneRotated = this.vectorDroneToWorld(getXObject(), getYObject(), getZObject());
+			double[] droneRotated = this.vectorWorldToDrone(getXObject(), getYObject(), getZObject());
 			double[] droneTranslated = VectorCalculations.sum(droneRotated, this.getPosition());
 			return droneTranslated;
 		}

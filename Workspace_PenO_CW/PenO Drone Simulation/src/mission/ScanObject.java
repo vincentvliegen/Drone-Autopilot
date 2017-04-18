@@ -66,12 +66,12 @@ public class ScanObject extends Mission{
 		
 		this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());//blijf dezelfde richting kijkenen
 		HashMap<ArrayList<float[]>, ArrayList<double[]>> outerCorners = polycalc.getMatchingCorners(getDrone().getLeftCamera() , getDrone().getRightCamera());
-		System.out.println(outerCorners == null);
-		for(ArrayList<float[]> key: outerCorners.keySet()) {
+		
+		for(ArrayList<float[]> key: outerCorners.keySet()) {			
 			float[] outerkey = key.get(0);
 			float[] innerkey = key.get(1);
 			try{
-				if(!drawnTriangles.contains(outerkey)) {
+				if(!colorExists(outerkey)) {
 					int rgb = Color.HSBtoRGB(outerkey[0], outerkey[1], outerkey[2]);
 					int rgbinner = Color.HSBtoRGB(innerkey[0], innerkey[1] , innerkey[2]);
 					datapolyly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0) , outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
@@ -83,6 +83,19 @@ public class ScanObject extends Mission{
 
 			}
 
+		}
+	
+		private boolean colorExists(float[] color) {
+			for (float[] checkColor: drawnTriangles) {
+				boolean sameColor = true;
+				for (int i = 0; i < 3; i++) {
+					if (color[i] - checkColor[i] > 0.00001)
+						sameColor = false;
+				}
+				if (sameColor)
+					return true;
+				}
+			return false;
 		}
 
 		@Override

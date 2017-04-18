@@ -1,5 +1,8 @@
 package DroneAutopilot.graphicalrepresentation;
 
+import java.awt.Color;
+import java.util.Arrays;
+
 /**
  * Data-aspect of the Triangles, containing the coordinates and the colors of the Triangle
  *
@@ -27,9 +30,31 @@ public class TriangleAPData {
 		//TODO colors in which format, might be needed to adjust this
 		this.innerColor = rgbInner;
 		this.outerColor = rgbOuter;
+		printTriangle();
 		//eigenlijk afdwingen dat dit er maar 3 kunnen zijn
 	}
 
+	private void printTriangle() {
+		System.out.println("--------------------");
+		System.out.println("APtriangle");
+		System.out.println("Outer points:");
+		System.out.println(Arrays.toString(getPoint1()));
+		System.out.println(Arrays.toString(getPoint2()));
+		System.out.println(Arrays.toString(getPoint3()));
+		System.out.println("Inner points:");
+		System.out.println(Arrays.toString(getInnerPoint1()));
+		System.out.println(Arrays.toString(getInnerPoint2()));
+		System.out.println(Arrays.toString(getInnerPoint3()));
+		System.out.println("Inner color (int) :" + getInnerColor());
+		System.out.println("Outer color (int) :" + getOuterColor());
+		System.out.println(" end of APtriangle");
+		System.out.println("--------------------");
+
+		
+
+	}
+	
+	
 	public double[] getPoint1() {
 		return p1;
 	}

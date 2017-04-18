@@ -21,6 +21,7 @@ import simulator.objects.ObstacleSphere;
 import simulator.objects.Polyhedron;
 import simulator.objects.PolyhedronType;
 import simulator.objects.SimulationDrone;
+import simulator.objects.Smth;
 import simulator.objects.SomeFigure;
 import simulator.objects.Sphere;
 import simulator.objects.Triangle;
@@ -345,6 +346,8 @@ public abstract class World extends GLCanvas implements GLEventListener {
 //		getWorldObjectList().add(fig);
 //		LetterLPolyhedron figL = new LetterLPolyhedron(this, PolyhedronType.TARGET, new double[]{2,0,0});
 //		getWorldObjectList().add(figL);
+		Smth fig3 = new Smth(this, PolyhedronType.TARGET, new double[]{4,0,0});
+		getWorldObjectList().add(fig3);
 
 		// Start animator.
 		gl.setSwapInterval(1);

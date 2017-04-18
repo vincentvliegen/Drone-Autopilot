@@ -12,6 +12,9 @@ public abstract class PredefinedPolyhedron extends Polyhedron {
 		super(world, type, vertices);
 		defineTriangles();
 		translatePolyhedronOver(MathCalculations.getVector(position, getPosition()));
+		for(Triangle tri: getTriangles()) {
+			tri.printTriangle();
+		}
 	}
 
 	protected abstract void defineTriangles();
