@@ -67,14 +67,14 @@ public class PolyhedraCalculations {
 		HashMap<float[], float[]> combinedColors = this.matchInnerAndOuterColor(cornersOuter, cornersInner);
 
 		HashMap<ArrayList<float[]>, ArrayList<double[]>> result = new HashMap<ArrayList<float[]>, ArrayList<double[]>>();
-		ArrayList<float[]> augmentedColor = new ArrayList<float[]>();
 		for (float[] color : cornersOuter.keySet()) {
 			float[] inner = combinedColors.get(color);
 			if (inner != null) {
+				ArrayList<float[]> augmentedColor = new ArrayList<float[]>();
 				augmentedColor.add(color);
 				augmentedColor.add(inner);
+				result.put(augmentedColor, cornersOuter.get(color));
 			}
-			result.put(augmentedColor, cornersOuter.get(color));
 		}
 		return result;
 	}
