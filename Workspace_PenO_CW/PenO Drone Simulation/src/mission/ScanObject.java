@@ -41,8 +41,9 @@ public class ScanObject extends Mission {
 
 		frame.getContentPane().add(world, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		frame.setSize(1024, 768); // width, height
+	
+//		frame.setSize(1024, 768); // width, height
+		frame.setBounds(900, 0, 1024, 768);
 		frame.setResizable(false); // Not resizable
 		world.requestFocus();
 		frame.setVisible(true);
