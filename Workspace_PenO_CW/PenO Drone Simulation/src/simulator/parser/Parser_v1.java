@@ -50,7 +50,7 @@ public class Parser_v1 extends Parser {
 		verticalAngleOfView = Double.parseDouble(splitArray[1]);
 		imageWidth = Integer.parseInt(splitArray[2]);
 		imageHeight = Integer.parseInt(splitArray[3]);
-		cameraSeparation = Double.parseDouble(splitArray[4]);
+		cameraSeparation = (float) Double.parseDouble(splitArray[4]);
 		weight = Double.parseDouble(splitArray[5]);
 		gravity = Double.parseDouble(splitArray[6]);
 		drag = Double.parseDouble(splitArray[7]);
