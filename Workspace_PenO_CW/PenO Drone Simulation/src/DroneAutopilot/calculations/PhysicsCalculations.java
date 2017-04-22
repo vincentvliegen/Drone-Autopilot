@@ -644,10 +644,10 @@ public class PhysicsCalculations{
 //			System.out.println("yawWanted: " + yawWanted);
 //			System.out.println("remaining yaw: " + remainingAngles[0]);
 			this.setRemainingAngles(remainingAngles);
-			System.out.println("position: {" + this.getPosition()[0] + ", " + this.getPosition()[1] + ", " + this.getPosition()[2] + "}");
-			System.out.println("yaw: "+ remainingAngles[0]);
-			System.out.println("pitch: "+ remainingAngles[1]);
-			System.out.println("roll: "+ remainingAngles[2]);
+//			System.out.println("position: {" + this.getPosition()[0] + ", " + this.getPosition()[1] + ", " + this.getPosition()[2] + "}");
+//			System.out.println("yaw: "+ remainingAngles[0]);
+//			System.out.println("pitch: "+ remainingAngles[1]);
+//			System.out.println("roll: "+ remainingAngles[2]);
 		}
 	
 		//Geeft de nodige rotatieRates om in bepaalde tijd de remainingAngles te overbruggen.
