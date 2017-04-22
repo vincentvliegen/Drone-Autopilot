@@ -14,7 +14,7 @@ public class GeneralCameraAP {
 	private float startLookAtX=0, startLookAtY=0, startLookAtZ=0;
 	private float startUpX=0, startUpY=0, startUpZ=0;
 	
-	public GeneralCameraAP(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ, World world){
+	public GeneralCameraAP(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ, WorldAPVisual world){
 		this.setEyeX(eyeX);
 		this.startEyeX = eyeX;
 		this.setEyeY(eyeY);
@@ -38,9 +38,9 @@ public class GeneralCameraAP {
 	
 	//TODO voeg translatie/rotatie toe van de vaste camera's!!
 	
-	private World world;
+	private WorldAPVisual world;
 	
-	protected World getWorld() {
+	protected WorldAPVisual getWorld() {
 		return world;
 	}
 	

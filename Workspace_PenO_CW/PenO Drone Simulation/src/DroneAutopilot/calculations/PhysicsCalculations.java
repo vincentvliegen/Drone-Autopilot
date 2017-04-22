@@ -242,14 +242,8 @@ public class PhysicsCalculations{
 			setXObject(deltaX);
 		}
 
-		private double[] objectPosDroneToWorld(){			
-			//positie = (a,b,c) = a*(1,0,0) + b(0,1,0)+c(0,0,1) = a*x-asdrone + b*y-asdrone + c*z-asdrone
-			//de assen van de drone zijn bekend: getOrientationDrone()
-			double[] xcomponent = VectorCalculations.timesScalar(getOrientationDrone()[0],getXObject());
-			double[] ycomponent = VectorCalculations.timesScalar(getOrientationDrone()[1],getYObject());
-			double[] zcomponent = VectorCalculations.timesScalar(getOrientationDrone()[2],getZObject());
-				
-			double[] droneRotated = VectorCalculations.sum(xcomponent, VectorCalculations.sum(ycomponent, zcomponent));
+		private double[] objectPosDroneToWorld(){				
+			double[] droneRotated = droneVectorToWorldVector(new double[] {this.getXObject(),this.getYObject(),this.getZObject()});
 			double[] droneTranslated = VectorCalculations.sum(droneRotated, this.getPosition());
 			return droneTranslated;
 		}
@@ -589,20 +583,11 @@ public class PhysicsCalculations{
 		
 		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll
 		private void calculateRemainingAnglesToObject() throws ArithmeticException{
-			//dees ist zelfde als hieronder
-//			double[] thrustWantedWorld = this.getWantedOrientation()[0];
-//			double[] viewWantedWorld = this.getWantedOrientation()[1];
-////			System.out.println("heading: " + this.getDrone().getHeading());
-////			System.out.println("pitch: " + this.getDrone().getPitch());
-////			System.out.println("roll: " + this.getDrone().getRoll());
-//			double[] thrustWantedNotNorm = this.vectorDroneToWorld(thrustWantedWorld);
-//			double[] viewWantedNotNorm = this.vectorDroneToWorld(viewWantedWorld);
-//			double[] thrustWanted = VectorCalculations.normalise(thrustWantedNotNorm);
-//			double[] viewWanted = VectorCalculations.normalise(viewWantedNotNorm);
 			
-			//dees ist zelfde als hierboven
-			double[] thrustWanted = VectorCalculations.normalise(this.vectorWorldToDrone(this.getWantedOrientation()[0]));
-			double[] viewWanted = VectorCalculations.normalise(this.vectorWorldToDrone(this.getWantedOrientation()[1]));
+			
+			
+			double[] thrustWanted = VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0]));
+			double[] viewWanted = VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]));
 			
 			
 			double pitchWanted = -Math.toDegrees(Math.asin(thrustWanted[2]));
@@ -750,7 +735,31 @@ public class PhysicsCalculations{
 		
 	//////////VECTOR ROTATIONS//////////
 		
-
+	private double[] droneVectorToWorldVector(double[] vector){
+		//positie = (a,b,c) = a*(1,0,0) + b(0,1,0) + c(0,0,1) = a*x-asdrone + b*y-asdrone + c*z-asdrone
+		//de assen van de drone zijn bekend: getOrientationDrone()
+		double[] xcomponent = VectorCalculations.timesScalar(getOrientationDrone()[0],vector[0]);
+		double[] ycomponent = VectorCalculations.timesScalar(getOrientationDrone()[1],vector[1]);
+		double[] zcomponent = VectorCalculations.timesScalar(getOrientationDrone()[2],vector[2]);
+			
+		double[] vNew = VectorCalculations.sum(xcomponent, VectorCalculations.sum(ycomponent, zcomponent));
+		return vNew;
+	}
+		
+	private double[] worldVectorToDroneVector(double[] vector){
+		//zelfde maar dan met transpose van orientationDrone = orientationWorld (in drone coordinaten)
+		double[] orientationWorldx = new double[] {getOrientationDrone()[0][0],getOrientationDrone()[1][0],getOrientationDrone()[2][0]};
+		double[] orientationWorldy = new double[] {getOrientationDrone()[0][1],getOrientationDrone()[1][1],getOrientationDrone()[2][1]};
+		double[] orientationWorldz = new double[] {getOrientationDrone()[0][2],getOrientationDrone()[1][2],getOrientationDrone()[2][2]};
+		
+		double[] xcomponent = VectorCalculations.timesScalar(orientationWorldx,vector[0]);
+		double[] ycomponent = VectorCalculations.timesScalar(orientationWorldy,vector[1]);
+		double[] zcomponent = VectorCalculations.timesScalar(orientationWorldz,vector[2]);
+			
+		double[] vNew = VectorCalculations.sum(xcomponent, VectorCalculations.sum(ycomponent, zcomponent));
+		return vNew;
+	}
+	
 	
 	//////////GETTERS & SETTERS//////////
 

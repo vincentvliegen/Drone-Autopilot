@@ -25,7 +25,7 @@ public class Tester {
 	private static JFrame frame;
 	private static GUI gui;
 
-	
+
 	@BeforeClass
 	public static void init() {
 		factory = new DroneAutopilotFactory();
@@ -72,15 +72,24 @@ public class Tester {
 	@Test
 	public void testSpeed() {
 		System.out.println("Speed:");
-		System.out.println(Arrays.toString(world.getDrones().get(0).getMovement().getVelocity()));
-		System.out.println(Arrays.toString(world.getAp().getPhysicsCalculations().getSpeed()));
-		for (int i = 0; i < world.getDrones().get(0).getMovement().getVelocity().length; i++) {
-			float v1 = world.getDrones().get(0).getMovement().getVelocity()[i];
-			float v2 = (float) world.getAp().getPhysicsCalculations().getSpeed()[i];
-			System.out.println((double) Math.abs(v1 - v2));
-			assertTrue( Math.abs(v1 - v2) < 0.00001);
-		}
+//		System.out.println(Arrays.toString(world.getDrones().get(0).getMovement().getVelocity()));
+//		System.out.println(Arrays.toString(world.getAp().getPhysicsCalculations().getSpeed()));
 
+		long t= System.currentTimeMillis();
+		int flag = 100;
+		long flagTime = t + flag;
+		long end = t+15000;
+		while(System.currentTimeMillis() < end) {
+			if(System.currentTimeMillis() > flagTime) {
+				flagTime = System.currentTimeMillis() + flag;
+				for (int i = 0; i < world.getDrones().get(0).getMovement().getVelocity().length; i++) {
+					float v1 = world.getDrones().get(0).getMovement().getVelocity()[i];
+					float v2 = (float) world.getAp().getPhysicsCalculations().getSpeed()[i];
+//					System.out.println((double) Math.abs(v1 - v2));
+					assertTrue( Math.abs(v1 - v2) < 0.001);
+				}
+			}
+		}
 	}
 
 	@Test
@@ -94,7 +103,7 @@ public class Tester {
 			System.out.println(v2);
 			System.out.println(Math.abs(v1 - v2));
 			assertTrue( Math.abs(v1 - v2) < 0.00001);
-			
+
 
 		}
 	}
