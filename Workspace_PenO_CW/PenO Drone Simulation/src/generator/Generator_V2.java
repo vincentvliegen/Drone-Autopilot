@@ -176,10 +176,10 @@ public class Generator_V2 {
 				}
 				
 				for (int j = 0; j < faces.length; j++) {
-					int hueDegrees = r.nextInt(361);
+					int hueDegrees = r.nextInt(361); 
 					float hueRadians = (float)Math.toRadians(hueDegrees);
-					float saturation = r.nextFloat() * 0.449f + 0.551f;
-					float brightness = r.nextFloat() * 0.449f + 0.551f;
+					float saturation = r.nextFloat() * (1 - 0.55f) + 0.55f;
+					float brightness = r.nextFloat() * (1 - 0.55f) + 0.55f;
 					int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
 					int[] color = new int[3];
 					color[0] = (rgb >> 16) & 0xFF;
@@ -254,7 +254,7 @@ public class Generator_V2 {
 				for (int j = 0; j < faces.length; j++) {
 					int hueDegrees = r.nextInt(361);
 					float hueRadians = (float)Math.toRadians(hueDegrees);
-					float saturation = r.nextFloat() * 0.449f + 0.551f;
+					float saturation = r.nextFloat() * (1 - 0.55f) + 0.55f;
 					float brightness = r.nextFloat() * 0.45f;
 					int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
 					int[] color = new int[3];
