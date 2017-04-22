@@ -10,7 +10,7 @@ public class FlyToPosition extends Mission{
 	
 	public FlyToPosition(DroneAutopilot droneAutopilot) {
 		super(droneAutopilot);
-		this.setTarget(new double[] {1,0,0});
+		this.setTarget(new double[] {3,0,0});
 	}
 	
 	@Override

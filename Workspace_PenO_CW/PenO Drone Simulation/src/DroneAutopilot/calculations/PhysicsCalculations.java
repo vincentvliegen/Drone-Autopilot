@@ -46,8 +46,8 @@ public class PhysicsCalculations{
 	private final static double maxWindTranslation = 0.05;
 	private static final double[] maxWindRotationRate = new double[]{0.5, 0.5, 0.5};
 	private boolean firstMovement;
-	private final static double distanceSpeedFactor = 0.5;
-	private final static double dropdownDistance = 3;
+	private final static double distanceSpeedFactor = 0.02;
+	private final static double dropdownDistance = 5;
 	
 	//Vector Rotations
 	private double[][] rotationMatrix;
@@ -93,18 +93,16 @@ public class PhysicsCalculations{
 		if(!isFirstTime()){
 			this.setDeltaT(this.getTime()-this.getPreviousTime());
 			this.calculateSpeed();
-			/*
-			System.out.println("--------------");
-			System.out.println("Autopilot");
-			System.out.println("DeltaT: " + this.getDeltaT());
-			System.out.println("PosX: " + this.getDrone().getX());
-			System.out.println("PosY: " + this.getDrone().getY());
-			System.out.println("PosZ: " + this.getDrone().getZ());
-			System.out.println("speedx: " + this.getSpeed()[0]);
-			System.out.println("speedy: " + this.getSpeed()[1]);
-			System.out.println("speedz: " + this.getSpeed()[2]);
-			System.out.println("--------------");	
-			 */
+//			System.out.println("--------------");
+//			System.out.println("Autopilot");
+//			System.out.println("DeltaT: " + this.getDeltaT());
+//			System.out.println("PosX: " + this.getDrone().getX());
+//			System.out.println("PosY: " + this.getDrone().getY());
+//			System.out.println("PosZ: " + this.getDrone().getZ());
+//			System.out.println("speedx: " + this.getSpeed()[0]);
+//			System.out.println("speedy: " + this.getSpeed()[1]);
+//			System.out.println("speedz: " + this.getSpeed()[2]);
+//			System.out.println("--------------");	
 		}
 		setFirstTime(false);
 	}
@@ -240,7 +238,7 @@ public class PhysicsCalculations{
 		}
 
 		private double[] objectPosDroneToWorld(){
-			double[] droneRotated = this.vectorDroneToWorld(getXObject(), getYObject(), getZObject());
+			double[] droneRotated = this.vectorWorldToDrone(getXObject(), getYObject(), getZObject());
 			double[] droneTranslated = VectorCalculations.sum(droneRotated, this.getPosition());
 			return droneTranslated;
 		}
@@ -265,7 +263,7 @@ public class PhysicsCalculations{
 	 */
 	public void updatePosition(double[] targetPosition){
 		if(!isFirstMovement()){
-			correctWindTranslation();
+//			correctWindTranslation();
 //			correctWindRotation();
 		
 			calculateExternalForces();
@@ -301,7 +299,7 @@ public class PhysicsCalculations{
 	 */
 	public void updateOrientation(double[] direction){
 		if(!isFirstMovement()){
-			correctWindTranslation();
+//			correctWindTranslation();
 //			correctWindRotation();
 		
 			calculateExternalForces();
@@ -514,6 +512,11 @@ public class PhysicsCalculations{
 				if (speed/distance >= PhysicsCalculations.getDistancespeedfactor()) {
 					minMaxIndex = 0;//decelerate
 				} 
+				if(minMaxIndex == 1){
+					System.out.println("accelerate");
+				}else{
+					System.out.println("decelerate");
+				}
 				if (distance <= PhysicsCalculations.getDropdowndistance()){
 					return maxAccelerationValues(position)[minMaxIndex]*distance/PhysicsCalculations.getDropdowndistance();
 				}else{
@@ -575,12 +578,23 @@ public class PhysicsCalculations{
 		
 		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll
 		private void calculateRemainingAnglesToObject() throws ArithmeticException{
-			double[] thrustWanted = VectorCalculations.normalise(this.getWantedOrientation()[0]);
-			double[] viewWanted = VectorCalculations.normalise(this.getWantedOrientation()[1]);
-			//DroneAngles gaan niet meer nodig zijn, aangezien we gwn de nodige hoek berekenen. //TODO
-			double[] inverseDroneAngles = new double[] {(double) -this.getDrone().getHeading(), (double) -this.getDrone().getPitch(), (double) -this.getDrone().getRoll()};
+			//dees ist zelfde als hieronder
+//			double[] thrustWantedWorld = this.getWantedOrientation()[0];
+//			double[] viewWantedWorld = this.getWantedOrientation()[1];
+////			System.out.println("heading: " + this.getDrone().getHeading());
+////			System.out.println("pitch: " + this.getDrone().getPitch());
+////			System.out.println("roll: " + this.getDrone().getRoll());
+//			double[] thrustWantedNotNorm = this.vectorDroneToWorld(thrustWantedWorld);
+//			double[] viewWantedNotNorm = this.vectorDroneToWorld(viewWantedWorld);
+//			double[] thrustWanted = VectorCalculations.normalise(thrustWantedNotNorm);
+//			double[] viewWanted = VectorCalculations.normalise(viewWantedNotNorm);
 			
-			double pitchWanted = Math.toDegrees(Math.asin(thrustWanted[2]));
+			//dees ist zelfde als hierboven
+			double[] thrustWanted = VectorCalculations.normalise(this.vectorWorldToDrone(this.getWantedOrientation()[0]));
+			double[] viewWanted = VectorCalculations.normalise(this.vectorWorldToDrone(this.getWantedOrientation()[1]));
+			
+			
+			double pitchWanted = -Math.toDegrees(Math.asin(thrustWanted[2]));
 			if (pitchWanted == Math.PI){
 				throw new ArithmeticException("pitchWanted is PI, division by zero");
 			}
@@ -625,8 +639,8 @@ public class PhysicsCalculations{
 				rollWanted *= -1;
 			}
 			
-			double[] wantedDroneAngles = new double[] {yawWanted, pitchWanted, rollWanted};
-			double[] remainingAngles = VectorCalculations.sum(inverseDroneAngles, wantedDroneAngles);
+			double[] remainingAngles = new double[] {yawWanted, pitchWanted, rollWanted};
+			
 //			System.out.println("viewWanted");
 //			for(double x: viewWanted)
 //				System.out.println(x);
@@ -634,9 +648,14 @@ public class PhysicsCalculations{
 //			System.out.println("yawWanted: " + yawWanted);
 //			System.out.println("remaining yaw: " + remainingAngles[0]);
 			this.setRemainingAngles(remainingAngles);
+			System.out.println("position: {" + this.getPosition()[0] + ", " + this.getPosition()[1] + ", " + this.getPosition()[2] + "}");
+			System.out.println("yaw: "+ remainingAngles[0]);
+			System.out.println("pitch: "+ remainingAngles[1]);
+			System.out.println("roll: "+ remainingAngles[2]);
 		}
 	
 		//Geeft de nodige rotatieRates om in bepaalde tijd de remainingAngles te overbruggen.
+
 		private void calculateRotationRates(){
 			double[] remainingAngles = this.getRemainingAngles();
 			if(!VectorCalculations.compareVectors(remainingAngles, new double[] {0,0,0})){
@@ -720,13 +739,13 @@ public class PhysicsCalculations{
 		
 	//////////VECTOR ROTATIONS//////////
 
-	public double[] vectorDroneToWorld(double x, double y, double z){
-		return vectorDroneToWorld(new double[] {x,y,z});
-	}
-
-	public double[] vectorDroneToWorld(double[] vector){
-		return VectorCalculations.rotate(this.getInverseRotationMatrix(), vector);
-	}
+//	public double[] vectorDroneToWorld(double x, double y, double z){
+//		return vectorDroneToWorld(new double[] {x,y,z});
+//	}
+//
+//	public double[] vectorDroneToWorld(double[] vector){
+//		return VectorCalculations.rotate(this.getInverseRotationMatrix(), vector);
+//	}
 
 	public double[] vectorWorldToDrone(double x, double y, double z){
 		return vectorWorldToDrone(new double[] {x,y,z});

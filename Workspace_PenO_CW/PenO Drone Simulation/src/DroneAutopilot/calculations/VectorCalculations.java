@@ -79,16 +79,16 @@ public class VectorCalculations {
 	}
 	
  	public static double[][] createRotationMatrix(double yaw, double pitch, double roll) {		
-		double r11 = (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
-		double r12 = (Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))+Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
-		double r13 = (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
+		double r11 = (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))+Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
+		double r12 = (Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
+		double r13 = (Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))-Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
 
-		double r21 = (-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
+		double r21 = (Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll)));
 		double r22 = (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
-		double r23 = (Math.sin(Math.toRadians(pitch)));
+		double r23 = (Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))+Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
 
-		double r31 = (Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))+Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
-		double r32 = (Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
+		double r31 = (Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
+		double r32 = (-Math.sin(Math.toRadians(pitch)));
 		double r33 = (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw)));
 		
 		return new double[][] {{r11,r12,r13},{r21,r22,r23},{r31,r32,r33}};
