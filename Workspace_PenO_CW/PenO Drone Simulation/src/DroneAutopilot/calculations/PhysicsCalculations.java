@@ -50,10 +50,11 @@ public class PhysicsCalculations{
 	private final static double dropdownDistance = 5;
 	
 	//Vector Rotations
-	private double[][] rotationMatrix;
-	private double[][] inverseRotationMatrix;
-
+	private final static double[][] orientationWorld = new double[][] {{1,0,0},{0,1,0},{0,0,1}};
+	private double[][] orientationDrone;
 	
+	
+
 	public PhysicsCalculations(Drone drone){
 		this.setDrone(drone);
 		this.setTime((double) this.getDrone().getCurrentTime());
@@ -83,8 +84,7 @@ public class PhysicsCalculations{
 
 		//update current
 		this.setPosition((double) this.getDrone().getX(), (double) this.getDrone().getY(), (double) this.getDrone().getZ());
-		this.setRotationMatrix(VectorCalculations.createRotationMatrix((double) this.getDrone().getHeading(), (double) this.getDrone().getPitch(), (double) this.getDrone().getRoll()));
-		this.setInverseRotationMatrix(VectorCalculations.createInverseRotationMatrix((double) this.getDrone().getHeading(), (double) this.getDrone().getPitch(), (double) this.getDrone().getRoll()));
+		this.calculateOrientation();
 		this.calculateDirectionOfView();
 		this.calculateDirectionOfThrust();
 		this.setTime((double) this.getDrone().getCurrentTime());
@@ -107,6 +107,11 @@ public class PhysicsCalculations{
 		setFirstTime(false);
 	}
 
+		private void calculateOrientation(){
+			double[][] axes = VectorCalculations.rotateAxes(PhysicsCalculations.getOrientationworld(), this.getDrone().getHeading(), this.getDrone().getPitch(), this.getDrone().getRoll());
+			setOrientationDrone(axes);
+		}
+	
 		private void calculateSpeed(){
 			//a*t^2/2 + v0*t + x0 = x1 => a = (x1-x0-v0*t)*2/t^2
 			double[] a = VectorCalculations.timesScalar(
@@ -125,13 +130,13 @@ public class PhysicsCalculations{
 		}
 
 		private void calculateDirectionOfView(){
-			double[] view = new double[] {0,0,-1};
-			setDirectionOfView(vectorWorldToDrone(view));
+			double[] view = VectorCalculations.inverse(getOrientationDrone()[2]);
+			setDirectionOfView(view);
 		}
 	
 		private void calculateDirectionOfThrust(){
-			double[] thrust = new double[] {0,1,0};
-			setDirectionOfThrust(vectorWorldToDrone(thrust));
+			double[] thrust = getOrientationDrone()[1];
+			setDirectionOfThrust(thrust);
 		}
 		
 
@@ -237,8 +242,14 @@ public class PhysicsCalculations{
 			setXObject(deltaX);
 		}
 
-		private double[] objectPosDroneToWorld(){
-			double[] droneRotated = this.vectorWorldToDrone(getXObject(), getYObject(), getZObject());
+		private double[] objectPosDroneToWorld(){			
+			//positie = (a,b,c) = a*(1,0,0) + b(0,1,0)+c(0,0,1) = a*x-asdrone + b*y-asdrone + c*z-asdrone
+			//de assen van de drone zijn bekend: getOrientationDrone()
+			double[] xcomponent = VectorCalculations.timesScalar(getOrientationDrone()[0],getXObject());
+			double[] ycomponent = VectorCalculations.timesScalar(getOrientationDrone()[1],getYObject());
+			double[] zcomponent = VectorCalculations.timesScalar(getOrientationDrone()[2],getZObject());
+				
+			double[] droneRotated = VectorCalculations.sum(xcomponent, VectorCalculations.sum(ycomponent, zcomponent));
 			double[] droneTranslated = VectorCalculations.sum(droneRotated, this.getPosition());
 			return droneTranslated;
 		}
@@ -738,22 +749,7 @@ public class PhysicsCalculations{
 				
 		
 	//////////VECTOR ROTATIONS//////////
-
-//	public double[] vectorDroneToWorld(double x, double y, double z){
-//		return vectorDroneToWorld(new double[] {x,y,z});
-//	}
-//
-//	public double[] vectorDroneToWorld(double[] vector){
-//		return VectorCalculations.rotate(this.getInverseRotationMatrix(), vector);
-//	}
-
-	public double[] vectorWorldToDrone(double x, double y, double z){
-		return vectorWorldToDrone(new double[] {x,y,z});
-	}
-
-	public double[] vectorWorldToDrone(double[] vector){
-		return VectorCalculations.rotate(this.getRotationMatrix(), vector);
-	}
+		
 
 	
 	//////////GETTERS & SETTERS//////////
@@ -824,22 +820,6 @@ public class PhysicsCalculations{
 
 	private void setTime(double time) {
 		this.time = time;
-	}
-
-	public double[][] getRotationMatrix() {
-		return rotationMatrix;
-	}
-
-	private void setRotationMatrix(double[][] rotationMatrix) {
-		this.rotationMatrix = rotationMatrix;
-	}
-
-	public double[][] getInverseRotationMatrix() {
-		return inverseRotationMatrix;
-	}
-
-	private void setInverseRotationMatrix(double[][] inverseRotationMatrix) {
-		this.inverseRotationMatrix = inverseRotationMatrix;
 	}
 
 	public double[] getWindTranslation() {
@@ -1066,6 +1046,26 @@ public class PhysicsCalculations{
 		this.directionOfThrust = directionOfThrust;
 	}
 
+
+
+	public double[][] getOrientationDrone() {
+		return orientationDrone;
+	}
+	
+
+
+	public void setOrientationDrone(double[][] orientationDrone) {
+		this.orientationDrone = orientationDrone;
+	}
+	
+
+
+	public static double[][] getOrientationworld() {
+		return orientationWorld;
+	}
+
+	
+	
 }
 
 

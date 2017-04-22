@@ -78,61 +78,6 @@ public class VectorCalculations {
 		return Math.sqrt(Math.pow(coord1[0]-coord2[0], 2) + Math.pow(coord1[1]-coord2[1], 2) + Math.pow(coord1[2]-coord2[2], 2));
 	}
 	
- 	public static double[][] createRotationMatrix(double yaw, double pitch, double roll) {		
-		double r11 = (Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))+Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
-		double r12 = (Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll)));
-		double r13 = (Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))-Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw)));
-
-		double r21 = (Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll)));
-		double r22 = (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll)));
-		double r23 = (Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))+Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)));
-
-		double r31 = (Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)));
-		double r32 = (-Math.sin(Math.toRadians(pitch)));
-		double r33 = (Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw)));
-		
-		return new double[][] {{r11,r12,r13},{r21,r22,r23},{r31,r32,r33}};
-	}
-
-	public static double[][] createInverseRotationMatrix(double yaw, double pitch, double roll){	
-		double[][] rotationMatrix = createRotationMatrix(yaw, pitch, roll);
-		
-		double r11 = rotationMatrix[0][0];
-		double r12 = rotationMatrix[1][0];
-		double r13 = rotationMatrix[2][0];
-		
-		double r21 = rotationMatrix[0][1];
-		double r22 = rotationMatrix[1][1];
-		double r23 = rotationMatrix[2][1];
-
-		double r31 = rotationMatrix[0][2];
-		double r32 = rotationMatrix[1][2];
-		double r33 = rotationMatrix[2][2];
-		
-		return new double[][] {{r11,r12,r13},{r21,r22,r23},{r31,r32,r33}};
-	}
-	
-	public static double[] rotate(double[][] rotationMatrix, double[] vector){
-		double r11 = rotationMatrix[0][0];
-		double r12 = rotationMatrix[0][1];
-		double r13 = rotationMatrix[0][2];
-		double r21 = rotationMatrix[1][0];
-		double r22 = rotationMatrix[1][1];
-		double r23 = rotationMatrix[1][2];
-		double r31 = rotationMatrix[2][0];
-		double r32 = rotationMatrix[2][1];
-		double r33 = rotationMatrix[2][2];
-		
-		double x = vector[0];
-		double y = vector[1];
-		double z = vector[2];
-		
-		double xRotated = r11*x + r12*y + r13*z;
-		double yRotated = r21*x + r22*y + r23*z;
-		double zRotated = r31*x + r32*y + r33*z;
-		return new double[] {xRotated, yRotated, zRotated};
-	}
-	
 	public static boolean compareVectors(double[] vector1, double[] vector2){
 		for( int i = 0; i<3; i++){
 			if(Math.abs(vector1[i]-vector2[i]) > 0.00001)
@@ -151,6 +96,87 @@ public class VectorCalculations {
 		double[] projection = projectOnAxis(vector, normal);
 		double[] result = sum(vector, inverse(projection));
 		return result;
+	}
+
+	
+	//////////ROTATIONS//////////
+	
+	//https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+	public static double[] rotateVectorAroundAxis(double[] vectorToRotate, double[] rotationAxis, double angle){
+		double cosAngle = Math.cos(Math.toRadians(angle));
+		double sinAngle = Math.sin(Math.toRadians(-angle));//hoek is negatief volgens de rechterhandregel (yaw/pitch/roll)
+		double[] k = normalise(rotationAxis);
+		double[] v = vectorToRotate;
+		
+		//vrot = v*cosAngle + (k x v)sinAngle + k(k*v)(1-cosAngle)
+		double[] rotatedVector = 	sum(timesScalar(v,cosAngle),
+									sum(timesScalar(crossProduct(k, v), sinAngle),
+									timesScalar(k, dotProduct(k, v)* (1-cosAngle)) ));
+		
+		return rotatedVector;
+	}
+
+	
+	public static double[] pitch(double[] vectorToRotate, double[][] currentOrientation, double pitch){
+		return rotateVectorAroundAxis(vectorToRotate, currentOrientation[0], pitch);
+	}
+	
+	public static double[] roll(double[] vectorToRotate, double[][] currentOrientation, double roll){
+		return rotateVectorAroundAxis(vectorToRotate, currentOrientation[2], roll);
+	}
+	
+	public static double[] yaw(double[] vectorToRotate, double[][] currentOrientation, double yaw){
+		return rotateVectorAroundAxis(vectorToRotate, currentOrientation[1], yaw);
+	}
+
+	
+	public static double[][] pitchAxes(double[][] currentOrientation, double pitch){
+		double[] newX = currentOrientation[0];
+		double[] newY = rotateVectorAroundAxis(currentOrientation[1], newX, pitch);
+		double[] newZ = rotateVectorAroundAxis(currentOrientation[2], newX, pitch);
+		return new double[][] {newX, newY, newZ};
+	}
+
+	public static double[][] yawAxes(double[][] currentOrientation, double yaw){
+		double[] newY = currentOrientation[1];
+		double[] newX = rotateVectorAroundAxis(currentOrientation[0], newY, yaw);
+		double[] newZ = rotateVectorAroundAxis(currentOrientation[2], newY, yaw);
+		return new double[][] {newX, newY, newZ};
+	}
+
+	public static double[][] rollAxes(double[][] currentOrientation, double roll){
+		double[] newZ = currentOrientation[2];
+		double[] newX = rotateVectorAroundAxis(currentOrientation[0], newZ, roll);
+		double[] newY = rotateVectorAroundAxis(currentOrientation[1], newZ, roll);
+		return new double[][] {newX, newY, newZ};
+	}
+
+	
+	public static double[] rotate(double[] vectorToRotate, double[][] currentOrientation, double yaw, double pitch, double roll){
+		
+		double[] vector = vectorToRotate;
+		double[][] axes = currentOrientation;
+		
+		//yaw
+		vector = yaw(vector, axes, yaw);
+		axes = yawAxes(axes, yaw);
+		
+		//pitch
+		vector = pitch(vector, axes, pitch);
+		axes = pitchAxes(axes, pitch);		
+		
+		//roll
+		vector = roll(vector, axes, roll);
+		
+		return vector;
+	}
+	
+	public static double[][] rotateAxes(double[][] currentOrientation, double yaw, double pitch, double roll){
+		double[][] axes = currentOrientation;
+		axes = yawAxes(axes, yaw);
+		axes = pitchAxes(axes, pitch);
+		axes = rollAxes(axes, roll);
+		return axes;
 	}
 	
 }
