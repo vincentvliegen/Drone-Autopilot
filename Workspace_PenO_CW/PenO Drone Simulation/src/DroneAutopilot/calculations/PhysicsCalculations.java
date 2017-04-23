@@ -585,14 +585,14 @@ public class PhysicsCalculations{
 		private void calculateRemainingAnglesToObject() throws ArithmeticException{
 			
 			
-			double[][] currentOrientation = new double[][]{new double[]{1,0,0}, new double[]{0,1,0}, new double[]{0,0,1}}; //{thrust, view} ifv drone
-			double[][] WantedOrientation = new double[][]{VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0])),VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]))}; //ifv drone
+			double[][] currentOrientation = new double[][]{new double[]{1,0,0}, new double[]{0,1,0}, new double[]{0,0,1}}; //x,y & z van drone
+			double[][] WantedOrientation = new double[][]{VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0])),VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]))}; //{thrust, view} ifv drone
 			
 			//Yaw, pitch roll
 			
 			//Yaw kan berekend worden adhv de viewvector
 			//atan2(V.X,V.Z)=yawWanted
-			double yawWanted = (180-Math.toDegrees(Math.atan2(WantedOrientation[1][0], WantedOrientation[1][2])));
+			double yawWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(new double[]{WantedOrientation[1][0],0,WantedOrientation[1][2]}, VectorCalculations.inverse(currentOrientation[2]))));
 			if(yawWanted>180){
 				yawWanted-=360;
 				//TODO: check het teken.
