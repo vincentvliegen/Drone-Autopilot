@@ -585,84 +585,39 @@ public class PhysicsCalculations{
 		private void calculateRemainingAnglesToObject() throws ArithmeticException{
 			
 			
+			double[][] currentOrientation = new double[][]{new double[]{1,0,0}, new double[]{0,1,0}, new double[]{0,0,-1}}; //{thrust, view} ifv drone
+			double[][] WantedOrientation = new double[][]{VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0])),VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]))}; //ifv drone
 			
-			double[] thrustWanted = VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0]));
-			double[] viewWanted = VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]));
+			//Yaw, pitch roll
 			
-			/*//Yaw, pitch roll
-			
-			//Yaw kan berekend worden adhv viewvector
+			//Yaw kan berekend worden adhv de viewvector
 			//atan2(V.X,V.Z)=yawWanted
-			double yawWanted = (180-Math.toDegrees(Math.atan2(viewWanted[0], viewWanted[2])));
+			double yawWanted = (180-Math.toDegrees(Math.atan2(WantedOrientation[1][0], WantedOrientation[1][2])));
 			if(yawWanted>180){
 				yawWanted-=360;
+				//TODO: check het teken.
 			}
 			
 			//Nu assenstelsel draaien zodanig de pitch berekend kan worden adhv dotproduct
-			TODO: double[] viewWithYaw = VectorCalculations.yawAxes([0,0,-1], yawWanted);
+			currentOrientation = VectorCalculations.yawAxes(currentOrientation, yawWanted);
 			//Thrust zal gelijk blijven na yawrotatie.
 			// v1.v2 = ||v1|| ||v2|| cos(pitch)
-			double pitchWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(viewWanted, viewWithYaw)));
-			if(viewWanted[1]>0){
+			double pitchWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], currentOrientation[2])));
+			if(WantedOrientation[1][1]>0){
 			pitchWanted*=-1;
-				TODO: check het teken.
+				//TODO: check het teken.
 			}
 			
 			//Nu staan de viewvectoren gelijk. Er moet dus enkel nog een rotatie gebeuren rond de rollvector om zo de thrustWanted en thrust gelijk te krijgen.
 			// Again dotproduct
-			TODO: double [] thrustWithPitch = VectoreCalculations.pitchAxes([0,1,0], pitchWanted);
-			double rollWanted = Math.toDegress(Math.acos(VectorCalculations.cosinusBetweenVectors(thrustWanted, thrustWithPitch)));
-			if(thrustWanted[0]<0){
+			currentOrientation = VectorCalculations.pitchAxes(currentOrientation, pitchWanted);
+			double rollWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[0], currentOrientation[1])));
+			if(WantedOrientation[0][0]<0){
 				pitchWanted*=-1;
-					TODO: check het teken.
-				}*/
-			
-			
-			double pitchWanted = -Math.toDegrees(Math.asin(thrustWanted[2]));
-			if (pitchWanted == Math.PI){
-				throw new ArithmeticException("pitchWanted is PI, division by zero");
-			}
-			//double rollWanted = (double) Math.toDegrees(-Math.acos(thrustWanted[1]/Math.cos(Math.toRadians(pitchWanted))));  Alles in stukken gehakt, waardoor geen NaN meer.
-			double cosPitch = Math.cos(Math.toRadians(pitchWanted));
-				double value1 = (thrustWanted[1]/cosPitch);
-				if (Math.abs(value1) > 1){
-					value1 = 1*Math.signum(value1);
+					//TODO: check het teken.
 				}
-			double rollWanted = Math.toDegrees(-Math.acos(value1));
-				double value2 = -viewWanted[2]/cosPitch;
-				if (Math.abs(value2) > 1){
-					value2 = 1*Math.signum(value2);
-				}
-			double yawWanted = Math.toDegrees(Math.acos(value2));
-			//richting yaw/roll
-			//yaw:
-			boolean samehalfyaw = true;
-			boolean posheading = true;
-			double[] ViewWantedOnView = VectorCalculations.projectOnAxis(viewWanted, this.getDirectionOfView());
-			if(!VectorCalculations.compareVectors(VectorCalculations.normalise(ViewWantedOnView), this.getDirectionOfView())){
-				samehalfyaw = false;
-			}
-			if (this.getDrone().getHeading() < 0) {
-				posheading = false;
-			}
-			if((samehalfyaw && !posheading) || (!samehalfyaw && posheading)) {
-				yawWanted *= -1;
-			}
-				
-			//roll:
-			boolean samehalfroll = true;
-			boolean posroll = true;
-			double[] ThrustWantedOnThrust = VectorCalculations.projectOnAxis(thrustWanted, this.getDirectionOfThrust());
-			if(!VectorCalculations.compareVectors(VectorCalculations.normalise(ThrustWantedOnThrust), this.getDirectionOfThrust())){
-				samehalfroll = false;
-			}
-			if (this.getDrone().getRoll() < 0) {
-				posroll = false;
-			}
-			if((samehalfroll && !posroll) || (!samehalfroll && posroll)) {
-				rollWanted *= -1;
-			}
 			
+		
 			double[] remainingAngles = new double[] {yawWanted, pitchWanted, rollWanted};
 			
 //			System.out.println("viewWanted");
