@@ -585,7 +585,7 @@ public class PhysicsCalculations{
 		private void calculateRemainingAnglesToObject() throws ArithmeticException{
 			
 			
-			double[][] currentOrientation = new double[][]{new double[]{1,0,0}, new double[]{0,1,0}, new double[]{0,0,-1}}; //{thrust, view} ifv drone
+			double[][] currentOrientation = new double[][]{new double[]{1,0,0}, new double[]{0,1,0}, new double[]{0,0,1}}; //{thrust, view} ifv drone
 			double[][] WantedOrientation = new double[][]{VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0])),VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]))}; //ifv drone
 			
 			//Yaw, pitch roll
@@ -603,6 +603,11 @@ public class PhysicsCalculations{
 			//Thrust zal gelijk blijven na yawrotatie.
 			// v1.v2 = ||v1|| ||v2|| cos(pitch)
 			double pitchWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], currentOrientation[2])));
+			if(Math.abs(pitchWanted)>90){
+				pitchWanted= Math.abs(pitchWanted) - 90;
+				pitchWanted*=Math.signum(pitchWanted);
+				
+			}
 			if(WantedOrientation[1][1]>0){
 			pitchWanted*=-1;
 				//TODO: check het teken.
