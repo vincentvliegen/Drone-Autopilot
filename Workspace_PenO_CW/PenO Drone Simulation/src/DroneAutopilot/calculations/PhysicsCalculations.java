@@ -589,6 +589,34 @@ public class PhysicsCalculations{
 			double[] thrustWanted = VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0]));
 			double[] viewWanted = VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]));
 			
+			/*//Yaw, pitch roll
+			
+			//Yaw kan berekend worden adhv viewvector
+			//atan2(V.X,V.Z)=yawWanted
+			double yawWanted = (180-Math.toDegrees(Math.atan2(viewWanted[0], viewWanted[2])));
+			if(yawWanted>180){
+				yawWanted-=360;
+			}
+			
+			//Nu assenstelsel draaien zodanig de pitch berekend kan worden adhv dotproduct
+			TODO: double[] viewWithYaw = VectorCalculations.yawAxes([0,0,-1], yawWanted);
+			//Thrust zal gelijk blijven na yawrotatie.
+			// v1.v2 = ||v1|| ||v2|| cos(pitch)
+			double pitchWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(viewWanted, viewWithYaw)));
+			if(viewWanted[1]>0){
+			pitchWanted*=-1;
+				TODO: check het teken.
+			}
+			
+			//Nu staan de viewvectoren gelijk. Er moet dus enkel nog een rotatie gebeuren rond de rollvector om zo de thrustWanted en thrust gelijk te krijgen.
+			// Again dotproduct
+			TODO: double [] thrustWithPitch = VectoreCalculations.pitchAxes([0,1,0], pitchWanted);
+			double rollWanted = Math.toDegress(Math.acos(VectorCalculations.cosinusBetweenVectors(thrustWanted, thrustWithPitch)));
+			if(thrustWanted[0]<0){
+				pitchWanted*=-1;
+					TODO: check het teken.
+				}*/
+			
 			
 			double pitchWanted = -Math.toDegrees(Math.asin(thrustWanted[2]));
 			if (pitchWanted == Math.PI){
