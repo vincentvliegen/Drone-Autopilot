@@ -602,12 +602,7 @@ public class PhysicsCalculations{
 			currentOrientation = VectorCalculations.yawAxes(currentOrientation, yawWanted);
 			//Thrust zal gelijk blijven na yawrotatie.
 			// v1.v2 = ||v1|| ||v2|| cos(pitch)
-			double pitchWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], currentOrientation[2])));
-			if(Math.abs(pitchWanted)>90){
-				pitchWanted= Math.abs(pitchWanted) - 90;
-				pitchWanted*=Math.signum(pitchWanted);
-				
-			}
+			double pitchWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], -currentOrientation[2])));
 			if(WantedOrientation[1][1]>0){
 			pitchWanted*=-1;
 				//TODO: check het teken.
