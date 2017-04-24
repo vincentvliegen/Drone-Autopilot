@@ -43,11 +43,11 @@ public class PhysicsCalculations{
 	private double yawRate;
 	private double pitchRate;
 	private double rollRate;
-	private final static double maxWindTranslation = 0.05;
+	private final double maxWindTranslation;
 	private static final double[] maxWindRotationRate = new double[]{0.5, 0.5, 0.5};
 	private boolean firstMovement;
-	private final static double distanceSpeedFactor = 0.02;
-	private final static double dropdownDistance = 5;
+	private final static double distanceSpeedFactor = 2;
+	private final static double dropdownDistance = 8;
 	
 	//Vector Rotations
 	private final static double[][] orientationWorld = new double[][] {{1,0,0},{0,1,0},{0,0,1}};
@@ -70,7 +70,7 @@ public class PhysicsCalculations{
 		this.setExpectedPosition((double) this.getDrone().getX(), (double) this.getDrone().getY(), (double) this.getDrone().getZ());
 		this.setExpectedOrientation((double) this.getDrone().getHeading(), (double) this.getDrone().getPitch(), (double) this.getDrone().getRoll());
 		this.setFirstMovement(true);
-		
+		this.maxWindTranslation = 0.05*this.getDrone().getDrag();
 	}
 
 
@@ -513,6 +513,10 @@ public class PhysicsCalculations{
 			private double determineAcceleration(double[] position) {
 				double distance = this.getDistanceDroneToPosition(position);
 				double speed = this.getSpeedDroneToPosition(position);
+				double[] acceleration = maxAccelerationValues(position);
+				//demping ifv speed TODO bij hogere speed kleinere versnelling
+				double speedDamping = 1;//TODO stel maximumsnelheid op (anders worden drag+wind+gravity te groot voor thrust)
+				
 				int minMaxIndex = 1;//accelerate
 				if (speed/distance >= PhysicsCalculations.getDistancespeedfactor()) {
 					minMaxIndex = 0;//decelerate
@@ -523,9 +527,11 @@ public class PhysicsCalculations{
 //					System.out.println("decelerate");
 //				}
 				if (distance <= PhysicsCalculations.getDropdowndistance()){
-					return maxAccelerationValues(position)[minMaxIndex]*distance/PhysicsCalculations.getDropdowndistance();
+					//demping ifv afstand
+					double distanceDamping = Math.pow(distance/PhysicsCalculations.getDropdowndistance(),2);
+					return acceleration[minMaxIndex]*speedDamping*distanceDamping;
 				}else{
-					return maxAccelerationValues(position)[minMaxIndex];
+					return acceleration[minMaxIndex]*speedDamping;
 				}
 			}
 			
@@ -536,8 +542,20 @@ public class PhysicsCalculations{
 					double[] direction = VectorCalculations.normalise(getDirectionDroneToPosition(position));
 					
 					double[] minMaxAcceleration = accelerationCalc(externalForces, maxthrust, direction, weight);
+					//change of wind;
+					minMaxAcceleration[0] += this.getMaxwindtranslation()/this.getDrone().getWeight();
+					minMaxAcceleration[1] -= this.getMaxwindtranslation()/this.getDrone().getWeight();
 					
-					return new double[] {minMaxAcceleration[0]+PhysicsCalculations.getMaxwindtranslation(),minMaxAcceleration[1]-PhysicsCalculations.getMaxwindtranslation()};//max uitwijking door de wind
+					//om een overcompensatie (bij verandering van accelerate naar decelerate of omgekeerd) te voorkomen, moeten de versnellingen van dezelfde grootte zijn
+					if(Math.signum(minMaxAcceleration[0]) == 1 || Math.signum(minMaxAcceleration[1]) == -1){
+						System.out.println("thrust can not compensate external forces");
+					}else if(Math.abs(minMaxAcceleration[0])>Math.abs(minMaxAcceleration[1])){
+						minMaxAcceleration[0] = -minMaxAcceleration[1];
+					}else{
+						minMaxAcceleration[1] = -minMaxAcceleration[0];
+					}
+					
+					return minMaxAcceleration;
 				}
 				
 					private double[] accelerationCalc(double[] externalForces, double thrustSize, double[] direction, double weight){
@@ -647,7 +665,7 @@ public class PhysicsCalculations{
 				}
 //				System.out.println("yawRate: " + this.getYawRate());
 //				System.out.println("----------------");
-				if (correctAnglesInOneFrames[1]+0 != 0 && Math.abs(correctAnglesInOneFrames[0]) < Math.abs(maxAngleRates[0])){
+				if (correctAnglesInOneFrames[1]+0 != 0 /*&& Math.abs(correctAnglesInOneFrames[0]) < Math.abs(maxAngleRates[0])*/){
 					if (Math.abs(correctAnglesInOneFrames[1]) > Math.abs(maxAngleRates[1])) {
 						this.setPitchRate(maxAngleRates[1]*Math.signum(correctAnglesInOneFrames[1]));
 					}else {
@@ -656,7 +674,7 @@ public class PhysicsCalculations{
 				}else{
 					this.setPitchRate(0);
 				}
-				if (correctAnglesInOneFrames[2]+0 != 0 && Math.abs(correctAnglesInOneFrames[0]) < Math.abs(maxAngleRates[0]) && Math.abs(correctAnglesInOneFrames[1]) < Math.abs(maxAngleRates[1])) {
+				if (correctAnglesInOneFrames[2]+0 != 0 /*&& Math.abs(correctAnglesInOneFrames[0]) < Math.abs(maxAngleRates[0]) && Math.abs(correctAnglesInOneFrames[1]) < Math.abs(maxAngleRates[1])*/) {
 					if (Math.abs(correctAnglesInOneFrames[2]) > Math.abs(maxAngleRates[2])) {
 						this.setRollRate(maxAngleRates[2]*Math.signum(correctAnglesInOneFrames[2]));
 					}else {
@@ -983,7 +1001,7 @@ public class PhysicsCalculations{
 		this.remainingAngles = remainingAngles;
 	}
 
-	public static double getMaxwindtranslation() {
+	public double getMaxwindtranslation() {
 		return maxWindTranslation;
 	}
 
