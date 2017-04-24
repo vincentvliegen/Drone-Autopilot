@@ -582,67 +582,45 @@ public class PhysicsCalculations{
 		}
 		
 		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll
-		private void calculateRemainingAnglesToObject() throws ArithmeticException{
-			
-			
+		private void calculateRemainingAnglesToObject(){
 			double[][] currentOrientation = new double[][] {{1,0,0},{0,1,0},{0,0,1}}; //x,y & z van drone
 			double[][] WantedOrientation = new double[][] {VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0])),VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]))}; //{thrust, view} ifv drone
 			
 			//Yaw, pitch roll
 			
 			//Yaw kan berekend worden adhv de viewvector
-			//atan2(V.X,V.Z)=yawWanted
 			double[] wantedViewOnYawPlane = new double[]{WantedOrientation[1][0],0,WantedOrientation[1][2]};
-			double yawValue = VectorCalculations.cosinusBetweenVectors(wantedViewOnYawPlane, VectorCalculations.inverse(currentOrientation[2]));
-			if (Math.abs(yawValue) > 1){
-				yawValue = 1*Math.signum(yawValue);
-			}
-			double yawWanted = Math.toDegrees(Math.acos(yawValue));
+			double yawWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedViewOnYawPlane, VectorCalculations.inverse(currentOrientation[2]))));
 			//sign yaw:
 			double[] crossProductViewXaxis = new double[] {0,-1,0}; // = VectorCalculations.crossProduct(VectorCalculations.inverse(currentOrientation[2]), currentOrientation[0]);
 			double[] crossProductViewWantedView = VectorCalculations.normalise(VectorCalculations.crossProduct(VectorCalculations.inverse(currentOrientation[2]), wantedViewOnYawPlane));
 			if(!VectorCalculations.compareVectors(crossProductViewWantedView, crossProductViewXaxis)){
 				yawWanted *= -1;
 			}
-			
-			
-			//Nu assenstelsel draaien zodanig de pitch berekend kan worden adhv dotproduct
+					
+			//Nu assenstelsel draaien zodanig de pitch berekend kan worden adhv cosinus tss de vectoren
 			currentOrientation = VectorCalculations.yawAxes(currentOrientation, yawWanted);
-			//Thrust zal gelijk blijven na yawrotatie.
-			// v1.v2 = ||v1|| ||v2|| cos(pitch)
-			double pitchValue = VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], VectorCalculations.inverse(currentOrientation[2]));
-			if (Math.abs(pitchValue) > 1){
-				pitchValue = 1*Math.signum(pitchValue);
-			}
-			double pitchWanted = Math.toDegrees(Math.acos(pitchValue));
+			double pitchWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], VectorCalculations.inverse(currentOrientation[2]))));
+			//sign pitch:
 			if(WantedOrientation[1][1]>0){
-			pitchWanted*=-1;
-				//TODO: check het teken.
+				pitchWanted*=-1;
 			}
 			
 			//Nu staan de viewvectoren gelijk. Er moet dus enkel nog een rotatie gebeuren rond de rollvector om zo de thrustWanted en thrust gelijk te krijgen.
-			// Again dotproduct
+			// cosinus tss vectoren
 			currentOrientation = VectorCalculations.pitchAxes(currentOrientation, pitchWanted);
-			double rollValue = VectorCalculations.cosinusBetweenVectors(WantedOrientation[0], currentOrientation[1]);
-			if (Math.abs(rollValue) > 1){
-				rollValue = 1*Math.signum(rollValue);
-			}
-			double rollWanted = Math.toDegrees(Math.acos(rollValue));
+			double rollWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[0], currentOrientation[1])));
+			//sign roll:
 			if(WantedOrientation[0][0]<0){
 				rollWanted*=-1;
-					//TODO: check het teken.
-				}
+			}
 			
-		
 			double[] remainingAngles = new double[] {yawWanted, pitchWanted, rollWanted};
-			
+			this.setRemainingAngles(remainingAngles);
+
 //			System.out.println("viewWanted");
 //			for(double x: viewWanted)
 //				System.out.println(x);
-//			System.out.println("heading: "+getDrone().getHeading());
-//			System.out.println("yawWanted: " + yawWanted);
-//			System.out.println("remaining yaw: " + remainingAngles[0]);
-			this.setRemainingAngles(remainingAngles);
 //			System.out.println("position: {" + this.getPosition()[0] + ", " + this.getPosition()[1] + ", " + this.getPosition()[2] + "}");
 //			System.out.println("yaw: "+ remainingAngles[0]);
 //			System.out.println("pitch: "+ remainingAngles[1]);
@@ -650,7 +628,6 @@ public class PhysicsCalculations{
 		}
 	
 		//Geeft de nodige rotatieRates om in bepaalde tijd de remainingAngles te overbruggen.
-
 		private void calculateRotationRates(){
 			double[] remainingAngles = this.getRemainingAngles();
 			if(!VectorCalculations.compareVectors(remainingAngles, new double[] {0,0,0})){

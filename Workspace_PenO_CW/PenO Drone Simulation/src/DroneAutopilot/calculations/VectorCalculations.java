@@ -62,7 +62,11 @@ public class VectorCalculations {
 		if(size(vector1)==0||size(vector2)==0){
 			return 0;
 		}else{
-			return dotProduct(vector1,vector2)/(size(vector1)*size(vector2));
+			double cosinus = dotProduct(vector1,vector2)/(size(vector1)*size(vector2));
+			if (Math.abs(cosinus) > 1){
+				cosinus = 1*Math.signum(cosinus);
+			}
+			return cosinus;
 		}
 	}
 	
@@ -70,7 +74,11 @@ public class VectorCalculations {
 		if(size(vector1)==0||size(vector2)==0){
 			return 0;
 		}else{
-			return size(crossProduct(vector1,vector2))/(size(vector1)*size(vector2));
+			double sinus = size(crossProduct(vector1,vector2))/(size(vector1)*size(vector2));
+			if (Math.abs(sinus) > 1){
+				sinus = 1*Math.signum(sinus);
+			}
+			return sinus;
 		}
  	}
 	
