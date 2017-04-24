@@ -37,7 +37,7 @@ public class Triangle {
 		float[] temp = new float[3];
 		Color.RGBtoHSB(getIntColor()[0], getIntColor()[1], getIntColor()[2], temp);
 		Random r = new Random();
-		temp[1] = r.nextFloat()*0.45f;
+		temp[1] = r.nextFloat()*0.44f;
 		int inner = Color.HSBtoRGB(temp[0], temp[1], temp[2]);
 		this.innerColor = new float[]{((inner>>16)&0xFF)/255f, ((inner>>8)&0xFF)/255f, (inner&0xFF)/255f};
 		
