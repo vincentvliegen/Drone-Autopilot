@@ -593,7 +593,11 @@ public class PhysicsCalculations{
 			//Yaw kan berekend worden adhv de viewvector
 			//atan2(V.X,V.Z)=yawWanted
 			double[] wantedViewOnYawPlane = new double[]{WantedOrientation[1][0],0,WantedOrientation[1][2]};
-			double yawWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedViewOnYawPlane, VectorCalculations.inverse(currentOrientation[2]))));
+			double yawValue = VectorCalculations.cosinusBetweenVectors(wantedViewOnYawPlane, VectorCalculations.inverse(currentOrientation[2]));
+			if (Math.abs(yawValue) > 1){
+				yawValue = 1*Math.signum(yawValue);
+			}
+			double yawWanted = Math.toDegrees(Math.acos(yawValue));
 			//sign yaw:
 			double[] crossProductViewXaxis = new double[] {0,-1,0}; // = VectorCalculations.crossProduct(VectorCalculations.inverse(currentOrientation[2]), currentOrientation[0]);
 			double[] crossProductViewWantedView = VectorCalculations.normalise(VectorCalculations.crossProduct(VectorCalculations.inverse(currentOrientation[2]), wantedViewOnYawPlane));
@@ -606,7 +610,11 @@ public class PhysicsCalculations{
 			currentOrientation = VectorCalculations.yawAxes(currentOrientation, yawWanted);
 			//Thrust zal gelijk blijven na yawrotatie.
 			// v1.v2 = ||v1|| ||v2|| cos(pitch)
-			double pitchWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], VectorCalculations.inverse(currentOrientation[2]))));
+			double pitchValue = VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], VectorCalculations.inverse(currentOrientation[2]));
+			if (Math.abs(pitchValue) > 1){
+				pitchValue = 1*Math.signum(pitchValue);
+			}
+			double pitchWanted = Math.toDegrees(Math.acos(pitchValue));
 			if(WantedOrientation[1][1]>0){
 			pitchWanted*=-1;
 				//TODO: check het teken.
@@ -615,7 +623,11 @@ public class PhysicsCalculations{
 			//Nu staan de viewvectoren gelijk. Er moet dus enkel nog een rotatie gebeuren rond de rollvector om zo de thrustWanted en thrust gelijk te krijgen.
 			// Again dotproduct
 			currentOrientation = VectorCalculations.pitchAxes(currentOrientation, pitchWanted);
-			double rollWanted = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[0], currentOrientation[1])));
+			double rollValue = VectorCalculations.cosinusBetweenVectors(WantedOrientation[0], currentOrientation[1]);
+			if (Math.abs(rollValue) > 1){
+				rollValue = 1*Math.signum(rollValue);
+			}
+			double rollWanted = Math.toDegrees(Math.acos(rollValue));
 			if(WantedOrientation[0][0]<0){
 				pitchWanted*=-1;
 					//TODO: check het teken.
