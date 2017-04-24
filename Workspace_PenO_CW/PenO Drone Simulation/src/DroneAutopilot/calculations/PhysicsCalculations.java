@@ -629,7 +629,7 @@ public class PhysicsCalculations{
 			}
 			double rollWanted = Math.toDegrees(Math.acos(rollValue));
 			if(WantedOrientation[0][0]<0){
-				pitchWanted*=-1;
+				rollWanted*=-1;
 					//TODO: check het teken.
 				}
 			
