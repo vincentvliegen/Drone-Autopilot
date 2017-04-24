@@ -670,7 +670,7 @@ public class PhysicsCalculations{
 				}
 //				System.out.println("yawRate: " + this.getYawRate());
 //				System.out.println("----------------");
-				if (correctAnglesInOneFrames[1]+0 != 0){
+				if (correctAnglesInOneFrames[1]+0 != 0 && Math.abs(correctAnglesInOneFrames[0]) < Math.abs(maxAngleRates[0])){
 					if (Math.abs(correctAnglesInOneFrames[1]) > Math.abs(maxAngleRates[1])) {
 						this.setPitchRate(maxAngleRates[1]*Math.signum(correctAnglesInOneFrames[1]));
 					}else {
@@ -679,7 +679,7 @@ public class PhysicsCalculations{
 				}else{
 					this.setPitchRate(0);
 				}
-				if (correctAnglesInOneFrames[2]+0 != 0) {
+				if (correctAnglesInOneFrames[2]+0 != 0 && Math.abs(correctAnglesInOneFrames[0]) < Math.abs(maxAngleRates[0]) && Math.abs(correctAnglesInOneFrames[1]) < Math.abs(maxAngleRates[1])) {
 					if (Math.abs(correctAnglesInOneFrames[2]) > Math.abs(maxAngleRates[2])) {
 						this.setRollRate(maxAngleRates[2]*Math.signum(correctAnglesInOneFrames[2]));
 					}else {
