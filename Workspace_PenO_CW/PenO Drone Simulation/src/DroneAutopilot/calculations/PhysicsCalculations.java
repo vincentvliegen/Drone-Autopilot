@@ -46,7 +46,7 @@ public class PhysicsCalculations{
 	private final double maxWindTranslation;
 	private static final double[] maxWindRotationRate = new double[]{0.5, 0.5, 0.5};
 	private boolean firstMovement;
-	private final static double distanceSpeedFactor = 2;
+	private final static double distanceSpeedFactor = 0.2;
 	private final static double dropdownDistance = 8;
 	
 	//Vector Rotations
@@ -514,8 +514,15 @@ public class PhysicsCalculations{
 				double distance = this.getDistanceDroneToPosition(position);
 				double speed = this.getSpeedDroneToPosition(position);
 				double[] acceleration = maxAccelerationValues(position);
-				//demping ifv speed TODO bij hogere speed kleinere versnelling
-				double speedDamping = 1;//TODO stel maximumsnelheid op (anders worden drag+wind+gravity te groot voor thrust)
+				//demping ifv speed
+				double wantedSpeed = 0.5* PhysicsCalculations.getDistancespeedfactor()* distance;
+//				double speedDamping = (wantedSpeed-speed)/wantedSpeed;
+//				if(Math.abs(speedDamping) > 1){
+//					speedDamping = Math.signum(speedDamping);
+//				}	
+//				speedDamping *= acceleration[1];
+//				acceleration[0] = Math.max(acceleration[0] + speedDamping, acceleration[0]);
+//				acceleration[1] = Math.min(acceleration[1] + speedDamping, acceleration[1]);
 				
 				int minMaxIndex = 1;//accelerate
 				if (speed/distance >= PhysicsCalculations.getDistancespeedfactor()) {
@@ -526,12 +533,15 @@ public class PhysicsCalculations{
 //				}else{
 //					System.out.println("decelerate");
 //				}
+//				System.out.println("minmaxAcc:= {" + acceleration[0] + ", " + acceleration[1] + "}");
+				
 				if (distance <= PhysicsCalculations.getDropdowndistance()){
 					//demping ifv afstand
 					double distanceDamping = Math.pow(distance/PhysicsCalculations.getDropdowndistance(),2);
-					return acceleration[minMaxIndex]*speedDamping*distanceDamping;
+					return acceleration[minMaxIndex]*distanceDamping;
+					
 				}else{
-					return acceleration[minMaxIndex]*speedDamping;
+					return acceleration[minMaxIndex];
 				}
 			}
 			
@@ -547,7 +557,7 @@ public class PhysicsCalculations{
 					minMaxAcceleration[1] -= this.getMaxwindtranslation()/this.getDrone().getWeight();
 					
 					//om een overcompensatie (bij verandering van accelerate naar decelerate of omgekeerd) te voorkomen, moeten de versnellingen van dezelfde grootte zijn
-					if(Math.signum(minMaxAcceleration[0]) == 1 || Math.signum(minMaxAcceleration[1]) == -1){
+					if((Math.signum(minMaxAcceleration[0]) == 1 || Math.signum(minMaxAcceleration[1]) == -1)&&!(VectorCalculations.compareVectors(direction, new double[] {0,0,0}))){
 						System.out.println("thrust can not compensate external forces");
 					}else if(Math.abs(minMaxAcceleration[0])>Math.abs(minMaxAcceleration[1])){
 						minMaxAcceleration[0] = -minMaxAcceleration[1];
@@ -559,6 +569,7 @@ public class PhysicsCalculations{
 				}
 				
 					private double[] accelerationCalc(double[] externalForces, double thrustSize, double[] direction, double weight){
+//						double[] snelheidscompensatie = VectorCalculations.timesScalar(this.getSpeed(),3);
 						//m*acc*Dir - (Grav + Wind + Drag) = Thrust met Thrust = t*(u,v,w) en t = size => u^2+v^2+w^2=1
 						//(ax+b)^2+(cx+d)^2+(ex+f)^2=1 met x = acc,
 						//a = (m*dirx)/t,
@@ -568,10 +579,13 @@ public class PhysicsCalculations{
 						//e = (m*dirz)/t,
 						//f = -(gravz+windz)/t
 						double a = weight*direction[0]/thrustSize;
+//						double b = -(externalForces[0]+snelheidscompensatie[0])/thrustSize;
 						double b = -(externalForces[0])/thrustSize;
 						double c = weight*direction[1]/thrustSize;
+//						double d = -(externalForces[1]+snelheidscompensatie[1])/thrustSize;
 						double d = -(externalForces[1])/thrustSize;
 						double e = weight*direction[2]/thrustSize;
+//						double f = -(externalForces[2]+snelheidscompensatie[2])/thrustSize;
 						double f = -(externalForces[2])/thrustSize;
 						
 						//oplossing is van de vorm (-b +- sqrt(b^2-4ac))/2a => (part1 +- sqrt)/part2
@@ -579,7 +593,7 @@ public class PhysicsCalculations{
 						double part1 = -(2*a*b+2*c*d+2*e*f);
 						double part2 = 2*(a*a+c*c+e*e);
 						double maxAcc = 0;
-						double minAcc = 0;
+						double minAcc = -0;
 						
 						if(part2+0!=0){
 							 maxAcc = (part1 + sqrt)/part2;
