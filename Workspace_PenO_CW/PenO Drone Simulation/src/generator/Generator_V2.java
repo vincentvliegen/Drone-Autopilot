@@ -15,9 +15,9 @@ public class Generator_V2 {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		String path = "inputFiles/GeneratorV2Test.txt";
-		boolean windOn = true;
+		boolean windOn = false;
 		boolean obstaclesOn = true;
-		boolean singleObject = true;
+		boolean singleObject = false;
 
 		File f = new File(path);
 		OutputStream fileStream = new FileOutputStream(f);
@@ -58,10 +58,7 @@ public class Generator_V2 {
 				if (i < 3)
 					for (int j = 0; j < 6; j++) {
 						stream.writeFloat(newQueue.poll());
-						if (i == 2)
-							stream.writeFloat(0.01f);
-						else
-						stream.writeFloat(r.nextFloat() * 0.0f);
+						stream.writeFloat(r.nextFloat() * 0.05f);
 					}
 				else {
 					for (int j = 0; j < 6; j++) {
