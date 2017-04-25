@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 
@@ -22,7 +23,7 @@ public class ScanObject extends Mission {
 
 	private PolyhedraCalculations polycalc = new PolyhedraCalculations(getDrone());
 
-	private final float quadraticMargin = 0.25f;
+	private final float quadraticMargin = 0.001f;
 	private ArrayList<ArrayList<double[]>> scannedLines = new ArrayList<ArrayList<double[]>>();
 
 	JFrame frame;
@@ -92,7 +93,9 @@ public class ScanObject extends Mission {
 			}
 
 		}
-
+		
+		addScannedLines(outerCorners);
+System.out.println("scannedLines size: "+scannedLines.size());
 	}
 
 	@Override
@@ -108,61 +111,71 @@ public class ScanObject extends Mission {
 			double[] corner3 = corners.get(key).get(2);
 			boolean[] linePrevFound = { false, false, false }; // lijn12,lijn13,lijn23
 
-			for (ArrayList<double[]> line : scannedLines) {
+			
+			
+		for (Iterator<ArrayList<double[]>> it = scannedLines.iterator(); it.hasNext(); ) {
+			ArrayList<double[]> line = it.next();
 				// if corner1 binnen marge 1e punt lijn
-				if (Math.pow(line.get(0)[0] - corner1[0], 2) + Math.pow(line.get(0)[1] - corner1[0], 2) < this
+				double cor1line1 = (Math.pow(line.get(0)[0] - corner1[0], 2) + Math.pow(line.get(0)[1] - corner1[1], 2) + Math.pow(line.get(0)[2] - corner1[2],2));
+				System.out.println("cor1line1: "+cor1line1);
+				double cor2line1 = Math.pow(line.get(0)[0] - corner2[0], 2) + Math.pow(line.get(0)[1] - corner2[1], 2) + Math.pow(line.get(0)[2] - corner2[2], 2);
+				System.out.println("cor2line1: "+cor2line1);
+				double cor3line1 = Math.pow(line.get(0)[0] - corner3[0], 2) + Math.pow(line.get(0)[1] - corner3[1], 2) + Math.pow(line.get(0)[2] - corner3[2], 2);
+				System.out.println("cor3line1: "+cor3line1);
+				if (Math.pow(line.get(0)[0] - corner1[0], 2) + Math.pow(line.get(0)[1] - corner1[1], 2) + Math.pow(line.get(0)[2] - corner1[2],2) < this
 						.getQuadraticMargin()) {
 					// if corner2 binnen marge 2e punt lijn
-					if (Math.pow(line.get(1)[0] - corner2[0], 2) + Math.pow(line.get(1)[1] - corner2[0], 2) < this
+					if (Math.pow(line.get(1)[0] - corner2[0], 2) + Math.pow(line.get(1)[1] - corner2[1], 2) + Math.pow(line.get(1)[2] - corner2[2],2) < this
 							.getQuadraticMargin()) {
 						linePrevFound[0] = true;
-						scannedLines.remove(line);
-						break;
+						it.remove();
+						continue;
 					}
-					// if corner3 binnen marge 3e punt lijn
-					else if (Math.pow(line.get(1)[0] - corner2[0], 2) + Math.pow(line.get(1)[1] - corner2[0], 2) < this
+					// if corner3 binnen marge 2e punt lijn
+					else if (Math.pow(line.get(1)[0] - corner3[0], 2) + Math.pow(line.get(1)[1] - corner3[1], 2) + Math.pow(line.get(1)[2] - corner3[2],2) < this
 							.getQuadraticMargin()) {
 						linePrevFound[1] = true;
-						scannedLines.remove(line);
-						break;
+						it.remove();
+						continue;
 					}
 
 				}
 				// if corner2 binnen marge 1e punt lijn
-				else if (Math.pow(line.get(0)[0] - corner2[0], 2) + Math.pow(line.get(0)[1] - corner2[0], 2) < this
+				else if (Math.pow(line.get(0)[0] - corner2[0], 2) + Math.pow(line.get(0)[1] - corner2[1], 2) + Math.pow(line.get(0)[2] - corner2[2], 2)< this
 						.getQuadraticMargin()) {
 					// if corner1 binnen marge 2e punt lijn
-					if (Math.pow(line.get(1)[0] - corner1[0], 2) + Math.pow(line.get(1)[1] - corner1[0], 2) < this
+					if (Math.pow(line.get(1)[0] - corner1[0], 2) + Math.pow(line.get(1)[1] - corner1[1], 2) + Math.pow(line.get(1)[2] - corner1[2], 2)< this
 							.getQuadraticMargin()) {
 						linePrevFound[0] = true;
-						scannedLines.remove(line);
-						break;
+						it.remove();
+						continue;
 					}
 					// if corner3 binnen marge 2e punt lijn
-					else if (Math.pow(line.get(1)[0] - corner3[0], 2) + Math.pow(line.get(1)[1] - corner3[0], 2) < this
+					else if (Math.pow(line.get(1)[0] - corner3[0], 2) + Math.pow(line.get(1)[1] - corner3[1], 2) + Math.pow(line.get(1)[2] - corner3[2], 2)< this
 							.getQuadraticMargin()) {
 						linePrevFound[2] = true;
-						scannedLines.remove(line);
-						break;
+						it.remove();
+						continue;
 					}
 
 				}
+		
 				// if corner3 binnen marge 1e punt lijn
-				else if (Math.pow(line.get(0)[0] - corner3[0], 2) + Math.pow(line.get(0)[1] - corner3[0], 2) < this
+				else if (Math.pow(line.get(0)[0] - corner3[0], 2) + Math.pow(line.get(0)[1] - corner3[1], 2) + Math.pow(line.get(0)[2] - corner3[2], 2)< this
 						.getQuadraticMargin()) {
 					// if corner1 binnen marge 2e punt lijn
-					if (Math.pow(line.get(1)[0] - corner1[0], 2) + Math.pow(line.get(1)[1] - corner1[0], 2) < this
+					if (Math.pow(line.get(1)[0] - corner1[0], 2) + Math.pow(line.get(1)[1] - corner1[1], 2) + Math.pow(line.get(1)[2] - corner1[2], 2)< this
 							.getQuadraticMargin()) {
 						linePrevFound[0] = true;
-						scannedLines.remove(line);
-						break;
+						it.remove();
+						continue;
 					}
 					// if corner2 binnen marge 2e punt lijn
-					else if (Math.pow(line.get(1)[0] - corner2[0], 2) + Math.pow(line.get(1)[1] - corner2[0], 2) < this
+					else if (Math.pow(line.get(1)[0] - corner2[0], 2) + Math.pow(line.get(1)[1] - corner2[1], 2) + Math.pow(line.get(1)[2] - corner2[2], 2)< this
 							.getQuadraticMargin()) {
 						linePrevFound[2] = true;
-						scannedLines.remove(line);
-						break;
+						it.remove();
+						continue;
 					}
 
 				}
