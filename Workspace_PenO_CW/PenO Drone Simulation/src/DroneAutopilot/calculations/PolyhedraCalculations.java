@@ -208,9 +208,9 @@ public class PolyhedraCalculations {
 						double xI = (Icorners.get(0)[0] + Icorners.get(1)[0] + Icorners.get(2)[0]) / 3;
 						double yI = (Icorners.get(0)[1] + Icorners.get(1)[1] + Icorners.get(2)[1]) / 3;
 						double zI = (Icorners.get(0)[2] + Icorners.get(1)[2] + Icorners.get(2)[2]) / 3;
-
-						if (xO >= xI - 0.15 && xO <= xI + 0.15 && yO >= yI - 0.15 && yO <= yI + 0.15 && zO >= zI - 0.15
-								&& zO <= zI + 0.15) {
+						if (xO >= xI - 0.07 && xO <= xI + 0.07 && yO >= yI - 0.07 && yO <= yI + 0.07 && zO >= zI - 0.07
+								&& zO <= zI + 0.07) {
+							//System.out.println(xO + " " + yO + " " + zO + " " +xI+" "+yI+" "+zI );
 							result.put(outerColor, innerColor);
 							break;
 						}
@@ -292,11 +292,9 @@ public class PolyhedraCalculations {
 					ArrayList<int[]> coordinateList = hashMapDifferentColors.get(colorIntValuesArray.get(i));
 					hashMapOuterColor.put(HSV, coordinateList);
 				} else {
-					System.out.println(HSV[1]);
 					throw new IllegalArgumentException("Foute Sat " + HSV[1]);
 				}
 			} else {
-				System.out.println(HSV[2]);
 				throw new IllegalArgumentException("Foute Value " + HSV[2]);
 			}
 		}
