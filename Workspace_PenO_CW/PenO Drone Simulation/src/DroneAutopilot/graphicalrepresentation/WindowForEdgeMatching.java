@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
 
-class WindowForEdgeMatching extends JFrame{
+public class WindowForEdgeMatching extends JFrame{
 
     public WindowForEdgeMatching() {
         JPanel panel=new JPanel();
@@ -26,12 +26,9 @@ class WindowForEdgeMatching extends JFrame{
         super.paint(g);  // fixes the immediate problem.
         Graphics2D g2 = (Graphics2D) g;
         for(ArrayList<double[]> arrlist : myList) {
-    		Line2D lin = new Line2D.Double(arrlist.get(0)[2], arrlist.get(0)[1], arrlist.get(1)[2], arrlist.get(1)[1]);
+    		Line2D lin = new Line2D.Double(50*arrlist.get(0)[2], 50*arrlist.get(0)[1], 50*arrlist.get(1)[2],50* arrlist.get(1)[1]);
     		g2.draw(lin);
         }
-        
-        Line2D lin = new Line2D.Float(100, 100, 250, 260);
-        g2.draw(lin);
     }
 
 

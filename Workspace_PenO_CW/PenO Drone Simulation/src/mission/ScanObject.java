@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PolyhedraCalculations;
-import DroneAutopilot.graphicalrepresentation.PolyhedronAPData;
+import DroneAutopilot.graphicalrepresentation.*;
 import DroneAutopilot.graphicalrepresentation.TriangleAPData;
 import DroneAutopilot.graphicalrepresentation.WorldAPData;
 import DroneAutopilot.graphicalrepresentation.WorldAPVisual;
@@ -95,7 +95,10 @@ public class ScanObject extends Mission {
 		}
 		
 		addScannedLines(outerCorners);
-System.out.println("scannedLines size: "+scannedLines.size());
+		System.out.println("scannedLines size: "+scannedLines.size());
+		WindowForEdgeMatching w = new WindowForEdgeMatching();
+		w.setMyList(scannedLines);
+		w.setVisible(true);
 	}
 
 	@Override
