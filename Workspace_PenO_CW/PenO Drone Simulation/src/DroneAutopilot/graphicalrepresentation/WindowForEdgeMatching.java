@@ -26,7 +26,7 @@ public class WindowForEdgeMatching extends JFrame{
     public void paint(Graphics g) {
 
         for(ArrayList<double[]> arrlist : myList) {
-        	g.drawLine((int) (1.5*(arrlist.get(0)[2]) + half), (int) (1.5*(arrlist.get(0)[1] + half)), (int) (1.5*(arrlist.get(1)[2] + half)),(int) (1.5*(arrlist.get(1)[1] + half)));
+        	g.drawLine((int) (1.5*(arrlist.get(0)[2]) + half), (int) -(1.5*(arrlist.get(0)[1] + half)), (int) (1.5*(arrlist.get(1)[2] + half)),(int) -(1.5*(arrlist.get(1)[1] + half)));
     		System.out.println("draw");
         	System.out.println((int) (1.5*(arrlist.get(0)[2] + half)));
         	System.out.println((int) (1.5*(arrlist.get(0)[1] + half)));
