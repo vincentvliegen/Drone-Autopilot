@@ -280,6 +280,7 @@ public class PhysicsCalculations{
 			this.getDrone().setThrust((float) this.getThrust());
 			this.getDrone().setYawRate((float) this.getYawRate());
 			this.getDrone().setPitchRate((float) this.getPitchRate());
+			System.out.println("pitchRate: " + this.getPitchRate());
 			this.getDrone().setRollRate((float) this.getRollRate());
 		
 			calculateExpectedPosition();
@@ -509,42 +510,31 @@ public class PhysicsCalculations{
 			this.setWantedOrientation(new double[][] {thrustVector,viewVector});
 
 		}
-
+			
 			private double determineAcceleration(double[] position) {
-				double distance = this.getDistanceDroneToPosition(position);
-				double speed = this.getSpeedDroneToPosition(position);
 				double[] acceleration = maxAccelerationValues(position);
-				//demping ifv speed
-				double wantedSpeed = 0.5* PhysicsCalculations.getDistancespeedfactor()* distance;
-//				double speedDamping = (wantedSpeed-speed)/wantedSpeed;
-//				if(Math.abs(speedDamping) > 1){
-//					speedDamping = Math.signum(speedDamping);
-//				}	
-//				speedDamping *= acceleration[1];
-//				acceleration[0] = Math.max(acceleration[0] + speedDamping, acceleration[0]);
-//				acceleration[1] = Math.min(acceleration[1] + speedDamping, acceleration[1]);
-				
-				int minMaxIndex = 1;//accelerate
-				if (speed/distance >= PhysicsCalculations.getDistancespeedfactor()) {
-					minMaxIndex = 0;//decelerate
-				} 
-//				if(minMaxIndex == 1){
-//					System.out.println("accelerate");
-//				}else{
-//					System.out.println("decelerate");
-//				}
-//				System.out.println("minmaxAcc:= {" + acceleration[0] + ", " + acceleration[1] + "}");
-				
-				if (distance <= PhysicsCalculations.getDropdowndistance()){
-					//demping ifv afstand
-					double distanceDamping = Math.pow(distance/PhysicsCalculations.getDropdowndistance(),2);
-					return acceleration[minMaxIndex]*distanceDamping;
-					
+				if (isPossibleToStop(position)==true){
+					return acceleration[1];
 				}else{
-					return acceleration[minMaxIndex];
+					System.out.println("---BREAKING---");
+					return acceleration[0];
 				}
 			}
 			
+				private boolean isPossibleToStop(double[] position){
+					double speed = this.getSpeedDroneToPosition(position);
+					System.out.println("Speed: " + speed);
+					double[] minMaxAcceleration = maxAccelerationValues(position);
+					double distance = this.getDistanceDroneToPosition(position);
+	
+					double breakingDistance = 2*(Math.pow(speed, 2))/(2*-minMaxAcceleration[0]);
+					if(distance<breakingDistance){
+						return false;
+					}else{
+						return true;
+					}	
+				}
+				
 				private double[] maxAccelerationValues(double[] position){
 					double maxthrust = (double) this.getDrone().getMaxThrust();
 					double weight = (double) this.getDrone().getWeight();
