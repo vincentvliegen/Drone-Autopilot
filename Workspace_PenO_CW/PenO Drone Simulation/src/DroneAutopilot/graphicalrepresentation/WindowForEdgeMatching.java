@@ -4,17 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class WindowForEdgeMatching extends JFrame{
 
-    public WindowForEdgeMatching() {
+    public WindowForEdgeMatching(ArrayList<ArrayList<double[]>> mylist) {
+    	setMyList(mylist);
         JPanel panel=new JPanel();
         getContentPane().add(panel);
         setSize(450,450);
-
-        JButton button =new JButton("press");
-        panel.add(button);
-    }
+   }
+    int size = 450;
+    int half = size/2;
     
     public ArrayList<ArrayList<double[]>> myList;
     
@@ -23,12 +24,19 @@ public class WindowForEdgeMatching extends JFrame{
 	}
 
     public void paint(Graphics g) {
-        super.paint(g);  // fixes the immediate problem.
-        Graphics2D g2 = (Graphics2D) g;
+
         for(ArrayList<double[]> arrlist : myList) {
-    		Line2D lin = new Line2D.Double(50*arrlist.get(0)[2], 50*arrlist.get(0)[1], 50*arrlist.get(1)[2],50* arrlist.get(1)[1]);
-    		g2.draw(lin);
+        	g.drawLine((int) (1.5*(arrlist.get(0)[2]) + half), (int) (1.5*(arrlist.get(0)[1] + half)), (int) (1.5*(arrlist.get(1)[2] + half)),(int) (1.5*(arrlist.get(1)[1] + half)));
+    		System.out.println("draw");
+        	System.out.println((int) (1.5*(arrlist.get(0)[2] + half)));
+        	System.out.println((int) (1.5*(arrlist.get(0)[1] + half)));
+        	System.out.println((int) (1.5*(arrlist.get(1)[2] + half)));
+        	System.out.println((int) (1.5*(arrlist.get(1)[1] + half)));
+    		System.out.println(Arrays.toString(arrlist.get(0)));
+    		System.out.println(Arrays.toString(arrlist.get(1)));
         }
+        super.paint(g);
+        
     }
 
 

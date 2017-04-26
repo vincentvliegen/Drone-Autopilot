@@ -96,8 +96,7 @@ public class ScanObject extends Mission {
 		
 		addScannedLines(outerCorners);
 		System.out.println("scannedLines size: "+scannedLines.size());
-		WindowForEdgeMatching w = new WindowForEdgeMatching();
-		w.setMyList(scannedLines);
+		WindowForEdgeMatching w = new WindowForEdgeMatching(scannedLines);
 		w.setVisible(true);
 	}
 
