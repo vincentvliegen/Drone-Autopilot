@@ -20,12 +20,12 @@ public abstract class PredefinedPolyhedron extends Polyhedron {
 		Random r = new Random();
 		int hueDegrees = r.nextInt(361);
 		float hueRadians = (float)Math.toRadians(hueDegrees);
-		float saturation = r.nextFloat() * (1 - 0.55f) + 0.55f;
+		float saturation = r.nextFloat() * (1 - 0.56f) + 0.56f;
 		float brightness;
 		if (getPolyhedronType() == PolyhedronType.TARGET)
-			brightness = r.nextFloat() * (1 - 0.55f) + 0.55f;
+			brightness = r.nextFloat() * (1 - 0.56f) + 0.56f;
 		else
-			brightness = r.nextFloat() * 0.45f;
+			brightness = r.nextFloat() * 0.44f;
 		int rgb = Color.HSBtoRGB(hueRadians, saturation, brightness);
 		int[] color = new int[3];
 		color[0] = (rgb >> 16) & 0xFF;
