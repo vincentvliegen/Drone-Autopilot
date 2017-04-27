@@ -529,9 +529,8 @@ public class PhysicsCalculations{
 				thrustVector = VectorCalculations.inverse(thrustVector);
 			}
 			double[] viewVector;
-			if(!VectorCalculations.compareVectors(directionToPos, new double[] {0,0,0})){
-				viewVector = VectorCalculations.projectOnPlane(directionToPos, thrustVector);
-			}else{
+			viewVector = VectorCalculations.projectOnPlane(directionToPos, thrustVector);
+			if(VectorCalculations.compareVectors(viewVector, new double[] {0,0,0})){
 				viewVector = VectorCalculations.projectOnPlane(this.getDirectionOfView(), thrustVector);
 			}
 			this.setWantedOrientation(new double[][] {thrustVector,viewVector});
