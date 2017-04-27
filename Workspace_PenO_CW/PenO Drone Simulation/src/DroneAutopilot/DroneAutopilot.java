@@ -16,6 +16,7 @@ public class DroneAutopilot implements Autopilot {
 	private final Mission hover;
 	private final Mission flyToPosition;
 	private final Mission scanObject;
+	private final Mission flyToMultiplePositions;
 //	private final Mission oneSphere;
 //	private final Mission severalSpheres;
 //	private final Mission severalObjects;
@@ -31,6 +32,7 @@ public class DroneAutopilot implements Autopilot {
 		this.physicsCalculations = new PhysicsCalculations(getDrone());
 		this.GUI = new GUI();
 		this.scanObject = new ScanObject(this);
+		this.flyToMultiplePositions = new FlyToMultiplePositions(this);
 //		this.oneSphere = new OneSphere(this);
 //		this.severalSpheres = new SeveralSpheres(this);//TODO execute + updateGUI
 //		this.severalObjects = new SeveralObjects(this);//TODO execute + updateGUI
@@ -70,6 +72,8 @@ public class DroneAutopilot implements Autopilot {
 			//iets
 			}else if(getGUI().getMissionType() == MissionType.SCANOBJECT) {
 				this.getScanObject().execute();
+			}else if(getGUI().getMissionType() == MissionType.FLYMULTIPLEPOS){
+				this.getFlyToMultiplePositions().execute();
 			}else{
 				System.out.println("mission does not exist");
 			}
@@ -130,6 +134,10 @@ public class DroneAutopilot implements Autopilot {
 
 	public Mission getScanObject() {
 		return scanObject;
+	}
+	
+	public Mission getFlyToMultiplePositions(){
+		return flyToMultiplePositions;
 	}
 
 }
