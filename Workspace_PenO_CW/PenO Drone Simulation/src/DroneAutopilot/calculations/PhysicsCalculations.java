@@ -280,7 +280,7 @@ public class PhysicsCalculations{
 			this.getDrone().setThrust((float) this.getThrust());
 			this.getDrone().setYawRate((float) this.getYawRate());
 			this.getDrone().setPitchRate((float) this.getPitchRate());
-			System.out.println("pitchRate: " + this.getPitchRate());
+//			System.out.println("pitchRate: " + this.getPitchRate());
 			this.getDrone().setRollRate((float) this.getRollRate());
 		
 			calculateExpectedPosition();
@@ -427,38 +427,58 @@ public class PhysicsCalculations{
 				result = VectorCalculations.size(externalForces)*(signThrustExtForce+compensateDir*signThrustDir);
 			}else{
 				//we kunnen enkel vliegen binnen een vlak, dus we benaderen de gewenste richting op dat vlak
-				double[] approxDir = VectorCalculations.projectOnPlane(dirToPos, normal);
+				double[] approxToDir = VectorCalculations.projectOnPlane(dirToPos, normal);//naar de positie
+				double[] approxFromDir = VectorCalculations.inverse(approxToDir);//weg van de positie
 	
 				//binnen dat vlak kunnen we enkel vliegen tussen de minmaxthrust zone
 				double maxThrust = (double) this.getDrone().getMaxThrust();
 				double[] upperLimit = VectorCalculations.sum(VectorCalculations.timesScalar(thrust, maxThrust),externalForces);
 				double[] lowerLimit = VectorCalculations.sum(VectorCalculations.timesScalar(thrust, -maxThrust),externalForces);
 	
-				//ligt approxDir binnen of buiten de kleine hoek gevormd door upperLimit en lowerLimit?
-				boolean isInside = true;
 				//we tekenen een xy-vlak, en we leggen lowerLimit volgens de x-as en upperLimit heeft een positieve y-waarde
 //				double[] coordLow = {VectorCalculations.size(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
-	
 				double cosLowUp = VectorCalculations.cosinusBetweenVectors(lowerLimit, upperLimit);
 				double[] crossPLowUp = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,upperLimit));
 //				double[] coordUp = {VectorCalculations.size(upperLimit)*cosLowUp,VectorCalculations.size(upperLimit)*(Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
 	
-				double cosLowAppDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxDir);
-				if(cosLowAppDir+0<cosLowUp+0){
-					isInside = false;
+				//TO POSITION
+				//ligt approxDir binnen of buiten de kleine hoek gevormd door upperLimit en lowerLimit?
+				boolean toDirIsInside = true;
+				double cosLowAppToDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxToDir);
+				if(cosLowAppToDir+0<cosLowUp+0){
+					toDirIsInside = false;
 				}
-				double[] crossPLowAppDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxDir));
-				double signAppDir;
-				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppDir)){
-					isInside = false;
-					signAppDir = -1;
+				double[] crossPLowAppToDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxToDir));
+				double signAppToDir;
+				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppToDir)){
+					toDirIsInside = false;
+					signAppToDir = -1;
 				}else{
-					signAppDir = 1;
+					signAppToDir = 1;
 				}
-				double[] coordAppDir = {VectorCalculations.size(approxDir)*cosLowAppDir,signAppDir*VectorCalculations.size(approxDir)*(Math.sqrt(1-cosLowAppDir*cosLowAppDir))};//coordinaten approxDir in xy-vlak
+				double[] coordAppToDir = {VectorCalculations.size(approxToDir)*cosLowAppToDir,signAppToDir*VectorCalculations.size(approxToDir)*(Math.sqrt(1-cosLowAppToDir*cosLowAppToDir))};//coordinaten approxDir in xy-vlak
+				
+				//AWAY FROM POSITION
+				boolean fromDirIsInside = true;
+				double cosLowAppFromDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxFromDir);
+				if(cosLowAppFromDir+0<cosLowUp+0){
+					fromDirIsInside = false;
+				}
+				double[] crossPLowAppFromDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxFromDir));
+				double signAppFromDir;
+				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppFromDir)){
+					fromDirIsInside = false;
+					signAppFromDir = -1;
+				}else{
+					signAppFromDir = 1;
+				}
+				double[] coordAppFromDir = {VectorCalculations.size(approxFromDir)*cosLowAppFromDir,signAppFromDir*VectorCalculations.size(approxFromDir)*(Math.sqrt(1-cosLowAppFromDir*cosLowAppFromDir))};//coordinaten approxDir in xy-vlak
+
+				
+				
 				//als binnen dan grootte thrust berekenen om exact op approxDir te vliegen
 				//als buiten dan dichter bij upper of lower (om op min of max te zetten)
-				if(isInside){//inside
+				if(toDirIsInside || fromDirIsInside){//to dir inside
 					double cosLowExtForce = VectorCalculations.cosinusBetweenVectors(lowerLimit, externalForces);
 					double[] coordExtForce = {VectorCalculations.size(externalForces)*cosLowExtForce,VectorCalculations.size(externalForces)*(Math.sqrt(1-cosLowExtForce*cosLowExtForce))};//coordinaten externalForces in xy-vlak
 	
@@ -471,14 +491,20 @@ public class PhysicsCalculations{
 					}else{
 						signThrust = 1;
 					}
-					double[] coordThrust = {VectorCalculations.size(thrust)*cosLowThrust,signThrust*VectorCalculations.size(thrust)*(Math.sqrt(1-cosLowThrust*cosLowThrust))};//coordinaten thrust in xy-vlak
-					//grootte + zin
-					result =	(coordAppDir[0]*coordExtForce[1]-coordAppDir[1]*coordExtForce[0])/
-								(coordAppDir[1]* coordThrust[0] -coordAppDir[0]* coordThrust[1] );
-				}else{//outside
+					double[] coordThrust = {VectorCalculations.size(thrust)*cosLowThrust,signThrust*VectorCalculations.size(thrust)*(Math.sqrt(1-cosLowThrust*cosLowThrust))};//coordinaten thrust in xy-vlak					
+					
+					if(toDirIsInside){//FLY TO DIRECTION
+						result =	(coordAppToDir[0]*coordExtForce[1]-coordAppToDir[1]*coordExtForce[0])/
+									(coordAppToDir[1]* coordThrust[0] -coordAppToDir[0]* coordThrust[1] );
+					}else{//FLY AWAY FROM DIRECTION
+						result =	(coordAppFromDir[0]*coordExtForce[1]-coordAppFromDir[1]*coordExtForce[0])/
+									(coordAppFromDir[1]* coordThrust[0] -coordAppFromDir[0]* coordThrust[1] );
+					}
+
+				}else{//outside -> vlieg zo goed mogelijk naar toDir
 					//grootte+zin
-					double cosUpAppDir = VectorCalculations.cosinusBetweenVectors(upperLimit, approxDir);
-					if(cosLowAppDir+0>cosUpAppDir+0){//dichter bij upperLimit
+					double cosUpAppDir = VectorCalculations.cosinusBetweenVectors(upperLimit, approxToDir);
+					if(cosLowAppToDir+0>cosUpAppDir+0){//dichter bij upperLimit
 						result = -maxThrust;
 					}else{//dichter bij lowerLimit
 						result = maxThrust;
@@ -496,14 +522,15 @@ public class PhysicsCalculations{
 			double acceleration = this.determineAcceleration(position);
 			double weight = (double) this.getDrone().getWeight();
 			double[] externalForces = this.getExternalForces();
-			double[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(getDirectionDroneToPosition(position)), Math.abs(acceleration)*weight);
+			double[] directionToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(getDirectionDroneToPosition(position)), Math.abs(acceleration)*weight);
+			double[] forceToPos = VectorCalculations.timesScalar(directionToPos, Math.signum(acceleration));
 			double[] thrustVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(externalForces));
 			if (thrustVector[1] <0){//thrust heeft altijd een positieve y waarde of de drone hangt ondersteboven
 				thrustVector = VectorCalculations.inverse(thrustVector);
 			}
 			double[] viewVector;
-			if(!VectorCalculations.compareVectors(forceToPos, new double[] {0,0,0})){
-				viewVector = VectorCalculations.projectOnPlane(forceToPos, thrustVector);
+			if(!VectorCalculations.compareVectors(directionToPos, new double[] {0,0,0})){
+				viewVector = VectorCalculations.projectOnPlane(directionToPos, thrustVector);
 			}else{
 				viewVector = VectorCalculations.projectOnPlane(this.getDirectionOfView(), thrustVector);
 			}
@@ -512,13 +539,36 @@ public class PhysicsCalculations{
 		}
 			
 			private double determineAcceleration(double[] position) {
-				double[] acceleration = maxAccelerationValues(position);
-				if (isPossibleToStop(position)==true){
-					return acceleration[1];
-				}else{
-					System.out.println("---BREAKING---");
-					return acceleration[0];
-				}
+                double distance = this.getDistanceDroneToPosition(position);
+                double speed = this.getSpeedDroneToPosition(position);
+                double[] acceleration = maxAccelerationValues(position);                
+                int minMaxIndex = 1;//accelerate
+                if (speed/distance >= PhysicsCalculations.getDistancespeedfactor()) {
+                    minMaxIndex = 0;//decelerate
+                } 
+//                if(minMaxIndex == 1){
+//                    System.out.println("accelerate");
+//                }else{
+//                    System.out.println("decelerate");
+//                }
+//                System.out.println("minmaxAcc:= {" + acceleration[0] + ", " + acceleration[1] + "}");
+//                
+                if (distance <= PhysicsCalculations.getDropdowndistance()){
+                    //demping ifv afstand
+                    double distanceDamping = Math.pow(distance/PhysicsCalculations.getDropdowndistance(),2);
+                    return acceleration[minMaxIndex]*distanceDamping;
+                }else{
+                    return acceleration[minMaxIndex];
+                }
+                      
+                //IMPLEMENTATIE ARNE
+//				double[] acceleration = maxAccelerationValues(position);
+//				if (isPossibleToStop(position)==true){
+//					return acceleration[1];
+//				}else{
+//					System.out.println("---BRAKING---");
+//					return acceleration[0];
+//				}
 			}
 			
 				private boolean isPossibleToStop(double[] position){
@@ -1053,25 +1103,19 @@ public class PhysicsCalculations{
 		this.directionOfThrust = directionOfThrust;
 	}
 
-
-
 	public double[][] getOrientationDrone() {
 		return orientationDrone;
 	}
 	
-
-
 	public void setOrientationDrone(double[][] orientationDrone) {
 		this.orientationDrone = orientationDrone;
 	}
 	
-
-
 	public static double[][] getOrientationworld() {
 		return orientationWorld;
 	}
 
-	
+
 	
 }
 
