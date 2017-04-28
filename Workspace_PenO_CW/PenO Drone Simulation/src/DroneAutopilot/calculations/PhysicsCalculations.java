@@ -424,7 +424,12 @@ public class PhysicsCalculations{
 				}else{
 					signThrustDir = -1;
 				}
-				result = VectorCalculations.size(externalForces)*(signThrustExtForce+compensateDir*signThrustDir);
+				double breaking=1;
+				if(this.isPossibleToStopThrust(position) == false){
+					breaking = -1;
+				} 
+				result = VectorCalculations.size(externalForces)*(signThrustExtForce+compensateDir*signThrustDir*breaking);
+				
 			}else{
 				//we kunnen enkel vliegen binnen een vlak, dus we benaderen de gewenste richting op dat vlak
 				double[] approxToDir = VectorCalculations.projectOnPlane(dirToPos, normal);//naar de positie
@@ -559,30 +564,26 @@ public class PhysicsCalculations{
                 }else{
                     return acceleration[minMaxIndex];
                 }
-                      
-                //IMPLEMENTATIE ARNE
-//				double[] acceleration = maxAccelerationValues(position);
-//				if (isPossibleToStop(position)==true){
-//					return acceleration[1];
-//				}else{
-//					System.out.println("---BRAKING---");
-//					return acceleration[0];
-//				}
 			}
 			
-				private boolean isPossibleToStop(double[] position){
-					double speed = this.getSpeedDroneToPosition(position);
-					System.out.println("Speed: " + speed);
-					double[] minMaxAcceleration = maxAccelerationValues(position);
-					double distance = this.getDistanceDroneToPosition(position);
-	
-					double breakingDistance = 2*(Math.pow(speed, 2))/(2*-minMaxAcceleration[0]);
-					if(distance<breakingDistance){
-						return false;
-					}else{
-						return true;
-					}	
+			//Bereken of het mogelijk is om de speed in de richting van de thrust tegen te werken. (motor uit of 2x de externalforces cfr Thrustberekening)
+			private boolean isPossibleToStopThrust(double[] position){
+				double speed = this.getSpeedDroneToPosition(position);
+				double thrust = Math.abs(2*this.getExternalForces()[1]);
+				if(position[1] > this.getDrone().getY()){
+					thrust = 0;
 				}
+				double accelerationY = Math.abs((thrust-this.getDrone().getWeight()*9.81)/this.getDrone().getWeight());
+				double distance = this.getDistanceDroneToPosition(position);
+
+				double breakingDistance = 1.3*(Math.pow(speed, 2))/(2*accelerationY); // 1.3* als veiligheidsfactor
+				if(distance<breakingDistance && speed>0){
+					//System.out.println("BREAKING");
+					return false;
+				}else{
+					return true;
+				}	
+			}
 				
 				private double[] maxAccelerationValues(double[] position){
 					double maxthrust = (double) this.getDrone().getMaxThrust();
