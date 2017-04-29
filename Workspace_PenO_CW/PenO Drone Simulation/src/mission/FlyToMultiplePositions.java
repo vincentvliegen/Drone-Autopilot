@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import DroneAutopilot.DroneAutopilot;
+import DroneAutopilot.calculations.VectorCalculations;
 
 public class FlyToMultiplePositions extends Mission {
 	
@@ -14,26 +15,27 @@ public class FlyToMultiplePositions extends Mission {
 	
 	public FlyToMultiplePositions(DroneAutopilot droneAutopilot) {
 		super(droneAutopilot);
-		// TODO Auto-generated constructor stub
+		listOfTargets.add(new double[]{3,0,2});
 		listOfTargets.add(new double[]{3,0,0});
 		listOfTargets.add(new double[]{5,2,2});
 		listOfTargets.add(new double[]{10,-5,-5});
-		this.setTarget(new double[]{3,0,2});
+		this.setTarget(listOfTargets.get(0));
 	}
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		if (this.getDrone().getX()<= this.getTarget()[0]+cte && this.getDrone().getX()>=this.getTarget()[0]-cte &&
-				this.getDrone().getY()<= this.getTarget()[1]+cte && this.getDrone().getY()>=this.getTarget()[1]-cte &&
-				this.getDrone().getZ()<= this.getTarget()[2]+cte && this.getDrone().getZ()>=this.getTarget()[2]-cte &&
-				listOfTargets.size()>1){
-			listOfTargets.remove(0);
+		double distance = getPhysicsCalculations().getDistanceDroneToPosition(getTarget());
+//		if(distance <= 0.4){
+//			System.out.println(distance);
+//		}
+		if(distance <= cte && listOfTargets.size()>1){		
+			double[] removedTarget = listOfTargets.remove(0);
 			this.setTarget(listOfTargets.get(0));
-			System.out.println("change target" + Arrays.toString(this.getTarget()));
+			System.out.println("changed target from" + Arrays.toString(removedTarget)+"  to: " + Arrays.toString(this.getTarget()));
 		}
 		this.getPhysicsCalculations().updatePosition(this.getTarget());
 	}
+	
 
 	@Override
 	public void updateGUI() {
