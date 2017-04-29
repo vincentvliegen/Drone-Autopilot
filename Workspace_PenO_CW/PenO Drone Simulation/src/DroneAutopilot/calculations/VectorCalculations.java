@@ -120,8 +120,19 @@ public class VectorCalculations {
 		double[] rotatedVector = 	sum(timesScalar(v,cosAngle),
 									sum(timesScalar(crossProduct(k, v), sinAngle),
 									timesScalar(k, dotProduct(k, v)* (1-cosAngle)) ));
-		
+		//randgeval, zou kleine afwijking kunnen geven
+		if	(	compareVectors(normalise(vectorToRotate),normalise(rotationAxis))||
+				compareVectors(normalise(vectorToRotate),inverse(normalise(rotationAxis)))){
+			rotatedVector = vectorToRotate;
+		}
 		return rotatedVector;
+	}
+
+	public static double[][] rotateAxesAroundAxis(double[][] axes, double[] rotationAxis, double angle){
+		double[] newX = rotateVectorAroundAxis(axes[0], rotationAxis, angle);
+		double[] newY = rotateVectorAroundAxis(axes[1], rotationAxis, angle);
+		double[] newZ = rotateVectorAroundAxis(axes[2], rotationAxis, angle);
+		return new double[][] {newX, newY, newZ};
 	}
 
 	
@@ -139,24 +150,18 @@ public class VectorCalculations {
 
 	
 	public static double[][] pitchAxes(double[][] currentOrientation, double pitch){
-		double[] newX = currentOrientation[0];
-		double[] newY = rotateVectorAroundAxis(currentOrientation[1], newX, pitch);
-		double[] newZ = rotateVectorAroundAxis(currentOrientation[2], newX, pitch);
-		return new double[][] {newX, newY, newZ};
+		double[] rotationAxis = currentOrientation[0];
+		return rotateAxesAroundAxis(currentOrientation, rotationAxis, pitch);
 	}
 
 	public static double[][] yawAxes(double[][] currentOrientation, double yaw){
-		double[] newY = currentOrientation[1];
-		double[] newX = rotateVectorAroundAxis(currentOrientation[0], newY, yaw);
-		double[] newZ = rotateVectorAroundAxis(currentOrientation[2], newY, yaw);
-		return new double[][] {newX, newY, newZ};
+		double[] rotationAxis = currentOrientation[1];
+		return rotateAxesAroundAxis(currentOrientation, rotationAxis, yaw);
 	}
 
 	public static double[][] rollAxes(double[][] currentOrientation, double roll){
-		double[] newZ = currentOrientation[2];
-		double[] newX = rotateVectorAroundAxis(currentOrientation[0], newZ, roll);
-		double[] newY = rotateVectorAroundAxis(currentOrientation[1], newZ, roll);
-		return new double[][] {newX, newY, newZ};
+		double[] rotationAxis = currentOrientation[2];
+		return rotateAxesAroundAxis(currentOrientation, rotationAxis, roll);
 	}
 
 	
