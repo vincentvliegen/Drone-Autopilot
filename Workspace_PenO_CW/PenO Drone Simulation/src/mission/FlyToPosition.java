@@ -15,7 +15,7 @@ public class FlyToPosition extends Mission{
 	
 	@Override
 	public void execute() {
-		this.getPhysicsCalculations().updatePosition(this.getTarget());
+		this.getPhysicsCalculations().updateMovement(this.getTarget());
 //		if(getPhysicsCalculations().getRollRate() != 0){
 //			System.out.println("----");
 //			System.out.println("currentYaw: " + this.getPhysicsCalculations().getDrone().getHeading());

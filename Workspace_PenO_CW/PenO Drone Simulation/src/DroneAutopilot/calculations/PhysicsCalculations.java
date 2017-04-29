@@ -1,6 +1,8 @@
 package DroneAutopilot.calculations;
 
 
+import java.util.Arrays;
+
 import p_en_o_cw_2016.Drone;
 
 public class PhysicsCalculations{
@@ -8,16 +10,33 @@ public class PhysicsCalculations{
 	private Drone drone;
 
 	//Drone
-	private double previousTime;
 	private double time;
-	private double[] previousPosition;
-	private double[] position;
+	private double previousTime;
 	private double deltaT;
-	private double[] speed;
-	private boolean firstTime;
+	
+	private double[] position;
+	private double[] previousPosition;
+	private double[] expectedPosition;
+	
+	private final static double[][] orientationWorld = new double[][] {{1,0,0},{0,1,0},{0,0,1}};
+	private double[][] orientationDrone;
+	private double[][] previousOrientationDrone;
+	private double[][] expectedOrientationDrone;
 	private double[] directionOfView;
 	private double[] directionOfThrust;
 	
+	private double[] speed;
+	private double[] previousSpeed;
+	
+	private double[] externalForces;
+	
+	private double[] windTranslation;
+	private double[] windRotation;
+	private final double maxWindTranslation;
+	private static final double[] maxWindRotationRate = new double[]{0.5, 0.5, 0.5};
+	
+	private boolean firstTime;
+
 	//Object
 	private final double focalDistance;
 	private final double cameraHeight;
@@ -32,27 +51,15 @@ public class PhysicsCalculations{
 	private double ZObject;
 
 	//Movement
-	private double[] windTranslation;
-	private double[] windRotation;
-	private double[] expectedPosition;
-	private double[] expectedOrientation;
 	private double[][] wantedOrientation;
 	private double[] remainingAngles;
-	private double[] externalForces;
 	private double thrust;
 	private double yawRate;
 	private double pitchRate;
 	private double rollRate;
-	private final double maxWindTranslation;
-	private static final double[] maxWindRotationRate = new double[]{0.5, 0.5, 0.5};
-	private boolean firstMovement;
+	private boolean firstMovement;//TODO weg
 	private final static double distanceSpeedFactor = 0.2;
 	private final static double dropdownDistance = 8;
-	
-	//Vector Rotations
-	private final static double[][] orientationWorld = new double[][] {{1,0,0},{0,1,0},{0,0,1}};
-	private double[][] orientationDrone;
-	
 	
 
 	public PhysicsCalculations(Drone drone){
@@ -68,7 +75,6 @@ public class PhysicsCalculations{
 		this.setWindTranslation(0,0,0);
 		this.setWindRotation(0,0,0);
 		this.setExpectedPosition((double) this.getDrone().getX(), (double) this.getDrone().getY(), (double) this.getDrone().getZ());
-		this.setExpectedOrientation((double) this.getDrone().getHeading(), (double) this.getDrone().getPitch(), (double) this.getDrone().getRoll());
 		this.setFirstMovement(true);
 		this.maxWindTranslation = 0.05*this.getDrone().getDrag();
 	}
@@ -81,6 +87,8 @@ public class PhysicsCalculations{
 		//update previous
 		this.setPreviousTime(this.getTime());
 		this.setPreviousPosition(this.getPosition());
+		this.setPreviousOrientationDrone(this.getOrientationDrone());
+		this.setPreviousSpeed(this.getSpeed());
 
 		//update current
 		this.setPosition((double) this.getDrone().getX(), (double) this.getDrone().getY(), (double) this.getDrone().getZ());
@@ -89,22 +97,26 @@ public class PhysicsCalculations{
 		this.calculateDirectionOfThrust();
 		this.setTime((double) this.getDrone().getCurrentTime());
 		
-		
-		if(!isFirstTime()){
+		if(!isFirstTime()){//Delta t is nog onbekend
 			this.setDeltaT(this.getTime()-this.getPreviousTime());
 			this.calculateSpeed();
-//			System.out.println("--------------");
-//			System.out.println("Autopilot");
-//			System.out.println("DeltaT: " + this.getDeltaT());
-//			System.out.println("PosX: " + this.getDrone().getX());
-//			System.out.println("PosY: " + this.getDrone().getY());
-//			System.out.println("PosZ: " + this.getDrone().getZ());
-//			System.out.println("speedx: " + this.getSpeed()[0]);
-//			System.out.println("speedy: " + this.getSpeed()[1]);
-//			System.out.println("speedz: " + this.getSpeed()[2]);
-//			System.out.println("--------------");	
+			calculateExpectedPosition();
+			calculateExpectedOrientation();//TODO volgorde assen
+			
+//			correctWindTranslation();
+//			correctWindRotation();//TODO
 		}
+		
+		this.calculateExternalForces();
 		setFirstTime(false);
+		
+//		System.out.println("x expected: " + Arrays.toString(VectorCalculations.inverse(this.getExpectedOrientationDrone()[2])));
+//		System.out.println("y expected: " + Arrays.toString(this.getExpectedOrientationDrone()[1]));
+//		System.out.println("z expected: " + Arrays.toString(this.getExpectedOrientationDrone()[0]));
+//		
+//		System.out.println("x current: " + Arrays.toString(VectorCalculations.inverse(this.getOrientationDrone()[2])));
+//		System.out.println("y current: " + Arrays.toString(this.getOrientationDrone()[1]));
+//		System.out.println("z current: " + Arrays.toString(this.getOrientationDrone()[0]));
 	}
 
 		private void calculateOrientation(){
@@ -112,6 +124,41 @@ public class PhysicsCalculations{
 			setOrientationDrone(axes);
 		}
 	
+		private void calculateDirectionOfView(){
+			double[] view = VectorCalculations.inverse(getOrientationDrone()[2]);
+			setDirectionOfView(view);
+		}
+	
+		private void calculateDirectionOfThrust(){
+			double[] thrust = getOrientationDrone()[1];
+			setDirectionOfThrust(thrust);
+		}
+	
+		private void calculateExpectedPosition(){
+			double weight = this.getDrone().getWeight();
+			double[] externalForces = this.getExternalForces();
+			double[] thrust = VectorCalculations.timesScalar(this.getPreviousOrientationDrone()[1], this.getThrust());//previous thrust en thrustgrootte
+			//(T+G+W+D)/(2m) * deltaT^2  {I} +  v0*deltaT + x0  {II} = Xexp
+			double[] part1 = VectorCalculations.timesScalar(VectorCalculations.sum(thrust, externalForces), this.getDeltaT()*this.getDeltaT()/(2*weight));
+			double[] acc = VectorCalculations.timesScalar(VectorCalculations.sum(thrust, externalForces), weight);
+			double[] part2 = VectorCalculations.sum(VectorCalculations.timesScalar(this.getPreviousSpeed(), this.getDeltaT()), this.getPreviousPosition());
+			double[] expectedPos = VectorCalculations.sum(part1, part2);
+			this.setExpectedPosition(expectedPos);
+		}
+	
+		private void calculateExpectedOrientation(){//TODO CORRECT
+			double yawRate = this.getYawRate();
+			double pitchRate = this.getPitchRate();
+			double rollRate = this.getRollRate();
+			double[][] expectedOrientationNoWind = VectorCalculations.rotateAxes(previousOrientationDrone, yawRate*getDeltaT(), pitchRate*getDeltaT(), rollRate*getDeltaT());
+			
+			//wind rotatie om assen in wereldassenstelsel TODO volgorde assen 
+			double[][] expectedOrientationWindYaw = VectorCalculations.rotateAxesAroundAxis(expectedOrientationNoWind, PhysicsCalculations.getOrientationworld()[0], this.getWindRotation()[0]);
+			double[][] expectedOrientationWindYawPitch = VectorCalculations.rotateAxesAroundAxis(expectedOrientationWindYaw, PhysicsCalculations.getOrientationworld()[1], this.getWindRotation()[0]);
+			double[][] expectedOrientationWithWind = VectorCalculations.rotateAxesAroundAxis(expectedOrientationWindYawPitch, PhysicsCalculations.getOrientationworld()[2], this.getWindRotation()[0]);
+			this.setExpectedOrientationDrone(expectedOrientationWithWind);
+		}	
+			
 		private void calculateSpeed(){
 			//a*t^2/2 + v0*t + x0 = x1 => a = (x1-x0-v0*t)*2/t^2
 			double[] a = VectorCalculations.timesScalar(
@@ -128,18 +175,50 @@ public class PhysicsCalculations{
 //				System.out.println(x);
 			setSpeed(vNew);
 		}
-
-		private void calculateDirectionOfView(){
-			double[] view = VectorCalculations.inverse(getOrientationDrone()[2]);
-			setDirectionOfView(view);
+		
+		private void correctWindTranslation(){
+			double[] deviation = VectorCalculations.sum(this.getPosition(),VectorCalculations.inverse(this.getExpectedPosition()));
+			double weight = (double) this.getDrone().getWeight();
+			//De voorspelde versnelling (som van thrust, gravity en wind) blijkt niet juist te zijn. 
+			//De wind kan afwijken (onnauwkeurigheid,verandering van de wind,...) en zorgt ervoor dat de drone ergens anders heen vliegt dan voorspeld.
+			//We berekenen hier een correctie obv de afwijking van de positie, en tellen deze hier bij op.
+			//Wcorr/(2m) * deltaT^2 = X1-Xexp = deviation
+			double[] Wcorr = VectorCalculations.timesScalar(deviation, 2*weight/(this.getDeltaT()*this.getDeltaT()));
+			this.setWindTranslation(VectorCalculations.sum(this.getWindTranslation(), Wcorr));
 		}
 	
-		private void calculateDirectionOfThrust(){
-			double[] thrust = getOrientationDrone()[1];
-			setDirectionOfThrust(thrust);
+		private void correctWindRotation(){//TODO correct
+//			double[] droneAngles = {(double) this.getDrone().getHeading(), (double) this.getDrone().getPitch(), (double) this.getDrone().getRoll()};
+//			double[] deviation = VectorCalculations.sum(droneAngles,VectorCalculations.inverse(this.getExpectedOrientation()));
+//			System.out.println("WindRotation: ");
+//			for (double x: deviation)
+//				System.out.println(x);
+//			this.setWindRotation(VectorCalculations.sum(deviation, this.getWindRotation()));
 		}
 		
+		private void calculateExternalForces(){
+			double weight = (double) this.getDrone().getWeight();
+			double gravity = (double) this.getDrone().getGravity();//gravity is negatief
+			double drag = (double) this.getDrone().getDrag();
+			double[] gravityForce = VectorCalculations.timesScalar(new double[] {0, 1, 0}, weight*gravity);//vector is positief, want gravity is negatief
+//			System.out.println("------AUTOPILOT------");
+//			System.out.println("gravity1");
+//			for (double x: gravityForce)
+//				System.out.println(x);
+			double[] windForce = this.getWindTranslation();
+//			System.out.println("wind1");
+//			for (double x: windForce)
+//				System.out.println(x);
+			double[] dragForce = VectorCalculations.timesScalar(this.getSpeed(),-drag);//- drag want tegengesteld aan de snelheidsvector
+//			System.out.println("drag1");
+//			for (double x: dragForce)
+//				System.out.println(x);
+			double[] totalExternalForce = VectorCalculations.sum(VectorCalculations.sum(gravityForce, windForce), dragForce);
+			setExternalForces(totalExternalForce);
+		}
 
+		
+		
 	public double[] getDirectionDroneToPosition(double[] position){
 		return VectorCalculations.sum(position, VectorCalculations.inverse(this.getPosition()));
 	}
@@ -264,36 +343,15 @@ public class PhysicsCalculations{
 	
 /////new update position/orientation////
 	public void updateMovement(double[] targetPosition, double[] direction){
-		if(!isFirstMovement()){
-//			correctWindTranslation();
-//			correctWindRotation();
-		
-			calculateExternalForces();
-			calculateThrust(targetPosition);
-			calculateWantedOrientation(targetPosition,direction);
-			calculateRemainingAnglesToObject();
-			calculateRotationRates();
-		
-			this.getDrone().setThrust((float) this.getThrust());
-			this.getDrone().setYawRate((float) this.getYawRate());
-			this.getDrone().setPitchRate((float) this.getPitchRate());
-//			System.out.println("pitchRate: " + this.getPitchRate());
-			this.getDrone().setRollRate((float) this.getRollRate());
-		
-			calculateExpectedPosition();
-			calculateExpectedOrientation();
-		}else{
-			
-			calculateExternalForces();
-			calculateThrust(targetPosition);
-			
-			this.getDrone().setThrust((float) this.getThrust());
-			this.getDrone().setYawRate(0);
-			this.getDrone().setPitchRate(0);
-			this.getDrone().setRollRate(0);
-			
-			setFirstMovement(false);
-		}
+		calculateThrust(targetPosition);
+		calculateWantedOrientation(targetPosition,direction);
+		calculateRemainingAnglesToObject();
+		calculateRotationRates();
+	
+		this.getDrone().setThrust((float) this.getThrust());
+		this.getDrone().setYawRate((float) this.getYawRate());
+		this.getDrone().setPitchRate((float) this.getPitchRate());
+		this.getDrone().setRollRate((float) this.getRollRate());
 	}
 
 	public void updateMovement(double[] targetPosition){
@@ -397,48 +455,6 @@ public class PhysicsCalculations{
 			setFirstMovement(false);
 		}
 	}
-	
-		private void correctWindTranslation(){
-			double[] deviation = VectorCalculations.sum(this.getPosition(),VectorCalculations.inverse(this.getExpectedPosition()));
-			double weight = (double) this.getDrone().getWeight();
-			//De voorspelde versnelling (som van thrust, gravity en wind) blijkt niet juist te zijn. 
-			//De wind kan afwijken (onnauwkeurigheid,verandering van de wind,...) en zorgt ervoor dat de drone ergens anders heen vliegt dan voorspeld.
-			//We berekenen hier een correctie obv de afwijking van de positie, en tellen deze hier bij op.
-			//Wcorr/(2m) * deltaT^2 = X1-Xexp = deviation
-			double[] Wcorr = VectorCalculations.timesScalar(deviation, 2*weight/(this.getDeltaT()*this.getDeltaT()));
-			this.setWindTranslation(VectorCalculations.sum(this.getWindTranslation(), Wcorr));
-		}
-	
-		//TODO windrotation in wereldassenstelsel
-		private void correctWindRotation(){
-			double[] droneAngles = {(double) this.getDrone().getHeading(), (double) this.getDrone().getPitch(), (double) this.getDrone().getRoll()};
-			double[] deviation = VectorCalculations.sum(droneAngles,VectorCalculations.inverse(this.getExpectedOrientation()));
-//			System.out.println("WindRotation: ");
-//			for (double x: deviation)
-//				System.out.println(x);
-			this.setWindRotation(VectorCalculations.sum(deviation, this.getWindRotation()));
-		}
-	
-		private void calculateExternalForces(){
-			double weight = (double) this.getDrone().getWeight();
-			double gravity = (double) this.getDrone().getGravity();//gravity is negatief
-			double drag = (double) this.getDrone().getDrag();
-			double[] gravityForce = VectorCalculations.timesScalar(new double[] {0, 1, 0}, weight*gravity);//vector is positief, want gravity is negatief
-//			System.out.println("------AUTOPILOT------");
-//			System.out.println("gravity1");
-//			for (double x: gravityForce)
-//				System.out.println(x);
-			double[] windForce = this.getWindTranslation();
-//			System.out.println("wind1");
-//			for (double x: windForce)
-//				System.out.println(x);
-			double[] dragForce = VectorCalculations.timesScalar(this.getSpeed(),-drag);//- drag want tegengesteld aan de snelheidsvector
-//			System.out.println("drag1");
-//			for (double x: dragForce)
-//				System.out.println(x);
-			double[] totalExternalForce = VectorCalculations.sum(VectorCalculations.sum(gravityForce, windForce), dragForce);
-			setExternalForces(totalExternalForce);
-		}
 		
 		//berekent de thrust om naar de positie te vliegen, het dichtst bij de gevraagde positie (afhankelijk van de rotatie van de drone) 
 		private void calculateThrust(double[] position){
@@ -586,6 +602,26 @@ public class PhysicsCalculations{
 			this.setThrust(result);
 		}	
 	
+			//Bereken of het mogelijk is om de speed in de richting van de thrust tegen te werken. (motor uit of 2x de externalforces)
+			private boolean isPossibleToStopThrust(double[] position){
+				double speed = this.getSpeedDroneToPosition(position);
+				double thrust = Math.abs(2*this.getExternalForces()[1]);
+				if(position[1] > this.getDrone().getY()){
+					thrust = 0;
+				}
+				double accelerationY = Math.abs((thrust-this.getDrone().getWeight()*9.81)/this.getDrone().getWeight());
+				double distance = this.getDistanceDroneToPosition(position);
+	
+				double breakingDistance = 1.3*(Math.pow(speed, 2))/(2*accelerationY); // 1.3* als veiligheidsfactor
+				if(distance<breakingDistance && speed>0){
+					//System.out.println("BREAKING");
+					return false;
+				}else{
+					return true;
+				}	
+			}
+
+		
 		private void calculateWantedOrientationPos(double[] position){
 			double acceleration = this.determineAcceleration(position);
 			double weight = (double) this.getDrone().getWeight();
@@ -628,26 +664,7 @@ public class PhysicsCalculations{
                     return acceleration[minMaxIndex];
                 }
 			}
-			
-			//Bereken of het mogelijk is om de speed in de richting van de thrust tegen te werken. (motor uit of 2x de externalforces cfr Thrustberekening)
-			private boolean isPossibleToStopThrust(double[] position){
-				double speed = this.getSpeedDroneToPosition(position);
-				double thrust = Math.abs(2*this.getExternalForces()[1]);
-				if(position[1] > this.getDrone().getY()){
-					thrust = 0;
-				}
-				double accelerationY = Math.abs((thrust-this.getDrone().getWeight()*9.81)/this.getDrone().getWeight());
-				double distance = this.getDistanceDroneToPosition(position);
-
-				double breakingDistance = 1.3*(Math.pow(speed, 2))/(2*accelerationY); // 1.3* als veiligheidsfactor
-				if(distance<breakingDistance && speed>0){
-					//System.out.println("BREAKING");
-					return false;
-				}else{
-					return true;
-				}	
-			}
-				
+							
 				private double[] maxAccelerationValues(double[] position){
 					double maxthrust = (double) this.getDrone().getMaxThrust();
 					double weight = (double) this.getDrone().getWeight();
@@ -656,8 +673,8 @@ public class PhysicsCalculations{
 					
 					double[] minMaxAcceleration = accelerationCalc(externalForces, maxthrust, direction, weight);
 					//change of wind;
-					minMaxAcceleration[0] += this.getMaxwindtranslation()/this.getDrone().getWeight();
-					minMaxAcceleration[1] -= this.getMaxwindtranslation()/this.getDrone().getWeight();
+					minMaxAcceleration[0] += this.getMaxWindTranslation()/this.getDrone().getWeight();
+					minMaxAcceleration[1] -= this.getMaxWindTranslation()/this.getDrone().getWeight();
 					
 					//om een overcompensatie (bij verandering van accelerate naar decelerate of omgekeerd) te voorkomen, moeten de versnellingen van dezelfde grootte zijn
 					if((Math.signum(minMaxAcceleration[0]) == 1 || Math.signum(minMaxAcceleration[1]) == -1)&&!(VectorCalculations.compareVectors(direction, new double[] {0,0,0}))){
@@ -716,7 +733,7 @@ public class PhysicsCalculations{
 			this.setWantedOrientation(new double[][] {thrustVector,viewVector});
 		}
 		
-		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll
+		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll TODO de invloed van windrotatie
 		private void calculateRemainingAnglesToObject(){
 			double[][] currentOrientation = new double[][] {{1,0,0},{0,1,0},{0,0,1}}; //x,y & z van drone
 			double[][] WantedOrientation = new double[][] {VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0])),VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]))}; //{thrust, view} ifv drone
@@ -835,46 +852,7 @@ public class PhysicsCalculations{
 			}
 		}
 		
-		private void calculateExpectedPosition(){
-			double weight = this.getDrone().getWeight();
-			double[] externalForces = this.getExternalForces();
-			double[] thrust = VectorCalculations.timesScalar(this.getDirectionOfThrust(), this.getThrust());
-//			System.out.println("---");
-//			System.out.println("speed1");
-//			for (double x: getSpeed())
-//				System.out.println(x);
-//			System.out.println("Position: ");
-//			for (double x: getPosition())
-//				System.out.println(x);
-//			System.out.println("prevPos: ");
-//			for (double x: getPreviousPosition())
-//				System.out.println(x);
-//			System.out.println("-----------");
-			//(T+G+W+D)/(2m) * deltaT^2  {I} +  v0*deltaT + x0  {II} = Xexp
-			double[] part1 = VectorCalculations.timesScalar(VectorCalculations.sum(thrust, externalForces), this.getDeltaT()*this.getDeltaT()/(2*weight));
-			double[] acc = VectorCalculations.timesScalar(VectorCalculations.sum(thrust, externalForces), weight);
-//			System.out.println("acceleration1");
-//			for(double x:acc)
-//				System.out.println(x);
-			double[] part2 = VectorCalculations.sum(VectorCalculations.timesScalar(this.getSpeed(), this.getDeltaT()), this.getPosition());
-			double[] expectedPos = VectorCalculations.sum(part1, part2);
-//			System.out.println("expected position");
-//			for(double x:expectedPos)
-//				System.out.println(x);
-			this.setExpectedPosition(expectedPos);
-		}
-	
-		private void calculateExpectedOrientation(){
-			double yawRate = this.getYawRate();
-			double pitchRate = this.getPitchRate();
-			double rollRate = this.getRollRate();
-//			pitch = 180 * atan (accelerationX/sqrt(accelerationY*accelerationY + accelerationZ*accelerationZ))/M_PI;
 			
-			double[] droneAngles = {(double) this.getDrone().getHeading(), (double) this.getDrone().getPitch(), (double) this.getDrone().getRoll()};
-			double[] AnglesDev = {this.getDeltaT()*yawRate+this.getWindRotation()[0], this.getDeltaT()*pitchRate+this.getWindRotation()[1], this.getDeltaT()*rollRate+this.getWindRotation()[2]};
-			this.setExpectedOrientation(VectorCalculations.sum(droneAngles, AnglesDev));
-		}	
-				
 		
 	//////////VECTOR ROTATIONS//////////
 		
@@ -942,6 +920,10 @@ public class PhysicsCalculations{
 		this.position = new double[] {x, y, z};
 	}
 
+	private void setPosition(double[] position){
+		this.position = position;
+	}
+	
 	public double[] getPreviousPosition() {
 		return previousPosition;
 	}
@@ -1008,18 +990,6 @@ public class PhysicsCalculations{
 
 	private void setWindRotation(double[] windRotation) {
 		this.windRotation = windRotation;
-	}
-
-	public double[] getExpectedOrientation() {
-		return expectedOrientation;
-	}
-
-	private void setExpectedOrientation(double yaw, double pitch, double roll){
-		this.expectedOrientation = new double[] {yaw, pitch, roll};
-	}
-
-	private void setExpectedOrientation(double[] expectedOrientation) {
-		this.expectedOrientation = expectedOrientation;
 	}
 
 	public double getThrust() {
@@ -1150,7 +1120,7 @@ public class PhysicsCalculations{
 		this.remainingAngles = remainingAngles;
 	}
 
-	public double getMaxwindtranslation() {
+	public double getMaxWindTranslation() {
 		return maxWindTranslation;
 	}
 
@@ -1211,6 +1181,40 @@ public class PhysicsCalculations{
 	}
 
 
+
+	public double[] getPreviousSpeed() {
+		return previousSpeed;
+	}
+	
+
+
+	public void setPreviousSpeed(double[] previousSpeed) {
+		this.previousSpeed = previousSpeed;
+	}
+
+
+	
+	public double[][] getPreviousOrientationDrone() {
+		return previousOrientationDrone;
+	}
+
+
+	
+	public void setPreviousOrientationDrone(double[][] previousOrientationDrone) {
+		this.previousOrientationDrone = previousOrientationDrone;
+	}
+
+
+	
+	public double[][] getExpectedOrientationDrone() {
+		return expectedOrientationDrone;
+	}
+
+
+	
+	public void setExpectedOrientationDrone(double[][] expectedOrientationDrone) {
+		this.expectedOrientationDrone = expectedOrientationDrone;
+	}
 	
 }
 
