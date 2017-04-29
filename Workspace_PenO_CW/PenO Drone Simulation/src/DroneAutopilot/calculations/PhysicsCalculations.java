@@ -261,7 +261,70 @@ public class PhysicsCalculations{
 	
 	
 	//////////MOVEMENT//////////
+	
+/////new update position/orientation////
+	public void updateMovement(double[] targetPosition, double[] direction){
+		if(!isFirstMovement()){
+//			correctWindTranslation();
+//			correctWindRotation();
+		
+			calculateExternalForces();
+			calculateThrust(targetPosition);
+			calculateWantedOrientation(targetPosition,direction);
+			calculateRemainingAnglesToObject();
+			calculateRotationRates();
+		
+			this.getDrone().setThrust((float) this.getThrust());
+			this.getDrone().setYawRate((float) this.getYawRate());
+			this.getDrone().setPitchRate((float) this.getPitchRate());
+//			System.out.println("pitchRate: " + this.getPitchRate());
+			this.getDrone().setRollRate((float) this.getRollRate());
+		
+			calculateExpectedPosition();
+			calculateExpectedOrientation();
+		}else{
+			
+			calculateExternalForces();
+			calculateThrust(targetPosition);
+			
+			this.getDrone().setThrust((float) this.getThrust());
+			this.getDrone().setYawRate(0);
+			this.getDrone().setPitchRate(0);
+			this.getDrone().setRollRate(0);
+			
+			setFirstMovement(false);
+		}
+	}
 
+	public void updateMovement(double[] targetPosition){
+		updateMovement(targetPosition,getDirectionDroneToPosition(targetPosition));
+	}
+	
+// deze functie lijkt me niet nodig, je hebt altijd wel een targetpositie, en door je huidige positie hier onder in te voeren kan je alleen maar afdriften
+//	public void updateMovement(double[] direction){
+//		updateMovement(this.getPosition(), direction);
+//	}
+
+		private void calculateWantedOrientation(double[] position, double[] direction){
+			double acceleration = this.determineAcceleration(position);
+			double weight = (double) this.getDrone().getWeight();
+			double[] externalForces = this.getExternalForces();
+			double[] directionToPos = getDirectionDroneToPosition(position);
+			double[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(directionToPos), acceleration*weight);
+			double[] thrustVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(externalForces));
+			if (thrustVector[1] <0){//thrust heeft altijd een positieve y waarde of de drone hangt ondersteboven
+				thrustVector = VectorCalculations.inverse(thrustVector);
+			}
+			double[] viewVector;
+			viewVector = VectorCalculations.projectOnPlane(direction, thrustVector);
+			if(VectorCalculations.compareVectors(viewVector, new double[] {0,0,0})){
+				viewVector = VectorCalculations.projectOnPlane(this.getDirectionOfView(), thrustVector);
+			}
+			this.setWantedOrientation(new double[][] {thrustVector,viewVector});
+		}
+////////////////////////////////////////
+		
+		
 	/**
 	 * Deze functie roep je op wanneer je naar een bepaalde positie wilt vliegen
 	 * @param targetPosition
