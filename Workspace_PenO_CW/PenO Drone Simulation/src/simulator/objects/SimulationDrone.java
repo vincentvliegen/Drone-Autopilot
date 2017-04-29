@@ -49,8 +49,8 @@ public class SimulationDrone extends WorldObject implements Drone {
 	private float cameraSeperation = 0;
 	private float radius;
 
-	public SimulationDrone(GL2 gl, float height, float width, float depth,
-			float[] color, double[] translate, World world) {
+	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, double[] translate,
+			World world) {
 		super(world);
 		this.height = height;
 		this.width = width;
@@ -62,19 +62,16 @@ public class SimulationDrone extends WorldObject implements Drone {
 		this.cameraSeperation = width;
 		generateDroneCameras();
 		this.autopilot = world.getAutopilotFactory().create(this);
-		this.radius = (float) Math.sqrt(Math.pow(height / 2, 2)
-				+ Math.pow(width / 2, 2) + Math.pow(depth / 2, 2));
+		this.radius = (float) Math.sqrt(Math.pow(height / 2, 2) + Math.pow(width / 2, 2) + Math.pow(depth / 2, 2));
 	}
 
-	public SimulationDrone(GL2 gl, float height, float width, float depth,
-			float[] color, World world) {
+	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, World world) {
 		this(gl, height, width, depth, color, standardTranslate, world);
 	}
 
 	public Autopilot getAutopilot() {
 		return autopilot;
 	}
-	
 
 	public void draw() {
 		gl.glEnable(GL.GL_CULL_FACE);
@@ -90,98 +87,62 @@ public class SimulationDrone extends WorldObject implements Drone {
 		gl.glCullFace(GL.GL_BACK);
 
 		// TOP new
-		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, -getDroneWidth() / 2);
 
-		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, -getDroneWidth() / 2);
 
 		// BOTTOM new
 
-		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, getDroneWidth() / 2);
 
-		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
 
 		// FRONT new
-		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
 
-		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
 
 		// BACK new
 
-		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
 
-		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, getDroneWidth() / 2);
 
 		// LEFT new
 
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				-getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, -getDroneWidth() / 2);
 
-		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				-getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				-getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, -getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, -getDroneWidth() / 2);
 
 		// RIGHT new
 
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, getDroneWidth() / 2);
 
-		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2,
-				getDroneWidth() / 2);
-		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2,
-				getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(-getDroneDepth() / 2, -getDroneHeight() / 2, getDroneWidth() / 2);
+		gl.glVertex3f(getDroneDepth() / 2, -getDroneHeight() / 2, getDroneWidth() / 2);
 
 		gl.glEnd();
 		gl.glPopMatrix();// undo rotation
@@ -192,27 +153,22 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	public void createRotateMatrix() {
 		this.getRotateMatrix().clear();
-		this.getRotateMatrix()
-				.add((Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
-		this.getRotateMatrix()
-				.add((Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))));
-		this.getRotateMatrix().add(
-				-(Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw)))-(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))));
+		this.getRotateMatrix().add((Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw))));
+		this.getRotateMatrix().add((Math.sin(Math.toRadians(pitch))));
+		this.getRotateMatrix().add(-(Math.cos(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw))));
 
-		this.getRotateMatrix().add(
-				-(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))-Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
-		this.getRotateMatrix().add(
-				(Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll))));
-		this.getRotateMatrix().add((Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))));
+		this.getRotateMatrix().add(-(Math.sin(Math.toRadians(yaw)) * Math.sin(Math.toRadians(roll))
+				- Math.sin(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw))));
+		this.getRotateMatrix().add((Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll))));
+		this.getRotateMatrix().add(-(Math.sin(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw))
+				+ Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch))));
 
-		this.getRotateMatrix()
-				.add((Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
-		this.getRotateMatrix()
-				.add((Math.sin(Math.toRadians(roll))));
-		this.getRotateMatrix()
-				.add((Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))));
+		this.getRotateMatrix().add((Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw)))
+				- Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll)));
+		this.getRotateMatrix().add((Math.sin(Math.toRadians(roll)) * Math.cos(pitch)));
+		this.getRotateMatrix().add((Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw)))
+				+ Math.sin(Math.toRadians(roll)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw)));
 	}
-
 
 	public void translateDrone(double[] translate) {
 		gl.glTranslated(translate[0], translate[1], translate[2]);
@@ -226,45 +182,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 	}
 
 	public void timeHasPassed(float timePassed) {
-		double yawPass = this.yawRate * timePassed;
-		createInverseRotate();
-		this.pitch += yawPass
-				* new BigDecimal(inverseRotateMatrix.get(7)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.yaw += yawPass
-				* new BigDecimal(inverseRotateMatrix.get(4)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.roll += yawPass
-				* new BigDecimal(inverseRotateMatrix.get(1)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		checkYawPitchRoll();
-
-		double pitchPass = this.pitchRate * timePassed;
-		createInverseRotate();
-		this.pitch += pitchPass
-				* new BigDecimal(inverseRotateMatrix.get(8)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.yaw += pitchPass
-				* new BigDecimal(inverseRotateMatrix.get(5)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.roll += pitchPass
-				* new BigDecimal(inverseRotateMatrix.get(2)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		checkYawPitchRoll();
-		
-		double rollPass = this.rollRate * timePassed;
-		createInverseRotate();
-		this.pitch += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(6)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.yaw += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(3)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		this.roll += rollPass
-				* new BigDecimal(inverseRotateMatrix.get(0)).setScale(2,
-						BigDecimal.ROUND_HALF_DOWN).doubleValue();
-		checkYawPitchRoll();
-
+		updateRPY(timePassed);
 		// Wind rotation stuff
 		this.yaw -= getWorld().getWindRotationY() * timePassed;
 		this.roll += getWorld().getWindRotationX() * timePassed;
@@ -288,6 +206,90 @@ public class SimulationDrone extends WorldObject implements Drone {
 		this.autopilot.timeHasPassed();
 	}
 
+	private void updateRPY(float timePassed) {
+		double[][] currentAxis = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+		double cosAngleY = Math.cos(Math.toRadians(yaw));
+		double sinAngleY = Math.sin(Math.toRadians(-yaw));
+		double cosAngleP = Math.cos(Math.toRadians(pitch));
+		double sinAngleP = Math.sin(Math.toRadians(-pitch));
+		double cosAngleR = Math.cos(Math.toRadians(roll));
+		double sinAngleR = Math.sin(Math.toRadians(roll));
+
+		// angles
+		double[] yawMat = currentAxis[1];
+		currentAxis[0] = rotate(currentAxis[0], yawMat, cosAngleY, sinAngleY);
+		currentAxis[2] = rotate(currentAxis[2], yawMat, cosAngleY, sinAngleY);
+
+		double[] pitchMat = currentAxis[2];
+		currentAxis[0] = rotate(currentAxis[0], pitchMat, cosAngleP, sinAngleP);
+		currentAxis[1] = rotate(currentAxis[1], pitchMat, cosAngleP, sinAngleP);
+
+		double[] rollMat = currentAxis[0];
+		currentAxis[1] = rotate(currentAxis[1], rollMat, cosAngleR, sinAngleR);
+		currentAxis[2] = rotate(currentAxis[2], rollMat, cosAngleR, sinAngleR);
+
+		double newPitch = pitchRate * timePassed;
+		double newRoll = rollRate * timePassed;
+		double newYaw = yawRate * timePassed;
+
+		double ncosAngleY = Math.cos(Math.toRadians(newYaw));
+		double nsinAngleY = Math.sin(Math.toRadians(-newYaw));
+		double ncosAngleP = Math.cos(Math.toRadians(newPitch));
+		double nsinAngleP = Math.sin(Math.toRadians(-newPitch));
+		double ncosAngleR = Math.cos(Math.toRadians(newRoll));
+		double nsinAngleR = Math.sin(Math.toRadians(newRoll));
+
+		// rates
+		double[] nyawMat = currentAxis[1];
+		currentAxis[0] = rotate(currentAxis[0], nyawMat, ncosAngleY, nsinAngleY);
+		currentAxis[2] = rotate(currentAxis[2], nyawMat, ncosAngleY, nsinAngleY);
+
+		double[] npitchMat = currentAxis[2];
+		currentAxis[0] = rotate(currentAxis[0], npitchMat, ncosAngleP, nsinAngleP);
+		currentAxis[1] = rotate(currentAxis[1], npitchMat, ncosAngleP, nsinAngleP);
+
+		double[] nrollMat = currentAxis[0];
+		currentAxis[1] = rotate(currentAxis[1], nrollMat, ncosAngleR, nsinAngleR);
+		currentAxis[2] = rotate(currentAxis[2], nrollMat, ncosAngleR, nsinAngleR);
+				
+		//Als pitch 90° is, geen opl???
+		
+		pitch = (float) Math.toDegrees(Math.asin(-currentAxis[0][1]));
+		if (Math.cos(Math.toRadians(pitch)) != 0)
+			yaw = (float) Math.toDegrees(Math.asin(currentAxis[0][2]/Math.cos(Math.toRadians(pitch))));
+		else
+			yaw = Float.NaN;
+		if (Math.cos(Math.toRadians(pitch)) != 0)
+			roll = (float) Math.toDegrees(Math.asin(currentAxis[2][1]/Math.cos(Math.toRadians(pitch))));
+		else
+			roll = Float.NaN;
+	}
+
+	private double[] rotate(double[] vec, double[] axis, double cos, double sin) {
+		double[] rotatedVector = sum(timesScalar(vec, cos),
+				sum(timesScalar(crossProduct(axis, vec), sin), timesScalar(axis, dotProduct(axis, vec) * (1 - cos))));
+		return rotatedVector;
+	}
+
+	private double[] timesScalar(double[] vec, double scalar) {
+		return new double[] { vec[0] * scalar, vec[1] * scalar, vec[2] * scalar };
+	}
+
+	private double[] sum(double[] vec1, double[] vec2) {
+		return new double[] { vec1[0] + vec2[0], vec1[1] + vec2[1], vec2[2] + vec1[2] };
+	}
+
+	public static double dotProduct(double[] vector1, double[] vector2) {
+		return vector1[0] * vector2[0] + vector1[1] * vector2[1] + vector1[2] * vector2[2];
+	}
+
+	public static double[] crossProduct(double[] vector1, double[] vector2) {
+		double x = vector1[1] * vector2[2] - vector1[2] * vector2[1];
+		double y = vector1[2] * vector2[0] - vector1[0] * vector2[2];
+		double z = vector1[0] * vector2[1] - vector1[1] * vector2[0];
+		return new double[] { x, y, z };
+	}
+
 	private void checkYawPitchRoll() {
 		if (Math.abs(pitch) > 90)
 			pitch = Math.signum(pitch) * 180 - pitch;
@@ -299,40 +301,41 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	public void createInverseRotate() {
 		inverseRotateMatrix.clear();
-		inverseRotateMatrix.add((Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))-Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
-		inverseRotateMatrix.add(-(Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch)))-(Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
-		inverseRotateMatrix.add((Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(yaw))));
+		inverseRotateMatrix.add((Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw))));
+		inverseRotateMatrix.add(-(Math.sin(Math.toRadians(yaw)) * Math.sin(Math.toRadians(roll)))
+				- (Math.sin(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw))));
+		inverseRotateMatrix.add((Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw))
+				- Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll))));
 
-		inverseRotateMatrix.add((Math.cos(Math.toRadians(roll))*Math.sin(Math.toRadians(pitch))));
-		inverseRotateMatrix.add((Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(roll))));
-		inverseRotateMatrix.add((Math.sin(Math.toRadians(roll))));
+		inverseRotateMatrix.add((Math.sin(Math.toRadians(pitch))));
+		inverseRotateMatrix.add((Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll))));
+		inverseRotateMatrix.add((Math.sin(Math.toRadians(roll)) * Math.cos(Math.toRadians(pitch))));
 
-		inverseRotateMatrix.add(-(Math.cos(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(roll))));
-		inverseRotateMatrix.add((Math.sin(Math.toRadians(pitch))*Math.sin(Math.toRadians(yaw))-Math.cos(Math.toRadians(pitch))*Math.cos(Math.toRadians(yaw))*Math.sin(Math.toRadians(roll))));
-		inverseRotateMatrix.add((Math.cos(Math.toRadians(roll))*Math.cos(Math.toRadians(yaw))));
+		inverseRotateMatrix.add(-(Math.cos(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw))));
+		inverseRotateMatrix
+				.add((Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(roll))
+						- Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(roll))));
+		inverseRotateMatrix.add((Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw))
+				+ Math.sin(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)) * Math.sin(roll)));
 	}
 
 	private void generateDroneCameras() {
-
 
 		float commonY = 0;
 		float commonX = 0;
 
 		// left
 		float leftZ = -getCameraSeparation() / 2;
-		leftCamera = new DroneCamera(commonX, commonY, leftZ, commonX + 100,
-				commonY, leftZ, 0, 1, 0, getWorld(), this,
+		leftCamera = new DroneCamera(commonX, commonY, leftZ, commonX + 100, commonY, leftZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.LEFT);
 
 		// right
 		float rightZ = getCameraSeparation() / 2;
-		rightCamera = new DroneCamera(commonX, commonY, rightZ, commonX + 100,
-				commonY, rightZ, 0, 1, 0, getWorld(), this,
-				DroneCameraPlace.RIGHT);
+		rightCamera = new DroneCamera(commonX, commonY, rightZ, commonX + 100, commonY, rightZ, 0, 1, 0, getWorld(),
+				this, DroneCameraPlace.RIGHT);
 
 		// middle
-		middleCamera = new DroneCamera(-2, 0.5f, 0, -1 + 100, 0, 0, 0, 1, 0,
-				getWorld(), this, DroneCameraPlace.MIDDLE);
+		middleCamera = new DroneCamera(-2, 0.5f, 0, -1 + 100, 0, 0, 0, 1, 0, getWorld(), this, DroneCameraPlace.MIDDLE);
 
 		// add to list in world
 		getWorld().addDroneCamera(leftCamera);
@@ -368,8 +371,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 	public void setThrust(float value) {
 		if (value != value) {
 			throw new IllegalArgumentException("NaN thrust????");
-		}
-		else if (value > getMaxThrust())
+		} else if (value > getMaxThrust())
 			this.thrust = getMaxThrust();
 		else
 			this.thrust = value;
@@ -377,17 +379,19 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	@Override
 	public void setPitchRate(float value) {
-//		System.out.println("Wind");
-//		System.out.println("windx = " + getWorld().getWindSpeedX()*this.getDrag());
-//		System.out.println("windy = " + getWorld().getWindSpeedY()*this.getDrag());
-//		System.out.println("windz = " + getWorld().getWindSpeedZ()*this.getDrag());
-//		System.out.println("wind roll = " + getWorld().getWindRotationX());
-//		System.out.println("wind yaw = " + getWorld().getWindRotationY());
-//		System.out.println("wind pitch = " + getWorld().getWindRotationZ());
+		// System.out.println("Wind");
+		// System.out.println("windx = " +
+		// getWorld().getWindSpeedX()*this.getDrag());
+		// System.out.println("windy = " +
+		// getWorld().getWindSpeedY()*this.getDrag());
+		// System.out.println("windz = " +
+		// getWorld().getWindSpeedZ()*this.getDrag());
+		// System.out.println("wind roll = " + getWorld().getWindRotationX());
+		// System.out.println("wind yaw = " + getWorld().getWindRotationY());
+		// System.out.println("wind pitch = " + getWorld().getWindRotationZ());
 		if (value != value) {
 			throw new IllegalArgumentException("NaN pitchrate????");
-		}
-		else if (Math.abs(value) > getMaxPitchRate())
+		} else if (Math.abs(value) > getMaxPitchRate())
 			this.pitchRate = getMaxPitchRate() * Math.signum(value);
 		else
 			this.pitchRate = value;
@@ -397,8 +401,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 	public void setRollRate(float value) {
 		if (value != value) {
 			throw new IllegalArgumentException("NaN rollrate????");
-		}
-		else if (Math.abs(value) > getMaxRollRate())
+		} else if (Math.abs(value) > getMaxRollRate())
 			this.rollRate = getMaxRollRate() * Math.signum(value);
 		else
 			this.rollRate = value;
@@ -408,8 +411,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 	public void setYawRate(float value) {
 		if (value != value) {
 			throw new IllegalArgumentException("NaN yawrate????");
-		}
-		else if (Math.abs(value) > getMaxYawRate())
+		} else if (Math.abs(value) > getMaxYawRate())
 			this.yawRate = getMaxYawRate() * Math.signum(value);
 		else
 			this.yawRate = value;
@@ -531,13 +533,11 @@ public class SimulationDrone extends WorldObject implements Drone {
 	}
 
 	public float getPitch() {
-		return (float) (this.pitch * Math.cos(Math.toRadians(yaw)) + this.roll
-				* Math.sin(Math.toRadians(yaw)));
+		return (float) (this.pitch * Math.cos(Math.toRadians(yaw)) + this.roll * Math.sin(Math.toRadians(yaw)));
 	}
 
 	public float getRoll() {
-		return (float) (this.roll * Math.cos(Math.toRadians(yaw)) - this.pitch
-				* Math.sin(Math.toRadians(yaw)));
+		return (float) (this.roll * Math.cos(Math.toRadians(yaw)) - this.pitch * Math.sin(Math.toRadians(yaw)));
 	}
 
 	public float getYaw() {
@@ -587,7 +587,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 			newYaw -= Math.signum(newYaw) * 360;
 		return newYaw;
 	}
-	
+
 	public List<Double> getInverseRotateMatrix() {
 		return inverseRotateMatrix;
 	}
@@ -599,5 +599,4 @@ public class SimulationDrone extends WorldObject implements Drone {
 		this.autopilot = autopilot;
 	}
 
-	
-	}
+}

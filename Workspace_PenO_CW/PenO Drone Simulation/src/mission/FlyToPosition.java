@@ -16,14 +16,16 @@ public class FlyToPosition extends Mission{
 	@Override
 	public void execute() {
 		this.getPhysicsCalculations().updatePosition(this.getTarget());
-		if(getPhysicsCalculations().getRollRate() != 0){
-			System.out.println("currentYaw: " + this.getPhysicsCalculations().getDrone().getHeading());
-			System.out.println("currentPitch: " + this.getPhysicsCalculations().getDrone().getPitch());
-			System.out.println("currentRoll: " + this.getPhysicsCalculations().getDrone().getRoll());	
-			System.out.println("yawrate: " + this.getPhysicsCalculations().getYawRate());
-			System.out.println("pitchrate: " + this.getPhysicsCalculations().getPitchRate());
-			System.out.println("rollrate: " + this.getPhysicsCalculations().getRollRate());
-		}
+//		if(getPhysicsCalculations().getRollRate() != 0){
+//			System.out.println("----");
+//			System.out.println("currentYaw: " + this.getPhysicsCalculations().getDrone().getHeading());
+//			System.out.println("currentPitch: " + this.getPhysicsCalculations().getDrone().getPitch());
+//			System.out.println("currentRoll: " + this.getPhysicsCalculations().getDrone().getRoll());	
+//			System.out.println("yawrate: " + this.getPhysicsCalculations().getYawRate());
+//			System.out.println("pitchrate: " + this.getPhysicsCalculations().getPitchRate());
+//			System.out.println("rollrate: " + this.getPhysicsCalculations().getRollRate());
+//			System.out.println("----");
+//		}
 	}
 
 	@Override
