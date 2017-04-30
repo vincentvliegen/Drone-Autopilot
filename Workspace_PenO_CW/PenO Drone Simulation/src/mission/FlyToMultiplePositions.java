@@ -33,7 +33,7 @@ public class FlyToMultiplePositions extends Mission {
 			this.setTarget(listOfTargets.get(0));
 			System.out.println("changed target from" + Arrays.toString(removedTarget)+"  to: " + Arrays.toString(this.getTarget()));
 		}
-		this.getPhysicsCalculations().updatePosition(this.getTarget());
+		this.getPhysicsCalculations().updateMovement(this.getTarget());
 	}
 	
 

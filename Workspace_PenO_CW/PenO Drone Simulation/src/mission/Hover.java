@@ -16,7 +16,7 @@ public class Hover extends Mission{
 		if(this.getDroneAutopilot().isFirstHover()){
 			this.setTarget(new double[] {(double) this.getDrone().getX(), (double) this.getDrone().getY(), (double) this.getDrone().getZ()});
 		}
-		this.getPhysicsCalculations().updatePosition(this.getTarget()); //blijf opdezelfde plaats
+		this.getPhysicsCalculations().updateMovement(this.getTarget()); //blijf opdezelfde plaats
 		//this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());//blijf dezelfde richting kijken
 	}
 
