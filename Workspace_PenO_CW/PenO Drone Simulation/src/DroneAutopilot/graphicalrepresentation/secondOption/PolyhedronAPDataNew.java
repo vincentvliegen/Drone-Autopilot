@@ -22,11 +22,11 @@ public class PolyhedronAPDataNew {
 	}
 	
 	
-	private void addPoint(Point point) {
+	public void addPoint(Point point) {
 		this.points.add(point);
 	}
 	
-	private void addColor_Point(CustomColor color, ArrayList<Point> points) {
+	public void addColor_Point(CustomColor color, ArrayList<Point> points) {
 		this.colorPointsPairs.put(color, points);
 	}
 	

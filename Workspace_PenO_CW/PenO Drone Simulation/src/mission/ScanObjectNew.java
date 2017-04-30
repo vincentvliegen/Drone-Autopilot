@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+
 import javax.swing.JFrame;
 
 import DroneAutopilot.DroneAutopilot;
@@ -128,30 +130,38 @@ public class ScanObjectNew extends Mission {
 				// als een gevonden: pas data aan + voeg extra kleur toe
 				// stop na 3 (in het begin een risico, als er teveel gematcht worden ga je totaal foute resultaten krijgen
 				CustomColor c = new CustomColor(rgb, rgbinner);
+				ArrayList<double[]> pointsOfTriangle = new ArrayList<double[]>();
+				pointsOfTriangle.add(p1);
+				pointsOfTriangle.add(p2);
+				pointsOfTriangle.add(p3);
 				//TODO lijst van p1, p2, p3 maken en eruit halen als gematcht
 				//TODO lijst van Points maken zodat die toegevoegd kunnen worden voor een bepaalde kleur				
 				// op einde de niet-gematchte punten toevoegen aan de points lijst (als nieuw punt)
 				// en aan de hashmap een <Customcolor, lijst van punten> toevoegen
 				//
+				ArrayList<Point> matchedPoints = new ArrayList<>();
 				for(Point p: datapoly.getPoints()) {
-					if(p.matches(p1, margin)) {
-						handleMatch(p, p1);
-						p.addColor(c);
-					}
-					else if(p.matches(p2, margin)) {
-						handleMatch(p, p2);
-						p.addColor(c);
-					}
-					else if(p.matches(p3, margin)) {
-						handleMatch(p, p3);
-						p.addColor(c);
+
+					for(Iterator<double[]> iterator = pointsOfTriangle.iterator(); iterator.hasNext();) {
+						double[] scannedPoint = iterator.next();
+						if(p.matches(scannedPoint, margin)) {
+							handleMatch(p, scannedPoint);
+							p.addColor(c);
+							iterator.remove();
+							matchedPoints.add(p);
+						}
 					}
 				}
-
+				//TODO: voeg overige pointsOfTriangle 
+				for(double[] d: pointsOfTriangle) {
+					Point pointToAdd = new Point(d[0], d[1], d[2]);
+					pointToAdd.addColor(c);
+					matchedPoints.add(pointToAdd);
+					datapoly.addPoint(pointToAdd);
+				}
+				datapoly.addColor_Point(c, matchedPoints);
 			}
-
 		}
-
 	}
 
 
