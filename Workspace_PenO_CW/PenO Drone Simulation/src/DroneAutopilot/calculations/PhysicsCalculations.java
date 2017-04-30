@@ -117,6 +117,15 @@ public class PhysicsCalculations{
 //		System.out.println("x current: " + Arrays.toString(VectorCalculations.inverse(this.getOrientationDrone()[2])));
 //		System.out.println("y current: " + Arrays.toString(this.getOrientationDrone()[1]));
 //		System.out.println("z current: " + Arrays.toString(this.getOrientationDrone()[0]));
+//		
+//		double[] errorx = VectorCalculations.sum(this.getExpectedOrientationDrone()[2], VectorCalculations.inverse(this.getOrientationDrone()[2]));
+//		double[] errory = VectorCalculations.sum(VectorCalculations.inverse(this.getExpectedOrientationDrone()[1]), this.getOrientationDrone()[1]);
+//		double[] errorz = VectorCalculations.sum(VectorCalculations.inverse(this.getExpectedOrientationDrone()[0]), this.getOrientationDrone()[0]);
+//
+//		
+//		System.out.println("error x current expected: " + Arrays.toString(errorx));
+//		System.out.println("error y current expected: " + Arrays.toString(errory));
+//		System.out.println("error z current expected: " + Arrays.toString(errorz));
 	}
 
 		private void calculateOrientation(){
@@ -146,16 +155,12 @@ public class PhysicsCalculations{
 			this.setExpectedPosition(expectedPos);
 		}
 	
-		private void calculateExpectedOrientation(){//TODO CORRECT
+		private void calculateExpectedOrientation(){
 			double yawRate = this.getYawRate();
 			double pitchRate = this.getPitchRate();
 			double rollRate = this.getRollRate();
 			double[][] expectedOrientationNoWind = VectorCalculations.rotateAxes(previousOrientationDrone, yawRate*getDeltaT(), pitchRate*getDeltaT(), rollRate*getDeltaT());
-			
-			//wind rotatie om assen in wereldassenstelsel TODO volgorde assen 
-			double[][] expectedOrientationWindYaw = VectorCalculations.rotateAxesAroundAxis(expectedOrientationNoWind, PhysicsCalculations.getOrientationworld()[0], this.getWindRotation()[0]);
-			double[][] expectedOrientationWindYawPitch = VectorCalculations.rotateAxesAroundAxis(expectedOrientationWindYaw, PhysicsCalculations.getOrientationworld()[1], this.getWindRotation()[0]);
-			double[][] expectedOrientationWithWind = VectorCalculations.rotateAxesAroundAxis(expectedOrientationWindYawPitch, PhysicsCalculations.getOrientationworld()[2], this.getWindRotation()[0]);
+			double[][] expectedOrientationWithWind = this.addRotationWind(expectedOrientationNoWind);	
 			this.setExpectedOrientationDrone(expectedOrientationWithWind);
 		}	
 			
@@ -187,13 +192,8 @@ public class PhysicsCalculations{
 			this.setWindTranslation(VectorCalculations.sum(this.getWindTranslation(), Wcorr));
 		}
 	
-		private void correctWindRotation(){//TODO correct
-//			double[] droneAngles = {(double) this.getDrone().getHeading(), (double) this.getDrone().getPitch(), (double) this.getDrone().getRoll()};
-//			double[] deviation = VectorCalculations.sum(droneAngles,VectorCalculations.inverse(this.getExpectedOrientation()));
-//			System.out.println("WindRotation: ");
-//			for (double x: deviation)
-//				System.out.println(x);
-//			this.setWindRotation(VectorCalculations.sum(deviation, this.getWindRotation()));
+		private void correctWindRotation(){//TODO nog maken
+			
 		}
 		
 		private void calculateExternalForces(){
@@ -736,9 +736,17 @@ public class PhysicsCalculations{
 		//Geeft de nog te overbruggen hoeken richting het object weer. Yaw & Pitch & Roll TODO de invloed van windrotatie
 		private void calculateRemainingAnglesToObject(){
 			double[][] currentOrientation = new double[][] {{1,0,0},{0,1,0},{0,0,1}}; //x,y & z van drone
-			double[][] WantedOrientation = new double[][] {VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[0])),VectorCalculations.normalise(this.worldVectorToDroneVector(this.getWantedOrientation()[1]))}; //{thrust, view} ifv drone
+			double[][] WantedOrientation = this.getWantedOrientation();
+
+			//wind in rekening brengen
+			WantedOrientation[0] = this.removeRotationWind(WantedOrientation[0]);
+			WantedOrientation[1] = this.removeRotationWind(WantedOrientation[1]);
 			
-			//Yaw, pitch roll
+			//omzetten naar droneCoordinaten
+			WantedOrientation[0] = VectorCalculations.normalise(this.worldVectorToDroneVector(WantedOrientation[0]));
+			WantedOrientation[1] = VectorCalculations.normalise(this.worldVectorToDroneVector(WantedOrientation[1]));		
+
+			//Yaw, pitch roll bepalen
 			
 			//Yaw kan berekend worden adhv de viewvector
 			double[] wantedViewOnYawPlane = new double[]{WantedOrientation[1][0],0,WantedOrientation[1][2]};
@@ -856,7 +864,7 @@ public class PhysicsCalculations{
 		
 	//////////VECTOR ROTATIONS//////////
 		
-	private double[] droneVectorToWorldVector(double[] vector){
+	public double[] droneVectorToWorldVector(double[] vector){
 		//positie = (a,b,c) = a*(1,0,0) + b(0,1,0) + c(0,0,1) = a*x-asdrone + b*y-asdrone + c*z-asdrone
 		//de assen van de drone zijn bekend: getOrientationDrone()
 		double[] xcomponent = VectorCalculations.timesScalar(getOrientationDrone()[0],vector[0]);
@@ -867,7 +875,7 @@ public class PhysicsCalculations{
 		return vNew;
 	}
 		
-	private double[] worldVectorToDroneVector(double[] vector){
+	public double[] worldVectorToDroneVector(double[] vector){
 		//zelfde maar dan met transpose van orientationDrone = orientationWorld (in drone coordinaten)
 		double[] orientationWorldx = new double[] {getOrientationDrone()[0][0],getOrientationDrone()[1][0],getOrientationDrone()[2][0]};
 		double[] orientationWorldy = new double[] {getOrientationDrone()[0][1],getOrientationDrone()[1][1],getOrientationDrone()[2][1]};
@@ -881,6 +889,33 @@ public class PhysicsCalculations{
 		return vNew;
 	}
 	
+	public double[] removeRotationWind(double[] vector){
+		double[] vectorNoRoll = VectorCalculations.rotateVectorAroundAxis(vector, PhysicsCalculations.getOrientationworld()[2], -this.getWindRotation()[2]);
+		double[] vectorNoRollNoPitch = VectorCalculations.rotateVectorAroundAxis(vectorNoRoll, PhysicsCalculations.getOrientationworld()[0], -this.getWindRotation()[1]);
+		double[] vectorNoWind= VectorCalculations.rotateVectorAroundAxis(vectorNoRollNoPitch, PhysicsCalculations.getOrientationworld()[1], -this.getWindRotation()[0]);
+		return vectorNoWind;
+	}
+	
+	public double[][] removeRotationWind(double[][] axes){
+		double[][] axesNoRoll = VectorCalculations.rotateAxesAroundAxis(axes, PhysicsCalculations.getOrientationworld()[2], -this.getWindRotation()[2]);
+		double[][] axesNoRollNoPitch = VectorCalculations.rotateAxesAroundAxis(axesNoRoll, PhysicsCalculations.getOrientationworld()[0], -this.getWindRotation()[1]);
+		double[][] axesNoWind= VectorCalculations.rotateAxesAroundAxis(axesNoRollNoPitch, PhysicsCalculations.getOrientationworld()[1], -this.getWindRotation()[0]);
+		return axesNoWind;
+	}
+	
+	public double[] addRotationWind(double[] vector){
+		double[] vectorWithYaw = VectorCalculations.rotateVectorAroundAxis(vector, PhysicsCalculations.getOrientationworld()[1], this.getWindRotation()[0]);
+		double[] vectorWithYawPitch = VectorCalculations.rotateVectorAroundAxis(vectorWithYaw, PhysicsCalculations.getOrientationworld()[0], this.getWindRotation()[1]);
+		double[] vectorWithWind = VectorCalculations.rotateVectorAroundAxis(vectorWithYawPitch, PhysicsCalculations.getOrientationworld()[2], this.getWindRotation()[2]);
+		return vectorWithWind;
+	}
+	
+	public double[][] addRotationWind(double[][] axes){
+		double[][] axesWithYaw = VectorCalculations.rotateAxesAroundAxis(axes, PhysicsCalculations.getOrientationworld()[1], this.getWindRotation()[0]);
+		double[][] axesWithYawPitch = VectorCalculations.rotateAxesAroundAxis(axesWithYaw, PhysicsCalculations.getOrientationworld()[0], this.getWindRotation()[1]);
+		double[][] axesWithWind = VectorCalculations.rotateAxesAroundAxis(axesWithYawPitch, PhysicsCalculations.getOrientationworld()[2], this.getWindRotation()[2]);
+		return axesWithWind;
+	}
 	
 	//////////GETTERS & SETTERS//////////
 
