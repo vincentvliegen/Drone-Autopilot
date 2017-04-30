@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.9" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
-  realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+<class-diagram version="1.1.11" icons="true" automaticImage="PNG" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true" 
+  router="FAN">  
   <class id="1" language="java" name="mission.Hover" project="PenO Drone Simulation" 
     file="/PenO Drone Simulation/src/mission/Hover.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="383" y="30"/>    
@@ -10,8 +11,8 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="mission.OneSphere" project="PenO Drone Simulation" 
-    file="/PenO Drone Simulation/src/mission/OneSphere.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="mission.FlyToObject" project="PenO Drone Simulation" 
+    file="/PenO Drone Simulation/src/mission/FlyToObject.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="573" y="31"/>    
     <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      

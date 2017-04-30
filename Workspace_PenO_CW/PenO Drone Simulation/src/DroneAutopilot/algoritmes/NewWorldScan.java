@@ -15,8 +15,8 @@ public class NewWorldScan {
 	private final PolyhedraCalculations polyCalc;
 	
 	private boolean finished;
-	private float[] newDirectionOfView;
-	private HashMap<float[],ArrayList<float[]>> colorAndCogs;
+	private double[] newDirectionOfView;
+	private HashMap<float[],ArrayList<double[]>> colorAndCogs;
 
 	public NewWorldScan(PhysicsCalculations physicsCalculations) {
 		this.physicsCalc = physicsCalculations;
@@ -38,13 +38,11 @@ public class NewWorldScan {
 			setFinished(true);
 		}
 	}	
-		//TODO check of rotatie juist is
+	
 		private void calculateNewDirectionOfView(){// draait met een hoek die overeenkomt met de helft van de horizontale hoek van het gezichtsveld
 			float cameraAngle = this.getDrone().getLeftCamera().getHorizontalAngleOfView();
-			float[][] rotationMatrix = VectorCalculations.createRotationMatrix(cameraAngle/2, 0, 0);//dit zorgt ervoor dat je een vector kan jawen
-			float[] newViewDrone = VectorCalculations.rotate(rotationMatrix, new float[] {0,0,-1});//dit is de oorspronkelijke view gejawd
-			float[] newViewWorld = this.getPhysics().vectorDroneToWorld(newViewDrone);//omgezet naar het wereldassenstelsel
-			setNewDirectionOfView(newViewWorld);
+			double[] newView = VectorCalculations.rotateVectorAroundAxis(this.getPhysics().getDirectionOfView(), this.getPhysics().getOrientationDrone()[1], cameraAngle/2);
+			setNewDirectionOfView(newView);
 		}
 	
 	
@@ -70,19 +68,19 @@ public class NewWorldScan {
 		this.finished = finished;
 	}
 
-	public float[] getNewDirectionOfView() {
+	public double[] getNewDirectionOfView() {
 		return newDirectionOfView;
 	}
 
-	public void setNewDirectionOfView(float[] newDirectionOfView) {
+	public void setNewDirectionOfView(double[] newDirectionOfView) {
 		this.newDirectionOfView = newDirectionOfView;
 	}
 
-	public HashMap<float[], ArrayList<float[]>> getColorAndCogs() {
+	public HashMap<float[], ArrayList<double[]>> getColorAndCogs() {
 		return colorAndCogs;
 	}
 
-	public void setColorAndCogs(HashMap<float[], ArrayList<float[]>> colorAndCogs) {
+	public void setColorAndCogs(HashMap<float[], ArrayList<double[]>> colorAndCogs) {
 		this.colorAndCogs = colorAndCogs;
 	}
 

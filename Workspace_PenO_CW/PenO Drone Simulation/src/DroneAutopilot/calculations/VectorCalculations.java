@@ -60,7 +60,7 @@ public class VectorCalculations {
 
 	public static double cosinusBetweenVectors(double[] vector1, double[] vector2){
 		if(size(vector1)==0||size(vector2)==0){
-			return 0;
+			return 1;
 		}else{
 			double cosinus = dotProduct(vector1,vector2)/(size(vector1)*size(vector2));
 			if (Math.abs(cosinus) > 1){

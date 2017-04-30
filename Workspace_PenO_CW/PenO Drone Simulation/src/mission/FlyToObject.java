@@ -6,13 +6,13 @@ import java.util.HashMap;
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.algoritmes.NewWorldScan;
 
-public class OneSphere extends Mission{
+public class FlyToObject extends Mission{
 
 	private NewWorldScan worldScan;
-	private float[] target;
+	private double[] target;
 	private boolean targetFound;
 
-	public OneSphere(DroneAutopilot droneAutopilot){
+	public FlyToObject(DroneAutopilot droneAutopilot){
 		super(droneAutopilot);
 		setWorldScan(new NewWorldScan(this.getPhysicsCalculations()));
 		setTargetFound(false);
@@ -20,37 +20,37 @@ public class OneSphere extends Mission{
 
 	@Override
 	public void execute() {
-		if(isTargetFound()){
-			this.getPhysicsCalculations().updatePosition(getTarget());
-		}else{
+		if(isTargetFound()){//we kennen target
+			this.getPhysicsCalculations().updateMovement(getTarget());
+		}else{//we kennen target niet
 			this.getWorldScan().scan();
-			if(this.getWorldScan().isFinished()){
-				HashMap<float[],ArrayList<float[]>> listColorAndCOG = this.getWorldScan().getColorAndCogs();
+			if(this.getWorldScan().isFinished()){//target gevonden
+				HashMap<float[],ArrayList<double[]>> listColorAndCOG = this.getWorldScan().getColorAndCogs();
 				setTargetFound(true);
 				int size = listColorAndCOG.size();
 				float[][] keys = listColorAndCOG.keySet().toArray(new float[size][]);
-				ArrayList<float[]> cogs = listColorAndCOG.get(keys[size/2]);
+				ArrayList<double[]> cogs = listColorAndCOG.get(keys[size/2]);
 				setTarget(this.getPhysicsCalculations().calculatePositionObject(cogs.get(0), cogs.get(1)));
-				this.getPhysicsCalculations().updatePosition(getTarget());
-			}else{
-				this.getPhysicsCalculations().updateOrientation(this.getWorldScan().getNewDirectionOfView());
+				this.getPhysicsCalculations().updateMovement(getTarget());
+			}else{//target niet gevonden
+				this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(),this.getWorldScan().getNewDirectionOfView());
 			}
 		}
 	}
 
 	@Override
-	public void updateGUI() {
-		this.getGUI().update(this.getPhysicsCalculations().getDistanceDroneToPosition(getTarget()),0);//TODO iets voor de kleur
+	public void updateGUI() {//TODO
+//		this.getGUI().update(this.getPhysicsCalculations().getDistanceDroneToPosition(getTarget()),0);
 	}
 
 
 	//////////GETTERS & SETTERS//////////
 
-	public float[] getTarget() {
+	public double[] getTarget() {
 		return target;
 	}
 
-	public void setTarget(float[] target) {
+	public void setTarget(double[] target) {
 		this.target = target;
 	}
 
