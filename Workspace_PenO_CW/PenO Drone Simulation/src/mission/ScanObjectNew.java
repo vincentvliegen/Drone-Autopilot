@@ -70,9 +70,9 @@ public class ScanObjectNew extends Mission {
 				int rgb = Color.HSBtoRGB(outerkey[0], outerkey[1], outerkey[2]);
 				int rgbinner = Color.HSBtoRGB(innerkey[0], innerkey[1], innerkey[2]);
 
-				
-//				datapoly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0),
-//						outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
+
+				//				datapoly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0),
+				//						outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
 			}
 
 			catch (Exception e) {
@@ -86,14 +86,14 @@ public class ScanObjectNew extends Mission {
 	public void updateGUI() {
 		world.display();
 	}
-	
+
 	/**
 	 * 
 	 */
 	private void handleSeenTriangles() {
 		HashMap<ArrayList<float[]>, ArrayList<double[]>> outerCorners = polycalc
 				.getMatchingCorners(getDrone().getLeftCamera(), getDrone().getRightCamera());
-		
+
 		// System.out.println(outerCorners == null);
 		//TODO
 		double margin = 0.001;
@@ -105,8 +105,8 @@ public class ScanObjectNew extends Mission {
 			double[] p1 = outerCorners.get(key).get(0);
 			double[] p2 = outerCorners.get(key).get(1);
 			double[] p3 = outerCorners.get(key).get(2);
-			
-			
+
+
 			if(datapoly.getColorPointsPairs().containsKey(rgb)) {
 				for(Point p : datapoly.getColorPointsPairs().get(rgb)) {
 					if(p.matches(p1, margin)) {
@@ -118,33 +118,50 @@ public class ScanObjectNew extends Mission {
 					else if(p.matches(p3, margin)) {
 						handleMatch(p,p3);
 					}
-					
-					else {
-						//overloop lijst van datapoly points
-						//zoek naar matchende punten
-							// als een gevonden: pas data aan + voeg extra kleur toe
-							// stop na 3 (in het begin een risico, als er teveel gematcht worden ga je totaal foute resultaten krijgen
-					}
 				}
-			}
-			
+			}			
 			else {
 				// zoek of er punten zijn in de points lijst die overeenkomen
 				// als ja: pas punten aan, voeg CustomColor toe
 				// als nee: voeg punt toe met de binnen- en buitenkleur
 				// voeg een CustomColor toe aan de hashmap met de overeenkomstige punten
+				// als een gevonden: pas data aan + voeg extra kleur toe
+				// stop na 3 (in het begin een risico, als er teveel gematcht worden ga je totaal foute resultaten krijgen
+				CustomColor c = new CustomColor(rgb, rgbinner);
+				//TODO lijst van p1, p2, p3 maken en eruit halen als gematcht
+				//TODO lijst van Points maken zodat die toegevoegd kunnen worden voor een bepaalde kleur				
+				// op einde de niet-gematchte punten toevoegen aan de points lijst (als nieuw punt)
+				// en aan de hashmap een <Customcolor, lijst van punten> toevoegen
+				//
+				for(Point p: datapoly.getPoints()) {
+					if(p.matches(p1, margin)) {
+						handleMatch(p, p1);
+						p.addColor(c);
+					}
+					else if(p.matches(p2, margin)) {
+						handleMatch(p, p2);
+						p.addColor(c);
+					}
+					else if(p.matches(p3, margin)) {
+						handleMatch(p, p3);
+						p.addColor(c);
+					}
+				}
+
 			}
 
 		}
-		
-		
-		
-			
-//		zoek geziene driehoeken
-//		voor elke geziene driehoek: 
-//		kijk in datapoly of al 
 
 	}
+
+
+
+
+	//		zoek geziene driehoeken
+	//		voor elke geziene driehoek: 
+	//		kijk in datapoly of al 
+
+
 	private void handleMatch(Point p, double[] d) {
 		double weightOld = 0.8;
 		double weightNew = 1-weightOld;
