@@ -193,7 +193,37 @@ public class PhysicsCalculations{
 		}
 	
 		private void correctWindRotation(){//TODO nog maken
+			double[][] expectedOrientation = this.getExpectedOrientationDrone();
+			double[][] expectedOrientationNoWind = removeRotationWind(expectedOrientation);
+			//expectedOrientationNoWind + windrotatie = currentOrientation
+			//de assen van EONW verandert na de windrotatie in de assen van CO (currentOrientation)
+			//een vector (a,b,c) in EONW wordt na wind (a,b,c) in CO
+			//we bepalen de vectoren in EONW die evenwijdig liggen aan worldOrientation
+			double[] xworldInEONW = VectorCalculations.changeCoordinateSystem(PhysicsCalculations.getOrientationworld()[0], PhysicsCalculations.getOrientationworld(), expectedOrientationNoWind);
+			double[] yworldInEONW = VectorCalculations.changeCoordinateSystem(PhysicsCalculations.getOrientationworld()[1], PhysicsCalculations.getOrientationworld(), expectedOrientationNoWind);
+			double[] zworldInEONW = VectorCalculations.changeCoordinateSystem(PhysicsCalculations.getOrientationworld()[2], PhysicsCalculations.getOrientationworld(), expectedOrientationNoWind);
+			//na windrotatie hebben deze assen (ai,bi,ci), orientatie (ai,bi,ci) in CO
+			//deze assen in CO kunnen weer omgezet worden in WO
+			double[] xWithWind = this.droneVectorToWorldVector(xworldInEONW);
+			double[] yWithWind = this.droneVectorToWorldVector(yworldInEONW);
+			double[] zWithWind = this.droneVectorToWorldVector(zworldInEONW);
 			
+			//nu kunnen we de windrotatie (vast assenstelsel) bepalen adhv de totale rotatiematrix (zie mupad)
+			//yWithWind[2] = -sin(p)
+			double pitch = Math.asin(-yWithWind[2]);
+			//yWithWind[1] = cos(p)cos(r) -> |r|
+			//yWithWind[0] = cos(p)sin(r) -> sign(r)
+			double roll = Math.acos(yWithWind[1]/Math.cos(pitch))*Math.signum(yWithWind[0]/Math.cos(pitch));
+			//xWithWind[2] = cos(p)sin(y) -> sign(y)
+			//zWithWind[2] = cos(p)cos(y) -> |y|			
+			double yaw = Math.acos(zWithWind[2]/Math.cos(pitch))*Math.signum(xWithWind[2]/Math.cos(pitch));;
+						
+			//radians -> degrees
+			pitch = Math.toDegrees(pitch);
+			yaw = Math.toDegrees(yaw);
+			roll = Math.toDegrees(roll);
+			
+			setWindRotation(new double[] {yaw,pitch,roll});	
 		}
 		
 		private void calculateExternalForces(){
@@ -865,28 +895,11 @@ public class PhysicsCalculations{
 	//////////VECTOR ROTATIONS//////////
 		
 	public double[] droneVectorToWorldVector(double[] vector){
-		//positie = (a,b,c) = a*(1,0,0) + b(0,1,0) + c(0,0,1) = a*x-asdrone + b*y-asdrone + c*z-asdrone
-		//de assen van de drone zijn bekend: getOrientationDrone()
-		double[] xcomponent = VectorCalculations.timesScalar(getOrientationDrone()[0],vector[0]);
-		double[] ycomponent = VectorCalculations.timesScalar(getOrientationDrone()[1],vector[1]);
-		double[] zcomponent = VectorCalculations.timesScalar(getOrientationDrone()[2],vector[2]);
-			
-		double[] vNew = VectorCalculations.sum(xcomponent, VectorCalculations.sum(ycomponent, zcomponent));
-		return vNew;
+		return VectorCalculations.changeCoordinateSystem(vector, this.getOrientationDrone(), PhysicsCalculations.getOrientationworld());
 	}
 		
 	public double[] worldVectorToDroneVector(double[] vector){
-		//zelfde maar dan met transpose van orientationDrone = orientationWorld (in drone coordinaten)
-		double[] orientationWorldx = new double[] {getOrientationDrone()[0][0],getOrientationDrone()[1][0],getOrientationDrone()[2][0]};
-		double[] orientationWorldy = new double[] {getOrientationDrone()[0][1],getOrientationDrone()[1][1],getOrientationDrone()[2][1]};
-		double[] orientationWorldz = new double[] {getOrientationDrone()[0][2],getOrientationDrone()[1][2],getOrientationDrone()[2][2]};
-		
-		double[] xcomponent = VectorCalculations.timesScalar(orientationWorldx,vector[0]);
-		double[] ycomponent = VectorCalculations.timesScalar(orientationWorldy,vector[1]);
-		double[] zcomponent = VectorCalculations.timesScalar(orientationWorldz,vector[2]);
-			
-		double[] vNew = VectorCalculations.sum(xcomponent, VectorCalculations.sum(ycomponent, zcomponent));
-		return vNew;
+		return VectorCalculations.changeCoordinateSystem(vector, PhysicsCalculations.getOrientationworld(), this.getOrientationDrone());
 	}
 	
 	public double[] removeRotationWind(double[] vector){

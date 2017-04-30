@@ -106,6 +106,37 @@ public class VectorCalculations {
 		return result;
 	}
 
+	/**
+	 * Geef een vector, gerepresenteerd in een assenstelsel, een representatie in een ander assenstelsel
+	 * @param vector in currentAxescoordinaten
+	 * @param currentAxes in worldcoordinaten
+	 * @param targetAxes in worldcoordinaten
+	 * @return
+	 */
+	public static double[] changeCoordinateSystem(double[] vector, double[][] currentAxes, double[][] targetAxes){
+		
+		//beschrijf de vector (in currentAxescoordinaten) in world
+		//positie = (x,y,z) = x*(1,0,0) + y(0,1,0) + z(0,0,1) [in currentAxes] = x*x-world + y*y-world + z*z-world = (a,b,c) [in world]
+		double[] xcomponent = VectorCalculations.timesScalar(currentAxes[0],vector[0]);
+		double[] ycomponent = VectorCalculations.timesScalar(currentAxes[1],vector[1]);
+		double[] zcomponent = VectorCalculations.timesScalar(currentAxes[2],vector[2]);
+
+		double[] vectorInWorld = VectorCalculations.sum(xcomponent, VectorCalculations.sum(ycomponent, zcomponent));
+		
+		//beschrijf de vector (in worldcoordinaten) in targetAxes
+		//positie = (a,b,c) = a*(1,0,0) + b(0,1,0) + c(0,0,1) = a*x-target + b*y-target + c*z-target
+		double[] orientationWorldx = new double[] {targetAxes[0][0],targetAxes[1][0],targetAxes[2][0]};
+		double[] orientationWorldy = new double[] {targetAxes[0][1],targetAxes[1][1],targetAxes[2][1]};
+		double[] orientationWorldz = new double[] {targetAxes[0][2],targetAxes[1][2],targetAxes[2][2]};
+		
+		double[] xcomponentTarget = VectorCalculations.timesScalar(orientationWorldx,vectorInWorld[0]);
+		double[] ycomponentTarget = VectorCalculations.timesScalar(orientationWorldy,vectorInWorld[1]);
+		double[] zcomponentTarget = VectorCalculations.timesScalar(orientationWorldz,vectorInWorld[2]);
+			
+		double[] targetVector= VectorCalculations.sum(xcomponentTarget, VectorCalculations.sum(ycomponentTarget, zcomponentTarget));
+		return targetVector;
+		}
+	
 	
 	//////////ROTATIONS//////////
 	
