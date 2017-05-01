@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import DroneAutopilot.DroneAutopilot;
-import DroneAutopilot.calculations.VectorCalculations;
 
 public class FlyToMultiplePositions extends Mission {
 	
@@ -25,9 +24,6 @@ public class FlyToMultiplePositions extends Mission {
 	@Override
 	public void execute() {
 		double distance = getPhysicsCalculations().getDistanceDroneToPosition(getTarget());
-//		if(distance <= 0.4){
-//			System.out.println(distance);
-//		}
 		if(distance <= cte && listOfTargets.size()>1){		
 			double[] removedTarget = listOfTargets.remove(0);
 			this.setTarget(listOfTargets.get(0));
@@ -36,13 +32,12 @@ public class FlyToMultiplePositions extends Mission {
 		this.getPhysicsCalculations().updateMovement(this.getTarget());
 	}
 	
-
 	@Override
 	public void updateGUI() {
 		// TODO Auto-generated method stub
-
 	}
 
+	
 	//////////GETTERS & SETTERS//////////
 
 	public double[] getTarget() {

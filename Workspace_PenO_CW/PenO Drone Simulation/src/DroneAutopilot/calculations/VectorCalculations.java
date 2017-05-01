@@ -82,8 +82,8 @@ public class VectorCalculations {
 		}
  	}
 	
-	public static double calculateDistanceBetweenCoords(double[] coord1, double[] coord2) {
-		return Math.sqrt(Math.pow(coord1[0]-coord2[0], 2) + Math.pow(coord1[1]-coord2[1], 2) + Math.pow(coord1[2]-coord2[2], 2));
+	public static double distance(double[] vector1, double[] vector2) {
+		return Math.sqrt(Math.pow(vector1[0]-vector2[0], 2) + Math.pow(vector1[1]-vector2[1], 2) + Math.pow(vector1[2]-vector2[2], 2));
 	}
 	
 	public static boolean compareVectors(double[] vector1, double[] vector2){
