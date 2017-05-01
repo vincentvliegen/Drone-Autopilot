@@ -14,6 +14,7 @@ public class GeneralCameraAP {
 	private float startLookAtX=0, startLookAtY=0, startLookAtZ=0;
 	private float startUpX=0, startUpY=0, startUpZ=0;
 	private float yaw = 0;
+	private boolean changeXP, changeYP, changeZP, changeXN, changeYN, changeZN, rotateP, rotateN;
 	
 	public GeneralCameraAP(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ, WorldAPVisual world){
 		this.setEyeX(eyeX);
@@ -161,6 +162,38 @@ public class GeneralCameraAP {
 		return this.yaw;
 	}
 	
+	public void setChangeXP(boolean x) {
+		this.changeXP = x;
+	}
+
+	public void setChangeYP(boolean y) {
+		this.changeYP = y;
+	}
+
+	public void setChangeZP(boolean z) {
+		this.changeZP = z;
+	}
+	
+	public void setChangeXN(boolean x) {
+		this.changeXN = x;
+	}
+
+	public void setChangeYN(boolean y) {
+		this.changeYN = y;
+	}
+
+	public void setChangeZN(boolean z) {
+		this.changeZN = z;
+	}
+	
+	public void setRotateP(boolean r) {
+		rotateP = r;
+	}
+	
+	public void setRotateN(boolean r) {
+		rotateN = r;
+	}
+	
 	public void setCamera(GL2 gl, GLU glu) {
 		int height = getWorld().getDrawable().getSurfaceHeight();
 		int width = getWorld().getDrawable().getSurfaceWidth();
@@ -179,5 +212,24 @@ public class GeneralCameraAP {
 		gl.glLoadIdentity();
 	}
 
+	public void update(float dt) {
+		float distance = dt;
+		if (changeXP)
+			eyeX += distance;
+		if (changeYP)
+			eyeY += distance;
+		if (changeZP)
+			eyeZ += distance;
+		if (changeXN)
+			eyeX -= distance;
+		if (changeYN)
+			eyeY -= distance;
+		if (changeZN)
+			eyeZ -= distance;
+		if (rotateP)
+			yaw += distance*3;
+		if (rotateN)
+			yaw -= distance*3;
+	}
 
 }

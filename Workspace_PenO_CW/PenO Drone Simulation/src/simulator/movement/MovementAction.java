@@ -9,44 +9,53 @@ import simulator.objects.*;
 public class MovementAction extends AbstractAction {
 
 	private KeyboardMovement movement;
-	private boolean changeX, changeY, changeZ, negative, object;
+	private boolean changeX, changeY, changeZ, negative, object, release;
 
-	public MovementAction(KeyboardMovement mov, boolean x, boolean y, boolean z, boolean negative, boolean object) {
+	public MovementAction(KeyboardMovement mov, boolean x, boolean y, boolean z, boolean negative, boolean object,
+			boolean release) {
 		movement = mov;
 		this.changeX = x;
 		this.changeY = y;
 		this.changeZ = z;
 		this.negative = negative;
 		this.object = object;
+		this.release = release;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		double distance = (double)1 / 30;
-		if (negative)
-			distance = -distance;
-		if (!object) {
-			if (changeX)
-				movement.setX(distance + movement.getX());
-			if (changeY)
-				movement.setY(distance + movement.getY());
-			if (changeZ)
-				movement.setZ(distance + movement.getZ());
+		movement.setChangeObj(object);
+		if (!release) {
+			if (!negative) {
+				if (changeX)
+					movement.setChangeXP(true);
+				if (changeY)
+					movement.setChangeYP(true);
+				if (changeZ)
+					movement.setChangeZP(true);
+			} else {
+				if (changeX)
+					movement.setChangeXN(true);
+				if (changeY)
+					movement.setChangeYN(true);
+				if (changeZ)
+					movement.setChangeZN(true);
+			}
 		} else {
-			if (movement.getObject() == null)
-				return;
-			float x = 0,y = 0, z= 0;
-			if (changeX)
-				x += distance;
-			if (changeY)
-				y += distance;
-			if (changeZ)
-				z += distance; 
-			WorldObject object = movement.getObject();
-			if(object instanceof Sphere) {
-				((Sphere)object).setPosition(new float[]{(float)object.getPosition()[0] + x, (float)object.getPosition()[1] + y, (float)object.getPosition()[2] + z});
-			} else if (object instanceof Polyhedron) {
-				((Polyhedron)object).translatePolyhedronOver(new double[]{(double)x, (double)y, (double)z});
+			if (!negative) {
+				if (changeX)
+					movement.setChangeXP(false);
+				if (changeY)
+					movement.setChangeYP(false);
+				if (changeZ)
+					movement.setChangeZP(false);
+			} else {
+				if (changeX)
+					movement.setChangeXN(false);
+				if (changeY)
+					movement.setChangeYN(false);
+				if (changeZ)
+					movement.setChangeZN(false);
 			}
 		}
 	}

@@ -37,7 +37,7 @@ public class WorldAPVisual extends GLCanvas implements GLEventListener {
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		gl.glLoadIdentity();
-
+		camera.update((float)1/60);
 		camera.setCamera(gl, glu);
 		gl.glPushMatrix();
 
@@ -103,21 +103,38 @@ public class WorldAPVisual extends GLCanvas implements GLEventListener {
 		ActionMap am = panel.getActionMap();
 		
 		im.put(KeyStroke.getKeyStroke("UP"), "Forward");
-        am.put("Forward", new MovementAction(camera, true, false, false, false, false));
+        am.put("Forward", new MovementActionAP(camera, true, false, false, false, false, false));
         im.put(KeyStroke.getKeyStroke("DOWN"), "Backwards");
-        am.put("Backwards", new MovementAction(camera, true, false, false, true, false));
+        am.put("Backwards", new MovementActionAP(camera, true, false, false, true, false, false));
         im.put(KeyStroke.getKeyStroke("LEFT"), "Left");
-        am.put("Left", new MovementAction(camera, false, false, true, true, false));
+        am.put("Left", new MovementActionAP(camera, false, false, true, true, false, false));
         im.put(KeyStroke.getKeyStroke("RIGHT"), "Right");
-        am.put("Right", new MovementAction(camera, false, false, true, false, false));
+        am.put("Right", new MovementActionAP(camera, false, false, true, false, false, false));
         im.put(KeyStroke.getKeyStroke("E"), "Upwards");
-        am.put("Upwards", new MovementAction(camera, false, true, false, false, false));
+        am.put("Upwards", new MovementActionAP(camera, false, true, false, false, false, false));
         im.put(KeyStroke.getKeyStroke("D"), "Downwards");
-        am.put("Downwards", new MovementAction(camera, false, true, false, true, false));
+        am.put("Downwards", new MovementActionAP(camera, false, true, false, true, false, false));
         im.put(KeyStroke.getKeyStroke("R"), "RotateRight");
-        am.put("RotateRight", new MovementAction(camera, false, false, false, false, true));
+        am.put("RotateRight", new MovementActionAP(camera, false, false, false, false, true, false));
         im.put(KeyStroke.getKeyStroke("F"), "RotateLeft");
-        am.put("RotateLeft", new MovementAction(camera, false, false, false, true, true));
+        am.put("RotateLeft", new MovementActionAP(camera, false, false, false, true, true, false));
+        
+        im.put(KeyStroke.getKeyStroke("released UP"), "RForward");
+        am.put("RForward", new MovementActionAP(camera, true, false, false, false, false, true));
+        im.put(KeyStroke.getKeyStroke("released DOWN"), "RBackwards");
+        am.put("RBackwards", new MovementActionAP(camera, true, false, false, true, false, true));
+        im.put(KeyStroke.getKeyStroke("released LEFT"), "RLeft");
+        am.put("RLeft", new MovementActionAP(camera, false, false, true, true, false, true));
+        im.put(KeyStroke.getKeyStroke("released RIGHT"), "RRight");
+        am.put("RRight", new MovementActionAP(camera, false, false, true, false, false, true));
+        im.put(KeyStroke.getKeyStroke("released E"), "RUpwards");
+        am.put("RUpwards", new MovementActionAP(camera, false, true, false, false, false, true));
+        im.put(KeyStroke.getKeyStroke("released D"), "RDownwards");
+        am.put("RDownwards", new MovementActionAP(camera, false, true, false, true, false, true));
+        im.put(KeyStroke.getKeyStroke("released R"), "RRotateRight");
+        am.put("RRotateRight", new MovementActionAP(camera, false, false, false, false, true, true));
+        im.put(KeyStroke.getKeyStroke("released F"), "RRotateLeft");
+        am.put("RRotateLeft", new MovementActionAP(camera, false, false, false, true, true, true));
         
 	}
 
