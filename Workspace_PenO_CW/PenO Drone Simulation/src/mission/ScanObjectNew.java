@@ -3,6 +3,7 @@ package mission;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -60,26 +61,14 @@ public class ScanObjectNew extends Mission {
 		if (!isSetup) {
 			init();
 		}
-
 		this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());// blijf dezelfde richting kijkenen
-		HashMap<ArrayList<float[]>, ArrayList<double[]>> outerCorners = polycalc
-				.getMatchingCorners(getDrone().getLeftCamera(), getDrone().getRightCamera());
 		// System.out.println(outerCorners == null);
-		for (ArrayList<float[]> key : outerCorners.keySet()) {
-			float[] outerkey = key.get(0);
-			float[] innerkey = key.get(1);
-			try {
-				int rgb = Color.HSBtoRGB(outerkey[0], outerkey[1], outerkey[2]);
-				int rgbinner = Color.HSBtoRGB(innerkey[0], innerkey[1], innerkey[2]);
 
 
-				//				datapoly.addTriangleToPolyhedron(new TriangleAPData(outerCorners.get(key).get(0),
-				//						outerCorners.get(key).get(1), outerCorners.get(key).get(2), rgbinner, rgb));
-			}
-
-			catch (Exception e) {
-			}
-
+		try {
+			handleSeenTriangles();
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 
 	}
@@ -98,7 +87,7 @@ public class ScanObjectNew extends Mission {
 
 		// System.out.println(outerCorners == null);
 		//TODO
-		double margin = 0.001;
+		double margin = 0.05;
 		for (ArrayList<float[]> key : outerCorners.keySet()) {
 			float[] outerkey = key.get(0);
 			float[] innerkey = key.get(1);
@@ -108,9 +97,11 @@ public class ScanObjectNew extends Mission {
 			double[] p2 = outerCorners.get(key).get(1);
 			double[] p3 = outerCorners.get(key).get(2);
 
-
-			if(datapoly.getColorPointsPairs().containsKey(rgb)) {
-				for(Point p : datapoly.getColorPointsPairs().get(rgb)) {
+			
+			if(datapoly.getIntegerColors().containsKey(rgb)) {
+				for(Point p : datapoly.getColorPointsPairs().get(datapoly.getIntegerColors().get(rgb))) {
+//					System.out.println(Arrays.toString(p1));
+//					System.out.println(p.getX() + " " + p.getY() + " " + p.getZ());
 					if(p.matches(p1, margin)) {
 						handleMatch(p, p1);
 					}
@@ -160,6 +151,7 @@ public class ScanObjectNew extends Mission {
 					datapoly.addPoint(pointToAdd);
 				}
 				datapoly.addColor_Point(c, matchedPoints);
+
 			}
 		}
 	}
@@ -173,7 +165,7 @@ public class ScanObjectNew extends Mission {
 
 
 	private void handleMatch(Point p, double[] d) {
-		double weightOld = 0.8;
+		double weightOld = 0;
 		double weightNew = 1-weightOld;
 		p.setX(weightOld*p.getX() + weightNew * d[0]);
 		p.setY(weightOld*p.getY() + weightNew * d[1]);

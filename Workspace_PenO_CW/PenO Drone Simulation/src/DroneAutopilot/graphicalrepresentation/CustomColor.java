@@ -15,6 +15,21 @@ public class CustomColor {
 		return getColor();
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Integer) {
+			return (int) obj == color;
+		}
+		else if (obj instanceof CustomColor) {
+			System.out.println(((CustomColor)obj).getColor());
+			System.out.println(getColor());
+			System.out.println(((CustomColor) obj).getColor() == getColor());
+			return ((CustomColor) obj).getColor() == getColor();
+		}
+		return false;
+
+	}
+	
 	public final int getColor() {
 		return color;
 	}

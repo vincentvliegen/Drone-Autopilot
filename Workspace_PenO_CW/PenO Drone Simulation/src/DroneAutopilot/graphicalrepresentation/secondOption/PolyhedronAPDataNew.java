@@ -12,6 +12,7 @@ public class PolyhedronAPDataNew {
 
 	private HashSet<Point> points = new HashSet<>();
 	private HashMap<CustomColor, ArrayList<Point>> colorPointsPairs = new HashMap<>();
+	private HashMap<Integer, CustomColor> integerColors = new HashMap<>();
 	
 	public HashSet<Point> getPoints() {
 		return points;
@@ -28,6 +29,11 @@ public class PolyhedronAPDataNew {
 	
 	public void addColor_Point(CustomColor color, ArrayList<Point> points) {
 		this.colorPointsPairs.put(color, points);
+		this.integerColors.put(color.getColor(), color);
+	}
+	
+	public HashMap<Integer, CustomColor> getIntegerColors() {
+		return integerColors;
 	}
 	
 

@@ -4,6 +4,7 @@ import com.jogamp.opengl.GL2;
 
 import DroneAutopilot.graphicalrepresentation.CustomColor;
 import DroneAutopilot.graphicalrepresentation.TriangleAPDrawer;
+import DroneAutopilot.scanning.Point;
 
 public class PolyhedronAPDrawerNew {
 	
@@ -19,9 +20,9 @@ public class PolyhedronAPDrawerNew {
 //		}
 		for(CustomColor key: poly.getColorPointsPairs().keySet()) {
 //			gl.glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
-//
-//			gl.glColor3f(((dataTriangle.getInnerColor() >> 16) & 0xFF)/255f, ((dataTriangle.getInnerColor() >> 8) & 0xFF)/255f,
-//					(dataTriangle.getInnerColor() & 0xFF)/255f);
+
+//			gl.glColor3f(((key.getInnerColor() >> 16) & 0xFF)/255f, ((key.getInnerColor() >> 8) & 0xFF)/255f,
+//					(key.getInnerColor() & 0xFF)/255f);
 //			gl.glVertex3d(dataTriangle.getInnerPoint1()[0], dataTriangle.getInnerPoint1()[1],
 //					dataTriangle.getInnerPoint1()[2]);
 //			gl.glVertex3d(dataTriangle.getInnerPoint2()[0], dataTriangle.getInnerPoint2()[1],
@@ -30,7 +31,19 @@ public class PolyhedronAPDrawerNew {
 //					dataTriangle.getInnerPoint3()[2]);
 //
 //			gl.glEnd();
-//
+
+			
+			gl.glBegin(GL2.GL_TRIANGLES); // Drawing Using Triangles
+			gl.glColor3f(((key.getColor() >> 16) & 0xFF)/255f, ((key.getColor() >> 8) & 0xFF)/255f,
+					(key.getColor() & 0xFF)/255f);
+			
+			for(Point p : poly.getColorPointsPairs().get(key)) {
+				gl.glVertex3d(p.getX(), p.getY(), p.getZ());
+			}
+			
+			gl.glEnd();
+
+
 //			gl.glBegin(GL2.GL_TRIANGLES);
 //
 //			gl.glColor3f(((dataTriangle.getOuterColor() >> 16) & 0xFF)/255f, ((dataTriangle.getOuterColor() >> 8) & 0xFF)/255f,
