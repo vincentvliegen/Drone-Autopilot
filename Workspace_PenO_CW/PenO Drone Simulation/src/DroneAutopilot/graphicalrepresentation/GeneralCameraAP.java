@@ -13,6 +13,7 @@ public class GeneralCameraAP {
 	private float startEyeX=0, startEyeY=0, startEyeZ =0;
 	private float startLookAtX=0, startLookAtY=0, startLookAtZ=0;
 	private float startUpX=0, startUpY=0, startUpZ=0;
+	private float yaw = 0;
 	
 	public GeneralCameraAP(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ, WorldAPVisual world){
 		this.setEyeX(eyeX);
@@ -152,6 +153,14 @@ public class GeneralCameraAP {
 		return startLookAtZ;
 	}
 	
+	public void setYaw(float y) {
+		this.yaw = y;
+	}
+	
+	public float getYaw() {
+		return this.yaw;
+	}
+	
 	public void setCamera(GL2 gl, GLU glu) {
 		int height = getWorld().getDrawable().getSurfaceHeight();
 		int width = getWorld().getDrawable().getSurfaceWidth();
@@ -162,7 +171,7 @@ public class GeneralCameraAP {
 		// Perspective.
 		float widthHeightRatio = (float) width / (float) height;
 		glu.gluPerspective(120, widthHeightRatio, 0.01, 500);
-		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(),
+		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX()*Math.cos(Math.toRadians(yaw)), getLookAtY(), getLookAtX()*Math.sin(Math.toRadians(yaw)), getUpX(), getUpY(),
 				getUpZ());
 	
 		// Change back to model view matrix.

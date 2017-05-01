@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.swing.JFrame;
+
+import javax.swing.*;
 
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PolyhedraCalculations;
@@ -46,6 +47,7 @@ public class ScanObject extends Mission {
 //		frame.setSize(1024, 768); // width, height
 		frame.setBounds(900, 0, 1024, 768);
 		frame.setResizable(false); // Not resizable
+		world.setJPanel((JPanel) frame.getContentPane());
 		world.requestFocus();
 		frame.setVisible(true);
 		dataWorld.addPolyhedron(datapolyly);
@@ -69,7 +71,7 @@ public class ScanObject extends Mission {
 			init();
 		}
 
-		this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());// blijf
+		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(), this.getPhysicsCalculations().getDirectionOfView());// blijf
 																											// dezelfde
 																											// richting
 																											// kijkenen
@@ -96,8 +98,7 @@ public class ScanObject extends Mission {
 		
 		addScannedLines(outerCorners);
 		System.out.println("scannedLines size: "+scannedLines.size());
-		WindowForEdgeMatching w = new WindowForEdgeMatching(scannedLines);
-		w.setVisible(true);
+		
 	}
 
 	@Override
@@ -202,7 +203,6 @@ public class ScanObject extends Mission {
 			}
 		}
 	}
-
 	
 
 	////////// GETTERS & SETTERS//////////

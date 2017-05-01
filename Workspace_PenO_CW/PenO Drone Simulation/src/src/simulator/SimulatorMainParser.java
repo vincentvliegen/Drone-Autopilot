@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import com.jogamp.newt.event.MouseListener;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import p_en_o_cw_2016.*;
 import simulator.GUI.GUI;
@@ -29,8 +30,8 @@ public class SimulatorMainParser {
 		
 		frame.setSize(1024, 768); // width, height
 		frame.setResizable(false); //Not resizable
+		world.setJPanel((JPanel) frame.getContentPane());
 		world.requestFocus();
-		world.addKeyListener(WorldParser.getMovement());
 		world.addMouseListener(World.getEditor());
 		frame.setVisible(true);
 		

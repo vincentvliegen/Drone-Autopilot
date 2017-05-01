@@ -2,6 +2,8 @@ package simulator.world;
 
 import java.util.*;
 
+import javax.swing.*;
+
 import p_en_o_cw_2016.AutopilotFactory;
 
 import com.jogamp.opengl.GL;
@@ -15,7 +17,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.editor.WorldEditor;
-import simulator.movement.KeyboardMovement;
+import simulator.movement.*;
 import simulator.objects.HollowCubePolyhedron;
 import simulator.objects.LetterLPolyhedron;
 import simulator.objects.ObstacleSphere;
@@ -77,6 +79,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private AutopilotFactory factory;
 	private static WorldEditor editor = new WorldEditor();
 	private Collision collision = new Collision(this);
+	private JPanel panel;
 
 	public World() {
 		addGLEventListener(this);
@@ -185,7 +188,6 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 		// translate camera.
 		if (!(this.getCurrentCamera() instanceof DroneCamera)) {
-			movement.update((float) 1 / 60);
 			this.getCurrentCamera().setEyeX(
 					(float) movement.getX()
 							+ this.getCurrentCamera().getStartEyeX());
@@ -282,6 +284,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		this.physics = new Physics(this);
 		final GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(gl);
+		createKeybindings();
 
 		// Enable z- (depth) buffer for hidden surface removal.
 		gl.glEnable(GL.GL_DEPTH_TEST);
@@ -571,5 +574,40 @@ public abstract class World extends GLCanvas implements GLEventListener {
 
 	public Collision getCollision() {
 		return collision;
+	}
+	
+	private void createKeybindings() {
+		InputMap im = panel.getInputMap();
+		ActionMap am = panel.getActionMap();
+		
+		im.put(KeyStroke.getKeyStroke("UP"), "Forward");
+        am.put("Forward", new MovementAction(getMovement(), true, false, false, false, false));
+        im.put(KeyStroke.getKeyStroke("DOWN"), "Backwards");
+        am.put("Backwards", new MovementAction(getMovement(), true, false, false, true, false));
+        im.put(KeyStroke.getKeyStroke("LEFT"), "Left");
+        am.put("Left", new MovementAction(getMovement(), false, false, true, true, false));
+        im.put(KeyStroke.getKeyStroke("RIGHT"), "Right");
+        am.put("Right", new MovementAction(getMovement(), false, false, true, false, false));
+        im.put(KeyStroke.getKeyStroke("E"), "Upwards");
+        am.put("Upwards", new MovementAction(getMovement(), false, true, false, false, false));
+        im.put(KeyStroke.getKeyStroke("D"), "Downwards");
+        am.put("Downwards", new MovementAction(getMovement(), false, true, false, true, false));
+        
+        im.put(KeyStroke.getKeyStroke("I"), "ForwardObject");
+        am.put("ForwardObject", new MovementAction(getMovement(), true, false, false, false, true));
+        im.put(KeyStroke.getKeyStroke("K"), "BackwardsObject");
+        am.put("BackwardsObject", new MovementAction(getMovement(), true, false, false, true, true));
+        im.put(KeyStroke.getKeyStroke("J"), "LeftObject");
+        am.put("LeftObject", new MovementAction(getMovement(), false, false, true, true, true));
+        im.put(KeyStroke.getKeyStroke("L"), "RightObject");
+        am.put("RightObject", new MovementAction(getMovement(), false, false, true, false, true));
+        im.put(KeyStroke.getKeyStroke("U"), "UpwardsObject");
+        am.put("UpwardsObject", new MovementAction(getMovement(), false, true, false, false, true));
+        im.put(KeyStroke.getKeyStroke("O"), "DownwardsObject");
+        am.put("DownwardsObject", new MovementAction(getMovement(), false, true, false, true, true));
+	}
+	
+	public void setJPanel(JPanel panel){
+		this.panel = panel;
 	}
 }

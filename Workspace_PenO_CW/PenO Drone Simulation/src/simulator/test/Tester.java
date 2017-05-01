@@ -44,7 +44,6 @@ public class Tester {
 		frame.setSize(1024, 768); // width, height
 		frame.setResizable(false); // Not resizable
 		world.requestFocus();
-		world.addKeyListener(WorldParser.getMovement());
 		world.addMouseListener(World.getEditor());
 		frame.setVisible(true);
 

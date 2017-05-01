@@ -3,6 +3,7 @@ package src.simulator;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import p_en_o_cw_2016.AutopilotFactory;
 import DroneAutopilot.DroneAutopilotFactory;
@@ -27,8 +28,8 @@ public class SimulatorMain12 {
 		
 		frame.setSize(1024, 768); // width, height
 		frame.setResizable(false); //Not resizable
+		world.setJPanel((JPanel) frame.getContentPane());
 		world.requestFocus();
-		world.addKeyListener(World12.getMovement());
 		frame.setVisible(true);
 		
 	}

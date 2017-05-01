@@ -1,5 +1,7 @@
 package DroneAutopilot.graphicalrepresentation;
 
+import javax.swing.*;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -17,6 +19,7 @@ public class WorldAPVisual extends GLCanvas implements GLEventListener {
 	private int fps = 60;
 	GLU glu;
 	private GeneralCameraAP camera = new GeneralCameraAP(0, 0, 0, 100, 0, 0, 0, 1, 0, this);
+	private JPanel panel;
 
 	public WorldAPVisual(WorldAPData dataWorld) {
 		this.dataWorld = dataWorld;
@@ -58,6 +61,7 @@ public class WorldAPVisual extends GLCanvas implements GLEventListener {
 		final GL2 gl = drawable.getGL().getGL2();
 		this.drawable = drawable;
 
+		createKeybindings();
 		drawable.setGL(gl);
 
 		// Enable z- (depth) buffer for hidden surface removal.
@@ -93,5 +97,31 @@ public class WorldAPVisual extends GLCanvas implements GLEventListener {
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
+	
+	private void createKeybindings() {
+		InputMap im = panel.getInputMap();
+		ActionMap am = panel.getActionMap();
+		
+		im.put(KeyStroke.getKeyStroke("UP"), "Forward");
+        am.put("Forward", new MovementAction(camera, true, false, false, false, false));
+        im.put(KeyStroke.getKeyStroke("DOWN"), "Backwards");
+        am.put("Backwards", new MovementAction(camera, true, false, false, true, false));
+        im.put(KeyStroke.getKeyStroke("LEFT"), "Left");
+        am.put("Left", new MovementAction(camera, false, false, true, true, false));
+        im.put(KeyStroke.getKeyStroke("RIGHT"), "Right");
+        am.put("Right", new MovementAction(camera, false, false, true, false, false));
+        im.put(KeyStroke.getKeyStroke("E"), "Upwards");
+        am.put("Upwards", new MovementAction(camera, false, true, false, false, false));
+        im.put(KeyStroke.getKeyStroke("D"), "Downwards");
+        am.put("Downwards", new MovementAction(camera, false, true, false, true, false));
+        im.put(KeyStroke.getKeyStroke("R"), "RotateRight");
+        am.put("RotateRight", new MovementAction(camera, false, false, false, false, true));
+        im.put(KeyStroke.getKeyStroke("F"), "RotateLeft");
+        am.put("RotateLeft", new MovementAction(camera, false, false, false, true, true));
+        
+	}
 
+	public void setJPanel(JPanel panel) {
+		this.panel = panel;
+	}
 }
