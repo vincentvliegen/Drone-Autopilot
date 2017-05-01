@@ -3,7 +3,6 @@ package mission;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -12,9 +11,6 @@ import javax.swing.JFrame;
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import DroneAutopilot.graphicalrepresentation.*;
-import DroneAutopilot.graphicalrepresentation.TriangleAPData;
-import DroneAutopilot.graphicalrepresentation.WorldAPData;
-import DroneAutopilot.graphicalrepresentation.WorldAPVisual;
 import DroneAutopilot.graphicalrepresentation.secondOption.PolyhedronAPDataNew;
 import DroneAutopilot.graphicalrepresentation.secondOption.WorldAPDataNew;
 import DroneAutopilot.graphicalrepresentation.secondOption.WorldAPVisualNew;
@@ -61,7 +57,8 @@ public class ScanObjectNew extends Mission {
 		if (!isSetup) {
 			init();
 		}
-		this.getPhysicsCalculations().updateOrientation(this.getPhysicsCalculations().getDirectionOfView());// blijf dezelfde richting kijkenen
+		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(), this.getPhysicsCalculations().getDirectionOfView());// blijf
+//		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getDirectionOfView());// blijf dezelfde richting kijkenen
 		// System.out.println(outerCorners == null);
 
 
@@ -87,7 +84,7 @@ public class ScanObjectNew extends Mission {
 
 		// System.out.println(outerCorners == null);
 		//TODO
-		double margin = 0.05;
+		double margin = 0.08;
 		for (ArrayList<float[]> key : outerCorners.keySet()) {
 			float[] outerkey = key.get(0);
 			float[] innerkey = key.get(1);
@@ -125,11 +122,7 @@ public class ScanObjectNew extends Mission {
 				pointsOfTriangle.add(p1);
 				pointsOfTriangle.add(p2);
 				pointsOfTriangle.add(p3);
-				//TODO lijst van p1, p2, p3 maken en eruit halen als gematcht
-				//TODO lijst van Points maken zodat die toegevoegd kunnen worden voor een bepaalde kleur				
-				// op einde de niet-gematchte punten toevoegen aan de points lijst (als nieuw punt)
-				// en aan de hashmap een <Customcolor, lijst van punten> toevoegen
-				//
+
 				ArrayList<Point> matchedPoints = new ArrayList<>();
 				for(Point p: datapoly.getPoints()) {
 
@@ -165,7 +158,7 @@ public class ScanObjectNew extends Mission {
 
 
 	private void handleMatch(Point p, double[] d) {
-		double weightOld = 0;
+		double weightOld = 0.85;
 		double weightNew = 1-weightOld;
 		p.setX(weightOld*p.getX() + weightNew * d[0]);
 		p.setY(weightOld*p.getY() + weightNew * d[1]);

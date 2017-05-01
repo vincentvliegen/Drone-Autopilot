@@ -49,13 +49,11 @@ public class Point {
 //		System.out.println(getX() + " " + getY() + " " + getZ());
 		double s = Math.sqrt(Math.pow((getX()-p[0]), 2) + Math.pow((getY()-p[1]), 2) + Math.pow((getZ()-p[2]), 2));
 // 		return (Math.abs(p[0] - getX()) < margin && Math.abs(p[1] - getY()) < margin && Math.abs(p[2] - getZ()) < margin);
-		System.out.println(s);
 		return (s < margin);
 	}
 	
 	public boolean matches(Point p, double margin) {
 		double s = Math.sqrt(Math.pow((getX()-p.getX()), 2) + Math.pow((getY()-p.getY()), 2) + Math.pow((getZ()-p.getZ()), 2));
-		System.out.println(s);
 		return s < margin;
 //		return (Math.abs(p.getX() - getX()) < margin && Math.abs(p.getY() - getY()) < margin && Math.abs(p.getZ() - getZ()) < margin);
 	}

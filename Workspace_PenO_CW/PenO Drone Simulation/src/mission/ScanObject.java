@@ -97,7 +97,7 @@ public class ScanObject extends Mission {
 		}
 		
 		addScannedLines(outerCorners);
-		System.out.println("scannedLines size: "+scannedLines.size());
+//		System.out.println("scannedLines size: "+scannedLines.size());
 		
 	}
 
@@ -120,11 +120,11 @@ public class ScanObject extends Mission {
 			ArrayList<double[]> line = it.next();
 				// if corner1 binnen marge 1e punt lijn
 				double cor1line1 = (Math.pow(line.get(0)[0] - corner1[0], 2) + Math.pow(line.get(0)[1] - corner1[1], 2) + Math.pow(line.get(0)[2] - corner1[2],2));
-				System.out.println("cor1line1: "+cor1line1);
+//				System.out.println("cor1line1: "+cor1line1);
 				double cor2line1 = Math.pow(line.get(0)[0] - corner2[0], 2) + Math.pow(line.get(0)[1] - corner2[1], 2) + Math.pow(line.get(0)[2] - corner2[2], 2);
-				System.out.println("cor2line1: "+cor2line1);
+//				System.out.println("cor2line1: "+cor2line1);
 				double cor3line1 = Math.pow(line.get(0)[0] - corner3[0], 2) + Math.pow(line.get(0)[1] - corner3[1], 2) + Math.pow(line.get(0)[2] - corner3[2], 2);
-				System.out.println("cor3line1: "+cor3line1);
+//				System.out.println("cor3line1: "+cor3line1);
 				if (Math.pow(line.get(0)[0] - corner1[0], 2) + Math.pow(line.get(0)[1] - corner1[1], 2) + Math.pow(line.get(0)[2] - corner1[2],2) < this
 						.getQuadraticMargin()) {
 					// if corner2 binnen marge 2e punt lijn

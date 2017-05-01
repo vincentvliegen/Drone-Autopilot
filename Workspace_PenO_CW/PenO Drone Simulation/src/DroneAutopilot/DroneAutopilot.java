@@ -16,6 +16,7 @@ public class DroneAutopilot implements Autopilot {
 	private final Mission hover;
 	private final Mission flyToPosition;
 	private final Mission scanObject;
+	private final Mission scanObjectNew;
 	private final Mission flyToMultiplePositions;
 	private final Mission flyToSingleObject;
 //	private final Mission severalSpheres;
@@ -36,6 +37,7 @@ public class DroneAutopilot implements Autopilot {
 		this.flyToSingleObject = new FlyToObject(this);
 		this.hover = new Hover(this);
 		this.flyToPosition = new FlyToPosition(this);
+		this.scanObjectNew = new ScanObjectNew(this);
 		this.setFirstHover(true);
 	}
 
@@ -64,6 +66,7 @@ public class DroneAutopilot implements Autopilot {
 				this.getFlyToSingleObject().execute();
 			}else if(getGUI().getMissionType() == MissionType.SCANOBJECT) {
 				this.getScanObject().execute();
+//				this.scanObjectNew.execute();
 			}else if(getGUI().getMissionType() == MissionType.FLYMULTIPLEPOS){
 				this.getFlyToMultiplePositions().execute();
 			}else if(getGUI().getMissionType() == MissionType.TEST){
