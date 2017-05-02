@@ -28,7 +28,7 @@ public class WorldParser extends World {
 	private int windRotationYI = 0;
 	private int windRotationZI = 0;
 	private boolean crash;
-	private boolean fakeOverride = true;
+	private boolean fakeOverride = false;
 
 	public WorldParser() {
 		super();
