@@ -49,6 +49,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 	List<Double> inverseRotateMatrix = new ArrayList<>();
 	private float cameraSeperation = 0;
 	private float radius;
+	private double fakeYaw = 0;
 
 	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, double[] translate,
 			World world) {
@@ -615,6 +616,28 @@ public class SimulationDrone extends WorldObject implements Drone {
 	 */
 	public void setAutopilot(Autopilot autopilot) {
 		this.autopilot = autopilot;
+	}
+
+	public void fakeTimeHasPassed() {
+		if (fakeYaw == 360) {
+			pitch = 90;
+			yaw = 0;
+			roll = 0;
+			translate = new double[]{2, 1, 0};
+			fakeYaw += 1;
+		} else if (fakeYaw == 361) {
+			pitch = -90;
+			yaw = 0;
+			roll = 0;
+			translate = new double[]{2, -1, 0};	
+		} else if (fakeYaw < 360) {
+			pitch = 0;
+			yaw = (float) -fakeYaw;
+			roll = 0;
+			translate = new double[]{2-0.8*Math.cos(Math.toRadians(fakeYaw)), 0, 0.8*Math.sin(Math.toRadians(fakeYaw))};
+			fakeYaw += 5;
+		}
+		autopilot.timeHasPassed();
 	}
 
 }

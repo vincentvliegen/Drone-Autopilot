@@ -28,21 +28,17 @@ public class WorldParser extends World {
 	private int windRotationYI = 0;
 	private int windRotationZI = 0;
 	private boolean crash;
+	private boolean fakeOverride = true;
 
 	public WorldParser() {
 		super();
-		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 0, 0, 1,
-				0, this));
-		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 2, 0, 1,
-				0, this));
+		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 0, 0, 1, 0, this));
+		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 2, 0, 1, 0, this));
 
-		super.addGeneralCamera(new GeneralCamera(-100, 0, 0, 0, 0, 0, 0, 1, 0,
-				this));
+		super.addGeneralCamera(new GeneralCamera(-100, 0, 0, 0, 0, 0, 0, 1, 0, this));
 
-		super.addGeneralCamera(new GeneralCamera(0, 0, 0, 100, 0, 0, 0, 1, 0,
-				this));
-		super.addGeneralCamera(new GeneralCamera(10, 0, 5, 10, 0, 0, 0, 1, 0,
-				this));
+		super.addGeneralCamera(new GeneralCamera(0, 0, 0, 100, 0, 0, 0, 1, 0, this));
+		super.addGeneralCamera(new GeneralCamera(10, 0, 5, 10, 0, 0, 0, 1, 0, this));
 		setCurrentCamera(getGeneralCameras().get(0));
 		setParser(new Parser_v1(this));
 	}
@@ -58,8 +54,7 @@ public class WorldParser extends World {
 
 		double[] translateDrone = { 0, 0, 0 };
 		float[] colorDrone = { 0f, 0f, 1f };
-		SimulationDrone drone1 = new SimulationDrone(gl, .06f, .35f, .35f,
-				colorDrone, translateDrone, this);
+		SimulationDrone drone1 = new SimulationDrone(gl, .06f, .35f, .35f, colorDrone, translateDrone, this);
 		addSimulationDrone(drone1);
 		drone1.draw();
 
@@ -68,18 +63,17 @@ public class WorldParser extends World {
 
 		gl.glGenRenderbuffers(1, colorRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferLeft[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getParser()
-				.getImageWidth(), getParser().getImageHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,
-				GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getParser().getImageWidth(),
+				getParser().getImageHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
 				colorRenderbufferLeft[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferLeft, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16,
-				getParser().getImageWidth(), getParser().getImageHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT,
-				GL.GL_RENDERBUFFER, depthRenderbufferLeft[0]);
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getParser().getImageWidth(),
+				getParser().getImageHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
+				depthRenderbufferLeft[0]);
 
 		gl.glGenTextures(1, textureLeft, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureLeft[0]);
@@ -91,18 +85,17 @@ public class WorldParser extends World {
 
 		gl.glGenRenderbuffers(1, colorRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, colorRenderbufferRight[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getParser()
-				.getImageWidth(), getParser().getImageHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER,
-				GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_RGBA8, getParser().getImageWidth(),
+				getParser().getImageHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER,
 				colorRenderbufferRight[0]);
 
 		gl.glGenRenderbuffers(1, depthRenderbufferRight, 0);
 		gl.glBindRenderbuffer(GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
-		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16,
-				getParser().getImageWidth(), getParser().getImageHeight());
-		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT,
-				GL.GL_RENDERBUFFER, depthRenderbufferRight[0]);
+		gl.glRenderbufferStorage(GL.GL_RENDERBUFFER, GL.GL_DEPTH_COMPONENT16, getParser().getImageWidth(),
+				getParser().getImageHeight());
+		gl.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER,
+				depthRenderbufferRight[0]);
 
 		gl.glGenTextures(1, textureRight, 0);
 		gl.glBindTexture(GL.GL_TEXTURE_2D, textureRight[0]);
@@ -129,11 +122,11 @@ public class WorldParser extends World {
 					System.out.println("You crashed into an Obstacle Polyhedron");
 					crash = true;
 				} else if (((Polyhedron) object).getPolyhedronType() == PolyhedronType.TARGET) {
-					removePolyhedron((Polyhedron)object);
+					removePolyhedron((Polyhedron) object);
 					System.out.println("hit Polyhedron target");
 				}
 			}
-				
+
 		}
 	}
 
@@ -150,94 +143,79 @@ public class WorldParser extends World {
 		 */
 
 		// WINDSPEED
-		if (getCurrentTime()
-				% getParser().getArrayXTimes()[getParser().getArrayXTimes().length - 1] > getParser()
+		if (getCurrentTime() % getParser().getArrayXTimes()[getParser().getArrayXTimes().length - 1] > getParser()
 				.getArrayXTimes()[windSpeedXI]) {
 			setWindSpeedX(getParser().getArrayXValues()[windSpeedXI]);
 			windSpeedXI++;
 		} else if ((getCurrentTime()
 				% getParser().getArrayXTimes()[getParser().getArrayXTimes().length - 1] < getParser()
-				.getArrayXTimes()[0])
+						.getArrayXTimes()[0])
 				&& (getCurrentTime() > getParser().getArrayXTimes()[0])) {
-			setWindSpeedX(getParser().getArrayXValues()[getParser()
-					.getArrayXTimes().length - 1]);
+			setWindSpeedX(getParser().getArrayXValues()[getParser().getArrayXTimes().length - 1]);
 			windSpeedXI = 0;
 		}
 
-		if (getCurrentTime()
-				% getParser().getArrayYTimes()[getParser().getArrayYTimes().length - 1] > getParser()
+		if (getCurrentTime() % getParser().getArrayYTimes()[getParser().getArrayYTimes().length - 1] > getParser()
 				.getArrayYTimes()[windSpeedYI]) {
 			setWindSpeedY(getParser().getArrayYValues()[windSpeedYI]);
 			windSpeedYI++;
 		} else if ((getCurrentTime()
 				% getParser().getArrayYTimes()[getParser().getArrayYTimes().length - 1] < getParser()
-				.getArrayYTimes()[0])
+						.getArrayYTimes()[0])
 				&& (getCurrentTime() > getParser().getArrayYTimes()[0])) {
-			setWindSpeedY(getParser().getArrayYValues()[getParser()
-					.getArrayYTimes().length - 1]);
+			setWindSpeedY(getParser().getArrayYValues()[getParser().getArrayYTimes().length - 1]);
 			windSpeedYI = 0;
 		}
 
-		if (getCurrentTime()
-				% getParser().getArrayZTimes()[getParser().getArrayZTimes().length - 1] > getParser()
+		if (getCurrentTime() % getParser().getArrayZTimes()[getParser().getArrayZTimes().length - 1] > getParser()
 				.getArrayZTimes()[windSpeedZI]) {
 			setWindSpeedZ(getParser().getArrayZValues()[windSpeedZI]);
 			windSpeedZI++;
 		} else if ((getCurrentTime()
 				% getParser().getArrayZTimes()[getParser().getArrayZTimes().length - 1] < getParser()
-				.getArrayZTimes()[0])
+						.getArrayZTimes()[0])
 				&& (getCurrentTime() > getParser().getArrayZTimes()[0])) {
-			setWindSpeedZ(getParser().getArrayZValues()[getParser()
-					.getArrayZTimes().length - 1]);
+			setWindSpeedZ(getParser().getArrayZValues()[getParser().getArrayZTimes().length - 1]);
 			windSpeedZI = 0;
 		}
 
 		// WINDROTATION
 		if (getCurrentTime()
-				% getParser().getWindRotationXTimes()[getParser()
-						.getWindRotationXTimes().length - 1] > getParser()
-				.getWindRotationXTimes()[windRotationXI]) {
+				% getParser().getWindRotationXTimes()[getParser().getWindRotationXTimes().length - 1] > getParser()
+						.getWindRotationXTimes()[windRotationXI]) {
 			setWindRotationX(getParser().getWindRotationXValues()[windRotationXI]);
 			windRotationXI++;
 		} else if ((getCurrentTime()
-				% getParser().getWindRotationXTimes()[getParser()
-						.getWindRotationXTimes().length - 1] < getParser()
-				.getWindRotationXTimes()[0])
+				% getParser().getWindRotationXTimes()[getParser().getWindRotationXTimes().length - 1] < getParser()
+						.getWindRotationXTimes()[0])
 				&& (getCurrentTime() > getParser().getWindRotationXTimes()[0])) {
-			setWindRotationX(getParser().getWindRotationXValues()[getParser()
-					.getWindRotationXTimes().length - 1]);
+			setWindRotationX(getParser().getWindRotationXValues()[getParser().getWindRotationXTimes().length - 1]);
 			windRotationXI = 0;
 		}
 
 		if (getCurrentTime()
-				% getParser().getWindRotationYTimes()[getParser()
-						.getWindRotationYTimes().length - 1] > getParser()
-				.getWindRotationYTimes()[windRotationYI]) {
+				% getParser().getWindRotationYTimes()[getParser().getWindRotationYTimes().length - 1] > getParser()
+						.getWindRotationYTimes()[windRotationYI]) {
 			setWindRotationY(getParser().getWindRotationYValues()[windRotationYI]);
 			windRotationYI++;
 		} else if ((getCurrentTime()
-				% getParser().getWindRotationYTimes()[getParser()
-						.getWindRotationYTimes().length - 1] < getParser()
-				.getWindRotationYTimes()[0])
+				% getParser().getWindRotationYTimes()[getParser().getWindRotationYTimes().length - 1] < getParser()
+						.getWindRotationYTimes()[0])
 				&& (getCurrentTime() > getParser().getWindRotationYTimes()[0])) {
-			setWindRotationY(getParser().getWindRotationYValues()[getParser()
-					.getWindRotationYTimes().length - 1]);
+			setWindRotationY(getParser().getWindRotationYValues()[getParser().getWindRotationYTimes().length - 1]);
 			windRotationYI = 0;
 		}
 
 		if (getCurrentTime()
-				% getParser().getWindRotationZTimes()[getParser()
-						.getWindRotationZTimes().length - 1] > getParser()
-				.getWindRotationZTimes()[windRotationZI]) {
+				% getParser().getWindRotationZTimes()[getParser().getWindRotationZTimes().length - 1] > getParser()
+						.getWindRotationZTimes()[windRotationZI]) {
 			setWindRotationZ(getParser().getWindRotationZValues()[windRotationZI]);
 			windRotationZI++;
 		} else if ((getCurrentTime()
-				% getParser().getWindRotationZTimes()[getParser()
-						.getWindRotationZTimes().length - 1] < getParser()
-				.getWindRotationZTimes()[0])
+				% getParser().getWindRotationZTimes()[getParser().getWindRotationZTimes().length - 1] < getParser()
+						.getWindRotationZTimes()[0])
 				&& (getCurrentTime() > getParser().getWindRotationZTimes()[0])) {
-			setWindRotationZ(getParser().getWindRotationZValues()[getParser()
-					.getWindRotationZTimes().length - 1]);
+			setWindRotationZ(getParser().getWindRotationZValues()[getParser().getWindRotationZTimes().length - 1]);
 			windRotationZI = 0;
 		}
 	}
@@ -250,9 +228,14 @@ public class WorldParser extends World {
 			updateFrames();
 			getPhysics().run((float) 1 / 60);
 
-			for (SimulationDrone drone : getDrones()) {
-				drone.timeHasPassed((float) 1 / 60);
-
+			if (!fakeOverride)
+				for (SimulationDrone drone : getDrones()) {
+					drone.timeHasPassed((float) 1 / 60);
+				}
+			else {
+				for (SimulationDrone drone: getDrones()) {
+					drone.fakeTimeHasPassed();
+				}
 			}
 			checkWindChange();
 
@@ -260,15 +243,13 @@ public class WorldParser extends World {
 			if (!super.getAnimator().isAnimating()) {
 				return;
 			}
-			
-			
+
 			// voor scherm
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-			gl.glViewport(0, 0, drawable.getSurfaceWidth(),
-					drawable.getSurfaceHeight());
+			gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 			getCurrentCamera().setCamera(gl, getGlu());
 			draw();
-			
+
 			if (getEditor().wasMousePressed()) {
 				mousePressed();
 			}
@@ -284,8 +265,7 @@ public class WorldParser extends World {
 			// voor takeimage linkerCamera
 			gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferLeft()[0]);
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-			gl.glViewport(0, 0, getParser().getImageWidth(), getParser()
-					.getImageHeight());
+			gl.glViewport(0, 0, getParser().getImageWidth(), getParser().getImageHeight());
 			getDrones().get(0).getLeftDroneCamera().setCamera(gl, getGlu());
 			draw();
 			gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
@@ -293,8 +273,7 @@ public class WorldParser extends World {
 			// voor takeimage rechterCamera
 			gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, getFramebufferRight()[0]);
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-			gl.glViewport(0, 0, getParser().getImageWidth(), getParser()
-					.getImageHeight());
+			gl.glViewport(0, 0, getParser().getImageWidth(), getParser().getImageHeight());
 			getDrones().get(0).getRightDroneCamera().setCamera(gl, getGlu());
 			draw();
 			gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
@@ -309,9 +288,8 @@ public class WorldParser extends World {
 			// i++;
 			//
 			// }
-			
-			gl.glViewport(0, 0, drawable.getSurfaceWidth(),
-					drawable.getSurfaceHeight());
+
+			gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 		}
 	}
 
