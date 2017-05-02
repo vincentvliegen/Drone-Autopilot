@@ -63,13 +63,13 @@ public class Point {
 	}
 	
 	public void addColor(CustomColor c) {
-		if(this.colors.size() < 3) {
+//		if(this.colors.size() < 3) {
 			this.colors.add(c);
-		}
-		else {
+//		}
+//		else {
 			//TODO
-			throw new IllegalStateException("There should not be more than 3 colors in a point."); 
-		}
+//			throw new IllegalStateException("There should not be more than 3 colors in a point."); 
+//		}
 
 	}
 
