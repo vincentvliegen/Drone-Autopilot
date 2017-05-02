@@ -217,12 +217,8 @@ public class PolyhedraCalculations {
 						double yI = (Icorners.get(0)[1] + Icorners.get(1)[1] + Icorners.get(2)[1]) / 3;
 						double zI = (Icorners.get(0)[2] + Icorners.get(1)[2] + Icorners.get(2)[2]) / 3;
 						
-						String s1 = String.format("%.2f", outerColor[0]);
-						String s2 = String.format("%.2f", innerColor[0]);
-						
-					//	if(s1.equals(s2)){
-						if (xO >= xI - 0.07 && xO <= xI + 0.07 && yO >= yI - 0.07 && yO <= yI + 0.07 && zO >= zI - 0.07
-								&& zO <= zI + 0.07) {
+						if (xO >= xI - 0.1 && xO <= xI + 0.1 && yO >= yI - 0.1 && yO <= yI + 0.1 && zO >= zI - 0.1
+								&& zO <= zI + 0.1 && outerColor[2] == innerColor[2]) {
 							//System.out.println(xO + " " + yO + " " + zO + " " +xI+" "+yI+" "+zI );
 							//System.out.println(outerColor[0] + " " + innerColor[0]);
 							result.put(outerColor, innerColor);
@@ -268,9 +264,9 @@ public class PolyhedraCalculations {
 	//kleuren omzetten
 	public float[] colorIntToHSV(int color) {
 		// to RGB
-		int B = color % 256;
-		int G = (color / 256) % 256;
-		int R = color / (256 * 256);
+		int B = color & 0xFF;
+		int G = (color >> 8) & 0xFF;
+		int R = (color >> 16) & 0xFF;
 
 		// to HSV
 		float[] HSV1 = { 0, 0, 0 };
