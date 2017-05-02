@@ -24,14 +24,19 @@ public class PolyhedraCalculations {
 
 	}
 
+	//functie die ge moet oproepen om de zwaartepunten van alle driehoeken te krijgen in hashmap per kleur
 	public HashMap<float[], ArrayList<double[]>> findAllCOGs(Camera leftCamera, Camera rightCamera) {
 		HashMap<float[], ArrayList<double[]>> COGS = new HashMap<float[], ArrayList<double[]>>();
 		this.SeparateTargetsAndObstacles(leftCamera);
-		HashMap<float[], double[]> leftCOGS = this.findCornersOfFullTrianglesViaCOG();
+		HashMap<float[], ArrayList<int[]>> outerTrianglesL =this.findThreePointsTriangles(this.getHashMapTargetOuterColor());
+		HashMap<float[], ArrayList<int[]>> innerTrianglesL =this.findThreePointsTriangles(this.getHashMapTargetInnerColor());
+		HashMap<float[], double[]> leftCOGS = this.findCornersOfFullTrianglesViaCOG(outerTrianglesL,innerTrianglesL);
 		// System.out.println("foundL " + leftCOGS.keySet());
 
 		this.SeparateTargetsAndObstacles(rightCamera);
-		HashMap<float[], double[]> rightCOGS = this.findCornersOfFullTrianglesViaCOG();
+		HashMap<float[], ArrayList<int[]>> outerTrianglesR =this.findThreePointsTriangles(this.getHashMapTargetOuterColor());
+		HashMap<float[], ArrayList<int[]>> innerTrianglesR =this.findThreePointsTriangles(this.getHashMapTargetInnerColor());
+		HashMap<float[], double[]> rightCOGS = this.findCornersOfFullTrianglesViaCOG(outerTrianglesR,innerTrianglesR);
 		// System.out.println("foundR "+rightCOGS.keySet());
 
 		for (float[] colorLeft : leftCOGS.keySet()) {
@@ -48,6 +53,7 @@ public class PolyhedraCalculations {
 		return COGS;
 	}
 
+	//functie om de hoekpunten te krijgen per kleur
 	public HashMap<ArrayList<float[]>, ArrayList<double[]>> getMatchingCorners(Camera leftCamera, Camera rightCamera) {
 		this.SeparateTargetsAndObstacles(leftCamera);
 		HashMap<float[], ArrayList<int[]>> outerTrianglesL = this
@@ -230,6 +236,7 @@ public class PolyhedraCalculations {
 		return coord;
 	}
 
+	//haal alle gekleurde pixels uit afbeelding per kleur
 	public HashMap<Integer, ArrayList<int[]>> calculatePixelsOfEachColor(Camera camera) {
 		int[] image = camera.takeImage();
 		HashMap<Integer, ArrayList<int[]>> hashMapDifferentColors = new HashMap<Integer, ArrayList<int[]>>();
@@ -247,11 +254,10 @@ public class PolyhedraCalculations {
 				}
 			}
 		}
-		// System.out.println("calculate pixels of each color: " +
-		// hashMapDifferentColors.keySet().size());
 		return hashMapDifferentColors;
 	}
 
+	//kleuren omzetten
 	public float[] colorIntToHSV(int color) {
 		// to RGB
 		int B = color % 256;
@@ -264,6 +270,7 @@ public class PolyhedraCalculations {
 		return HSV;
 	}
 
+	//maak onderscheid tussen targets en obstacles en sla ze apart op
 	private void SeparateTargetsAndObstacles(Camera camera) throws IllegalArgumentException {
 		HashMap<Integer, ArrayList<int[]>> hashMapDifferentColors = this.calculatePixelsOfEachColor(camera);
 		Set<Integer> colorIntValuesSet = hashMapDifferentColors.keySet();
@@ -298,10 +305,6 @@ public class PolyhedraCalculations {
 				throw new IllegalArgumentException("Foute Value " + HSV[2]);
 			}
 		}
-		// System.out.println("outerTargetColors =" + hashMapOuterColor.size());
-		// System.out.println("innerTargetColors =" + hashMapInnerColor.size());
-		// System.out.println("obstaclesTargetColors =" +
-		// hashMapObstacle.size());
 		this.setHashMapTargetOuterColor(hashMapOuterColor);
 		this.setHashMapTargetInnerColor(hashMapInnerColor);
 		this.setHashMapObstacleOuterColor(hashMapObstacle);
@@ -503,12 +506,8 @@ public class PolyhedraCalculations {
 		return COGHashMap;
 	}
 
-	private HashMap<float[], double[]> findCornersOfFullTrianglesViaCOG() {
-		HashMap<float[], ArrayList<int[]>> outerTriangles = this
-				.findThreePointsTriangles(this.getHashMapTargetOuterColor());
-		HashMap<float[], ArrayList<int[]>> innerTriangles = this
-				.findThreePointsTriangles(this.getHashMapTargetInnerColor());
-
+	private HashMap<float[], double[]> findCornersOfFullTrianglesViaCOG(HashMap<float[], ArrayList<int[]>> outerTriangles,
+			HashMap<float[], ArrayList<int[]>> innerTriangles) {
 		HashMap<float[], double[]> outerTrianglesCOG = this.findCOGOfAllColors(outerTriangles);
 		Set<float[]> setOuterCOG = outerTrianglesCOG.keySet();
 		HashMap<float[], double[]> innerTrianglesCOG = this.findCOGOfAllColors(innerTriangles);
