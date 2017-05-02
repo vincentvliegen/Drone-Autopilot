@@ -7,6 +7,7 @@ import p_en_o_cw_2016.Drone;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -61,6 +62,9 @@ public class SimulationDrone extends WorldObject implements Drone {
 		this.movement = new Movement(this);
 		this.cameraSeperation = width;
 		generateDroneCameras();
+		pitch = 0;
+		roll = 0;
+		yaw = 0;
 		this.autopilot = world.getAutopilotFactory().create(this);
 		this.radius = (float) Math.sqrt(Math.pow(height / 2, 2) + Math.pow(width / 2, 2) + Math.pow(depth / 2, 2));
 	}
@@ -228,6 +232,9 @@ public class SimulationDrone extends WorldObject implements Drone {
 		currentAxis[1] = rotate(currentAxis[1], rollMat, cosAngleR, sinAngleR);
 		currentAxis[2] = rotate(currentAxis[2], rollMat, cosAngleR, sinAngleR);
 
+//		for (double[] x: currentAxis)
+//			System.out.println(Arrays.toString(x));
+		
 		double newPitch = pitchRate * timePassed;
 		double newRoll = rollRate * timePassed;
 		double newYaw = yawRate * timePassed;
@@ -252,17 +259,25 @@ public class SimulationDrone extends WorldObject implements Drone {
 		currentAxis[1] = rotate(currentAxis[1], nrollMat, ncosAngleR, nsinAngleR);
 		currentAxis[2] = rotate(currentAxis[2], nrollMat, ncosAngleR, nsinAngleR);
 				
-		//Als pitch 90° is, geen opl???
+		//Als pitch 90 is, geen opl???
+//		for (double[] x: currentAxis)
+//			System.out.println(Arrays.toString(x));
+//		System.out.println("-----");
 		
 		pitch = (float) Math.toDegrees(Math.asin(-currentAxis[0][1]));
+		float yawCorr = (float) ( Math.signum(currentAxis[0][0]/Math.cos(Math.toRadians(pitch)))*Math.min(Math.abs(currentAxis[0][0]/Math.cos(Math.toRadians(pitch))), 1)); 
 		if (Math.cos(Math.toRadians(pitch)) != 0)
-			yaw = (float) Math.toDegrees(Math.asin(currentAxis[0][2]/Math.cos(Math.toRadians(pitch))));
+			yaw = (float) Math.toDegrees(Math.acos(yawCorr));
 		else
 			yaw = Float.NaN;
+		yaw = (float)Math.signum(currentAxis[0][2]/Math.cos(Math.toRadians(pitch))) * yaw;
+		
+		float rollCorr = (float) ( Math.signum(currentAxis[1][1]/Math.cos(Math.toRadians(pitch)))*Math.min(Math.abs(currentAxis[1][1]/Math.cos(Math.toRadians(pitch))), 1));
 		if (Math.cos(Math.toRadians(pitch)) != 0)
-			roll = (float) Math.toDegrees(Math.asin(currentAxis[2][1]/Math.cos(Math.toRadians(pitch))));
+			roll = (float) Math.toDegrees(Math.acos(rollCorr));
 		else
 			roll = Float.NaN;
+		roll *= Math.signum(-currentAxis[2][1]/Math.cos(Math.toRadians(pitch)));
 	}
 
 	private double[] rotate(double[] vec, double[] axis, double cos, double sin) {
