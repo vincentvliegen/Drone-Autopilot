@@ -212,6 +212,9 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	private void updateRPY(float timePassed) {
 		double[][] currentAxis = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+//		yawRate = 0;
+//		pitchRate = 720;
+//		rollRate = 0;
 		double cosAngleY = Math.cos(Math.toRadians(yaw));
 		double sinAngleY = Math.sin(Math.toRadians(-yaw));
 		double cosAngleP = Math.cos(Math.toRadians(pitch));
@@ -235,8 +238,8 @@ public class SimulationDrone extends WorldObject implements Drone {
 //		for (double[] x: currentAxis)
 //			System.out.println(Arrays.toString(x));
 		
-		double newPitch = pitchRate * timePassed;
-		double newRoll = rollRate * timePassed;
+		double newPitch = (pitchRate*Math.cos(Math.toRadians(yaw)) + rollRate*Math.sin(Math.toRadians(yaw))) * timePassed;
+		double newRoll = (rollRate*Math.cos(Math.toRadians(yaw)) - pitchRate * Math.sin(Math.toRadians(yaw))) * timePassed;
 		double newYaw = yawRate * timePassed;
 
 		double ncosAngleY = Math.cos(Math.toRadians(newYaw));
