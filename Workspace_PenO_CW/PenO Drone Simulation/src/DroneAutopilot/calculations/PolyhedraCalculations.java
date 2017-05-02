@@ -1,6 +1,7 @@
 package DroneAutopilot.calculations;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -66,9 +67,9 @@ public class PolyhedraCalculations {
 		HashMap<float[], ArrayList<int[]>> innerTrianglesR = this
 				.findThreePointsTriangles(this.getHashMapTargetInnerColor());
 
-//		System.out.println("Outer");
+		//		System.out.println("Outer");
 		HashMap<float[], ArrayList<double[]>> cornersOuter = this.findMatchingCorners(outerTrianglesL, outerTrianglesR);
-//		System.out.println("Innerdriehoekpunten");
+		//		System.out.println("Innerdriehoekpunten");
 		HashMap<float[], ArrayList<double[]>> cornersInner = this.findMatchingCorners(innerTrianglesL, innerTrianglesR);
 		HashMap<float[], float[]> combinedColors = this.matchInnerAndOuterColor(cornersOuter, cornersInner);
 
@@ -109,7 +110,7 @@ public class PolyhedraCalculations {
 						double[] coordinate = this.getPhysics().calculatePositionObject(
 								intListToDoubleList(foundmaxyL.get(0)), intListToDoubleList(foundmaxyR.get(0)));
 						corners.add(coordinate);
-//						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
+						//						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
 						allCornersL.remove(foundmaxyL.get(0));
 						allCornersR.remove(foundmaxyR.get(0));
 					}
@@ -119,7 +120,7 @@ public class PolyhedraCalculations {
 						double[] coordinate = this.getPhysics().calculatePositionObject(
 								intListToDoubleList(foundminyL.get(0)), intListToDoubleList(foundminyR.get(0)));
 						corners.add(coordinate);
-//						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
+						//						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
 						allCornersL.remove(foundminyL.get(0));
 						allCornersR.remove(foundminyR.get(0));
 					}
@@ -178,7 +179,7 @@ public class PolyhedraCalculations {
 							}
 						}
 						corners.add(coordinate);
-//						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
+						//						System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
 
 					}
 
@@ -186,9 +187,10 @@ public class PolyhedraCalculations {
 					double[] coordinate = this.getPhysics().calculatePositionObject(
 							intListToDoubleList(allCornersL.get(0)), intListToDoubleList(allCornersR.get(0)));
 					corners.add(coordinate);
-//					System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
-
-					result.put(colorLeft, corners);
+					//System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
+					if(Math.abs(coordinate[0] - this.getPhysics().getDrone().getX()) <=0.8){
+						result.put(colorLeft, corners);
+					}
 				}
 			}
 		}
@@ -214,9 +216,15 @@ public class PolyhedraCalculations {
 						double xI = (Icorners.get(0)[0] + Icorners.get(1)[0] + Icorners.get(2)[0]) / 3;
 						double yI = (Icorners.get(0)[1] + Icorners.get(1)[1] + Icorners.get(2)[1]) / 3;
 						double zI = (Icorners.get(0)[2] + Icorners.get(1)[2] + Icorners.get(2)[2]) / 3;
+						
+						String s1 = String.format("%.2f", outerColor[0]);
+						String s2 = String.format("%.2f", innerColor[0]);
+						
+					//	if(s1.equals(s2)){
 						if (xO >= xI - 0.07 && xO <= xI + 0.07 && yO >= yI - 0.07 && yO <= yI + 0.07 && zO >= zI - 0.07
 								&& zO <= zI + 0.07) {
 							//System.out.println(xO + " " + yO + " " + zO + " " +xI+" "+yI+" "+zI );
+							//System.out.println(outerColor[0] + " " + innerColor[0]);
 							result.put(outerColor, innerColor);
 							break;
 						}
