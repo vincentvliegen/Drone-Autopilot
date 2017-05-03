@@ -28,7 +28,7 @@ public class WorldParser extends World {
 	private int windRotationYI = 0;
 	private int windRotationZI = 0;
 	private boolean crash;
-	private boolean fakeOverride = false;
+	private boolean fakeOverride = true;
 
 	public WorldParser() {
 		super();
@@ -234,7 +234,8 @@ public class WorldParser extends World {
 				}
 			else {
 				for (SimulationDrone drone: getDrones()) {
-					drone.fakeTimeHasPassed();
+					if (getCurrentTime() > 7)
+						drone.fakeTimeHasPassed();
 				}
 			}
 			checkWindChange();

@@ -623,18 +623,18 @@ public class SimulationDrone extends WorldObject implements Drone {
 			pitch = 90;
 			yaw = 0;
 			roll = 0;
-			translate = new double[]{2, 1, 0};
+			translate = new double[]{1, 1, 0};
 			fakeYaw += 1;
 		} else if (fakeYaw == 361) {
 			pitch = -90;
 			yaw = 0;
 			roll = 0;
-			translate = new double[]{2, -1, 0};	
+			translate = new double[]{1, -1, 0};	
 		} else if (fakeYaw < 360) {
 			pitch = 0;
 			yaw = (float) -fakeYaw;
 			roll = 0;
-			translate = new double[]{2-0.8*Math.cos(Math.toRadians(fakeYaw)), 0, 0.8*Math.sin(Math.toRadians(fakeYaw))};
+			translate = new double[]{1-0.8*Math.cos(Math.toRadians(fakeYaw)), 0, 0.8*Math.sin(Math.toRadians(fakeYaw))};
 			fakeYaw += 5;
 		}
 		autopilot.timeHasPassed();
