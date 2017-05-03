@@ -13,6 +13,8 @@ public class GeneralCameraAPNew {
 	private float startEyeX=0, startEyeY=0, startEyeZ =0;
 	private float startLookAtX=0, startLookAtY=0, startLookAtZ=0;
 	private float startUpX=0, startUpY=0, startUpZ=0;
+	private float yaw = 0;
+	private boolean changeXP, changeYP, changeZP, changeXN, changeYN, changeZN, rotateP, rotateN;
 	
 	public GeneralCameraAPNew(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ, WorldAPVisualNew world){
 		this.setEyeX(eyeX);
@@ -152,6 +154,46 @@ public class GeneralCameraAPNew {
 		return startLookAtZ;
 	}
 	
+	public void setYaw(float y) {
+		this.yaw = y;
+	}
+	
+	public float getYaw() {
+		return this.yaw;
+	}
+	
+	public void setChangeXP(boolean x) {
+		this.changeXP = x;
+	}
+
+	public void setChangeYP(boolean y) {
+		this.changeYP = y;
+	}
+
+	public void setChangeZP(boolean z) {
+		this.changeZP = z;
+	}
+	
+	public void setChangeXN(boolean x) {
+		this.changeXN = x;
+	}
+
+	public void setChangeYN(boolean y) {
+		this.changeYN = y;
+	}
+
+	public void setChangeZN(boolean z) {
+		this.changeZN = z;
+	}
+	
+	public void setRotateP(boolean r) {
+		rotateP = r;
+	}
+	
+	public void setRotateN(boolean r) {
+		rotateN = r;
+	}
+	
 	public void setCamera(GL2 gl, GLU glu) {
 		int height = getWorld().getDrawable().getSurfaceHeight();
 		int width = getWorld().getDrawable().getSurfaceWidth();
@@ -162,7 +204,7 @@ public class GeneralCameraAPNew {
 		// Perspective.
 		float widthHeightRatio = (float) width / (float) height;
 		glu.gluPerspective(120, widthHeightRatio, 0.01, 500);
-		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX(), getLookAtY(), getLookAtZ(), getUpX(), getUpY(),
+		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX()*Math.cos(Math.toRadians(yaw)), getLookAtY(), getLookAtX()*Math.sin(Math.toRadians(yaw)), getUpX(), getUpY(),
 				getUpZ());
 	
 		// Change back to model view matrix.
@@ -170,5 +212,24 @@ public class GeneralCameraAPNew {
 		gl.glLoadIdentity();
 	}
 
+	public void update(float dt) {
+		float distance = dt;
+		if (changeXP)
+			eyeX += distance;
+		if (changeYP)
+			eyeY += distance;
+		if (changeZP)
+			eyeZ += distance;
+		if (changeXN)
+			eyeX -= distance;
+		if (changeYN)
+			eyeY -= distance;
+		if (changeZN)
+			eyeZ -= distance;
+		if (rotateP)
+			yaw += distance*3;
+		if (rotateN)
+			yaw -= distance*3;
+	}
 
 }

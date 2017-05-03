@@ -1,5 +1,10 @@
 package DroneAutopilot.graphicalrepresentation.secondOption;
 
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -8,9 +13,6 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
-import DroneAutopilot.graphicalrepresentation.PolyhedronAPData;
-import DroneAutopilot.graphicalrepresentation.PolyhedronAPDrawer;
-import DroneAutopilot.graphicalrepresentation.WorldAPData;
 
 //TODO enkel tekenen als nodig, niet gewoon standaard
 @SuppressWarnings("serial")
@@ -21,6 +23,7 @@ public class WorldAPVisualNew extends GLCanvas implements GLEventListener {
 	private int fps = 60;
 	GLU glu;
 	private GeneralCameraAPNew camera = new GeneralCameraAPNew(0, 0, 0, 100, 0, 0, 0, 1, 0, this);
+	private JPanel panel;
 
 	public WorldAPVisualNew(WorldAPDataNew dataWorld2) {
 		this.dataWorld = dataWorld2;
@@ -38,7 +41,7 @@ public class WorldAPVisualNew extends GLCanvas implements GLEventListener {
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		gl.glLoadIdentity();
-
+		camera.update((float) 1/60);
 		camera.setCamera(gl, glu);
 		gl.glPushMatrix();
 
@@ -61,7 +64,7 @@ public class WorldAPVisualNew extends GLCanvas implements GLEventListener {
 	public void init(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
 		this.drawable = drawable;
-
+		createKeybindings();
 		drawable.setGL(gl);
 
 		// Enable z- (depth) buffer for hidden surface removal.
@@ -96,6 +99,50 @@ public class WorldAPVisualNew extends GLCanvas implements GLEventListener {
 
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
+	}
+	
+	private void createKeybindings() {
+		InputMap im = panel.getInputMap();
+		ActionMap am = panel.getActionMap();
+		
+		im.put(KeyStroke.getKeyStroke("UP"), "Forward");
+        am.put("Forward", new MovementActionAPNew(camera, true, false, false, false, false, false));
+        im.put(KeyStroke.getKeyStroke("DOWN"), "Backwards");
+        am.put("Backwards", new MovementActionAPNew(camera, true, false, false, true, false, false));
+        im.put(KeyStroke.getKeyStroke("LEFT"), "Left");
+        am.put("Left", new MovementActionAPNew(camera, false, false, true, true, false, false));
+        im.put(KeyStroke.getKeyStroke("RIGHT"), "Right");
+        am.put("Right", new MovementActionAPNew(camera, false, false, true, false, false, false));
+        im.put(KeyStroke.getKeyStroke("E"), "Upwards");
+        am.put("Upwards", new MovementActionAPNew(camera, false, true, false, false, false, false));
+        im.put(KeyStroke.getKeyStroke("D"), "Downwards");
+        am.put("Downwards", new MovementActionAPNew(camera, false, true, false, true, false, false));
+        im.put(KeyStroke.getKeyStroke("R"), "RotateRight");
+        am.put("RotateRight", new MovementActionAPNew(camera, false, false, false, false, true, false));
+        im.put(KeyStroke.getKeyStroke("F"), "RotateLeft");
+        am.put("RotateLeft", new MovementActionAPNew(camera, false, false, false, true, true, false));
+        
+        im.put(KeyStroke.getKeyStroke("released UP"), "RForward");
+        am.put("RForward", new MovementActionAPNew(camera, true, false, false, false, false, true));
+        im.put(KeyStroke.getKeyStroke("released DOWN"), "RBackwards");
+        am.put("RBackwards", new MovementActionAPNew(camera, true, false, false, true, false, true));
+        im.put(KeyStroke.getKeyStroke("released LEFT"), "RLeft");
+        am.put("RLeft", new MovementActionAPNew(camera, false, false, true, true, false, true));
+        im.put(KeyStroke.getKeyStroke("released RIGHT"), "RRight");
+        am.put("RRight", new MovementActionAPNew(camera, false, false, true, false, false, true));
+        im.put(KeyStroke.getKeyStroke("released E"), "RUpwards");
+        am.put("RUpwards", new MovementActionAPNew(camera, false, true, false, false, false, true));
+        im.put(KeyStroke.getKeyStroke("released D"), "RDownwards");
+        am.put("RDownwards", new MovementActionAPNew(camera, false, true, false, true, false, true));
+        im.put(KeyStroke.getKeyStroke("released R"), "RRotateRight");
+        am.put("RRotateRight", new MovementActionAPNew(camera, false, false, false, false, true, true));
+        im.put(KeyStroke.getKeyStroke("released F"), "RRotateLeft");
+        am.put("RRotateLeft", new MovementActionAPNew(camera, false, false, false, true, true, true));
+        
+	}
+
+	public void setJPanel(JPanel panel) {
+		this.panel = panel;
 	}
 
 }

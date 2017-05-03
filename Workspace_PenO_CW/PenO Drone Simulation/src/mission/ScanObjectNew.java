@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PolyhedraCalculations;
@@ -42,6 +42,7 @@ public class ScanObjectNew extends Mission {
 		// frame.setSize(1024, 768); // width, height
 		frame.setBounds(900, 0, 1024, 768);
 		frame.setResizable(false); // Not resizable
+		world.setJPanel((JPanel) frame.getContentPane());
 		world.requestFocus();
 		frame.setVisible(true);
 		dataWorld.addPolyhedron(datapoly);
@@ -57,7 +58,9 @@ public class ScanObjectNew extends Mission {
 		if (!isSetup) {
 			init();
 		}
-		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(), this.getPhysicsCalculations().getDirectionOfView());// blijf
+		this.getPhysicsCalculations().updateMovement(new double[]{2,0,0}, this.getPhysicsCalculations().getDirectionOfView());// blijf
+
+//		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(), this.getPhysicsCalculations().getDirectionOfView());// blijf
 //		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getDirectionOfView());// blijf dezelfde richting kijkenen
 		// System.out.println(outerCorners == null);
 
