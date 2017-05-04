@@ -1,9 +1,7 @@
 package DroneAutopilot.calculations;
 
 import java.awt.Color;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
