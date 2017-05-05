@@ -281,7 +281,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 			roll = (float) Math.toDegrees(Math.acos(rollCorr));
 		else
 			roll = Float.NaN;
-		roll *= Math.signum(-currentAxis[2][1]/Math.cos(Math.toRadians(pitch)));
+		roll *= Math.signum(currentAxis[2][1]/Math.cos(Math.toRadians(pitch)));
 	}
 
 	private double[] rotate(double[] vec, double[] axis, double cos, double sin) {
