@@ -264,11 +264,23 @@ public class PhysicsCalculations{
 
 	public double getSpeedDroneToPosition(double[] position){
 		double speedDrone = VectorCalculations.size(this.getSpeed());
-		//the cosinus of the angle between the speedvector of the drone and the distance of the object to the drone
 		double cosAngle = VectorCalculations.cosinusBetweenVectors(VectorCalculations.sum(position, VectorCalculations.inverse(this.getPosition())),this.getSpeed());
 		return cosAngle*speedDrone;
 	}
 
+	public double[] getLinearSpeedDroneToPosition(double[] position){
+		if(VectorCalculations.compareVectors(position, this.getPosition()))
+			return new double[] {0,0,0};
+		double[] linear = VectorCalculations.projectOnAxis(this.getSpeed(), getDirectionDroneToPosition(position));
+		return linear;
+	}
+	
+	public double[] getTransverseSpeedDroneToPosition(double[] position){
+		if(VectorCalculations.compareVectors(position, this.getPosition()))
+			return new double[] {0,0,0};
+		double[] transverse = VectorCalculations.projectOnPlane(this.getSpeed(), getDirectionDroneToPosition(position));
+		return transverse;
+	}
 		
 	//////////OBJECT//////////
 
@@ -389,9 +401,18 @@ public class PhysicsCalculations{
 	
 			//bereken de richting naar de positie
 			double[] dirToPos = VectorCalculations.normalise(getDirectionDroneToPosition(position));
-	
+			
+			
+//			double[] linearSpeed = getLinearSpeedDroneToPosition(position);
+//			double[] transverseSpeed = getTransverseSpeedDroneToPosition(position);
+//			
+//			System.out.println("---------------");
+//			System.out.println("linearSpeed: " + Arrays.toString(linearSpeed));
+//			System.out.println("transverseSpeed: " + Arrays.toString(transverseSpeed));
+			
+			
 			double result;
-			if(VectorCalculations.compareVectors(position, this.getPosition())){//DOEL = HUIDIGE POSITIE
+			if(VectorCalculations.compareVectors(position, this.getPosition()) || isFirstTime()){//DOEL = HUIDIGE POSITIE || EERSTE FRAME = GEEN VERPLAATSINGEN
 				//grootte + richting
 				double[] ExtForceOnThrust = VectorCalculations.projectOnAxis(externalForces, thrust);
 				//zin
@@ -412,119 +433,214 @@ public class PhysicsCalculations{
 					signThrustExtForce = 1;
 				}
 				
-				//grootte compensatie:
-				double compensateDir = 1;//externalForces*compensateDir = |compensatie| TODO mag beter
-				double cosAngleDirExtForce = VectorCalculations.cosinusBetweenVectors(dirToPos, externalForces);
-				if(cosAngleDirExtForce+0 == 0){//kan niet in die richting vliegen
-					compensateDir = 0;
-				}
-				//zin compensatie:
-				double[] DirOnThrust = VectorCalculations.projectOnAxis(dirToPos, thrust);
-				double signThrustDir;
-				if(VectorCalculations.compareVectors(thrust, VectorCalculations.normalise(DirOnThrust))){
-					signThrustDir = 1;
-				}else{
-					signThrustDir = -1;
-				}
-				double breaking=1;
-				if(this.isPossibleToStopThrust(position) == false){
-					breaking = -1;
-				} 
-				result = VectorCalculations.size(externalForces)*(signThrustExtForce+compensateDir*signThrustDir*breaking);
+				//new compensate
 				
-			}else{
-				//we kunnen enkel vliegen binnen een vlak, dus we benaderen de gewenste richting op dat vlak
-				double[] approxToDir = VectorCalculations.projectOnPlane(dirToPos, normal);//naar de positie
-				double[] approxFromDir = VectorCalculations.inverse(approxToDir);//weg van de positie
-	
-				//binnen dat vlak kunnen we enkel vliegen tussen de minmaxthrust zone
-				double maxThrust = (double) this.getDrone().getMaxThrust();
-				double[] upperLimit = VectorCalculations.sum(VectorCalculations.timesScalar(thrust, maxThrust),externalForces);
-				double[] lowerLimit = VectorCalculations.sum(VectorCalculations.timesScalar(thrust, -maxThrust),externalForces);
-	
-				//we tekenen een xy-vlak, en we leggen lowerLimit volgens de x-as en upperLimit heeft een positieve y-waarde
-//				double[] coordLow = {VectorCalculations.size(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
-				double cosLowUp = VectorCalculations.cosinusBetweenVectors(lowerLimit, upperLimit);
-				double[] crossPLowUp = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,upperLimit));
-//				double[] coordUp = {VectorCalculations.size(upperLimit)*cosLowUp,VectorCalculations.size(upperLimit)*(Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
-	
-				//TO POSITION
-				//ligt approxDir binnen of buiten de kleine hoek gevormd door upperLimit en lowerLimit?
-				boolean toDirIsInside = true;
-				double cosLowAppToDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxToDir);
-				if(cosLowAppToDir+0<cosLowUp+0){
-					toDirIsInside = false;
+				//we kunnen alleen vliegen volgens de thrustas, dus we benaderen de positie op thrustas en berekenen snelheid volgens thrustas;
+				double[] direction = VectorCalculations.projectOnAxis(getDirectionDroneToPosition(position), thrust);
+				boolean inDirectionOfThrust = VectorCalculations.compareVectors(thrust, VectorCalculations.normalise(direction));
+				double distance = VectorCalculations.size(direction);
+				double speed = VectorCalculations.size(VectorCalculations.projectOnAxis(getSpeed(), thrust));
+				if(!inDirectionOfThrust){
+					speed *= -1;
 				}
-				double[] crossPLowAppToDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxToDir));
-				double signAppToDir;
-				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppToDir)){
-					toDirIsInside = false;
-					signAppToDir = -1;
-				}else{
-					signAppToDir = 1;
-				}
-				double[] coordAppToDir = {VectorCalculations.size(approxToDir)*cosLowAppToDir,signAppToDir*VectorCalculations.size(approxToDir)*(Math.sqrt(1-cosLowAppToDir*cosLowAppToDir))};//coordinaten approxDir in xy-vlak
+				double currentThrust = VectorCalculations.size(externalForces)*signThrustExtForce;//compenseert external forces
+				double maxThrust = this.getDrone().getMaxThrust();
+				double weight = this.getDrone().getWeight();
 				
-				//AWAY FROM POSITION
-				boolean fromDirIsInside = true;
-				double cosLowAppFromDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxFromDir);
-				if(cosLowAppFromDir+0<cosLowUp+0){
-					fromDirIsInside = false;
-				}
-				double[] crossPLowAppFromDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxFromDir));
-				double signAppFromDir;
-				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppFromDir)){
-					fromDirIsInside = false;
-					signAppFromDir = -1;
-				}else{
-					signAppFromDir = 1;
-				}
-				double[] coordAppFromDir = {VectorCalculations.size(approxFromDir)*cosLowAppFromDir,signAppFromDir*VectorCalculations.size(approxFromDir)*(Math.sqrt(1-cosLowAppFromDir*cosLowAppFromDir))};//coordinaten approxDir in xy-vlak
-
+				double minAcceleration = -(maxThrust - Math.abs(currentThrust))/weight;
+				double maxAcceleration = (maxThrust - Math.abs(currentThrust))/weight;
+				double[] acceleration = new double[] {minAcceleration,maxAcceleration};
+                
+				double wantedAcceleration;
+				
+				int minMaxIndex = 1;//accelerate
+                if (speed/distance >= PhysicsCalculations.getMaxspeeddistanceratio()) {
+                    minMaxIndex = 0;//decelerate
+                }                 
+                if (distance <= PhysicsCalculations.getSlowdowndistance()){
+                    //demping ifv afstand
+                    double distanceDamping = distance/PhysicsCalculations.getSlowdowndistance();
+                    wantedAcceleration = acceleration[minMaxIndex]*distanceDamping;
+                }else{
+                    wantedAcceleration = acceleration[minMaxIndex];
+                }
+//                System.out.println(wantedAcceleration);
+                result = currentThrust+wantedAcceleration*weight;
+              
+                //original compensate
+                
+//				//grootte compensatie:
+//				double compensateDir = 1;//externalForces*compensateDir = |compensatie| TODO mag beter
+//				double cosAngleDirExtForce = VectorCalculations.cosinusBetweenVectors(dirToPos, externalForces);
+//				if(cosAngleDirExtForce+0 == 0){//kan niet in die richting vliegen
+//					compensateDir = 0;
+//				}
+//				//zin compensatie:
+//				double[] DirOnThrust = VectorCalculations.projectOnAxis(dirToPos, thrust);
+//				double signThrustDir;
+//				if(VectorCalculations.compareVectors(thrust, VectorCalculations.normalise(DirOnThrust))){
+//					signThrustDir = 1;
+//				}else{
+//					signThrustDir = -1;
+//				}
+//				double braking=1;
+//				if(this.isPossibleToStopThrust(position) == false){
+//					braking = -1;
+//				} 
+//				result = VectorCalculations.size(externalForces)*(signThrustExtForce+compensateDir*signThrustDir*braking);
+				
+			}else{	
+				
+				//originele uitwerking
+				
+//				//we kunnen enkel vliegen binnen een vlak, dus we benaderen de gewenste richting op dat vlak
+//				double[] approxToDir = VectorCalculations.projectOnPlane(dirToPos, normal);//naar de positie
+//				double[] approxFromDir = VectorCalculations.inverse(approxToDir);//weg van de positie
+//	
+//				//binnen dat vlak kunnen we enkel vliegen tussen de minmaxthrust zone
+//				double maxThrust = (double) this.getDrone().getMaxThrust();
+//				double[] upperLimit = VectorCalculations.sum(VectorCalculations.timesScalar(thrust, maxThrust),externalForces);
+//				double[] lowerLimit = VectorCalculations.sum(VectorCalculations.timesScalar(thrust, -maxThrust),externalForces);
+//	
+//				//we tekenen een xy-vlak, en we leggen lowerLimit volgens de x-as en upperLimit heeft een positieve y-waarde
+////				double[] coordLow = {VectorCalculations.size(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
+//				double cosLowUp = VectorCalculations.cosinusBetweenVectors(lowerLimit, upperLimit);
+//				double[] crossPLowUp = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,upperLimit));
+////				double[] coordUp = {VectorCalculations.size(upperLimit)*cosLowUp,VectorCalculations.size(upperLimit)*(Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
+//	
+//				//TO POSITION
+//				//ligt approxDir binnen of buiten de kleine hoek gevormd door upperLimit en lowerLimit?
+//				boolean toDirIsInside = true;
+//				double cosLowAppToDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxToDir);
+//				if(cosLowAppToDir+0<cosLowUp+0){
+//					toDirIsInside = false;
+//				}
+//				double[] crossPLowAppToDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxToDir));
+//				double signAppToDir;
+//				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppToDir)){
+//					toDirIsInside = false;
+//					signAppToDir = -1;
+//				}else{
+//					signAppToDir = 1;
+//				}
+//				double[] coordAppToDir = {VectorCalculations.size(approxToDir)*cosLowAppToDir,signAppToDir*VectorCalculations.size(approxToDir)*(Math.sqrt(1-cosLowAppToDir*cosLowAppToDir))};//coordinaten approxDir in xy-vlak
+//				
+//				//AWAY FROM POSITION
+//				boolean fromDirIsInside = true;
+//				double cosLowAppFromDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxFromDir);
+//				if(cosLowAppFromDir+0<cosLowUp+0){
+//					fromDirIsInside = false;
+//				}
+//				double[] crossPLowAppFromDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxFromDir));
+//				double signAppFromDir;
+//				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppFromDir)){
+//					fromDirIsInside = false;
+//					signAppFromDir = -1;
+//				}else{
+//					signAppFromDir = 1;
+//				}
+//				double[] coordAppFromDir = {VectorCalculations.size(approxFromDir)*cosLowAppFromDir,signAppFromDir*VectorCalculations.size(approxFromDir)*(Math.sqrt(1-cosLowAppFromDir*cosLowAppFromDir))};//coordinaten approxDir in xy-vlak
+//				
+//				//als binnen dan grootte thrust berekenen om exact op approxDir te vliegen
+//				//als buiten dan dichter bij upper of lower (om op min of max te zetten)
+//				if(toDirIsInside || fromDirIsInside){//to dir inside
+//					double cosLowExtForce = VectorCalculations.cosinusBetweenVectors(lowerLimit, externalForces);
+//					double[] coordExtForce = {VectorCalculations.size(externalForces)*cosLowExtForce,VectorCalculations.size(externalForces)*(Math.sqrt(1-cosLowExtForce*cosLowExtForce))};//coordinaten externalForces in xy-vlak
+//	
+//					double cosLowThrust = VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust);
+//					double[] crossPLowThrust = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,thrust));
+//					
+//					double signThrust;
+//					if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowThrust)){
+//						signThrust = -1;
+//					}else{
+//						signThrust = 1;
+//					}
+//					double[] coordThrust = {VectorCalculations.size(thrust)*cosLowThrust,signThrust*VectorCalculations.size(thrust)*(Math.sqrt(1-cosLowThrust*cosLowThrust))};//coordinaten thrust in xy-vlak					
+//					
+//					if(toDirIsInside){//FLY TO DIRECTION
+//						result =	(coordAppToDir[0]*coordExtForce[1]-coordAppToDir[1]*coordExtForce[0])/
+//									(coordAppToDir[1]* coordThrust[0] -coordAppToDir[0]* coordThrust[1] );
+//					}else{//FLY AWAY FROM DIRECTION
+//						result =	(coordAppFromDir[0]*coordExtForce[1]-coordAppFromDir[1]*coordExtForce[0])/
+//									(coordAppFromDir[1]* coordThrust[0] -coordAppFromDir[0]* coordThrust[1] );
+//					}
+//
+//				}else{//outside -> vlieg zo goed mogelijk naar toDir
+//					//grootte+zin
+//					double cosUpAppDir = VectorCalculations.cosinusBetweenVectors(upperLimit, approxToDir);
+//					if(cosLowAppToDir+0>cosUpAppDir+0){//dichter bij upperLimit
+//						result = -maxThrust;
+//					}else{//dichter bij lowerLimit
+//						result = maxThrust;
+//					}
+//				}	
 				
 				
-				//als binnen dan grootte thrust berekenen om exact op approxDir te vliegen
-				//als buiten dan dichter bij upper of lower (om op min of max te zetten)
-				if(toDirIsInside || fromDirIsInside){//to dir inside
-					double cosLowExtForce = VectorCalculations.cosinusBetweenVectors(lowerLimit, externalForces);
-					double[] coordExtForce = {VectorCalculations.size(externalForces)*cosLowExtForce,VectorCalculations.size(externalForces)*(Math.sqrt(1-cosLowExtForce*cosLowExtForce))};//coordinaten externalForces in xy-vlak
-	
-					double cosLowThrust = VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust);
-					double[] crossPLowThrust = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,thrust));
+				//nieuwe implementatie, niet ifv acceleratie maar ifv verplaatsing
+				
+				//(T+EF)/2m * (Dt)^2 + v*Dt = Dx = a*Dir met a onbekend, Dir is benaderd
+				double[] speed = this.getSpeed();
+				double deltaT = this.getDeltaT();
+				double weight = this.getDrone().getWeight();
+				
+				double[] lowerLimit = VectorCalculations.inverse(thrust);//als t = -infinity, gaan we perfect volgens -thrust; genormaliseerd
+//				double[] upperlimit = thrust.clone();//als t = infinity; genormaliseerd
+				
+				//als t = 0
+				double[] externalMovement = VectorCalculations.sum(	VectorCalculations.timesScalar(externalForces, deltaT*deltaT/(2*weight)),
+																	VectorCalculations.timesScalar(speed, deltaT));						
+				
+				//nu is het vlak bepaald: lowerlimit/upperlimit en externalMovement
+				//benader nu direction
+				double[] normalOnMovementPlane = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit, externalMovement));
+				double[] approxDir = VectorCalculations.projectOnPlane(dirToPos,normalOnMovementPlane);
+				
+				//als we niet naar de positie vliegen dan vliegen we er van weg?
+				double[] crossProductDirLowLim = VectorCalculations.crossProduct(lowerLimit, approxDir);
+				if(VectorCalculations.compareVectors(lowerLimit, crossProductDirLowLim)){
+					approxDir = VectorCalculations.inverse(approxDir);//verander appDir van richting
+				}
+				
+				//nu bepalen we hoeveel thrust we nodig hebben om volgens appDir te vliegen
+				double thrustNeeded;
+				
+				//bepaal vectoren in vlak:
+				//lower limit = (-infinity,0)
+				//upper limit = (infinity,0)
+				//alle vectoren hebben positieve y component
+				double cosLowThrust = VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust);
+				double cosLowExtMov = VectorCalculations.cosinusBetweenVectors(lowerLimit, externalMovement);
+				double cosLowDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxDir);
+				
+				double sinLowThrust = Math.sqrt(1-cosLowThrust*cosLowThrust);
+				double sinLowExtMov = Math.sqrt(1-cosLowExtMov*cosLowExtMov);
+				double sinLowDir = Math.sqrt(1-cosLowDir*cosLowDir);
+								
+				double sizeExtMov = VectorCalculations.size(externalMovement);
+				double sizeThrust = deltaT*deltaT/(2*weight);//component versnelling van thrust
+				
+				double[] coordThrust = new double[] {cosLowThrust*sizeThrust, sinLowThrust*sizeThrust};
+				double[] coordExtMov = new double[] {cosLowExtMov*sizeExtMov,sinLowExtMov*sizeExtMov};
+				double[] coordDir = new double[] {cosLowDir,sinLowDir};
+				
+				thrustNeeded = 	(coordDir[0]*coordExtMov[1] - coordDir[1]*coordExtMov[0])/
+								(coordDir[1]*coordThrust[0] - coordDir[0]*coordThrust[1]);
 					
-					double signThrust;
-					if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowThrust)){
-						signThrust = -1;
-					}else{
-						signThrust = 1;
-					}
-					double[] coordThrust = {VectorCalculations.size(thrust)*cosLowThrust,signThrust*VectorCalculations.size(thrust)*(Math.sqrt(1-cosLowThrust*cosLowThrust))};//coordinaten thrust in xy-vlak					
-					
-					if(toDirIsInside){//FLY TO DIRECTION
-						result =	(coordAppToDir[0]*coordExtForce[1]-coordAppToDir[1]*coordExtForce[0])/
-									(coordAppToDir[1]* coordThrust[0] -coordAppToDir[0]* coordThrust[1] );
-					}else{//FLY AWAY FROM DIRECTION
-						result =	(coordAppFromDir[0]*coordExtForce[1]-coordAppFromDir[1]*coordExtForce[0])/
-									(coordAppFromDir[1]* coordThrust[0] -coordAppFromDir[0]* coordThrust[1] );
-					}
-
-				}else{//outside -> vlieg zo goed mogelijk naar toDir
-					//grootte+zin
-					double cosUpAppDir = VectorCalculations.cosinusBetweenVectors(upperLimit, approxToDir);
-					if(cosLowAppToDir+0>cosUpAppDir+0){//dichter bij upperLimit
-						result = -maxThrust;
-					}else{//dichter bij lowerLimit
-						result = maxThrust;
-					}
-				}
+				result = thrustNeeded;
 			}
-//			System.out.println("thrust1");
-//			double[] thrustWithSize = VectorCalculations.timesScalar(thrust,result);
-//			for(double x : thrustWithSize)
-//				System.out.println(x);
 			this.setThrust(result);
 		}	
 	
+			private double[] determineSpeedInThrustEFPlane(){
+				double[] externalForces = this.getExternalForces();
+				double[] thrust = this.getDirectionOfThrust();
+				double[] normal = VectorCalculations.crossProduct(externalForces, thrust);
+				
+				double[] speedInPlane = VectorCalculations.projectOnPlane(this.getSpeed(), normal);
+				return speedInPlane;
+			}
+						
 			private boolean isPossibleToStopThrust(double[] position){
 				double speed = this.getSpeedDroneToPosition(position);
 				double thrust = Math.abs(2*this.getExternalForces()[1]);
@@ -534,9 +650,9 @@ public class PhysicsCalculations{
 				double accelerationY = Math.abs((thrust-this.getDrone().getWeight()*9.81)/this.getDrone().getWeight());
 				double distance = this.getDistanceDroneToPosition(position);
 	
-				double breakingDistance = 1.3*(Math.pow(speed, 2))/(2*accelerationY); // 1.3* als veiligheidsfactor
-				if(distance<breakingDistance && speed>0){
-					//System.out.println("BREAKING");
+				double brakingDistance = 1.3*(Math.pow(speed, 2))/(2*accelerationY); // 1.3* als veiligheidsfactor
+				if(distance<brakingDistance && speed>0){
+					//System.out.println("BRAKING");
 					return false;
 				}else{
 					return true;

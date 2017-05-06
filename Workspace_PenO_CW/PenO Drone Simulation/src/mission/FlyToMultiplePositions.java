@@ -18,6 +18,7 @@ public class FlyToMultiplePositions extends Mission {
 		listOfTargets.add(new double[]{3,0,0});
 		listOfTargets.add(new double[]{5,2,2});
 		listOfTargets.add(new double[]{10,-5,-5});
+		listOfTargets.add(new double[]{0,0,0});
 		this.setTarget(listOfTargets.get(0));
 	}
 
