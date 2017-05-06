@@ -335,7 +335,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 				.add((Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(roll))
 						- Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(roll))));
 		inverseRotateMatrix.add((Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw))
-				+ Math.sin(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)) * Math.sin(roll)));
+				+ Math.sin(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll))));
 	}
 
 	private void generateDroneCameras() {
