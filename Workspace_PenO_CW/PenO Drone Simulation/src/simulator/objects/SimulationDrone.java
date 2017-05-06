@@ -170,7 +170,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 		this.getRotateMatrix().add((Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw)))
 				- Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll)));
-		this.getRotateMatrix().add((Math.sin(Math.toRadians(roll)) * Math.cos(pitch)));
+		this.getRotateMatrix().add((Math.sin(Math.toRadians(roll)) * Math.cos(Math.toRadians(pitch))));
 		this.getRotateMatrix().add((Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw)))
 				+ Math.sin(Math.toRadians(roll)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw)));
 	}
