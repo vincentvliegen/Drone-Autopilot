@@ -158,21 +158,25 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	public void createRotateMatrix() {
 		this.getRotateMatrix().clear();
-		this.getRotateMatrix().add((Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw))));
-		this.getRotateMatrix().add((Math.sin(Math.toRadians(pitch))));
-		this.getRotateMatrix().add(-(Math.cos(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw))));
+		
+		double sinY = Math.sin(Math.toRadians(this.yaw));
+		double cosY = Math.cos(Math.toRadians(this.yaw));
+		double sinP = Math.sin(Math.toRadians(this.pitch));
+		double cosP = Math.cos(Math.toRadians(this.pitch));
+		double sinR = Math.sin(Math.toRadians(this.roll));
+		double cosR = Math.cos(Math.toRadians(this.roll));
+		
+		this.getRotateMatrix().add(cosP*cosY);
+		this.getRotateMatrix().add(sinP);
+		this.getRotateMatrix().add(-cosP*sinY);
 
-		this.getRotateMatrix().add(-(Math.sin(Math.toRadians(yaw)) * Math.sin(Math.toRadians(roll))
-				- Math.sin(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw))));
-		this.getRotateMatrix().add((Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(roll))));
-		this.getRotateMatrix().add(-(Math.sin(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw))
-				+ Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch))));
-
-		this.getRotateMatrix().add((Math.cos(Math.toRadians(roll)) * Math.sin(Math.toRadians(yaw)))
-				- Math.cos(Math.toRadians(yaw)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(roll)));
-		this.getRotateMatrix().add((Math.sin(Math.toRadians(roll)) * Math.cos(Math.toRadians(pitch))));
-		this.getRotateMatrix().add((Math.cos(Math.toRadians(roll)) * Math.cos(Math.toRadians(yaw)))
-				+ Math.sin(Math.toRadians(roll)) * Math.sin(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw)));
+		this.getRotateMatrix().add(-sinY*sinR - sinP*cosR*cosY);
+		this.getRotateMatrix().add(cosP*cosR);
+		this.getRotateMatrix().add(-sinR*cosY + cosR*sinY*sinP);
+		
+		this.getRotateMatrix().add(cosR*sinY - cosY*sinP*sinR);
+		this.getRotateMatrix().add(sinR*cosP);
+		this.getRotateMatrix().add(cosR*cosY + sinR*sinP*sinY);
 	}
 
 	public void translateDrone(double[] translate) {
@@ -197,6 +201,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 //		 System.out.println("global pitch " + this.pitch);
 //		 System.out.println("global yaw " + this.yaw);
 //		 System.out.println("global roll " + this.roll);
+//		 System.out.println("current yaw " + this.getHeading());
 //		 System.out.println("current pitch " + getPitch());
 //		 System.out.println("current roll " + getRoll());
 //		 System.out.println("pitchRate " + this.pitchRate);
@@ -212,35 +217,39 @@ public class SimulationDrone extends WorldObject implements Drone {
 	}
 
 	private void updateRPY(float timePassed) {
-		double[][] currentAxis = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+		double[][] currentAxis = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };//wereldassenstelsel 
 //		yawRate = 0;
 //		pitchRate = 720;
 //		rollRate = 0;
+		double yaw = getHeading();
+		double pitch = getPitch();
+		double roll = getRoll();
+		
 		double cosAngleY = Math.cos(Math.toRadians(yaw));
 		double sinAngleY = Math.sin(Math.toRadians(-yaw));
 		double cosAngleP = Math.cos(Math.toRadians(pitch));
 		double sinAngleP = Math.sin(Math.toRadians(-pitch));
 		double cosAngleR = Math.cos(Math.toRadians(roll));
-		double sinAngleR = Math.sin(Math.toRadians(roll));
+		double sinAngleR = Math.sin(Math.toRadians(-roll));
 
 		// angles
 		double[] yawMat = currentAxis[1];
 		currentAxis[0] = rotate(currentAxis[0], yawMat, cosAngleY, sinAngleY);
 		currentAxis[2] = rotate(currentAxis[2], yawMat, cosAngleY, sinAngleY);
 
-		double[] pitchMat = currentAxis[2];
-		currentAxis[0] = rotate(currentAxis[0], pitchMat, cosAngleP, sinAngleP);
+		double[] pitchMat = currentAxis[0];
 		currentAxis[1] = rotate(currentAxis[1], pitchMat, cosAngleP, sinAngleP);
+		currentAxis[2] = rotate(currentAxis[2], pitchMat, cosAngleP, sinAngleP);
 
-		double[] rollMat = currentAxis[0];
+		double[] rollMat = currentAxis[2];
+		currentAxis[0] = rotate(currentAxis[0], rollMat, cosAngleR, sinAngleR);
 		currentAxis[1] = rotate(currentAxis[1], rollMat, cosAngleR, sinAngleR);
-		currentAxis[2] = rotate(currentAxis[2], rollMat, cosAngleR, sinAngleR);
 
 //		for (double[] x: currentAxis)
 //			System.out.println(Arrays.toString(x));
 		
-		double newPitch = (pitchRate*Math.cos(Math.toRadians(yaw)) + rollRate*Math.sin(Math.toRadians(yaw))) * timePassed;
-		double newRoll = (rollRate*Math.cos(Math.toRadians(yaw)) - pitchRate * Math.sin(Math.toRadians(yaw))) * timePassed;
+		double newPitch = pitchRate* timePassed;
+		double newRoll = rollRate * timePassed;
 		double newYaw = yawRate * timePassed;
 
 		double ncosAngleY = Math.cos(Math.toRadians(newYaw));
@@ -248,40 +257,56 @@ public class SimulationDrone extends WorldObject implements Drone {
 		double ncosAngleP = Math.cos(Math.toRadians(newPitch));
 		double nsinAngleP = Math.sin(Math.toRadians(-newPitch));
 		double ncosAngleR = Math.cos(Math.toRadians(newRoll));
-		double nsinAngleR = Math.sin(Math.toRadians(newRoll));
+		double nsinAngleR = Math.sin(Math.toRadians(-newRoll));
 
 		// rates
 		double[] nyawMat = currentAxis[1];
 		currentAxis[0] = rotate(currentAxis[0], nyawMat, ncosAngleY, nsinAngleY);
 		currentAxis[2] = rotate(currentAxis[2], nyawMat, ncosAngleY, nsinAngleY);
 
-		double[] npitchMat = currentAxis[2];
-		currentAxis[0] = rotate(currentAxis[0], npitchMat, ncosAngleP, nsinAngleP);
+		double[] npitchMat = currentAxis[0];
 		currentAxis[1] = rotate(currentAxis[1], npitchMat, ncosAngleP, nsinAngleP);
+		currentAxis[2] = rotate(currentAxis[2], npitchMat, ncosAngleP, nsinAngleP);
 
-		double[] nrollMat = currentAxis[0];
+		double[] nrollMat = currentAxis[2];
+		currentAxis[0] = rotate(currentAxis[0], nrollMat, ncosAngleR, nsinAngleR);
 		currentAxis[1] = rotate(currentAxis[1], nrollMat, ncosAngleR, nsinAngleR);
-		currentAxis[2] = rotate(currentAxis[2], nrollMat, ncosAngleR, nsinAngleR);
 				
 		//Als pitch 90 is, geen opl???
 //		for (double[] x: currentAxis)
 //			System.out.println(Arrays.toString(x));
 //		System.out.println("-----");
 		
-		pitch = (float) Math.toDegrees(Math.asin(-currentAxis[0][1]));
-		float yawCorr = (float) ( Math.signum(currentAxis[0][0]/Math.cos(Math.toRadians(pitch)))*Math.min(Math.abs(currentAxis[0][0]/Math.cos(Math.toRadians(pitch))), 1)); 
-		if (Math.cos(Math.toRadians(pitch)) != 0)
-			yaw = (float) Math.toDegrees(Math.acos(yawCorr));
-		else
-			yaw = Float.NaN;
-		yaw = (float)Math.signum(currentAxis[0][2]/Math.cos(Math.toRadians(pitch))) * yaw;
+		double yawFixedWorld;
+		double pitchFixedWorld;
+		double rollFixedWorld;
 		
-		float rollCorr = (float) ( Math.signum(currentAxis[1][1]/Math.cos(Math.toRadians(pitch)))*Math.min(Math.abs(currentAxis[1][1]/Math.cos(Math.toRadians(pitch))), 1));
-		if (Math.cos(Math.toRadians(pitch)) != 0)
-			roll = (float) Math.toDegrees(Math.acos(rollCorr));
+		//note: rotatiematrix is pitch*roll*yaw, omdat volgorde verandert
+		
+		rollFixedWorld = Math.toDegrees(Math.asin(currentAxis[1][0]));
+		double yawCorr =  Math.signum(currentAxis[0][0]/Math.cos(Math.toRadians(rollFixedWorld)))*Math.min(Math.abs(currentAxis[0][0]/Math.cos(Math.toRadians(rollFixedWorld))), 1); 
+		if (Math.cos(Math.toRadians(rollFixedWorld)) != 0)
+			yawFixedWorld = Math.toDegrees(Math.acos(yawCorr));
 		else
-			roll = Float.NaN;
-		roll *= Math.signum(currentAxis[2][1]/Math.cos(Math.toRadians(pitch)));
+			yawFixedWorld = Float.NaN;
+		yawFixedWorld *= Math.signum(-currentAxis[2][0]/Math.cos(Math.toRadians(rollFixedWorld)));
+		
+		double pitchCorr = Math.signum(currentAxis[1][1]/Math.cos(Math.toRadians(rollFixedWorld)))*Math.min(Math.abs(currentAxis[1][1]/Math.cos(Math.toRadians(rollFixedWorld))), 1);
+		if (Math.cos(Math.toRadians(rollFixedWorld)) != 0)
+			pitchFixedWorld = Math.toDegrees(Math.acos(pitchCorr));
+		else
+			pitchFixedWorld = Float.NaN;
+		pitchFixedWorld *= Math.signum(-currentAxis[1][2]/Math.cos(Math.toRadians(rollFixedWorld)));
+	
+		if(yawFixedWorld-90 < -180){
+			yawFixedWorld += 360;
+		}
+		
+		this.yaw = (float) (yawFixedWorld-90);
+		
+		this.pitch = (float) rollFixedWorld;
+		this.roll = (float) -pitchFixedWorld;
+	
 	}
 
 	private double[] rotate(double[] vec, double[] axis, double cos, double sin) {
