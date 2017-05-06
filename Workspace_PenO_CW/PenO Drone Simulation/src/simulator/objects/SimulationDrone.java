@@ -158,25 +158,25 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	public void createRotateMatrix() {
 		this.getRotateMatrix().clear();
-		
+
 		double sinY = Math.sin(Math.toRadians(this.yaw));
 		double cosY = Math.cos(Math.toRadians(this.yaw));
 		double sinP = Math.sin(Math.toRadians(this.pitch));
 		double cosP = Math.cos(Math.toRadians(this.pitch));
 		double sinR = Math.sin(Math.toRadians(this.roll));
 		double cosR = Math.cos(Math.toRadians(this.roll));
-		
-		this.getRotateMatrix().add(cosP*cosY);
-		this.getRotateMatrix().add(sinP);
-		this.getRotateMatrix().add(-cosP*sinY);
 
-		this.getRotateMatrix().add(-sinY*sinR - sinP*cosR*cosY);
-		this.getRotateMatrix().add(cosP*cosR);
-		this.getRotateMatrix().add(-sinR*cosY + cosR*sinY*sinP);
-		
-		this.getRotateMatrix().add(cosR*sinY - cosY*sinP*sinR);
-		this.getRotateMatrix().add(sinR*cosP);
-		this.getRotateMatrix().add(cosR*cosY + sinR*sinP*sinY);
+		this.getRotateMatrix().add(cosP * cosY);
+		this.getRotateMatrix().add(sinP);
+		this.getRotateMatrix().add(-cosP * sinY);
+
+		this.getRotateMatrix().add(-sinY * sinR - sinP * cosR * cosY);
+		this.getRotateMatrix().add(cosP * cosR);
+		this.getRotateMatrix().add(-sinR * cosY + cosR * sinY * sinP);
+
+		this.getRotateMatrix().add(cosR * sinY - cosY * sinP * sinR);
+		this.getRotateMatrix().add(sinR * cosP);
+		this.getRotateMatrix().add(cosR * cosY + sinR * sinP * sinY);
 	}
 
 	public void translateDrone(double[] translate) {
@@ -196,19 +196,19 @@ public class SimulationDrone extends WorldObject implements Drone {
 		this.yaw -= getWorld().getWindRotationY() * timePassed;
 		this.roll += getWorld().getWindRotationX() * timePassed;
 		this.pitch -= getWorld().getWindRotationZ() * timePassed;
-		
-//		 System.out.println("--------------");
-//		 System.out.println("global pitch " + this.pitch);
-//		 System.out.println("global yaw " + this.yaw);
-//		 System.out.println("global roll " + this.roll);
-//		 System.out.println("current yaw " + this.getHeading());
-//		 System.out.println("current pitch " + getPitch());
-//		 System.out.println("current roll " + getRoll());
-//		 System.out.println("pitchRate " + this.pitchRate);
-//		 System.out.println("yawRate " + this.yawRate);
-//		 System.out.println("rollRate " + this.rollRate);
-//		 System.out.println("--------------");
-		 
+
+		// System.out.println("--------------");
+		// System.out.println("global pitch " + this.pitch);
+		// System.out.println("global yaw " + this.yaw);
+		// System.out.println("global roll " + this.roll);
+		// System.out.println("current yaw " + this.getHeading());
+		// System.out.println("current pitch " + getPitch());
+		// System.out.println("current roll " + getRoll());
+		// System.out.println("pitchRate " + this.pitchRate);
+		// System.out.println("yawRate " + this.yawRate);
+		// System.out.println("rollRate " + this.rollRate);
+		// System.out.println("--------------");
+
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
 		getMiddleCamera().updateDroneCamera();
@@ -217,14 +217,14 @@ public class SimulationDrone extends WorldObject implements Drone {
 	}
 
 	private void updateRPY(float timePassed) {
-		double[][] currentAxis = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };//wereldassenstelsel 
-//		yawRate = 0;
-//		pitchRate = 720;
-//		rollRate = 0;
+		double[][] currentAxis = new double[][] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };// wereldassenstelsel
+		// yawRate = 0;
+		// pitchRate = 720;
+		// rollRate = 0;
 		double yaw = getHeading();
 		double pitch = getPitch();
 		double roll = getRoll();
-		
+
 		double cosAngleY = Math.cos(Math.toRadians(yaw));
 		double sinAngleY = Math.sin(Math.toRadians(-yaw));
 		double cosAngleP = Math.cos(Math.toRadians(pitch));
@@ -245,10 +245,10 @@ public class SimulationDrone extends WorldObject implements Drone {
 		currentAxis[0] = rotate(currentAxis[0], rollMat, cosAngleR, sinAngleR);
 		currentAxis[1] = rotate(currentAxis[1], rollMat, cosAngleR, sinAngleR);
 
-//		for (double[] x: currentAxis)
-//			System.out.println(Arrays.toString(x));
-		
-		double newPitch = pitchRate* timePassed;
+		// for (double[] x: currentAxis)
+		// System.out.println(Arrays.toString(x));
+
+		double newPitch = pitchRate * timePassed;
 		double newRoll = rollRate * timePassed;
 		double newYaw = yawRate * timePassed;
 
@@ -271,42 +271,44 @@ public class SimulationDrone extends WorldObject implements Drone {
 		double[] nrollMat = currentAxis[2];
 		currentAxis[0] = rotate(currentAxis[0], nrollMat, ncosAngleR, nsinAngleR);
 		currentAxis[1] = rotate(currentAxis[1], nrollMat, ncosAngleR, nsinAngleR);
-				
-		//Als pitch 90 is, geen opl???
-//		for (double[] x: currentAxis)
-//			System.out.println(Arrays.toString(x));
-//		System.out.println("-----");
-		
+
+		// Als pitch 90 is, geen opl???
+		// for (double[] x: currentAxis)
+		// System.out.println(Arrays.toString(x));
+		// System.out.println("-----");
+
 		double yawFixedWorld;
 		double pitchFixedWorld;
 		double rollFixedWorld;
-		
-		//note: rotatiematrix is pitch*roll*yaw, omdat volgorde verandert
-		
+
+		// note: rotatiematrix is pitch*roll*yaw, omdat volgorde verandert
+
 		rollFixedWorld = Math.toDegrees(Math.asin(currentAxis[1][0]));
-		double yawCorr =  Math.signum(currentAxis[0][0]/Math.cos(Math.toRadians(rollFixedWorld)))*Math.min(Math.abs(currentAxis[0][0]/Math.cos(Math.toRadians(rollFixedWorld))), 1); 
+		double yawCorr = Math.signum(currentAxis[0][0] / Math.cos(Math.toRadians(rollFixedWorld)))
+				* Math.min(Math.abs(currentAxis[0][0] / Math.cos(Math.toRadians(rollFixedWorld))), 1);
 		if (Math.cos(Math.toRadians(rollFixedWorld)) != 0)
 			yawFixedWorld = Math.toDegrees(Math.acos(yawCorr));
 		else
 			yawFixedWorld = Float.NaN;
-		yawFixedWorld *= Math.signum(-currentAxis[2][0]/Math.cos(Math.toRadians(rollFixedWorld)));
-		
-		double pitchCorr = Math.signum(currentAxis[1][1]/Math.cos(Math.toRadians(rollFixedWorld)))*Math.min(Math.abs(currentAxis[1][1]/Math.cos(Math.toRadians(rollFixedWorld))), 1);
+		yawFixedWorld *= Math.signum(-currentAxis[2][0] / Math.cos(Math.toRadians(rollFixedWorld)));
+
+		double pitchCorr = Math.signum(currentAxis[1][1] / Math.cos(Math.toRadians(rollFixedWorld)))
+				* Math.min(Math.abs(currentAxis[1][1] / Math.cos(Math.toRadians(rollFixedWorld))), 1);
 		if (Math.cos(Math.toRadians(rollFixedWorld)) != 0)
 			pitchFixedWorld = Math.toDegrees(Math.acos(pitchCorr));
 		else
 			pitchFixedWorld = Float.NaN;
-		pitchFixedWorld *= Math.signum(-currentAxis[1][2]/Math.cos(Math.toRadians(rollFixedWorld)));
-	
-		if(yawFixedWorld-90 < -180){
+		pitchFixedWorld *= Math.signum(-currentAxis[1][2] / Math.cos(Math.toRadians(rollFixedWorld)));
+
+		if (yawFixedWorld - 90 < -180) {
 			yawFixedWorld += 360;
 		}
-		
-		this.yaw = (float) (yawFixedWorld-90);
-		
+
+		this.yaw = (float) (yawFixedWorld - 90);
+
 		this.pitch = (float) rollFixedWorld;
 		this.roll = (float) -pitchFixedWorld;
-	
+
 	}
 
 	private double[] rotate(double[] vec, double[] axis, double cos, double sin) {
@@ -644,24 +646,33 @@ public class SimulationDrone extends WorldObject implements Drone {
 	}
 
 	public void fakeTimeHasPassed() {
-		if (fakeYaw == 360) {
-			pitch = 90;
-			yaw = 0;
-			roll = 0;
-			translate = new double[]{1, 1, 0};
-			fakeYaw += 1;
-		} else if (fakeYaw == 361) {
-			pitch = -90;
-			yaw = 0;
-			roll = 0;
-			translate = new double[]{1, -1, 0};	
-		} else if (fakeYaw < 360) {
+		if (fakeYaw < 361) {
 			pitch = 0;
 			yaw = (float) -fakeYaw;
 			roll = 0;
-			translate = new double[]{1-0.8*Math.cos(Math.toRadians(fakeYaw)), 0, 0.8*Math.sin(Math.toRadians(fakeYaw))};
-			fakeYaw += 5;
+			translate = new double[] { 1 - 0.8 * Math.cos(Math.toRadians(fakeYaw)), 0,
+					0.8 * Math.sin(Math.toRadians(fakeYaw)) };
+			fakeYaw += 1;
+		} else if (fakeYaw < 721) {
+			float npitch = (float) (fakeYaw - 360);
+			pitch = npitch;
+			yaw = 0;
+			roll = 0;
+			translate = new double[] { 1- 0.8*Math.cos(Math.toRadians(npitch)), 0.8*Math.sin(Math.toRadians(npitch)), 0 };
+			fakeYaw += 1;
+		} else {
+			pitch = 0;
+			yaw = 0;
+			roll = 0;
+			this.getMovement().currentPosition = new double[]{0.2,0,0};
+			float[] vel = this.getMovement().getVelocity();
+			for (int i = 0; i<3;i++)
+				vel[i] = 0;
 		}
+		getLeftDroneCamera().updateDroneCamera();
+		getRightDroneCamera().updateDroneCamera();
+		getMiddleCamera().updateDroneCamera();
+		
 		autopilot.timeHasPassed();
 	}
 
