@@ -115,7 +115,6 @@ public class PhysicsCalculations{
 		}
 		
 		this.calculateExternalForces();
-		setFirstTime(false);
 		
 //		System.out.println("x expected: " + Arrays.toString(VectorCalculations.inverse(this.getExpectedOrientationDrone()[2])));
 //		System.out.println("y expected: " + Arrays.toString(this.getExpectedOrientationDrone()[1]));
@@ -644,20 +643,20 @@ public class PhysicsCalculations{
 					
 		private void calculateRemainingAnglesToObject(){
 			double[][] currentOrientation = new double[][] {{1,0,0},{0,1,0},{0,0,1}}; //x,y & z van drone
-			double[][] WantedOrientation = this.getWantedOrientation();
+			double[][] wantedOrientation = this.getWantedOrientation().clone();
 
 			//wind in rekening brengen
-			WantedOrientation[0] = this.removeRotationWind(WantedOrientation[0]);
-			WantedOrientation[1] = this.removeRotationWind(WantedOrientation[1]);
+			wantedOrientation[0] = this.removeRotationWind(wantedOrientation[0]);
+			wantedOrientation[1] = this.removeRotationWind(wantedOrientation[1]);
 			
 			//omzetten naar droneCoordinaten
-			WantedOrientation[0] = VectorCalculations.normalise(this.worldVectorToDroneVector(WantedOrientation[0]));
-			WantedOrientation[1] = VectorCalculations.normalise(this.worldVectorToDroneVector(WantedOrientation[1]));		
+			wantedOrientation[0] = VectorCalculations.normalise(this.worldVectorToDroneVector(wantedOrientation[0]));
+			wantedOrientation[1] = VectorCalculations.normalise(this.worldVectorToDroneVector(wantedOrientation[1]));		
 
 			//Yaw, pitch roll bepalen
 			
 			//Yaw kan berekend worden adhv de viewvector
-			double[] wantedViewOnYawPlane = new double[]{WantedOrientation[1][0],0,WantedOrientation[1][2]};
+			double[] wantedViewOnYawPlane = new double[]{wantedOrientation[1][0],0,wantedOrientation[1][2]};
 			double yawWanted1 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedViewOnYawPlane, VectorCalculations.inverse(currentOrientation[2]))));
 			//sign yaw:
 			double[] crossProductViewXaxis = new double[] {0,-1,0}; // = VectorCalculations.crossProduct(VectorCalculations.inverse(currentOrientation[2]), currentOrientation[0]);
@@ -674,15 +673,15 @@ public class PhysicsCalculations{
 			//Nu assenstelsel draaien zodanig de pitch berekend kan worden adhv cosinus tss de vectoren
 			double[][] currentOrientation1 = VectorCalculations.yawAxes(currentOrientation, yawWanted1);
 			double[][] currentOrientation2 = VectorCalculations.yawAxes(currentOrientation, yawWanted2);
-			double pitchWanted1 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], VectorCalculations.inverse(currentOrientation1[2]))));
+			double pitchWanted1 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedOrientation[1], VectorCalculations.inverse(currentOrientation1[2]))));
 			//sign pitch:
-			if(WantedOrientation[1][1]>0){
+			if(wantedOrientation[1][1]>0){
 				pitchWanted1*=-1;
 			}
 			
-			double pitchWanted2 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[1], VectorCalculations.inverse(currentOrientation2[2]))));
+			double pitchWanted2 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedOrientation[1], VectorCalculations.inverse(currentOrientation2[2]))));
 			//sign pitch:
-			if(WantedOrientation[1][1]>0){
+			if(wantedOrientation[1][1]>0){
 				pitchWanted2*=-1;
 			}
 			
@@ -690,15 +689,20 @@ public class PhysicsCalculations{
 			// cosinus tss vectoren
 			currentOrientation1 = VectorCalculations.pitchAxes(currentOrientation1, pitchWanted1);
 			currentOrientation2 = VectorCalculations.pitchAxes(currentOrientation2, pitchWanted2);
-			double rollWanted1 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[0], currentOrientation1[1])));
+			double rollWanted1 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedOrientation[0], currentOrientation1[1])));
 			//sign roll:
-			if(WantedOrientation[0][0]<0){
-				rollWanted1*=-1;
+			double[] crossProductThrust1Xaxis = VectorCalculations.crossProduct(currentOrientation1[1], currentOrientation1[0]);//positieve roll van y naar x
+			double[] crossProductThrust1WantedThrust= VectorCalculations.normalise(VectorCalculations.crossProduct(currentOrientation1[1], wantedOrientation[0]));
+			if(!VectorCalculations.compareVectors(crossProductThrust1WantedThrust, crossProductThrust1Xaxis)){
+				rollWanted1 *= -1;
 			}
-			double rollWanted2 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(WantedOrientation[0], currentOrientation2[1])));
+
+			double rollWanted2 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedOrientation[0], currentOrientation2[1])));
 			//sign roll:
-			if(WantedOrientation[0][0]<0){
-				rollWanted2*=-1;
+			double[] crossProductThrust2Xaxis = VectorCalculations.crossProduct(currentOrientation2[1], currentOrientation2[0]);//positieve roll van y naar x
+			double[] crossProductThrust2WantedThrust= VectorCalculations.normalise(VectorCalculations.crossProduct(currentOrientation2[1], wantedOrientation[0]));
+			if(!VectorCalculations.compareVectors(crossProductThrust2WantedThrust, crossProductThrust2Xaxis)){
+				rollWanted2 *= -1;
 			}
 			
 			//1 of 2?
@@ -728,45 +732,141 @@ public class PhysicsCalculations{
 		}
 	
 		private void calculateRotationRates(){
-			double[] remainingAngles = this.getRemainingAngles();
-			if(!VectorCalculations.compareVectors(remainingAngles, new double[] {0,0,0})){
-				double[] maxAngleRates = new double[]{(double) this.getDrone().getMaxYawRate(), (double) this.getDrone().getMaxPitchRate(), (double) this.getDrone().getMaxRollRate()};
-				//Gecorrigeerde waarde ifv de maxwindrates.
-				// Remain angles in 1 frame => 1/Delta * Remain
-				double[] correctAnglesInOneFrames = VectorCalculations.timesScalar(remainingAngles, 1/getDeltaT());
-				//Check vs maxRates
-				if (correctAnglesInOneFrames[0]+0 != 0) {
-					if (Math.abs(correctAnglesInOneFrames[0]) > Math.abs(maxAngleRates[0])) {
-						this.setYawRate(maxAngleRates[0]*Math.signum(correctAnglesInOneFrames[0]));
-					}else {
-						this.setYawRate(correctAnglesInOneFrames[0]);
-					}
-				}else{
-					this.setYawRate(0);
+			double yawrate = 0;
+			double pitchrate = 0;
+			double rollrate = 0;
+			if(!isFirstTime()){//deltaT is nodig id berekeningen hierop
+				double yaw = this.getRemainingAngles()[0];
+				double maxYawRate = Math.abs(this.getDrone().getMaxYawRate());
+				double yawInOneFrameRate = yaw/getDeltaT();
+				//yaw
+				boolean yawFinished;
+				if (Math.abs(yawInOneFrameRate) > maxYawRate) {//kan niet volledig yawen
+					yawFinished = false;
+					yawrate = maxYawRate*Math.signum(yaw);
+				}else {//kan volledig yawen
+					yawFinished = true;
+					yawrate = yawInOneFrameRate;
 				}
-//				System.out.println("yawRate: " + this.getYawRate());
-//				System.out.println("----------------");
-				if (correctAnglesInOneFrames[1]+0 != 0 /*&& Math.abs(correctAnglesInOneFrames[0]) < Math.abs(maxAngleRates[0])*/){
-					if (Math.abs(correctAnglesInOneFrames[1]) > Math.abs(maxAngleRates[1])) {
-						this.setPitchRate(maxAngleRates[1]*Math.signum(correctAnglesInOneFrames[1]));
-					}else {
-						this.setPitchRate(correctAnglesInOneFrames[1]);
-					}
-				}else{
-					this.setPitchRate(0);
+				//pitch/roll
+				//als yaw niet gedaan is, gaat de thrustvector id foute richting draaien met gegeven pitch/roll
+				if(!yawFinished){
+					correctRemainingPitchRoll(yawrate*this.getDeltaT());				
 				}
-				if (correctAnglesInOneFrames[2]+0 != 0 /*&& Math.abs(correctAnglesInOneFrames[0]) < Math.abs(maxAngleRates[0]) && Math.abs(correctAnglesInOneFrames[1]) < Math.abs(maxAngleRates[1])*/) {
-					if (Math.abs(correctAnglesInOneFrames[2]) > Math.abs(maxAngleRates[2])) {
-						this.setRollRate(maxAngleRates[2]*Math.signum(correctAnglesInOneFrames[2]));
-					}else {
-						this.setRollRate(correctAnglesInOneFrames[2]);
+				double pitch = this.getRemainingAngles()[1];
+				double roll = this.getRemainingAngles()[2];
+				double pitchInOneFrameRate = pitch/getDeltaT();
+				double rollInOneFrameRate = roll/getDeltaT();
+				double maxPitchRate =  Math.abs(this.getDrone().getMaxPitchRate());
+				double maxRollRate = Math.abs(this.getDrone().getMaxRollRate());			
+				if(roll+0 == 0){//roll = 0
+					rollrate = 0;
+					if (Math.abs(pitchInOneFrameRate) > maxPitchRate) {//kan niet volledig pitchen
+						pitchrate = maxPitchRate*Math.signum(pitch);
+					}else {//kan volledig pitchen
+						pitchrate = pitchInOneFrameRate;
 					}
-				}else{
-					this.setRollRate(0);
+				}else if(pitch+0==0){//pitch = 0
+					pitchrate = 0;
+					if (Math.abs(rollInOneFrameRate) > maxRollRate) {//kan niet volledig pitchen
+						rollrate = maxRollRate*Math.signum(roll);
+					}else {//kan volledig pitchen
+						rollrate = rollInOneFrameRate;
+					}
+				}else{//roll,pitch != 0
+					//pitch en roll moeten in gelijke verhoudingen worden doorgevoerd om in de juiste richting de thrust te verplaatsen
+					double ratio = Math.abs(pitch/roll);
+					double maxRatio = maxPitchRate/maxRollRate;
+					boolean pitchGreaterThanMax = (Math.abs(pitchInOneFrameRate) > maxPitchRate);
+					boolean rollGreaterThanMax = (Math.abs(rollInOneFrameRate) > maxRollRate);
+					
+					if(!pitchGreaterThanMax){//pitch kleiner dan max
+						if(!rollGreaterThanMax){//roll kleiner dan max
+							pitchrate = pitchInOneFrameRate;
+							rollrate = rollInOneFrameRate;
+						}else{//roll groter dan max
+							rollrate = maxRollRate*Math.signum(roll);
+							pitchrate = maxRollRate*ratio*Math.signum(pitch);
+						}
+					}else{//pitch groter dan max
+						if(!rollGreaterThanMax){//roll kleiner dan max
+							pitchrate = maxPitchRate*Math.signum(pitch);
+							rollrate = maxPitchRate/ratio*Math.signum(roll);
+						}else{//roll groter dan max
+							//beiden zijn groter dan max
+							if(maxRatio>=ratio){//maxPitch/maxRoll >= pitch/roll
+								rollrate = maxRollRate*Math.signum(roll);
+								pitchrate = maxRollRate*ratio*Math.signum(pitch);
+							}else{
+								pitchrate = maxPitchRate*Math.signum(pitch);
+								rollrate = maxPitchRate/ratio*Math.signum(roll);
+							}
+						}
+					}
+
+					//nu is pitchrate/rollrate = ratio -> thrust stijgt gelijkmatig
+					
 				}
 			}
+			setYawRate(yawrate);
+			setPitchRate(pitchrate);
+			setRollRate(rollrate);
+			setFirstTime(false);
 		}
-					
+		
+			public void correctRemainingPitchRoll(double expectedYaw){
+				double[] wantedThrust = this.getWantedOrientation()[0];
+				wantedThrust = this.removeRotationWind(wantedThrust);//windloos
+				wantedThrust = VectorCalculations.normalise(this.worldVectorToDroneVector(wantedThrust));//in droneCoordinaten
+				double[][] currentOrientation = new double[][] {{1,0,0},{0,1,0},{0,0,1}};//currentThrust = currentOrientation[1]
+				//yaw = yawExpected
+				//yaw axes
+				currentOrientation = VectorCalculations.yawAxes(currentOrientation, expectedYaw);		
+				
+				//pitch
+				//projecteer wantedThrust op pitchvlak
+				double[] wantedThrustOnPitchPlane = VectorCalculations.projectOnPlane(wantedThrust, currentOrientation[0]);
+				double pitchWanted1 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedThrustOnPitchPlane, currentOrientation[1])));
+				double[] crossProductThrustNegZaxis = VectorCalculations.crossProduct(currentOrientation[1], VectorCalculations.inverse(currentOrientation[2]));//positieve pitch van thrust (=y) naar neg z
+				double[] crossProductThrustWantedThrust= VectorCalculations.normalise(VectorCalculations.crossProduct(currentOrientation[1], wantedThrustOnPitchPlane));
+				if(!VectorCalculations.compareVectors(crossProductThrustWantedThrust, crossProductThrustNegZaxis)){
+					pitchWanted1 *= -1;
+				}
+				
+				double pitchWanted2 = pitchWanted1+180;
+				if(pitchWanted2 > 180){
+					pitchWanted2 -= 360;
+				}
+				//pitch axes
+				double[][] currentOrientation1 = VectorCalculations.pitchAxes(currentOrientation, pitchWanted1);
+				double[][] currentOrientation2 = VectorCalculations.pitchAxes(currentOrientation, pitchWanted2);
+				
+				//roll
+				double rollWanted1 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedThrust, currentOrientation1[1])));
+				double[] crossProductThrust1Xaxis = VectorCalculations.crossProduct(currentOrientation1[1], currentOrientation1[0]);//positieve roll van y naar x
+				double[] crossProductThrust1WantedThrust= VectorCalculations.normalise(VectorCalculations.crossProduct(currentOrientation1[1], wantedThrust));
+				if(!VectorCalculations.compareVectors(crossProductThrust1WantedThrust, crossProductThrust1Xaxis)){
+					rollWanted1 *= -1;
+				}
+				double rollWanted2 = Math.toDegrees(Math.acos(VectorCalculations.cosinusBetweenVectors(wantedThrust, currentOrientation2[1])));
+				double[] crossProductThrust2Xaxis = VectorCalculations.crossProduct(currentOrientation2[1], currentOrientation2[0]);//positieve roll van y naar x
+				double[] crossProductThrust2WantedThrust= VectorCalculations.normalise(VectorCalculations.crossProduct(currentOrientation2[1], wantedThrust));
+				if(!VectorCalculations.compareVectors(crossProductThrust2WantedThrust, crossProductThrust2Xaxis)){
+					rollWanted2 *= -1;
+				}
+				
+				//1 of 2?
+				double pitch;
+				double roll;
+				if(Math.abs(pitchWanted1)+Math.abs(rollWanted1) <= 180){
+					pitch = pitchWanted1;
+					roll = rollWanted1;
+				}else{
+					pitch = pitchWanted2;
+					roll = rollWanted2;
+				}
+				setRemainingAngles(new double[] {expectedYaw,pitch,roll});
+			}
 		
 	//////////VECTOR ROTATIONS//////////
 		
