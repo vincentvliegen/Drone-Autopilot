@@ -36,7 +36,7 @@ public class Edge {
 		}
 	}
 	
-	private ArrayList<CustomColor> getColors() {
+	public ArrayList<CustomColor> getColors() {
 		return new ArrayList<>(colors);
 	}
 	

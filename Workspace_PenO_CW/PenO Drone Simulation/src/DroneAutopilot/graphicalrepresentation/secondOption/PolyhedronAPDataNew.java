@@ -12,6 +12,9 @@ public class PolyhedronAPDataNew {
 	private HashMap<CustomColor, ArrayList<Point>> colorPointsPairs = new HashMap<>();
 	private HashMap<Integer, CustomColor> integerColors = new HashMap<>();
 	private HashMap<Point, ArrayList<Edge>> pointsWithTheirEdges = new HashMap<>();
+	private ArrayList<Edge> unfinishedEdges = new ArrayList<>();
+	private boolean anEdgeWasAdded = false;
+	
 	
 	public HashSet<Point> getPoints() {
 		return points;
@@ -39,7 +42,7 @@ public class PolyhedronAPDataNew {
 		return pointsWithTheirEdges;
 	}
 	
-	public void addEdgeToPoint(Point p, Edge e) {
+	private void addEdgeToPoint(Point p, Edge e) {
 		if(pointsWithTheirEdges.containsKey(p)) {
 			pointsWithTheirEdges.get(p).add(e);
 		}
@@ -81,8 +84,31 @@ public class PolyhedronAPDataNew {
 		Edge e = new Edge(p1, p2, c);
 		addEdgeToPoint(p1, e);
 		addEdgeToPoint(p2, e);
+		addUnfinishedEdge(e);
+		this.anEdgeWasAdded = true;
 	}
 	
+	private void addUnfinishedEdge(Edge e) {
+		if(e.getColors().size() != 2) {
+			this.unfinishedEdges.add(e);
+		}
+		this.anEdgeWasAdded = true;
+
+	}
+	
+	public void removeFromUnfinishedEdges(Edge e) {
+		if(e.getColors().size() == 2) {
+			unfinishedEdges.remove(e);
+		}
+	}
+	
+	public ArrayList<Edge> getUnfinishedEdges() {
+		return unfinishedEdges;
+	}
+	
+	public boolean anEdgeWasAdded() {
+		return anEdgeWasAdded;
+	}
 	
 
 

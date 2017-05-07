@@ -30,6 +30,9 @@ public class WorldAPDataNew {
 		this.polyhedrons.add(poly);
 	}
 	
+	public void removePolyhedron(PolyhedronAPDataNew poly) {
+		this.polyhedrons.remove(poly);
+	}
 	
 	
 	

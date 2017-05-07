@@ -3,8 +3,12 @@ package mission;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,21 +33,24 @@ public class ScanObjectNew extends Mission {
 
 	JFrame frame;
 
+	WorldAPDataNew dataWorld = new WorldAPDataNew();
+
+	WorldAPVisualNew world = new WorldAPVisualNew(dataWorld);
+	PolyhedronAPDataNew datapoly = new PolyhedronAPDataNew();
+
+	private boolean isSetup = false;
+	private boolean isANewDataPoly = true;
+
 	public ScanObjectNew(DroneAutopilot droneAutopilot) {
 		super(droneAutopilot);
 	}
 
-	WorldAPDataNew dataWorld = new WorldAPDataNew();
-	WorldAPVisualNew world = new WorldAPVisualNew(dataWorld);
-
-	PolyhedronAPDataNew datapoly = new PolyhedronAPDataNew();
-
 	private void init() {
 		frame = new JFrame("AP world");
-
+	
 		frame.getContentPane().add(world, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+	
 		// frame.setSize(1024, 768); // width, height
 		frame.setBounds(900, 0, 1024, 768);
 		frame.setResizable(false); // Not resizable
@@ -55,8 +62,6 @@ public class ScanObjectNew extends Mission {
 		System.out.println("init");
 	}
 
-	private boolean isSetup = false;
-
 	@Override
 	public void execute() {
 
@@ -64,23 +69,50 @@ public class ScanObjectNew extends Mission {
 		if (!isSetup) {
 			init();
 		}
-//		this.getPhysicsCalculations().updateMovement(new double[]{2,0,0}, this.getPhysicsCalculations().getDirectionOfView());// blijf
+
+	
+//		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(), this.getPhysicsCalculations().getDirectionOfView());// blijf waar je bent
+//		this.getPhysicsCalculations().updateMovement(new double[]{2,0,0}, this.getPhysicsCalculations().getDirectionOfView());// vlieg naar een gegeven positie
 //		this.getPhysicsCalculations().updateMovement(new double[]{2,0,1}, new double[] {2,0,0});// vlieg een beetje schuin
 
-//		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(), this.getPhysicsCalculations().getDirectionOfView());// blijf
 
-
-		try {
-			handleSeenTriangles();
-		} catch (Exception e) {
-			e.printStackTrace();
+		//TODO eens we een finished object kunnen produceren, dit verbeteren!
+		if(!isANewDataPoly && datapoly.getUnfinishedEdges().isEmpty()) {
+			dataWorld.removePolyhedron(datapoly);
+			//TODO niet ok, want moet eerst een nieuw object vinden in theorie, voor je een nieuw object kan scannen
+			try {
+				//create a clone of datapoly so we can add it to the dataworld and start working on a new figure
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(baos);
+				oos.writeObject(datapoly);
+				ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+				ObjectInputStream ois = new ObjectInputStream(bais);
+				System.out.println("Figure is complete!");
+				/*
+				dataWorld.addPolyhedron((PolyhedronAPDataNew) ois.readObject());
+				datapoly = new PolyhedronAPDataNew();
+				isANewDataPoly = true;
+				*/
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		else {
+		
+			try {
+				handleSeenTriangles();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
 
 	@Override
 	public void updateGUI() {
-		world.display();
+		//TODO
 	}
 
 	/**
@@ -92,6 +124,7 @@ public class ScanObjectNew extends Mission {
 //		writeTakeImageToFile();
 		double margin = 0.08;
 		for (ArrayList<float[]> key : outerCorners.keySet()) {
+			isANewDataPoly = false;
 			float[] outerkey = key.get(0);
 			float[] innerkey = key.get(1);
 			int rgb = Color.HSBtoRGB(outerkey[0], outerkey[1], outerkey[2]);
@@ -190,22 +223,48 @@ public class ScanObjectNew extends Mission {
 
 	}
 	
+	private void addColorToExistingEdges(ArrayList<Point> existingPoints, CustomColor c) {
+		for(int firstIndex = 0; firstIndex < existingPoints.size(); firstIndex ++) {
+			Point p1 = existingPoints.get(firstIndex);
+			for(int secondIndex = firstIndex + 1; secondIndex < existingPoints.size(); secondIndex ++) {
+				innerLoop:
+				for(Edge e: datapoly.getPointsWithTheirEdges().get(p1)) {
+					if(e.consistsOfPoint(existingPoints.get(secondIndex))) {
+						try {
+							e.addColor(c);
+							datapoly.removeFromUnfinishedEdges(e);
+							if(e.getColors().size() == 2) {
+								
+							}
+							break innerLoop;
+						} catch (Exception e1) {
+							System.out.println("Error in addColorToExistingEdges(ScanObjectNew)");
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	int index = 0;
+
 	//voor uitschrijven naar bestand
 	public void writeTakeImageToFile() {
 		  //		int width = getWidth();
 		  String path = "images/img";
 		  path = path + "-left" + index +".png";
 		  index ++;
-
+	
 		  File file = new File(path); // The file to save to.
-
+	
 		  String format = "PNG"; // Example: "PNG" or "JPG"
 		  int[] temp = getDrone().getLeftCamera().takeImage();
-
+	
 		  int width = getDrone().getLeftCamera().getWidth();
 		  int height = temp.length/getDrone().getLeftCamera().getWidth();
 		  BufferedImage image = new BufferedImage(width, height , BufferedImage.TYPE_INT_RGB);
-
+	
 		  for(int x = 0; x < width; x++)
 		  {
 		    for(int y = 0; y < height; y++)
@@ -216,29 +275,6 @@ public class ScanObjectNew extends Mission {
 		  try {
 		    ImageIO.write(image, format, file);
 		  } catch (IOException e) { e.printStackTrace(); }
-	}
-	int index = 0;
-	
-	
-	private void addColorToExistingEdges(ArrayList<Point> existingPoints, CustomColor c) {
-		for(int firstIndex = 0; firstIndex < existingPoints.size(); firstIndex ++) {
-			Point p1 = existingPoints.get(firstIndex);
-			for(int secondIndex = firstIndex + 1; secondIndex < existingPoints.size(); secondIndex ++) {
-//				Point p2 = existingPoints.get(secondIndex);
-				innerLoop:
-				for(Edge e: datapoly.getPointsWithTheirEdges().get(p1)) {
-					if(e.consistsOfPoint(existingPoints.get(secondIndex))) {
-						try {
-							e.addColor(c);
-							break innerLoop;
-						} catch (Exception e1) {
-							System.out.println("Error in addColorToExistingEdges(ScanObjectNew)");
-							e1.printStackTrace();
-						}
-					}
-				}
-			}
-		}
 	}
 
 
