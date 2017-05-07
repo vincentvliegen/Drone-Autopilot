@@ -21,9 +21,11 @@ public class CustomColor {
 			return (int) obj == color;
 		}
 		else if (obj instanceof CustomColor) {
-			System.out.println(((CustomColor)obj).getColor());
-			System.out.println(getColor());
-			System.out.println(((CustomColor) obj).getColor() == getColor());
+			
+//			TODO komt hier niet sinds invoer van hashmap int->color
+//			System.out.println(((CustomColor)obj).getColor());
+//			System.out.println(getColor());
+//			System.out.println(((CustomColor) obj).getColor() == getColor());
 			return ((CustomColor) obj).getColor() == getColor();
 		}
 		return false;

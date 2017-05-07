@@ -65,8 +65,8 @@ public class DroneAutopilot implements Autopilot {
 			}else if(getGUI().getMissionType() == MissionType.SINGLEOBJECT){
 				this.getFlyToSingleObject().execute();
 			}else if(getGUI().getMissionType() == MissionType.SCANOBJECT) {
-				this.getScanObject().execute();
-//				this.scanObjectNew.execute();
+//				this.getScanObject().execute();
+				this.scanObjectNew.execute();
 			}else if(getGUI().getMissionType() == MissionType.FLYMULTIPLEPOS){
 				this.getFlyToMultiplePositions().execute();
 			}else if(getGUI().getMissionType() == MissionType.TEST){

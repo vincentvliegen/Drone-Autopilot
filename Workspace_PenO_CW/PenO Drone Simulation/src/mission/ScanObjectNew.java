@@ -2,15 +2,20 @@ package mission;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import DroneAutopilot.graphicalrepresentation.*;
+import DroneAutopilot.graphicalrepresentation.secondOption.Edge;
 import DroneAutopilot.graphicalrepresentation.secondOption.PolyhedronAPDataNew;
 import DroneAutopilot.graphicalrepresentation.secondOption.WorldAPDataNew;
 import DroneAutopilot.graphicalrepresentation.secondOption.WorldAPVisualNew;
@@ -47,6 +52,7 @@ public class ScanObjectNew extends Mission {
 		frame.setVisible(true);
 		dataWorld.addPolyhedron(datapoly);
 		isSetup = true;
+		System.out.println("init");
 	}
 
 	private boolean isSetup = false;
@@ -58,17 +64,16 @@ public class ScanObjectNew extends Mission {
 		if (!isSetup) {
 			init();
 		}
-		this.getPhysicsCalculations().updateMovement(new double[]{2,0,0}, this.getPhysicsCalculations().getDirectionOfView());// blijf
+//		this.getPhysicsCalculations().updateMovement(new double[]{2,0,0}, this.getPhysicsCalculations().getDirectionOfView());// blijf
+//		this.getPhysicsCalculations().updateMovement(new double[]{2,0,1}, new double[] {2,0,0});// vlieg een beetje schuin
 
 //		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(), this.getPhysicsCalculations().getDirectionOfView());// blijf
-//		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getDirectionOfView());// blijf dezelfde richting kijkenen
-		// System.out.println(outerCorners == null);
 
 
 		try {
 			handleSeenTriangles();
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 
 	}
@@ -84,9 +89,7 @@ public class ScanObjectNew extends Mission {
 	private void handleSeenTriangles() {
 		HashMap<ArrayList<float[]>, ArrayList<double[]>> outerCorners = polycalc
 				.getMatchingCorners(getDrone().getLeftCamera(), getDrone().getRightCamera());
-
-		// System.out.println(outerCorners == null);
-		//TODO
+//		writeTakeImageToFile();
 		double margin = 0.08;
 		for (ArrayList<float[]> key : outerCorners.keySet()) {
 			float[] outerkey = key.get(0);
@@ -97,11 +100,9 @@ public class ScanObjectNew extends Mission {
 			double[] p2 = outerCorners.get(key).get(1);
 			double[] p3 = outerCorners.get(key).get(2);
 
-			
+			// if this color was seen before, we try to match the points seen with the ones already registered
 			if(datapoly.getIntegerColors().containsKey(rgb)) {
 				for(Point p : datapoly.getColorPointsPairs().get(datapoly.getIntegerColors().get(rgb))) {
-//					System.out.println(Arrays.toString(p1));
-//					System.out.println(p.getX() + " " + p.getY() + " " + p.getZ());
 					if(p.matches(p1, margin)) {
 						handleMatch(p, p1);
 					}
@@ -110,6 +111,9 @@ public class ScanObjectNew extends Mission {
 					}
 					else if(p.matches(p3, margin)) {
 						handleMatch(p,p3);
+					}
+					else {
+						//TODO: moet hier iets gebeuren?
 					}
 				}
 			}			
@@ -125,12 +129,17 @@ public class ScanObjectNew extends Mission {
 				pointsOfTriangle.add(p1);
 				pointsOfTriangle.add(p2);
 				pointsOfTriangle.add(p3);
-
+				//hierboven: punten die gezien zijn door image processing
 				ArrayList<Point> matchedPoints = new ArrayList<>();
-				for(Point p: datapoly.getPoints()) {
 
+				// kijken of de punten gezien door image processing matchbaar zijn met punten die al gezien zijn, 
+				// dus waar we een kleur aan kunnen toevoegen
+
+				for(Point p: datapoly.getPoints()) {
 					for(Iterator<double[]> iterator = pointsOfTriangle.iterator(); iterator.hasNext();) {
 						double[] scannedPoint = iterator.next();
+						// als we een bestaand punt vinden dat matcht, passen we de positie een beetje aan, en voegen we de kleur toe aan het punt
+		
 						if(p.matches(scannedPoint, margin)) {
 							handleMatch(p, scannedPoint);
 							p.addColor(c);
@@ -139,13 +148,25 @@ public class ScanObjectNew extends Mission {
 						}
 					}
 				}
-				//TODO: voeg overige pointsOfTriangle 
+				System.out.println(pointsOfTriangle.size() + matchedPoints.size() == 3);
+				
+				//we voegen de kleur toe aan de edges van de punten die reeds bestonden (matchedPoints dus)
+				addColorToExistingEdges(matchedPoints, c);
+				System.out.println("after");
+				
+				// van de punten die we niet konden matchen met een bestaand punt, maken we een nieuw Point + we maken een Edge tussen het neiuwe punt en degenen die reeds bestonden
 				for(double[] d: pointsOfTriangle) {
 					Point pointToAdd = new Point(d[0], d[1], d[2]);
 					pointToAdd.addColor(c);
+					
+					
+					for(Point matchedPoint: matchedPoints) {
+						datapoly.addNewEdgeWithThesePoints(pointToAdd, matchedPoint, c);
+					}
 					matchedPoints.add(pointToAdd);
 					datapoly.addPoint(pointToAdd);
 				}
+				// voeg de CustomColor toe, waartoe de nieuwe punten behoren en degenen die gematcht zijn; zij vormen samen een driehoek. 
 				datapoly.addColor_Point(c, matchedPoints);
 
 			}
@@ -168,5 +189,57 @@ public class ScanObjectNew extends Mission {
 		p.setZ(weightOld*p.getZ() + weightNew * d[2]);
 
 	}
+	
+	//voor uitschrijven naar bestand
+	public void writeTakeImageToFile() {
+		  //		int width = getWidth();
+		  String path = "images/img";
+		  path = path + "-left" + index +".png";
+		  index ++;
+
+		  File file = new File(path); // The file to save to.
+
+		  String format = "PNG"; // Example: "PNG" or "JPG"
+		  int[] temp = getDrone().getLeftCamera().takeImage();
+
+		  int width = getDrone().getLeftCamera().getWidth();
+		  int height = temp.length/getDrone().getLeftCamera().getWidth();
+		  BufferedImage image = new BufferedImage(width, height , BufferedImage.TYPE_INT_RGB);
+
+		  for(int x = 0; x < width; x++)
+		  {
+		    for(int y = 0; y < height; y++)
+		    {
+		      image.setRGB(x, y, temp[y*width+x]);
+		    }
+		  }
+		  try {
+		    ImageIO.write(image, format, file);
+		  } catch (IOException e) { e.printStackTrace(); }
+	}
+	int index = 0;
+	
+	
+	private void addColorToExistingEdges(ArrayList<Point> existingPoints, CustomColor c) {
+		for(int firstIndex = 0; firstIndex < existingPoints.size(); firstIndex ++) {
+			Point p1 = existingPoints.get(firstIndex);
+			for(int secondIndex = firstIndex + 1; secondIndex < existingPoints.size(); secondIndex ++) {
+//				Point p2 = existingPoints.get(secondIndex);
+				innerLoop:
+				for(Edge e: datapoly.getPointsWithTheirEdges().get(p1)) {
+					if(e.consistsOfPoint(existingPoints.get(secondIndex))) {
+						try {
+							e.addColor(c);
+							break innerLoop;
+						} catch (Exception e1) {
+							System.out.println("Error in addColorToExistingEdges(ScanObjectNew)");
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+	}
+
 
 }

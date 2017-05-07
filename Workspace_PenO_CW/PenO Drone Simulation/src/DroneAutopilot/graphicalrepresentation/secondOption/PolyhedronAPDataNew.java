@@ -3,8 +3,6 @@ package DroneAutopilot.graphicalrepresentation.secondOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
-
 import DroneAutopilot.graphicalrepresentation.CustomColor;
 import DroneAutopilot.scanning.Point;
 
@@ -13,6 +11,7 @@ public class PolyhedronAPDataNew {
 	private HashSet<Point> points = new HashSet<>();
 	private HashMap<CustomColor, ArrayList<Point>> colorPointsPairs = new HashMap<>();
 	private HashMap<Integer, CustomColor> integerColors = new HashMap<>();
+	private HashMap<Point, ArrayList<Edge>> pointsWithTheirEdges = new HashMap<>();
 	
 	public HashSet<Point> getPoints() {
 		return points;
@@ -35,6 +34,55 @@ public class PolyhedronAPDataNew {
 	public HashMap<Integer, CustomColor> getIntegerColors() {
 		return integerColors;
 	}
+	
+	public HashMap<Point, ArrayList<Edge>> getPointsWithTheirEdges() {
+		return pointsWithTheirEdges;
+	}
+	
+	public void addEdgeToPoint(Point p, Edge e) {
+		if(pointsWithTheirEdges.containsKey(p)) {
+			pointsWithTheirEdges.get(p).add(e);
+		}
+		else{
+			ArrayList<Edge> list = new ArrayList<Edge>();
+			list.add(e);
+			pointsWithTheirEdges.put(p, list);
+		}
+	}
+	
+
+//	private void addEdge(Point p1, Point p2, CustomColor c) {
+//		if(pointsWithTheirEdges.containsKey(p1)) {
+//			boolean hit = false;
+//			for(Edge e: getPointsWithTheirEdges().get(p1)) {
+//				if(e.consistsOfPoint(p2)) {
+//					try {
+//						e.addColor(c);
+//						hit = true;
+//						break;
+//					} catch (Exception e1) {
+//						e1.printStackTrace();
+//					}
+//				}
+//			}
+//			if(!hit) {
+//				Edge e = new Edge(p1, p2, c);
+//				
+//			}
+//		}
+//		
+//		else if(pointsWithTheirEdges.containsKey(p2)) {
+//			
+//		}
+//
+//	}
+	
+	public void addNewEdgeWithThesePoints(Point p1, Point p2, CustomColor c) {
+		Edge e = new Edge(p1, p2, c);
+		addEdgeToPoint(p1, e);
+		addEdgeToPoint(p2, e);
+	}
+	
 	
 
 
