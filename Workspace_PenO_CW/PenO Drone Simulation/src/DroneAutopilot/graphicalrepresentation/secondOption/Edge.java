@@ -6,8 +6,8 @@ import DroneAutopilot.scanning.Point;
 
 public class Edge {
 
-	private final Point endPoint1;
-	private final Point endPoint2;
+	private Point endPoint1;
+	private Point endPoint2;
 	private ArrayList<CustomColor> colors = new ArrayList<>(2);
 
 	/**
@@ -46,6 +46,14 @@ public class Edge {
 	
 	public boolean consistsOfPoint(Point p) {
 		return (getEndPoint1() == p || getEndPoint2() == p);
+	}
+	
+	public void setEndPoint1(Point endPoint1) {
+		this.endPoint1 = endPoint1;
+	}
+	
+	public void setEndPoint2(Point endPoint2) {
+		this.endPoint2 = endPoint2;
 	}
 	
 }

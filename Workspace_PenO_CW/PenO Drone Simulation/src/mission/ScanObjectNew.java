@@ -37,6 +37,9 @@ public class ScanObjectNew extends Mission {
 
 	WorldAPVisualNew world = new WorldAPVisualNew(dataWorld);
 	PolyhedronAPDataNew datapoly = new PolyhedronAPDataNew();
+	
+	private int mergeCounter = 0; 
+	private double margin = 0.08;
 
 	private boolean isSetup = false;
 	private boolean isANewDataPoly = true;
@@ -72,7 +75,7 @@ public class ScanObjectNew extends Mission {
 
 	
 //		this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(), this.getPhysicsCalculations().getDirectionOfView());// blijf waar je bent
-//		this.getPhysicsCalculations().updateMovement(new double[]{2,0,0}, this.getPhysicsCalculations().getDirectionOfView());// vlieg naar een gegeven positie
+//		this.getPhysicsCalculations().updateMovement(new double[]{3,0,0}, this.getPhysicsCalculations().getDirectionOfView());// vlieg naar een gegeven positie
 //		this.getPhysicsCalculations().updateMovement(new double[]{2,0,1}, new double[] {2,0,0});// vlieg een beetje schuin
 
 
@@ -106,7 +109,11 @@ public class ScanObjectNew extends Mission {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+			if(mergeCounter++ == 10) {
+				datapoly.mergePoints(margin);
+				mergeCounter = 0;
+			}
+		} 
 
 	}
 
@@ -122,7 +129,6 @@ public class ScanObjectNew extends Mission {
 		HashMap<ArrayList<float[]>, ArrayList<double[]>> outerCorners = polycalc
 				.getMatchingCorners(getDrone().getLeftCamera(), getDrone().getRightCamera());
 //		writeTakeImageToFile();
-		double margin = 0.08;
 		for (ArrayList<float[]> key : outerCorners.keySet()) {
 			isANewDataPoly = false;
 			float[] outerkey = key.get(0);
@@ -181,11 +187,9 @@ public class ScanObjectNew extends Mission {
 						}
 					}
 				}
-				System.out.println(pointsOfTriangle.size() + matchedPoints.size() == 3);
 				
 				//we voegen de kleur toe aan de edges van de punten die reeds bestonden (matchedPoints dus)
 				addColorToExistingEdges(matchedPoints, c);
-				System.out.println("after");
 				
 				// van de punten die we niet konden matchen met een bestaand punt, maken we een nieuw Point + we maken een Edge tussen het neiuwe punt en degenen die reeds bestonden
 				for(double[] d: pointsOfTriangle) {

@@ -49,7 +49,7 @@ public class PolyhedraCalculations {
 				}
 			}
 		}
-		System.out.println("final " + COGS.size());
+//		System.out.println("final " + COGS.size());
 		return COGS;
 	}
 
@@ -192,7 +192,7 @@ public class PolyhedraCalculations {
 					double afstand = Math.sqrt(Math.pow(this.getPhysics().getPosition()[0]-COG[0], 2)+
 							Math.pow(this.getPhysics().getPosition()[1]-COG[1], 2)+
 							Math.pow(this.getPhysics().getPosition()[2]-COG[2], 2));
-					System.out.println(afstand);
+//					System.out.println(afstand);
 					if(afstand<1.2 && afstand>0.4){
 						//System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
 						result.put(colorLeft, corners);

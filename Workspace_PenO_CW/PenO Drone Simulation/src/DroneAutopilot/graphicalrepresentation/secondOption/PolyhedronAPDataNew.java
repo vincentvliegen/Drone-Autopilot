@@ -1,6 +1,7 @@
 package DroneAutopilot.graphicalrepresentation.secondOption;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import DroneAutopilot.graphicalrepresentation.CustomColor;
@@ -108,6 +109,61 @@ public class PolyhedronAPDataNew {
 	
 	public boolean anEdgeWasAdded() {
 		return anEdgeWasAdded;
+	}
+	public void mergePoints(double margin) {
+		HashSet<Point> done = new HashSet<>();
+		HashSet<Point> toRemove = new HashSet<>(); //TODO
+		for(Point p: getPoints()) {
+			done.add(p);
+			for(Point p2 : getPoints()) {
+				if(!done.contains(p2)) {
+
+					if(p.matches(p2, margin)) {
+						handleMerge(p, p2);
+//						System.out.println("p:");
+//						System.out.println(p.getX() + " " + p.getY() + " " + p.getZ());
+//						System.out.println(p2.getX() + " " + p2.getY() + " " + p2.getZ());
+						toRemove.add(p2);
+					}
+				}
+			}
+		}
+		points.removeAll(toRemove);
+	}
+
+	
+	private void handleMerge(Point p, Point p2) {
+		
+		//p2 is the victim
+		p.setX((p.getX() + p2.getX())/2);
+		p.setY((p.getY() + p2.getY())/2);
+		p.setZ((p.getZ() + p2.getZ())/2);
+
+		for(CustomColor c: p2.getColors()) {
+			//TODO if hoeft niet normaal gezien
+//			if(! p.getColorsInt().contains(c.getColor())) {
+//				p.addColor(c);
+//			}
+//			else {
+//				System.out.println("dit kan niet (polyapdata)");
+//			}
+			p.addColor(c);
+			getColorPointsPairs().get(c).remove(p2);
+			getColorPointsPairs().get(c).add(p);
+		}
+		
+		for(Edge e: getPointsWithTheirEdges().get(p2)) {
+			if(e.getEndPoint1() == p2) {
+				e.setEndPoint1(p);
+				break;
+			}
+			else if(e.getEndPoint2() == p2) {
+				e.setEndPoint2(p2);
+				break;
+			}
+			
+
+		}
 	}
 	
 
