@@ -42,7 +42,7 @@ public class FlyScan {
 	}
 	
 	private double[] calculateNextDir(double[] nextPos){
-		double[] newDir = new double[]{};
+		double[] newDir = new double[]{0,0,0};
 		newDir[0] = nextPos[0] - getCenterEdgePoint()[0];
 		newDir[1] = nextPos[1] - getCenterEdgePoint()[1];
 		newDir[2] = nextPos[3] - getCenterEdgePoint()[2];
@@ -55,7 +55,7 @@ public class FlyScan {
 	}
 	
 	private double[] calculatePointatRechte(double[] p1, double[] p2, double k){
-		double[] point = new double[]{};
+		double[] point = new double[]{0,0,0};
 		point[0] = p1[0] + k*(p2[0]-p1[0]);
 		point[1] = p1[1] + k*(p2[1]-p1[1]);
 		point[2] = p1[2] + k*(p2[2]-p1[2]);
