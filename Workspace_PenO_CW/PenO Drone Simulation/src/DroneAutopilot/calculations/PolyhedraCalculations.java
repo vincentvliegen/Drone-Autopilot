@@ -547,6 +547,17 @@ public class PolyhedraCalculations {
 		}
 		return resultingOuterTriangleCOGs;
 	}
+	
+	public HashMap<float[], ArrayList<double[]>> getObstacleCorners(Camera leftCamera, Camera rightCamera){
+		this.SeparateTargetsAndObstacles(leftCamera);
+		HashMap<float[], ArrayList<int[]>> outerTrianglesL = this
+				.findThreePointsTriangles(this.getHashMapObstacleOuterColor());
+		this.SeparateTargetsAndObstacles(rightCamera);
+		HashMap<float[], ArrayList<int[]>> outerTrianglesR = this
+				.findThreePointsTriangles(this.getHashMapObstacleOuterColor());
+		HashMap<float[], ArrayList<double[]>> cornersOuter = this.findMatchingCorners(outerTrianglesL, outerTrianglesR);
+		return cornersOuter;
+	}
 
 	public HashMap<float[], ArrayList<int[]>> getHashMapTargetOuterColor() {
 		return this.hashMapOuterColor;

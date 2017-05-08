@@ -28,7 +28,7 @@ public class FlyToMultiplePositions extends Mission {
 		if(distance <= cte && listOfTargets.size()>1){		
 			double[] removedTarget = listOfTargets.remove(0);
 			this.setTarget(listOfTargets.get(0));
-			System.out.println("changed target from" + Arrays.toString(removedTarget)+"  to: " + Arrays.toString(this.getTarget()));
+			System.out.println("Changed target from " + Arrays.toString(removedTarget) + " to: " + Arrays.toString(this.getTarget()));
 		}
 		this.getPhysicsCalculations().updateMovement(this.getTarget());
 	}
