@@ -49,7 +49,7 @@ public class PolyhedraCalculations {
 				}
 			}
 		}
-//		System.out.println("final " + COGS.size());
+		//		System.out.println("final " + COGS.size());
 		return COGS;
 	}
 
@@ -187,15 +187,16 @@ public class PolyhedraCalculations {
 					double[] coordinate = this.getPhysics().calculatePositionObject(
 							intListToDoubleList(allCornersL.get(0)), intListToDoubleList(allCornersR.get(0)));
 					corners.add(coordinate);
-					
-					double[] COG = this.calculateCOG(corners.get(0), corners.get(1), corners.get(2));
-					double afstand = Math.sqrt(Math.pow(this.getPhysics().getPosition()[0]-COG[0], 2)+
-							Math.pow(this.getPhysics().getPosition()[1]-COG[1], 2)+
-							Math.pow(this.getPhysics().getPosition()[2]-COG[2], 2));
-//					System.out.println(afstand);
-					if(afstand<1.2 && afstand>0.4){
-						//System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
-						result.put(colorLeft, corners);
+					if(corners.size()==3){
+						double[] COG = this.calculateCOG(corners.get(0), corners.get(1), corners.get(2));
+						double afstand = Math.sqrt(Math.pow(this.getPhysics().getPosition()[0]-COG[0], 2)+
+								Math.pow(this.getPhysics().getPosition()[1]-COG[1], 2)+
+								Math.pow(this.getPhysics().getPosition()[2]-COG[2], 2));
+						//					System.out.println(afstand);
+						if(afstand<1.2 && afstand>0.4){
+							//System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
+							result.put(colorLeft, corners);
+						}
 					}
 				}
 			}
@@ -547,7 +548,7 @@ public class PolyhedraCalculations {
 		}
 		return resultingOuterTriangleCOGs;
 	}
-	
+
 	public HashMap<float[], ArrayList<double[]>> getObstacleCorners(Camera leftCamera, Camera rightCamera){
 		this.SeparateTargetsAndObstacles(leftCamera);
 		HashMap<float[], ArrayList<int[]>> outerTrianglesL = this
