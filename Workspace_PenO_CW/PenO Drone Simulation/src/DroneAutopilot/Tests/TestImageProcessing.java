@@ -2,6 +2,9 @@
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import p_en_o_cw_2016.Camera;
@@ -10,7 +13,10 @@ import p_en_o_cw_2016.Drone;
 public class TestImageProcessing {
 	
 	private PolyhedraCalculations polyhedraCalc;
-
+	private Camera camera1;
+	private BufferedImage poly1;
+	private int[] polylist1;
+	
 	private static final int widthCamera = 150;
 	private static final int heightCamera = 100;
 	private static final float horizontalAngleOfView = 90; 
@@ -22,6 +28,12 @@ public class TestImageProcessing {
 	private static final float dronePitch = 0;
 	private static final float cameraSeparation2 = 0.25f;
 	private static final float maxThrust = 50;
+	
+	public void createImage() throws IOException{
+		poly1 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/img0-left.png"));
+		polylist1 = convertImageToIntArray(poly1,331,222);
+		camera1 = createCameraForTesting(polylist1, 1, 1, 331);
+	}
 	
 	public void createDrone(Camera cam1, Camera cam2){
 		Drone drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation, cam1, cam2);
