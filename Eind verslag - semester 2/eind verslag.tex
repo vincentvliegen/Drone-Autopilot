@@ -1,0 +1,108 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                                                                     %%%
+%%%   LaTeX template voor het verslag van P&O: Computerwetenschappen.   %%%
+%%%                                                                     %%%
+%%%   Opties:                                                           %%%
+%%%     tt      Tussentijdsverslag                                      %%%
+%%%     eind    Eindverslag                                             %%%
+%%%                                                                     %%%
+%%%   3 oktober 2016                                   %%%
+%%%   Versie 1.4                                                        %%%
+%%%                                                                     %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[eind]{penoverslag}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath,bm}
+\usepackage{gensymb}
+\usepackage{float}
+\usepackage[dutch]{babel}
+
+%%% PACKAGES %%%
+
+
+\begin{document}
+
+% == TITELPAGINA == %
+\team{Zilver}
+\year{2016-2017}
+\members{Bram Vandendriessche (Co\"ordinator)\\
+         Arne Vlietinck (Secretaris)\\
+         Matthias Van der Heyden \\
+         Jef Versyck\\
+         Vincent Vliegen\\
+         Laura Vranken}
+\maketitlepage
+
+
+% == SAMENVATTING == %
+\begin{abstract}
+\input{abstract.tex}
+
+
+\end{abstract}
+
+
+% == INHOUDSOPGAVE == %
+\tableofcontents\newpage
+
+% == INLEIDING == %
+\section*{Inleiding}
+\label{sec:Inleiding}
+\input{inleiding.tex}
+\newpage
+
+% == Beschrijving materiaal en bouw drone == %
+\section{Ontwerp}
+\label{sec:Ontwerp}
+\input{ontwerp.tex}
+
+
+% == SOFTWARE == %
+\section{Software}
+\label{sec:Software}
+\input{software.tex}
+
+
+% == ALGORITMES == %
+\section{Algoritmes}
+\label{sec:Algoritmes}
+\input{algoritmes.tex}
+
+
+\newpage
+% == GUI == %
+\section{GUI}
+\label{sec:GUI}
+\input{gui.tex}
+
+
+% == Testen == %
+\section{Testen}
+\label{sec:Testen}
+\input{testen.tex}
+
+
+% == Algemeen Resultaat == %
+\section*{Algemeen Resultaat}
+\label{sec:AlgemeenResultaat}
+\input{AlgemeenResultaat.tex}
+
+
+% == BESLUIT == %
+\section*{Besluit}
+\label{sec:Besluit}
+\input{besluit.tex}
+
+% == REFERENTIES == %
+\bibliographystyle{siam}
+\bibliography{references}
+
+
+% == APPENDICES == %
+%\newpage\makeappendix
+
+\end{document}
