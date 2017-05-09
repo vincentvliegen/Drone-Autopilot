@@ -2,10 +2,13 @@ package DroneAutopilot.calculations;
 
 
 import java.util.Arrays;
+
+import DroneAutopilot.DroneAutopilot;
 import p_en_o_cw_2016.Drone;
 
 public class PhysicsCalculations{
 
+	private DroneAutopilot droneAutopilot;
 	private Drone drone;
 
 	//Drone
@@ -60,8 +63,9 @@ public class PhysicsCalculations{
 	
 	//////////CONSTRUCTOR//////////
 	
-	public PhysicsCalculations(Drone drone){
-		this.setDrone(drone);
+	public PhysicsCalculations(DroneAutopilot droneAutopilot){
+		this.setDroneAutopilot(droneAutopilot);
+		this.setDrone(getDroneAutopilot().getDrone());
 		this.setTime((double) this.getDrone().getCurrentTime());
 		this.setPosition((double) this.getDrone().getX(), (double) this.getDrone().getY(), (double) this.getDrone().getZ());
 		this.setSpeed(0,0,0);
@@ -377,15 +381,25 @@ public class PhysicsCalculations{
 	//////////MOVEMENT//////////
 	
 	public void updateMovement(double[] targetPosition, double[] direction){
-		calculateThrust(targetPosition);
-		calculateWantedOrientation(targetPosition,direction);
-		calculateRemainingAnglesToObject();
-		calculateRotationRates();
-	
-		this.getDrone().setThrust((float) this.getThrust());
-		this.getDrone().setYawRate((float) this.getYawRate());
-		this.getDrone().setPitchRate((float) this.getPitchRate());
-		this.getDrone().setRollRate((float) this.getRollRate());
+		if(isFirstTime()){
+			calculateThrust(targetPosition);
+			
+			this.getDrone().setThrust((float) this.getThrust());
+			this.getDrone().setYawRate(0);
+			this.getDrone().setPitchRate(0);
+			this.getDrone().setRollRate(0);
+			this.setFirstTime(false);
+		}else{
+			calculateThrust(targetPosition);
+			calculateWantedOrientation(targetPosition,direction);
+			calculateRemainingAnglesToObject();
+			calculateRotationRates();
+		
+			this.getDrone().setThrust((float) this.getThrust());
+			this.getDrone().setYawRate((float) this.getYawRate());
+			this.getDrone().setPitchRate((float) this.getPitchRate());
+			this.getDrone().setRollRate((float) this.getRollRate());
+		}
 	}
 
 	public void updateMovement(double[] targetPosition){
@@ -432,9 +446,7 @@ public class PhysicsCalculations{
 				}else{
 					signThrustExtForce = 1;
 				}
-				
-				//new compensate
-				
+								
 				//we kunnen alleen vliegen volgens de thrustas, dus we benaderen de positie op thrustas en berekenen snelheid volgens thrustas;
 				double[] direction = VectorCalculations.projectOnAxis(getDirectionDroneToPosition(position), thrust);
 				boolean inDirectionOfThrust = VectorCalculations.compareVectors(thrust, VectorCalculations.normalise(direction));
@@ -465,119 +477,8 @@ public class PhysicsCalculations{
                     wantedAcceleration = acceleration[minMaxIndex];
                 }
 //                System.out.println(wantedAcceleration);
-                result = currentThrust+wantedAcceleration*weight;
-              
-                //original compensate
-                
-//				//grootte compensatie:
-//				double compensateDir = 1;//externalForces*compensateDir = |compensatie| TODO mag beter
-//				double cosAngleDirExtForce = VectorCalculations.cosinusBetweenVectors(dirToPos, externalForces);
-//				if(cosAngleDirExtForce+0 == 0){//kan niet in die richting vliegen
-//					compensateDir = 0;
-//				}
-//				//zin compensatie:
-//				double[] DirOnThrust = VectorCalculations.projectOnAxis(dirToPos, thrust);
-//				double signThrustDir;
-//				if(VectorCalculations.compareVectors(thrust, VectorCalculations.normalise(DirOnThrust))){
-//					signThrustDir = 1;
-//				}else{
-//					signThrustDir = -1;
-//				}
-//				double braking=1;
-//				if(this.isPossibleToStopThrust(position) == false){
-//					braking = -1;
-//				} 
-//				result = VectorCalculations.size(externalForces)*(signThrustExtForce+compensateDir*signThrustDir*braking);
-				
+                result = currentThrust+wantedAcceleration*weight;				
 			}else{	
-				
-				//originele uitwerking
-				
-//				//we kunnen enkel vliegen binnen een vlak, dus we benaderen de gewenste richting op dat vlak
-//				double[] approxToDir = VectorCalculations.projectOnPlane(dirToPos, normal);//naar de positie
-//				double[] approxFromDir = VectorCalculations.inverse(approxToDir);//weg van de positie
-//	
-//				//binnen dat vlak kunnen we enkel vliegen tussen de minmaxthrust zone
-//				double maxThrust = (double) this.getDrone().getMaxThrust();
-//				double[] upperLimit = VectorCalculations.sum(VectorCalculations.timesScalar(thrust, maxThrust),externalForces);
-//				double[] lowerLimit = VectorCalculations.sum(VectorCalculations.timesScalar(thrust, -maxThrust),externalForces);
-//	
-//				//we tekenen een xy-vlak, en we leggen lowerLimit volgens de x-as en upperLimit heeft een positieve y-waarde
-////				double[] coordLow = {VectorCalculations.size(lowerLimit),0};//coordinaten lowerLimit in xy-vlak
-//				double cosLowUp = VectorCalculations.cosinusBetweenVectors(lowerLimit, upperLimit);
-//				double[] crossPLowUp = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,upperLimit));
-////				double[] coordUp = {VectorCalculations.size(upperLimit)*cosLowUp,VectorCalculations.size(upperLimit)*(Math.sqrt(1-cosLowUp*cosLowUp))};//coordinaten upperLimit in xy-vlak
-//	
-//				//TO POSITION
-//				//ligt approxDir binnen of buiten de kleine hoek gevormd door upperLimit en lowerLimit?
-//				boolean toDirIsInside = true;
-//				double cosLowAppToDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxToDir);
-//				if(cosLowAppToDir+0<cosLowUp+0){
-//					toDirIsInside = false;
-//				}
-//				double[] crossPLowAppToDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxToDir));
-//				double signAppToDir;
-//				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppToDir)){
-//					toDirIsInside = false;
-//					signAppToDir = -1;
-//				}else{
-//					signAppToDir = 1;
-//				}
-//				double[] coordAppToDir = {VectorCalculations.size(approxToDir)*cosLowAppToDir,signAppToDir*VectorCalculations.size(approxToDir)*(Math.sqrt(1-cosLowAppToDir*cosLowAppToDir))};//coordinaten approxDir in xy-vlak
-//				
-//				//AWAY FROM POSITION
-//				boolean fromDirIsInside = true;
-//				double cosLowAppFromDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxFromDir);
-//				if(cosLowAppFromDir+0<cosLowUp+0){
-//					fromDirIsInside = false;
-//				}
-//				double[] crossPLowAppFromDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,approxFromDir));
-//				double signAppFromDir;
-//				if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowAppFromDir)){
-//					fromDirIsInside = false;
-//					signAppFromDir = -1;
-//				}else{
-//					signAppFromDir = 1;
-//				}
-//				double[] coordAppFromDir = {VectorCalculations.size(approxFromDir)*cosLowAppFromDir,signAppFromDir*VectorCalculations.size(approxFromDir)*(Math.sqrt(1-cosLowAppFromDir*cosLowAppFromDir))};//coordinaten approxDir in xy-vlak
-//				
-//				//als binnen dan grootte thrust berekenen om exact op approxDir te vliegen
-//				//als buiten dan dichter bij upper of lower (om op min of max te zetten)
-//				if(toDirIsInside || fromDirIsInside){//to dir inside
-//					double cosLowExtForce = VectorCalculations.cosinusBetweenVectors(lowerLimit, externalForces);
-//					double[] coordExtForce = {VectorCalculations.size(externalForces)*cosLowExtForce,VectorCalculations.size(externalForces)*(Math.sqrt(1-cosLowExtForce*cosLowExtForce))};//coordinaten externalForces in xy-vlak
-//	
-//					double cosLowThrust = VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust);
-//					double[] crossPLowThrust = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit,thrust));
-//					
-//					double signThrust;
-//					if(!VectorCalculations.compareVectors(crossPLowUp, crossPLowThrust)){
-//						signThrust = -1;
-//					}else{
-//						signThrust = 1;
-//					}
-//					double[] coordThrust = {VectorCalculations.size(thrust)*cosLowThrust,signThrust*VectorCalculations.size(thrust)*(Math.sqrt(1-cosLowThrust*cosLowThrust))};//coordinaten thrust in xy-vlak					
-//					
-//					if(toDirIsInside){//FLY TO DIRECTION
-//						result =	(coordAppToDir[0]*coordExtForce[1]-coordAppToDir[1]*coordExtForce[0])/
-//									(coordAppToDir[1]* coordThrust[0] -coordAppToDir[0]* coordThrust[1] );
-//					}else{//FLY AWAY FROM DIRECTION
-//						result =	(coordAppFromDir[0]*coordExtForce[1]-coordAppFromDir[1]*coordExtForce[0])/
-//									(coordAppFromDir[1]* coordThrust[0] -coordAppFromDir[0]* coordThrust[1] );
-//					}
-//
-//				}else{//outside -> vlieg zo goed mogelijk naar toDir
-//					//grootte+zin
-//					double cosUpAppDir = VectorCalculations.cosinusBetweenVectors(upperLimit, approxToDir);
-//					if(cosLowAppToDir+0>cosUpAppDir+0){//dichter bij upperLimit
-//						result = -maxThrust;
-//					}else{//dichter bij lowerLimit
-//						result = maxThrust;
-//					}
-//				}	
-				
-				
-				//nieuwe implementatie, niet ifv acceleratie maar ifv verplaatsing
 				
 				//(T+EF)/2m * (Dt)^2 + v*Dt = Dx = a*Dir met a onbekend, Dir is benaderd
 				double[] speed = this.getSpeed();
@@ -632,40 +533,14 @@ public class PhysicsCalculations{
 			this.setThrust(result);
 		}	
 	
-			private double[] determineSpeedInThrustEFPlane(){
-				double[] externalForces = this.getExternalForces();
-				double[] thrust = this.getDirectionOfThrust();
-				double[] normal = VectorCalculations.crossProduct(externalForces, thrust);
-				
-				double[] speedInPlane = VectorCalculations.projectOnPlane(this.getSpeed(), normal);
-				return speedInPlane;
-			}
-						
-			private boolean isPossibleToStopThrust(double[] position){
-				double speed = this.getSpeedDroneToPosition(position);
-				double thrust = Math.abs(2*this.getExternalForces()[1]);
-				if(position[1] > this.getDrone().getY()){
-					thrust = 0;
-				}
-				double accelerationY = Math.abs((thrust-this.getDrone().getWeight()*9.81)/this.getDrone().getWeight());
-				double distance = this.getDistanceDroneToPosition(position);
-	
-				double brakingDistance = 1.3*(Math.pow(speed, 2))/(2*accelerationY); // 1.3* als veiligheidsfactor
-				if(distance<brakingDistance && speed>0){
-					//System.out.println("BRAKING");
-					return false;
-				}else{
-					return true;
-				}	
-			}
-	
 			
 		private void calculateWantedOrientation(double[] position, double[] direction){
 				double acceleration = this.determineAcceleration(position);
 				double weight = (double) this.getDrone().getWeight();
 				double[] externalForces = this.getExternalForces();
 				double[] directionToPos = getDirectionDroneToPosition(position);
-				double[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(directionToPos), acceleration*weight);
+				double[] directionOfAcceleration = determineDirectionOfAcceleration(acceleration, directionToPos);
+				double[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(directionOfAcceleration), acceleration*weight);
 				double[] thrustVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(externalForces));
 				if (thrustVector[1] <0){//thrust heeft altijd een positieve y waarde of de drone hangt ondersteboven
 					thrustVector = VectorCalculations.inverse(thrustVector);
@@ -695,7 +570,7 @@ public class PhysicsCalculations{
 //                
                 if (distance <= PhysicsCalculations.getSlowdowndistance()){
                     //demping ifv afstand
-                    double distanceDamping = Math.pow(distance/PhysicsCalculations.getSlowdowndistance(),2);
+                    double distanceDamping = Math.pow(distance/PhysicsCalculations.getSlowdowndistance(),1);
                     return acceleration[minMaxIndex]*distanceDamping;
                 }else{
                     return acceleration[minMaxIndex];
@@ -755,8 +630,66 @@ public class PhysicsCalculations{
 						}
 						return new double[] {minAcc,maxAcc};
 					}
-	
+
 					
+			private double[] determineDirectionOfAcceleration(double acceleration, double[] directionToPosition){		
+				//we moeten bepalen in welke richting we willen versnellen, om de snelheid in laterale richtingen te compenseren
+				//a*(Dt)^2/2 + v*Dt = Dx
+				//met a = acc * (DirAcc)
+				//met Dx = u*Dir met u een cste van onbekende grootte
+				//vereenvoudiging: A + V = X
+				//AccDirx? AccDiry? AccDirz? u? => 4 onbekenden
+				//Ax+Vx = Xx; Ay+Vy = Xy; Az+Vz = Xz; DirAccx^2 + DirAccy^2 + DirAccz^2 = 1; => 4 vgl
+				double Dt = this.getDeltaT();
+				double[] Dir = VectorCalculations.normalise(directionToPosition);
+//				double[] v = VectorCalculations.projectOnPlane(this.getSpeed(), this.getDirectionOfThrust());
+				double[] v = VectorCalculations.projectOnPlane(this.getSpeed().clone(), directionToPosition);
+//				double[] v = this.getSpeed();
+//				double[] v = new double[] {0,0,0};
+				double acc = acceleration;
+				
+				double u;
+				double[] DirAcc;
+				if(acc+0 == 0){
+					DirAcc = new double[] {0,0,0};
+				}else{
+					//beetje geometrie enzo, teken de drie vectoren dir, v en acc, om de som A + V = X te laten uitkomen
+					//X = (1,0)*|X| = (1,0)*u
+					//V = (cosXV,sinXV)*|V| = (cosXV,sinXV)*|v|*Dt
+					//A = (cosXA,sinXA)*|A| = (cosXA,sinXA)*acc*(Dt)^2/2
+					//met sinXA*|A| = -sinXV*|V|
+					//=> u = cosXA*|A| + cosXV*|V|
+					
+					double factor = 0;//niet te veel de snelheid compenseren of de drone gaat schommelen
+					
+					double sizeV = VectorCalculations.size(v)*Dt*factor;
+					double sizeA = Math.abs(acc)*Dt*Dt/2;
+					
+					double cosXV = VectorCalculations.cosinusBetweenVectors(Dir, v);
+					double sinXV = Math.sqrt(1-cosXV*cosXV);
+					
+					double sinXA = -sinXV*sizeV/sizeA;
+					if(Math.abs(sinXA) > 1){
+						sinXA = 1*Math.signum(sinXA);
+					}
+					double cosXA = Math.sqrt(1-sinXA*sinXA);
+					
+					if(Math.signum(acc) == 1){
+						u = cosXA*sizeA + cosXV*sizeV;
+					}else{
+						u = -cosXA*sizeA + cosXV*sizeV;
+					}
+					
+//					nu we 'u' weten hebben we drie vgl voor DirAcc
+					//DirAcc = (u*Dir - v*Dt)*2/(acc*(Dt)^2) = (X - V) * 2/(acc*(Dt)^2)
+					double[] X = VectorCalculations.timesScalar(Dir, u);
+					double[] negV = VectorCalculations.timesScalar(v, -Dt*factor);
+					DirAcc = VectorCalculations.timesScalar(VectorCalculations.sum(X, negV), 2/(acc*Dt*Dt));
+				}
+				return DirAcc;
+			}
+
+			
 		private void calculateRemainingAnglesToObject(){
 			double[][] currentOrientation = new double[][] {{1,0,0},{0,1,0},{0,0,1}}; //x,y & z van drone
 			double[][] wantedOrientation = this.getWantedOrientation().clone();
@@ -851,83 +784,80 @@ public class PhysicsCalculations{
 			double yawrate = 0;
 			double pitchrate = 0;
 			double rollrate = 0;
-			if(!isFirstTime()){//deltaT is nodig id berekeningen hierop
-				double yaw = this.getRemainingAngles()[0];
-				double maxYawRate = Math.abs(this.getDrone().getMaxYawRate());
-				double yawInOneFrameRate = yaw/getDeltaT();
-				//yaw
-				boolean yawFinished;
-				if (Math.abs(yawInOneFrameRate) > maxYawRate) {//kan niet volledig yawen
-					yawFinished = false;
-					yawrate = maxYawRate*Math.signum(yaw);
-				}else {//kan volledig yawen
-					yawFinished = true;
-					yawrate = yawInOneFrameRate;
+			double yaw = this.getRemainingAngles()[0];
+			double maxYawRate = Math.abs(this.getDrone().getMaxYawRate());
+			double yawInOneFrameRate = yaw/getDeltaT();
+			//yaw
+			boolean yawFinished;
+			if (Math.abs(yawInOneFrameRate) > maxYawRate) {//kan niet volledig yawen
+				yawFinished = false;
+				yawrate = maxYawRate*Math.signum(yaw);
+			}else {//kan volledig yawen
+				yawFinished = true;
+				yawrate = yawInOneFrameRate;
+			}
+			//pitch/roll
+			//als yaw niet gedaan is, gaat de thrustvector id foute richting draaien met gegeven pitch/roll
+			if(!yawFinished){
+				correctRemainingPitchRoll(yawrate*this.getDeltaT());				
+			}
+			double pitch = this.getRemainingAngles()[1];
+			double roll = this.getRemainingAngles()[2];
+			double pitchInOneFrameRate = pitch/getDeltaT();
+			double rollInOneFrameRate = roll/getDeltaT();
+			double maxPitchRate =  Math.abs(this.getDrone().getMaxPitchRate());
+			double maxRollRate = Math.abs(this.getDrone().getMaxRollRate());			
+			if(roll+0 == 0){//roll = 0
+				rollrate = 0;
+				if (Math.abs(pitchInOneFrameRate) > maxPitchRate) {//kan niet volledig pitchen
+					pitchrate = maxPitchRate*Math.signum(pitch);
+				}else {//kan volledig pitchen
+					pitchrate = pitchInOneFrameRate;
 				}
-				//pitch/roll
-				//als yaw niet gedaan is, gaat de thrustvector id foute richting draaien met gegeven pitch/roll
-				if(!yawFinished){
-					correctRemainingPitchRoll(yawrate*this.getDeltaT());				
+			}else if(pitch+0==0){//pitch = 0
+				pitchrate = 0;
+				if (Math.abs(rollInOneFrameRate) > maxRollRate) {//kan niet volledig pitchen
+					rollrate = maxRollRate*Math.signum(roll);
+				}else {//kan volledig pitchen
+					rollrate = rollInOneFrameRate;
 				}
-				double pitch = this.getRemainingAngles()[1];
-				double roll = this.getRemainingAngles()[2];
-				double pitchInOneFrameRate = pitch/getDeltaT();
-				double rollInOneFrameRate = roll/getDeltaT();
-				double maxPitchRate =  Math.abs(this.getDrone().getMaxPitchRate());
-				double maxRollRate = Math.abs(this.getDrone().getMaxRollRate());			
-				if(roll+0 == 0){//roll = 0
-					rollrate = 0;
-					if (Math.abs(pitchInOneFrameRate) > maxPitchRate) {//kan niet volledig pitchen
-						pitchrate = maxPitchRate*Math.signum(pitch);
-					}else {//kan volledig pitchen
+			}else{//roll,pitch != 0
+				//pitch en roll moeten in gelijke verhoudingen worden doorgevoerd om in de juiste richting de thrust te verplaatsen
+				double ratio = Math.abs(pitch/roll);
+				double maxRatio = maxPitchRate/maxRollRate;
+				boolean pitchGreaterThanMax = (Math.abs(pitchInOneFrameRate) > maxPitchRate);
+				boolean rollGreaterThanMax = (Math.abs(rollInOneFrameRate) > maxRollRate);
+				
+				if(!pitchGreaterThanMax){//pitch kleiner dan max
+					if(!rollGreaterThanMax){//roll kleiner dan max
 						pitchrate = pitchInOneFrameRate;
-					}
-				}else if(pitch+0==0){//pitch = 0
-					pitchrate = 0;
-					if (Math.abs(rollInOneFrameRate) > maxRollRate) {//kan niet volledig pitchen
-						rollrate = maxRollRate*Math.signum(roll);
-					}else {//kan volledig pitchen
 						rollrate = rollInOneFrameRate;
+					}else{//roll groter dan max
+						rollrate = maxRollRate*Math.signum(roll);
+						pitchrate = maxRollRate*ratio*Math.signum(pitch);
 					}
-				}else{//roll,pitch != 0
-					//pitch en roll moeten in gelijke verhoudingen worden doorgevoerd om in de juiste richting de thrust te verplaatsen
-					double ratio = Math.abs(pitch/roll);
-					double maxRatio = maxPitchRate/maxRollRate;
-					boolean pitchGreaterThanMax = (Math.abs(pitchInOneFrameRate) > maxPitchRate);
-					boolean rollGreaterThanMax = (Math.abs(rollInOneFrameRate) > maxRollRate);
-					
-					if(!pitchGreaterThanMax){//pitch kleiner dan max
-						if(!rollGreaterThanMax){//roll kleiner dan max
-							pitchrate = pitchInOneFrameRate;
-							rollrate = rollInOneFrameRate;
-						}else{//roll groter dan max
+				}else{//pitch groter dan max
+					if(!rollGreaterThanMax){//roll kleiner dan max
+						pitchrate = maxPitchRate*Math.signum(pitch);
+						rollrate = maxPitchRate/ratio*Math.signum(roll);
+					}else{//roll groter dan max
+						//beiden zijn groter dan max
+						if(maxRatio>=ratio){//maxPitch/maxRoll >= pitch/roll
 							rollrate = maxRollRate*Math.signum(roll);
 							pitchrate = maxRollRate*ratio*Math.signum(pitch);
-						}
-					}else{//pitch groter dan max
-						if(!rollGreaterThanMax){//roll kleiner dan max
+						}else{
 							pitchrate = maxPitchRate*Math.signum(pitch);
 							rollrate = maxPitchRate/ratio*Math.signum(roll);
-						}else{//roll groter dan max
-							//beiden zijn groter dan max
-							if(maxRatio>=ratio){//maxPitch/maxRoll >= pitch/roll
-								rollrate = maxRollRate*Math.signum(roll);
-								pitchrate = maxRollRate*ratio*Math.signum(pitch);
-							}else{
-								pitchrate = maxPitchRate*Math.signum(pitch);
-								rollrate = maxPitchRate/ratio*Math.signum(roll);
-							}
 						}
 					}
-
-					//nu is pitchrate/rollrate = ratio -> thrust stijgt gelijkmatig
-					
 				}
+
+				//nu is pitchrate/rollrate = ratio -> thrust verandert gelijkmatig
+				
 			}
 			setYawRate(yawrate);
 			setPitchRate(pitchrate);
 			setRollRate(rollrate);
-			setFirstTime(false);
 		}
 		
 			public void correctRemainingPitchRoll(double expectedYaw){
@@ -1328,6 +1258,16 @@ public class PhysicsCalculations{
 	
 	public void setExpectedOrientationDrone(double[][] expectedOrientationDrone) {
 		this.expectedOrientationDrone = expectedOrientationDrone;
+	}
+
+
+	public DroneAutopilot getDroneAutopilot() {
+		return droneAutopilot;
+	}
+	
+
+	public void setDroneAutopilot(DroneAutopilot droneAutopilot) {
+		this.droneAutopilot = droneAutopilot;
 	}
 	
 }
