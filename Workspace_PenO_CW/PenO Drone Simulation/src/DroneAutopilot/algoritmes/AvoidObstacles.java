@@ -77,7 +77,7 @@ public class AvoidObstacles {
 
 	//https://gamedev.stackexchange.com/questions/60630/how-do-i-find-the-circumcenter-of-a-triangle-in-3d
 	private  ArrayList<double[]> calculatespheres(){
-		HashMap<float[], ArrayList<double[]>> obstacleCorners = this.getPolyhedraCalculations().getObstacleCorners(this.getDrone().getLeftCamera(), this.getDrone().getLeftCamera());
+		HashMap<float[], ArrayList<double[]>> obstacleCorners = this.getPolyhedraCalculations().getObstacleCorners(this.getDrone().getLeftCamera(), this.getDrone().getRightCamera());
 		ArrayList<double[]> spheres = new ArrayList<double[]>();
 		Collection<ArrayList<double[]>> corners = obstacleCorners.values();
 		Iterator itrCorners = corners.iterator();

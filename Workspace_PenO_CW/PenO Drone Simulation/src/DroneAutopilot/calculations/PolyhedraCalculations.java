@@ -194,7 +194,7 @@ public class PolyhedraCalculations {
 								Math.pow(this.getPhysics().getPosition()[1]-COG[1], 2)+
 								Math.pow(this.getPhysics().getPosition()[2]-COG[2], 2));
 						//					System.out.println(afstand);
-						if(afstand<1.2 && afstand>0.4){
+						if((afstand<1.2 && afstand>0.4) || (colorLeft[2]<0.45)){
 							//System.out.println("coordinaat" + coordinate[0] + " " + coordinate[1] + " " + coordinate[2]);
 							result.put(colorLeft, corners);
 						}
