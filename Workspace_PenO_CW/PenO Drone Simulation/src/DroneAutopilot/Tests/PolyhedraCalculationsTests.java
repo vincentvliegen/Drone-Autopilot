@@ -9,15 +9,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import DroneAutopilot.calculations.PhysicsCalculations;
+import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import p_en_o_cw_2016.*;
 
 public class PolyhedraCalculationsTests {
 	
+	private TestAP testap;
 	private PolyhedraCalculations polyhedraCalc;
 	private Camera camera1;
 	private Camera camera2;
@@ -82,12 +82,14 @@ public class PolyhedraCalculationsTests {
 	
 	public void createDrone(Camera cam1, Camera cam2){
 		Drone drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation, cam1, cam2);
-		polyhedraCalc = new PolyhedraCalculations(drone);
+		testap = new TestAP(drone);
+		polyhedraCalc = new PolyhedraCalculations(testap);
 	}
 	
 	public void createDrone2(Camera cam1, Camera cam2){
 		Drone drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation2, cam1, cam2);
-		polyhedraCalc = new PolyhedraCalculations(drone);
+		testap = new TestAP(drone);
+		polyhedraCalc = new PolyhedraCalculations(testap);
 	}
 
 	public void createImage() throws IOException{
@@ -334,5 +336,17 @@ public class PolyhedraCalculationsTests {
 			}
 
 	    };
+	}
+	
+	private class TestAP extends DroneAutopilot {
+
+		public TestAP(Drone drone) {
+			super(drone);
+		}
+		
+		@Override
+		public void timeHasPassed() {
+		}
+		
 	}
 }
