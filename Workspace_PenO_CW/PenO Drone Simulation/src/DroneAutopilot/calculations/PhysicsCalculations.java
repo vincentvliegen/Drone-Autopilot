@@ -1,15 +1,14 @@
 package DroneAutopilot.calculations;
 
-
-import java.util.Arrays;
-
 import DroneAutopilot.DroneAutopilot;
+import DroneAutopilot.algoritmes.AvoidObstacles;
 import p_en_o_cw_2016.Drone;
 
 public class PhysicsCalculations{
 
 	private DroneAutopilot droneAutopilot;
 	private Drone drone;
+	private AvoidObstacles avoidObstacle;
 
 	//Drone
 	private double time;
@@ -66,6 +65,8 @@ public class PhysicsCalculations{
 	public PhysicsCalculations(DroneAutopilot droneAutopilot){
 		this.setDroneAutopilot(droneAutopilot);
 		this.setDrone(getDroneAutopilot().getDrone());
+		this.setAvoidObstacle(avoidObstacle);
+		
 		this.setTime((double) this.getDrone().getCurrentTime());
 		this.setPosition((double) this.getDrone().getX(), (double) this.getDrone().getY(), (double) this.getDrone().getZ());
 		this.setSpeed(0,0,0);
@@ -77,7 +78,6 @@ public class PhysicsCalculations{
 		this.setWindTranslation(0,0,0);
 		this.setWindRotation(0,0,0);
 		this.setExpectedPosition((double) this.getDrone().getX(), (double) this.getDrone().getY(), (double) this.getDrone().getZ());
-//		this.maxWindTranslation = 0.05*this.getDrone().getDrag();
 	}
 	
 	 	private double calculateFocalDistance(){
@@ -1268,6 +1268,14 @@ public class PhysicsCalculations{
 
 	public void setDroneAutopilot(DroneAutopilot droneAutopilot) {
 		this.droneAutopilot = droneAutopilot;
+	}
+
+	public AvoidObstacles getAvoidObstacle() {
+		return avoidObstacle;
+	}
+
+	public void setAvoidObstacle(AvoidObstacles avoidObstacle) {
+		this.avoidObstacle = avoidObstacle;
 	}
 	
 }

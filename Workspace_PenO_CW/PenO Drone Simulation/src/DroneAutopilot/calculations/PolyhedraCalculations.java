@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
+import DroneAutopilot.DroneAutopilot;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
@@ -19,8 +20,8 @@ public class PolyhedraCalculations {
 	private HashMap<float[], ArrayList<int[]>> hashMapInnerColor;
 	private HashMap<float[], ArrayList<int[]>> hashMapObstacle;
 
-	public PolyhedraCalculations(Drone drone) {
-		this.physicsCalc = new PhysicsCalculations(drone);
+	public PolyhedraCalculations(DroneAutopilot droneAutopilot) {
+		this.physicsCalc = droneAutopilot.getPhysicsCalculations();
 
 	}
 

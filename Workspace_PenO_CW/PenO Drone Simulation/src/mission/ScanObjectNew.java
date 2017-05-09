@@ -28,7 +28,7 @@ import DroneAutopilot.scanning.Point;
 public class ScanObjectNew extends Mission {
 
 	public float[] previousPosition;
-	private PolyhedraCalculations polycalc = new PolyhedraCalculations(getDrone());
+	private PolyhedraCalculations polycalc = new PolyhedraCalculations(this.getDroneAutopilot());
 
 
 	JFrame frame;

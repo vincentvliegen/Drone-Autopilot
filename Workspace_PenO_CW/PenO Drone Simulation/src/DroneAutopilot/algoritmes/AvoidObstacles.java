@@ -1,134 +1,172 @@
 package DroneAutopilot.algoritmes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
-import DroneAutopilot.calculations.ImageCalculations;
-import DroneAutopilot.calculations.PhysicsCalculations;
+import DroneAutopilot.DroneAutopilot;
+import DroneAutopilot.calculations.PolyhedraCalculations;
+import DroneAutopilot.calculations.VectorCalculations;
 import p_en_o_cw_2016.Drone;
 
 public class AvoidObstacles {
 
 	private Drone drone;
-	private ImageCalculations imageCalculations;
-	private PhysicsCalculations physicsCalculations;
-	private boolean obstacleFound;
-	private float shortestDistance;
+	private PolyhedraCalculations polyhedraCalculations;
+	private DroneAutopilot droneAutopilot;
+	private boolean obstacleInLine;
+	private double width;
 
-	public AvoidObstacles(Drone drone){
- 		this.setDrone(drone);
- 		this.imageCalculations = new ImageCalculations();
- 		this.physicsCalculations = new PhysicsCalculations(drone);
- 	}
-	
-	public ArrayList<float[]> closestObstacle(float[] cogLeftTarget, float[] cogRightTarget ){
-		shortestDistance = Float.POSITIVE_INFINITY;
-		ArrayList<float[]> closestObst = new ArrayList<float[]>();
-		HashMap<Integer, ArrayList<float[]>> obstacleCOG = this.removeObstacleFarFromTarget(cogLeftTarget, cogRightTarget);
-		if (obstacleCOG.isEmpty()){
-			this.setObstacleFound(false);
-		}else{
-			this.setObstacleFound(true);
-			for(int obstacle: obstacleCOG.keySet()){
-				float distanceObst = this.getPhysicsCalculations().getDistance(obstacleCOG.get(obstacle).get(0), obstacleCOG.get(obstacle).get(2));
-				if (distanceObst< shortestDistance){
-					shortestDistance = distanceObst;
-					closestObst.clear();
-					closestObst.add(obstacleCOG.get(obstacle).get(0));					
-					closestObst.add(obstacleCOG.get(obstacle).get(1));
-				}
+	public AvoidObstacles(DroneAutopilot droneAutopilot){
+		this.setDroneAutopilot(droneAutopilot);
+		this.setDrone(this.getDroneAutopilot().getDrone());
+		this.polyhedraCalculations = new PolyhedraCalculations(this.getDroneAutopilot());
+		this.setWidth(0.35); // De breedte van de drone.
+	}
+
+	public double[] execute(double[] target){
+		double[] newTarget = target;
+		double[] sphereInLine = this.obtacleInLine(target);
+		if(this.isObstacleInLine()==true){
+			
+			//Voorlopig enkel y waarde aanpassen, dus die berekenen:
+			double xSphere = sphereInLine[0];
+			double ySphere = sphereInLine[1];
+			double zSphere = sphereInLine[2];
+			//straal om ervoorbij te vliegen met veiligheidsmarge voor drone
+			double straalSphere = sphereInLine[3] + 1.5*this.getWidth();
+			
+			// (x-xc)^2 + (y-yc)^2 + (z-zc)^2 = r^2
+			// y^2 - 2*y*yc - r^2 + (x-xc)^2 + (z-zc)^2 + yc^2
+			// oplossen naar y
+			// 2e graadsvgl oplossen b^2 - 4ac:
+			double a = 1;
+			double b = -2*ySphere;
+			double c = - Math.pow(straalSphere, 2) + Math.pow(target[0] - xSphere, 2) + Math.pow(target[2] - zSphere, 2) + Math.pow(ySphere, 2);
+			double opl1 = (-b-Math.sqrt(Math.pow(b, 2)-4*a*c))/(2*a);
+			double opl2 = (-b+Math.sqrt(Math.pow(b, 2)-4*a*c))/(2*a);
+			if(Math.abs(target[1]-opl1) >= Math.abs(target[1]-opl2)){
+				newTarget = new double[]{target[0],opl2,target[2]};
+			}else{
+				newTarget = new double[]{target[0],opl1,target[2]};
 			}
 		}
-		return closestObst;
+		return newTarget;
 	}
-	
-	
-	public  HashMap<Integer, ArrayList<float[]>> removeObstacleFarFromTarget(float[] cogLeftTarget, float[] cogRightTarget ){
-		HashMap<Integer, ArrayList<float[]>> obstacleCOG = this.obstaclesCOG();
-		float targetHorizDev = this.getPhysicsCalculations().horizontalAngleDeviation(cogLeftTarget, cogRightTarget);
-		float targetVertDev = this.getPhysicsCalculations().verticalAngleDeviation(cogLeftTarget);
-		float targetDistance = this.getPhysicsCalculations().getDistance(cogLeftTarget, cogRightTarget);
-			for (int obstacle: obstacleCOG.keySet()){
-				float distanceObst = this.getPhysicsCalculations().getDistance(obstacleCOG.get(obstacle).get(0), obstacleCOG.get(obstacle).get(2));
-				float horizDevObst = this.getPhysicsCalculations().horizontalAngleDeviation(obstacleCOG.get(obstacle).get(0), obstacleCOG.get(obstacle).get(2));
-				float vertDevObst = this.getPhysicsCalculations().verticalAngleDeviation(obstacleCOG.get(obstacle).get(0));
-				
-				if (Math.abs(horizDevObst - targetHorizDev) > 2){
-					obstacleCOG.remove(obstacle,obstacleCOG.get(obstacle));
-				}else if(Math.abs(vertDevObst - targetVertDev )> 2){
-					obstacleCOG.remove(obstacle,obstacleCOG.get(obstacle));
-				}else if(distanceObst > targetDistance+5){
-					obstacleCOG.remove(obstacle,obstacleCOG.get(obstacle));
-				}
-			}
-		return obstacleCOG;
-	}
-	
-	
-	public HashMap<Integer, ArrayList<float[]>> obstaclesCOG(){
-		HashMap<Integer, ArrayList<float[]>> obstacleCOG = new HashMap<Integer, ArrayList<float[]>>();
-		HashMap<Integer, ArrayList<ArrayList<int[]>>> obstacleCoordinates = this.obstacleCoordinates();
-		for(int obstacle: obstacleCoordinates.keySet()){
-			float[] cogObstLeft = this.getImageCalculations().findBestCenterOfGravity(obstacleCoordinates.get(obstacle).get(0), this.getDrone().getLeftCamera());
-			float[] cogObstRight = this.getImageCalculations().findBestCenterOfGravity(obstacleCoordinates.get(obstacle).get(1), this.getDrone().getRightCamera());
-			ArrayList<float[]> cogsObst = new ArrayList<float[]>();
-			cogsObst.add(cogObstLeft);
-			cogsObst.add(cogObstRight);
-			obstacleCOG.put(obstacle, cogsObst);
-		}
-		return obstacleCOG;
-	}
-	
-	public HashMap<Integer, ArrayList<ArrayList<int[]>>> obstacleCoordinates(){
-		HashMap<Integer, ArrayList<ArrayList<int[]>>> hashMapOfColorsBoth = new HashMap<Integer, ArrayList<ArrayList<int[]>>>();
-		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getLeftCamera());
-		HashMap<Integer, ArrayList<int[]>> hashMapOfColorsLeft = this.getImageCalculations().getGreyPixels();
-		this.getImageCalculations().calculatePixelsOfEachColor(this.getDrone().getRightCamera());
-		HashMap<Integer, ArrayList<int[]>> hashMapOfColorsRight = this.getImageCalculations().getGreyPixels();
-		
-		//samenvoegen L en R coordinaten van zelfde obstakels
-		for(int color: hashMapOfColorsLeft.keySet()){
-			if(hashMapOfColorsRight.containsKey(color)){
-				ArrayList<ArrayList<int[]>> both = new ArrayList<ArrayList<int[]>>();
-				both.add(hashMapOfColorsLeft.get(color));
-				both.add(hashMapOfColorsRight.get(color));
-				hashMapOfColorsBoth.put(color, both);
+
+	//Geeft de bol weer die het vliegen belemmert 
+	private double[] obtacleInLine(double[] target){
+		this.setObstacleInLine(false);
+		double[] dronePosition = new double[]{this.getDrone().getX(), this.getDrone().getY(), this.getDrone().getZ()};
+		double[] targetPosVector = VectorCalculations.sum(target, VectorCalculations.inverse(dronePosition)); //Vector van positie naar target
+		ArrayList<double[]> spheresAroundObstacle = calculatespheres();
+		//Test als de vector een bol snijdt.
+		double[] currentSphere = null;
+		Iterator itrSpheres = spheresAroundObstacle.iterator();
+		while (itrSpheres.hasNext() && this.isObstacleInLine()==false) {
+			currentSphere = (double[]) itrSpheres.next();
+			if(intersectionVectorSphere(targetPosVector, currentSphere) == false){
+				currentSphere = null;
+			}else{
+				this.setObstacleInLine(true);
 			}
 		}
-		return hashMapOfColorsBoth;
-	}	
+		return currentSphere;
+	}
+
+	//https://gamedev.stackexchange.com/questions/60630/how-do-i-find-the-circumcenter-of-a-triangle-in-3d
+	private  ArrayList<double[]> calculatespheres(){
+		HashMap<float[], ArrayList<double[]>> obstacleCorners = this.getPolyhedraCalculations().getObstacleCorners(this.getDrone().getLeftCamera(), this.getDrone().getLeftCamera());
+		ArrayList<double[]> spheres = new ArrayList<double[]>();
+		Collection<ArrayList<double[]>> corners = obstacleCorners.values();
+		Iterator itrCorners = corners.iterator();
+		while (itrCorners.hasNext()) {
+			//Bereken het middenpunt van de bol:
+			ArrayList<double[]> punten = (ArrayList<double[]>) itrCorners.next();
+			double[] a = punten.get(0);
+			double[] b = punten.get(1);
+			double[] c = punten.get(2);
+
+			double[] ac = VectorCalculations.sum(c, VectorCalculations.inverse(a));
+			double[] ab = VectorCalculations.sum(b, VectorCalculations.inverse(a));
+			double[] abCrossac = VectorCalculations.crossProduct(ab, ac);
+
+			double[] teller = VectorCalculations.sum(VectorCalculations.timesScalar(VectorCalculations.crossProduct(abCrossac, ab), Math.pow(VectorCalculations.size(ac),2)), 
+					VectorCalculations.timesScalar(VectorCalculations.crossProduct(ac, abCrossac), Math.pow(VectorCalculations.size(ab),2)));
+			double noemer = 2 * Math.pow(VectorCalculations.size(abCrossac), 2);
+			double[] circumCenter = VectorCalculations.sum(a, VectorCalculations.timesScalar(teller, 1/noemer));
+			//Bereken de straal van de bol (grootste afstand naar het punt):
+			double straal = Math.max(Math.max(VectorCalculations.distance(a, circumCenter), VectorCalculations.distance(b, circumCenter)), VectorCalculations.distance(c, circumCenter));
+			//Sphere bestaat uit het middelpunt(eerste 3 elementen) en de straal.
+			double[] sphere = new double[]{circumCenter[0],circumCenter[1],circumCenter[2],straal};
+			spheres.add(sphere);
+		}
+		return spheres;
+	}
+
+	//http://www.ambrsoft.com/TrigoCalc/Sphere/SpherLineIntersection_.htm
+	private boolean intersectionVectorSphere(double[] vector, double[] sphere){
+		boolean intersection = false;
+
+		//DroneCoordinaten
+		double x1 = this.getDrone().getX();
+		double y1 = this.getDrone().getY();
+		double z1 = this.getDrone().getZ();
+
+		//Formules zie site:
+		double a = Math.pow(vector[0], 2) + Math.pow(vector[1], 2) + Math.pow(vector[2], 2);
+		double b = 2*(vector[0]*(x1-sphere[0])+vector[1]*(y1-sphere[1])+vector[2]*(z1-sphere[2])); 
+		double c = Math.pow(sphere[0], 2) + Math.pow(sphere[1], 2) + Math.pow(sphere[2], 2) + Math.pow(x1, 2) + Math.pow(y1, 2) + Math.pow(z1, 2) -
+				2*(x1*sphere[0]+y1*sphere[1]+z1*sphere[2]) - Math.pow(sphere[3],2);
+
+		if(Math.pow(b, 2)-4*a*c >= 0){
+			intersection = true;
+		}
+		return intersection;
+	}
 	
-	//////////Getters & Setters//////////
- 	
- 	public Drone getDrone() {
- 		return drone;
+
+	//////////GETTERS & SETTERS//////////
+
+	public boolean isObstacleInLine() {
+		return obstacleInLine;
+	}
+
+	public void setObstacleInLine(boolean obstacleInLine) {
+		this.obstacleInLine = obstacleInLine;
+	}
+
+	public double getWidth() {
+		return width;
+	}
+
+	public void setWidth(double d) {
+		this.width = d;
+	}
+
+	public Drone getDrone() {
+		return drone;
 	}
 
 	public void setDrone(Drone drone) {
 		this.drone = drone;
 	}
-	
-	public ImageCalculations getImageCalculations(){
-		return imageCalculations;
+
+	public PolyhedraCalculations getPolyhedraCalculations() {
+		return polyhedraCalculations;
+	}
+
+	public void setPolyhedraCalculations(PolyhedraCalculations polyhedraCalculations) {
+		this.polyhedraCalculations = polyhedraCalculations;
+	}
+
+	public DroneAutopilot getDroneAutopilot() {
+		return droneAutopilot;
+	}
+
+	public void setDroneAutopilot(DroneAutopilot droneAutopilot) {
+		this.droneAutopilot = droneAutopilot;
 	}
 	
-	public void setImageCalculations(ImageCalculations imageCalc){
-		this.imageCalculations = imageCalc;
-	}
-	
-	public PhysicsCalculations getPhysicsCalculations() {
-		return physicsCalculations;
-	}
-	
-	public void setPhysicsCalculations(PhysicsCalculations physicsCalculations) {
-		this.physicsCalculations = physicsCalculations;
-	}
-	
-	public void setObstacleFound(boolean found){
-		this.obstacleFound = found;
-	}
-	
-	public boolean getObstacleFound(){
-		return this.obstacleFound;
-	}
 }

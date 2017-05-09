@@ -22,7 +22,7 @@ public class ScanObject extends Mission {
 	public float[] target;
 	private ArrayList<float[]> drawnTriangles = new ArrayList<float[]>();
 
-	private PolyhedraCalculations polycalc = new PolyhedraCalculations(getDrone());
+	private PolyhedraCalculations polycalc = new PolyhedraCalculations(this.getDroneAutopilot());
 
 	private final float quadraticMargin = 0.001f;
 	private ArrayList<ArrayList<double[]>> scannedLines = new ArrayList<ArrayList<double[]>>();
