@@ -664,7 +664,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 			pitch = 0;
 			yaw = 0;
 			roll = 0;
-			this.getMovement().currentPosition = new double[]{0,0,0};
+			translate = new double[]{10,0,0};
 			float[] vel = this.getMovement().getVelocity();
 			for (int i = 0; i<3;i++)
 				vel[i] = 0;
