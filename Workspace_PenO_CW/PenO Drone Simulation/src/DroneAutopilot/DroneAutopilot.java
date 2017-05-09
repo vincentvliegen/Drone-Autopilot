@@ -2,6 +2,7 @@ package DroneAutopilot;
 
 import DroneAutopilot.GUI.GUI;
 import DroneAutopilot.GUI.MissionType;
+import DroneAutopilot.algoritmes.AvoidObstacles;
 import DroneAutopilot.calculations.PhysicsCalculations;
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import mission.*;
@@ -13,6 +14,7 @@ public class DroneAutopilot implements Autopilot {
 	private final Drone drone;
 	private final PhysicsCalculations physicsCalculations;//deze mag niet verschillen tussen de missies, omdat de snelheid/positie/wind elk frame moet worden geupdate
 	private final PolyhedraCalculations polyhedraCalculations;
+	private final AvoidObstacles avoidObstacles;
 	private final GUI GUI;
 	
 	private final Mission hover;
@@ -34,6 +36,7 @@ public class DroneAutopilot implements Autopilot {
 		this.drone = drone;
 		this.physicsCalculations = new PhysicsCalculations(this);
 		this.polyhedraCalculations = new PolyhedraCalculations(this);
+		this.avoidObstacles = new AvoidObstacles(this);
 		this.GUI = new GUI();
 		this.scanObject = new ScanObject(this);
 		this.flyToMultiplePositions = new FlyToMultiplePositions(this);
@@ -139,5 +142,19 @@ public class DroneAutopilot implements Autopilot {
 	public Mission getFlyToSingleObject() {
 		return flyToSingleObject;
 	}
+
+	public PolyhedraCalculations getPolyhedraCalculations() {
+		return polyhedraCalculations;
+	}
+
+	public Mission getScanObjectNew() {
+		return scanObjectNew;
+	}
+
+	public AvoidObstacles getAvoidObstacles() {
+		return avoidObstacles;
+	}
+	
+	
 	
 }

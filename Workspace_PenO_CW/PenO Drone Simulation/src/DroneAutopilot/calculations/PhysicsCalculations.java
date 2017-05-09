@@ -66,8 +66,7 @@ public class PhysicsCalculations{
 	
 	public PhysicsCalculations(DroneAutopilot droneAutopilot){
 		this.setDroneAutopilot(droneAutopilot);
-		this.setDrone(getDroneAutopilot().getDrone());
-		this.setAvoidObstacle(avoidObstacle);
+		this.setDrone(this.getDroneAutopilot().getDrone());
 		
 		this.setTime((double) this.getDrone().getCurrentTime());
 		this.setPosition((double) this.getDrone().getX(), (double) this.getDrone().getY(), (double) this.getDrone().getZ());
@@ -387,6 +386,7 @@ public class PhysicsCalculations{
 	//////////MOVEMENT//////////
 	
 	public void updateMovement(double[] targetPosition, double[] direction){
+		//targetPosition = this.getDroneAutopilot().getAvoidObstacles().execute(targetPosition);
 		if(isFirstTime()){
 			calculateThrust(targetPosition);
 			

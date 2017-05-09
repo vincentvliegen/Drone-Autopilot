@@ -21,7 +21,7 @@ public class AvoidObstacles {
 	public AvoidObstacles(DroneAutopilot droneAutopilot){
 		this.setDroneAutopilot(droneAutopilot);
 		this.setDrone(this.getDroneAutopilot().getDrone());
-		this.polyhedraCalculations = new PolyhedraCalculations(this.getDroneAutopilot());
+		this.setPolyhedraCalculations(new PolyhedraCalculations(droneAutopilot));
 		this.setWidth(0.35); // De breedte van de drone.
 	}
 
