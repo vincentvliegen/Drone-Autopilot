@@ -105,7 +105,6 @@ public class PolyhedraCalculations {
 					ArrayList<int[]> foundminyL = this.findMinCoordsWithMargin(targetListLeft.get(colorLeft), 1);
 					ArrayList<int[]> foundminyR = this.findMinCoordsWithMargin(targetListRight.get(colorRight), 1);
 
-					this.getPhysics().updateDroneData();
 					// onderste hoekpunt toevoegen
 					if (foundmaxyL.size() == 1 && foundmaxyR.size() == 1) {
 						double[] coordinate = this.getPhysics().calculatePositionObject(

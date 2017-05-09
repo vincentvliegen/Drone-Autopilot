@@ -37,19 +37,13 @@ public class AvoidObstacles {
 			//straal om ervoorbij te vliegen met veiligheidsmarge voor drone
 			double straalSphere = sphereInLine[3] + 1.5*this.getWidth();
 			
-			// (x-xc)^2 + (y-yc)^2 + (z-zc)^2 = r^2
-			// y^2 - 2*y*yc - r^2 + (x-xc)^2 + (z-zc)^2 + yc^2
-			// oplossen naar y
-			// 2e graadsvgl oplossen b^2 - 4ac:
-			double a = 1;
-			double b = -2*ySphere;
-			double c = - Math.pow(straalSphere, 2) + Math.pow(target[0] - xSphere, 2) + Math.pow(target[2] - zSphere, 2) + Math.pow(ySphere, 2);
-			double opl1 = (-b-Math.sqrt(Math.pow(b, 2)-4*a*c))/(2*a);
-			double opl2 = (-b+Math.sqrt(Math.pow(b, 2)-4*a*c))/(2*a);
-			if(Math.abs(target[1]-opl1) >= Math.abs(target[1]-opl2)){
-				newTarget = new double[]{target[0],opl2,target[2]};
+			double newYSphere1 = ySphere+straalSphere;
+			double newYSphere2 = ySphere-straalSphere;
+			
+			if(Math.abs(this.getDrone().getY()-newYSphere1) >= Math.abs(this.getDrone().getY()-newYSphere2)){
+				newTarget = new double[]{xSphere,newYSphere2,zSphere};
 			}else{
-				newTarget = new double[]{target[0],opl1,target[2]};
+				newTarget = new double[]{xSphere,newYSphere1,zSphere};
 			}
 		}
 		return newTarget;

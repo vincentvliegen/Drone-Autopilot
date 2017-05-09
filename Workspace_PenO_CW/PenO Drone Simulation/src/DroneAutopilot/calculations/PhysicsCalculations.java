@@ -387,6 +387,7 @@ public class PhysicsCalculations{
 	
 	public void updateMovement(double[] targetPosition, double[] direction){
 		//targetPosition = this.getDroneAutopilot().getAvoidObstacles().execute(targetPosition);
+		//System.out.println(targetPosition[0] + " " + targetPosition[1] + " " + targetPosition[2]);
 		if(isFirstTime()){
 			calculateThrust(targetPosition);
 			
