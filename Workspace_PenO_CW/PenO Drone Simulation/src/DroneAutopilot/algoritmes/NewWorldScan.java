@@ -3,6 +3,7 @@ package DroneAutopilot.algoritmes;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PhysicsCalculations;
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import DroneAutopilot.calculations.VectorCalculations;
@@ -11,17 +12,17 @@ import p_en_o_cw_2016.Drone;
 public class NewWorldScan {
 
 	private final Drone drone;
-	private final  PhysicsCalculations physicsCalc;
-	private final PolyhedraCalculations polyCalc;
+	private final  PhysicsCalculations physicsCalculations;
+	private final PolyhedraCalculations polyhedraCalculations;
 	
 	private boolean finished;
 	private double[] newDirectionOfView;
 	private HashMap<float[],ArrayList<double[]>> colorAndCogs;
 
-	public NewWorldScan(PhysicsCalculations physicsCalculations) {
-		this.physicsCalc = physicsCalculations;
-		this.drone = getPhysics().getDrone();
-		this.polyCalc = new PolyhedraCalculations(this.getPhysics().getDroneAutopilot());
+	public NewWorldScan(DroneAutopilot droneAutoPilot) {
+		this.drone = droneAutoPilot.getDrone();
+		this.physicsCalculations = droneAutoPilot.getPhysicsCalculations();
+		this.polyhedraCalculations = droneAutoPilot.getPolyhedraCalculations();
 	}
 
 	/**
@@ -30,7 +31,7 @@ public class NewWorldScan {
 	 * Als er wel bruikbare punten zijn, wordt isFinished() true en kan je deze punten opvragen via getColorsAndCogs().
 	 */
 	public void scan(){
-		setColorAndCogs(this.getPolyCalc().findAllCOGs(this.getDrone().getLeftCamera(), this.getDrone().getRightCamera()));
+		setColorAndCogs(this.getPolyhedraCalculations().findAllCOGs(this.getDrone().getLeftCamera(), this.getDrone().getRightCamera()));
 		if(getColorAndCogs().isEmpty()){//nieuwe viewDirection
 			setFinished(false);
 			calculateNewDirectionOfView();
@@ -39,49 +40,51 @@ public class NewWorldScan {
 		}
 	}	
 	
-		private void calculateNewDirectionOfView(){// draait met een hoek die overeenkomt met de helft van de horizontale hoek van het gezichtsveld
+		private void calculateNewDirectionOfView(){//draait met een hoek die overeenkomt met de helft van de horizontale hoek van het gezichtsveld
 			float cameraAngle = this.getDrone().getLeftCamera().getHorizontalAngleOfView();
-			double[] newView = VectorCalculations.rotateVectorAroundAxis(this.getPhysics().getDirectionOfView(), this.getPhysics().getOrientationDrone()[1], cameraAngle/2);
+			double[] newView = VectorCalculations.rotateVectorAroundAxis(this.getPhysicsCalculations().getDirectionOfView(), this.getPhysicsCalculations().getOrientationDrone()[1], cameraAngle/2);
 			setNewDirectionOfView(newView);
 		}
+
+
 	
 	
 	//////////GETTERS & SETTERS//////////
 
-	private  PolyhedraCalculations getPolyCalc(){
-		return this.polyCalc;
-	}
+		public boolean isFinished() {
+			return finished;
+		}
 
-	private  PhysicsCalculations getPhysics(){
-		return this.physicsCalc;
-	}
+		public void setFinished(boolean finished) {
+			this.finished = finished;
+		}
 
-	private  Drone getDrone() {
-		return this.drone;
-	}
+		public double[] getNewDirectionOfView() {
+			return newDirectionOfView;
+		}
 
-	public boolean isFinished() {
-		return finished;
-	}
+		public void setNewDirectionOfView(double[] newDirectionOfView) {
+			this.newDirectionOfView = newDirectionOfView;
+		}
 
-	public void setFinished(boolean finished) {
-		this.finished = finished;
-	}
+		public HashMap<float[], ArrayList<double[]>> getColorAndCogs() {
+			return colorAndCogs;
+		}
 
-	public double[] getNewDirectionOfView() {
-		return newDirectionOfView;
-	}
+		public void setColorAndCogs(HashMap<float[], ArrayList<double[]>> colorAndCogs) {
+			this.colorAndCogs = colorAndCogs;
+		}
 
-	public void setNewDirectionOfView(double[] newDirectionOfView) {
-		this.newDirectionOfView = newDirectionOfView;
-	}
+		public Drone getDrone() {
+			return drone;
+		}
 
-	public HashMap<float[], ArrayList<double[]>> getColorAndCogs() {
-		return colorAndCogs;
-	}
+		public PhysicsCalculations getPhysicsCalculations() {
+			return physicsCalculations;
+		}
 
-	public void setColorAndCogs(HashMap<float[], ArrayList<double[]>> colorAndCogs) {
-		this.colorAndCogs = colorAndCogs;
-	}
+		public PolyhedraCalculations getPolyhedraCalculations() {
+			return polyhedraCalculations;
+		}
 
 }

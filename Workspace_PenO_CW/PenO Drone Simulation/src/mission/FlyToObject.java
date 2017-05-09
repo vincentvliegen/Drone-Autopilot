@@ -14,7 +14,7 @@ public class FlyToObject extends Mission{
 
 	public FlyToObject(DroneAutopilot droneAutopilot){
 		super(droneAutopilot);
-		setWorldScan(new NewWorldScan(this.getPhysicsCalculations()));
+		setWorldScan(new NewWorldScan(this.getDroneAutopilot()));
 		setTargetFound(false);
 	}
 
@@ -25,12 +25,8 @@ public class FlyToObject extends Mission{
 		}else{//we kennen target niet
 			this.getWorldScan().scan();
 			if(this.getWorldScan().isFinished()){//target gevonden
-				HashMap<float[],ArrayList<double[]>> listColorAndCOG = this.getWorldScan().getColorAndCogs();
 				setTargetFound(true);
-				int size = listColorAndCOG.size();
-				float[][] keys = listColorAndCOG.keySet().toArray(new float[size][]);
-				ArrayList<double[]> cogs = listColorAndCOG.get(keys[size/2]);
-				setTarget(this.getPhysicsCalculations().calculatePositionObject(cogs.get(0), cogs.get(1)));
+				setTarget(getPositionOfObject());
 				this.getPhysicsCalculations().updateMovement(getTarget());
 			}else{//target niet gevonden
 				this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(),this.getWorldScan().getNewDirectionOfView());
@@ -38,6 +34,15 @@ public class FlyToObject extends Mission{
 		}
 	}
 
+		public double[] getPositionOfObject(){
+			//list of all cogs of triangles, fly to middle cog in list;
+			HashMap<float[],ArrayList<double[]>> listColorAndCOG = this.getWorldScan().getColorAndCogs();
+			int size = listColorAndCOG.size();
+			float[][] keys = listColorAndCOG.keySet().toArray(new float[size][]);
+			ArrayList<double[]> cogs = listColorAndCOG.get(keys[size/2]);
+			return this.getPhysicsCalculations().calculatePositionObject(cogs.get(0), cogs.get(1));
+		}
+	
 	@Override
 	public void updateGUI() {//TODO
 //		this.getGUI().update(this.getPhysicsCalculations().getDistanceDroneToPosition(getTarget()),0);

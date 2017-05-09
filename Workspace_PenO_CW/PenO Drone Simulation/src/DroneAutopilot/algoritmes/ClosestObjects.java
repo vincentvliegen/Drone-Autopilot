@@ -96,7 +96,7 @@ public class ClosestObjects {
 			double[] distances = new double[size];
 			int i = 0;
 			for (double[] coord : this.getObjectList()) {
-				distances[i] = VectorCalculations.calculateDistanceBetweenCoords(coord,this.getClosestObject());
+				distances[i] = VectorCalculations.distance(coord,this.getClosestObject());
 				i++;
 			}
 			int index = (int) this.twoHighestValues(distances, 2, true);
@@ -108,7 +108,7 @@ public class ClosestObjects {
 	// gedetecteerd is
 	public void updateObjectList(double[] coords) {
 		for (double[] checkcoords : this.getObjectList()) {
-			if (VectorCalculations.calculateDistanceBetweenCoords(coords, checkcoords) >= this.getMinDistance()) {
+			if (VectorCalculations.distance(coords, checkcoords) >= this.getMinDistance()) {
 				this.getObjectList().add(coords);
 			}
 		}
