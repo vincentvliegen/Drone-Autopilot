@@ -17,7 +17,7 @@ public class Generator_V2 {
 		String path = "inputFiles/GeneratorV2Test.txt";
 		boolean windOn = false;
 		boolean obstaclesOn = true;
-		boolean singleObject = false;
+		boolean emptyWorld = false;
 
 		File f = new File(path);
 		OutputStream fileStream = new FileOutputStream(f);
@@ -77,7 +77,7 @@ public class Generator_V2 {
 
 			// Objects
 			int numberOfObjects;
-			if (!singleObject)
+			if (!emptyWorld)
 				numberOfObjects = r.nextInt(7) + 10;
 			else
 				numberOfObjects = 0;
