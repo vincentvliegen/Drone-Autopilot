@@ -85,7 +85,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 							// rotation
 		// System.out.println(getTranslate()[0] + " " + getTranslate()[1] + " "
 		// + getTranslate()[2]);
-		translateDrone(getPosition());
+		gl.glTranslated(translate[0], translate[1], translate[2]);
 		rotateDrone(-getYaw(), getGlobalRoll(), -getGlobalPitch());
 		gl.glColor3f(color[0], color[1], color[2]);
 		gl.glBegin(GL2ES3.GL_TRIANGLES);
@@ -180,7 +180,6 @@ public class SimulationDrone extends WorldObject implements Drone {
 	}
 
 	public void translateDrone(double[] translate) {
-		gl.glTranslated(translate[0], translate[1], translate[2]);
 		this.translate = translate;
 	}
 
@@ -607,7 +606,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 		// float xCo = (getLeftDroneCamera().getEyeX() +
 		// getRightDroneCamera().getEyeX())/2;
 		// return xCo;
-		return (float) this.getMovement().getCurrentPosition()[0];
+		return (float) this.translate[0];
 	}
 
 	@Override
@@ -615,7 +614,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 		// float yCo = (getLeftDroneCamera().getEyeY() +
 		// getRightDroneCamera().getEyeY())/2;
 		// return yCo;
-		return (float) this.getMovement().getCurrentPosition()[1];
+		return (float) this.translate[1];
 	}
 
 	@Override
@@ -623,7 +622,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 		// float zCo = (getLeftDroneCamera().getEyeZ() +
 		// getRightDroneCamera().getEyeZ())/2;
 		// return zCo;
-		return (float) this.getMovement().getCurrentPosition()[2];
+		return (float) this.translate[2];
 	}
 
 	@Override
@@ -646,29 +645,36 @@ public class SimulationDrone extends WorldObject implements Drone {
 	}
 
 	public void fakeTimeHasPassed() {
+		
 		if (fakeYaw < 361) {
 			pitch = 0;
 			yaw = (float) -fakeYaw;
 			roll = 0;
-			translate = new double[] { 1 - 0.8 * Math.cos(Math.toRadians(fakeYaw)), 0,
+			translate = new double[] { 1 - 0.8* Math.cos(Math.toRadians(fakeYaw)), 0,
 					0.8 * Math.sin(Math.toRadians(fakeYaw)) };
-			fakeYaw += 1;
+			fakeYaw += 0.5;
 		} else if (fakeYaw < 721) {
 			float npitch = (float) (fakeYaw - 360);
 			pitch = npitch;
 			yaw = 0;
 			roll = 0;
 			translate = new double[] { 1- 0.8*Math.cos(Math.toRadians(npitch)), 0.8*Math.sin(Math.toRadians(npitch)), 0 };
-			fakeYaw += 1;
+			fakeYaw += 0.5;
 		} else {
 			pitch = 0;
 			yaw = 0;
 			roll = 0;
-			this.getMovement().currentPosition = new double[]{0.2,0,0};
+			this.getMovement().currentPosition = new double[]{0,0,0};
 			float[] vel = this.getMovement().getVelocity();
 			for (int i = 0; i<3;i++)
 				vel[i] = 0;
 		}
+		
+		
+//		this.translate = new double[]{1, -1.2,0};
+//		pitch = 270;
+//		yaw = 0;
+//		roll = 0;
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
 		getMiddleCamera().updateDroneCamera();
