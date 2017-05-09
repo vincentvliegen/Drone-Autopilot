@@ -1,5 +1,7 @@
 package DroneAutopilot.calculations;
 
+import java.util.Arrays;
+
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.algoritmes.AvoidObstacles;
 import p_en_o_cw_2016.Drone;
@@ -185,9 +187,13 @@ public class PhysicsCalculations{
 							2/(this.getDeltaT()*this.getDeltaT()));
 			//v1 = v0 + at
 			double[] vNew = VectorCalculations.sum(this.getSpeed(), VectorCalculations.timesScalar(a, this.getDeltaT()));
-//			System.out.println("speed:");
-//			for(double x:vNew)
-//				System.out.println(x);
+
+//			System.out.println("--------------");
+//			System.out.println("autopilot");
+//			System.out.println("speed: " + Arrays.toString(vNew));
+//			System.out.println("size speed: " + VectorCalculations.size(vNew));
+//			System.out.println("--------------");
+
 			setSpeed(vNew);
 		}
 		
@@ -532,7 +538,6 @@ public class PhysicsCalculations{
 			}
 			this.setThrust(result);
 		}	
-	
 			
 		private void calculateWantedOrientation(double[] position, double[] direction){
 				double acceleration = this.determineAcceleration(position);
@@ -633,7 +638,7 @@ public class PhysicsCalculations{
 
 					
 			private double[] determineDirectionOfAcceleration(double acceleration, double[] directionToPosition){		
-				//we moeten bepalen in welke richting we willen versnellen, om de snelheid in laterale richtingen te compenseren
+				//we moeten bepalen in welke richting we willen versnellen, om de snelheid in transversale richtingen te compenseren
 				//a*(Dt)^2/2 + v*Dt = Dx
 				//met a = acc * (DirAcc)
 				//met Dx = u*Dir met u een cste van onbekende grootte
@@ -642,8 +647,8 @@ public class PhysicsCalculations{
 				//Ax+Vx = Xx; Ay+Vy = Xy; Az+Vz = Xz; DirAccx^2 + DirAccy^2 + DirAccz^2 = 1; => 4 vgl
 				double Dt = this.getDeltaT();
 				double[] Dir = VectorCalculations.normalise(directionToPosition);
-//				double[] v = VectorCalculations.projectOnPlane(this.getSpeed(), this.getDirectionOfThrust());
-				double[] v = VectorCalculations.projectOnPlane(this.getSpeed().clone(), directionToPosition);
+				double[] v = VectorCalculations.projectOnPlane(this.getSpeed(), this.getDirectionOfThrust());
+//				double[] v = VectorCalculations.projectOnPlane(this.getSpeed().clone(), directionToPosition);
 //				double[] v = this.getSpeed();
 //				double[] v = new double[] {0,0,0};
 				double acc = acceleration;
@@ -660,7 +665,7 @@ public class PhysicsCalculations{
 					//met sinXA*|A| = -sinXV*|V|
 					//=> u = cosXA*|A| + cosXV*|V|
 					
-					double factor = 0;//niet te veel de snelheid compenseren of de drone gaat schommelen
+					double factor = 0.3;// tussen [0,1]; niet te veel de snelheid compenseren of de drone gaat schommelen
 					
 					double sizeV = VectorCalculations.size(v)*Dt*factor;
 					double sizeA = Math.abs(acc)*Dt*Dt/2;
@@ -914,6 +919,7 @@ public class PhysicsCalculations{
 				setRemainingAngles(new double[] {expectedYaw,pitch,roll});
 			}
 		
+			
 	//////////VECTOR ROTATIONS//////////
 		
 	public double[] droneVectorToWorldVector(double[] vector){
