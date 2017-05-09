@@ -3,8 +3,12 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+
+import org.junit.Test;
 
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import p_en_o_cw_2016.Camera;
@@ -17,22 +21,44 @@ public class TestImageProcessing {
 	private BufferedImage poly1;
 	private int[] polylist1;
 	
-	private static final int widthCamera = 150;
-	private static final int heightCamera = 100;
-	private static final float horizontalAngleOfView = 90; 
-	private float verticalAngleOfView; 
+	private static final float horizontalAngleOfView = 120; 
 	
-	private static final float cameraSeparation = 0.35f;
+	private static final float cameraSeparation = 0.25f;
 	private static final float droneGravity = -9.81f;
-	private static final float droneWeight = 1.4f;
+	private static final float droneWeight = 1.0f;
 	private static final float dronePitch = 0;
-	private static final float cameraSeparation2 = 0.25f;
 	private static final float maxThrust = 50;
+	
+	@Test
+	public void testPixelCoordinates() throws IOException{
+		createImage();
+		createDrone(camera1, camera1);
+		polyhedraCalc.SeparateTargetsAndObstacles(camera1);
+		HashMap<float[], ArrayList<int[]>> outerTrianglesL = polyhedraCalc
+				.findThreePointsTriangles(polyhedraCalc.getHashMapTargetOuterColor());
+		HashMap<float[], ArrayList<int[]>> innerTrianglesL = polyhedraCalc
+				.findThreePointsTriangles(polyhedraCalc.getHashMapTargetInnerColor());
+		String coordinates = new String();
+		for(float[] color: outerTrianglesL.keySet()){
+			ArrayList<int[]> coordpix = outerTrianglesL.get(color);
+			coordinates += (coordpix.get(0)[0] + " " + coordpix.get(0)[1] + " ");
+			coordinates += (coordpix.get(1)[0] + " " + coordpix.get(1)[1] + " ");
+			coordinates += (coordpix.get(2)[0] + " " + coordpix.get(2)[1] + " ");
+		}
+		for(float[] color: innerTrianglesL.keySet()){
+			ArrayList<int[]> coordpix = outerTrianglesL.get(color);
+			coordinates += (coordpix.get(0)[0] + " " + coordpix.get(0)[1] + " ");
+			coordinates += (coordpix.get(1)[0] + " " + coordpix.get(1)[1] + " ");
+			coordinates += (coordpix.get(2)[0] + " " + coordpix.get(2)[1] + " ");
+		}
+		
+		
+	}
 	
 	public void createImage() throws IOException{
 		poly1 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/img0-left.png"));
-		polylist1 = convertImageToIntArray(poly1,331,222);
-		camera1 = createCameraForTesting(polylist1, 1, 1, 331);
+		polylist1 = convertImageToIntArray(poly1,400,400);
+		camera1 = createCameraForTesting(polylist1, 1, 1, 400);
 	}
 	
 	public void createDrone(Camera cam1, Camera cam2){
