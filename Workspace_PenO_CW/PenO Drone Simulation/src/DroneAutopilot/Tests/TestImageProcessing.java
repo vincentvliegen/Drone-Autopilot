@@ -31,8 +31,11 @@ public class TestImageProcessing {
 	private static final float dronePitch = 0;
 	private static final float maxThrust = 50;
 	
-	@Test
-	public void testPixelCoordinates() throws IOException{
+	public TestImageProcessing(){
+		
+	}
+	
+	public String testPixelCoordinates() throws IOException{
 		createImage();
 		createDrone(camera1, camera1);
 		polyhedraCalc.SeparateTargetsAndObstacles(camera1);
@@ -48,17 +51,18 @@ public class TestImageProcessing {
 			coordinates += (coordpix.get(2)[0] + " " + coordpix.get(2)[1] + " ");
 		}
 		for(float[] color: innerTrianglesL.keySet()){
-			ArrayList<int[]> coordpix = outerTrianglesL.get(color);
+			ArrayList<int[]> coordpix = innerTrianglesL.get(color);
 			coordinates += (coordpix.get(0)[0] + " " + coordpix.get(0)[1] + " ");
 			coordinates += (coordpix.get(1)[0] + " " + coordpix.get(1)[1] + " ");
 			coordinates += (coordpix.get(2)[0] + " " + coordpix.get(2)[1] + " ");
 		}
 		
-		
+		return coordinates;
+		 
 	}
 	
 	public void createImage() throws IOException{
-		poly1 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/img0-left.png"));
+		poly1 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/img-left832.png"));
 		polylist1 = convertImageToIntArray(poly1,400,400);
 		camera1 = createCameraForTesting(polylist1, 1, 1, 400);
 	}
