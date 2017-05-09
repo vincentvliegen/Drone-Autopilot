@@ -10,12 +10,14 @@ import javax.imageio.ImageIO;
 
 import org.junit.Test;
 
+import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import p_en_o_cw_2016.Camera;
 import p_en_o_cw_2016.Drone;
 
 public class TestImageProcessing {
 	
+	private TestAP testap;
 	private PolyhedraCalculations polyhedraCalc;
 	private Camera camera1;
 	private BufferedImage poly1;
@@ -63,7 +65,8 @@ public class TestImageProcessing {
 	
 	public void createDrone(Camera cam1, Camera cam2){
 		Drone drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation, cam1, cam2);
-		polyhedraCalc = new PolyhedraCalculations(drone);
+		testap = new TestAP(drone);
+		polyhedraCalc = new PolyhedraCalculations(testap);
 	}
 	
 	public int[] convertImageToIntArray(BufferedImage image, int width, int height){
@@ -195,5 +198,19 @@ public class TestImageProcessing {
 
 	    };
 	}
+	
+	
+	private class TestAP extends DroneAutopilot {
+
+		public TestAP(Drone drone) {
+			super(drone);
+		}
+		
+		@Override
+		public void timeHasPassed() {
+		}
+		
+	}
+
 	
 }
