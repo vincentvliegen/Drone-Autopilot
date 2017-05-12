@@ -386,7 +386,7 @@ public class PhysicsCalculations{
 	//////////MOVEMENT//////////
 	
 	public void updateMovement(double[] targetPosition, double[] direction){
-//		targetPosition = this.getAvoidObstacles().execute(targetPosition);
+//		targetPosition = this.getAvoidObstacles().correctPosition(targetPosition);
 //		System.out.println(targetPosition[0] + " " + targetPosition[1] + " " + targetPosition[2]);
 		if(isFirstTime()){
 			calculateThrust(targetPosition);
