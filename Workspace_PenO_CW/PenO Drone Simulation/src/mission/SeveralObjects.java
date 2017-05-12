@@ -1,6 +1,5 @@
 package mission;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,23 +12,22 @@ public class SeveralObjects extends Mission {
 
 	private double[] target;
 	private boolean targetFound;
-	
+
 	private final ClosestObjects closestObjects;
 	private int refreshCounter;
 	private final static int timeToRefresh = 10;
 	private boolean firstTime;
 	private boolean closestObjectAcquired;
 	private boolean secondObjectAcquired;
-	private final static double distanceToArrival = 0.1f;
+	private final static double distanceToArrival = 0.1f;//TODO
 
 	private final NewWorldScan scan;
 	private int targetLostCounter = 0;
 	private double[] currentTarget = null;
-	private float inFrontFactor;
 
 	public SeveralObjects(DroneAutopilot droneAutopilot) {
 		super(droneAutopilot);
-		this.closestObjects = new ClosestObjects(this.getDrone());
+		this.closestObjects = new ClosestObjects(this.getDroneAutopilot());
 		this.scan = new NewWorldScan(this.getDroneAutopilot());
 		this.setTargetFound(false);
 		setRefreshCounter(0);
@@ -38,51 +36,69 @@ public class SeveralObjects extends Mission {
 
 	@Override
 	public void execute() {
-		
-		if(isTargetFound()){//we kennen target
-			this.getPhysicsCalculations().updateMovement(getTarget());
-		}else{//we kennen target niet
-			this.getWorldScan().scan();
-			if(this.getWorldScan().isFinished()){//target gevonden
-				setTargetFound(true);
-				setTarget(getPositionOfObject());
+
+		if (isTargetFound()) {// we kennen target
+			if (this.getPhysicsCalculations().getDistanceDroneToPosition(this.getTarget()) <= getDistancetoarrival()) {
+				ArrivedAtTarget();
+			} else {
+				this.setRefreshCounter(this.getRefreshCounter() + 1);
 				this.getPhysicsCalculations().updateMovement(getTarget());
-			}else{//target niet gevonden
-				this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(),this.getWorldScan().getNewDirectionOfView());
+			}
+		} else {// we kennen target niet
+			this.getScan().scan();
+			if (this.getScan().isFinished()) {// target gevonden
+				setTargetFound(true);
+				this.getClosestObjects().addVisibleObjects();
+				this.getClosestObjects().determineClosestObject();
+				setTarget(this.getClosestObjects().getClosestObject());
+				this.getPhysicsCalculations().updateMovement(getTarget());
+			} else {// target niet gevonden
+				this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(),
+						this.getScan().getNewDirectionOfView());
 			}
 		}
-	
-		// fly to multiple targets execute
-		// hebben we een target
-		// nee: scan wereld nieuw target?
-		// 		ja:	vlieg naar target
-		// 		nee:zoek target
-		// ja: 	check target of het nog goed is
-		//		ja:	vlieg naar target
-		//		nee:volgende target/nieuw target
-		
-				
-		if (!this.getScan().isFinished()) {// als de scanner nog geen object heeft gevonden, blijf zoeken
+/*
+		 fly to multiple targets execute
+		 hebben we een target
+		 nee: scan wereld nieuw target?
+		 ja: vlieg naar target
+		 nee:zoek target
+		 ja: check target of het nog goed is
+		 ja: vlieg naar target
+		 nee:volgende target/nieuw target
+*/
+		if (!this.getScan().isFinished()) {// als de scanner nog geen object
+											// heeft gevonden, blijf zoeken
 			this.getScan().scan();
 			this.setFirstTime(true);
 			this.setRefreshCounter(0);
-			
+
 		} else { // als de scanner gedaan heeft met zoeken:
-//			if (this.getMoveToTarget().isTargetLost()) {
-//				this.setTargetLostCounter(this.getTargetLostCounter() + 1);
-//				if (this.getTargetLostCounter() >= 20) {
-//					this.setClosestObjectAcquired(false);
-//					this.setTargetLostCounter(0);
-//				}
-//			}
+			// if (this.getMoveToTarget().isTargetLost()) {
+			// this.setTargetLostCounter(this.getTargetLostCounter() + 1);
+			// if (this.getTargetLostCounter() >= 20) {
+			// this.setClosestObjectAcquired(false);
+			// this.setTargetLostCounter(0);
+			// }
+			// }
 			// BEREKENING OBJECTS
 			if (isFirstTime()) {
 				firstTimeSinceScan();
-			} else if (this.getRefreshCounter() >= getTimeToRefresh()) { // TODO functie otherObjectsFar die aangeeft of andere objecten ver af liggen
+			} else if (this.getRefreshCounter() >= getTimeToRefresh()) { // TODO
+																			// functie
+																			// otherObjectsFar
+																			// die
+																			// aangeeft
+																			// of
+																			// andere
+																			// objecten
+																			// ver
+																			// af
+																			// liggen
 				refreshWhenFlying();
-			}
-			else {
-				double distance = this.getPhysicsCalculations().getDistanceDroneToPosition(this.getClosestObjects().getClosestObject());
+			} else {
+				double distance = this.getPhysicsCalculations()
+						.getDistanceDroneToPosition(this.getClosestObjects().getClosestObject());
 
 				if (distance <= getDistancetoarrival()) {
 					ArrivedAtTarget(); // TODO aanpassen voor objects
@@ -92,12 +108,12 @@ public class SeveralObjects extends Mission {
 
 			// BEWEGING
 			if (isClosestObjectAcquired()) {
-				if (this.getClosestObjects().getClosestObject() != this.getCurrentTarget()) {
-					this.setCurrentTarget(this.getClosestObjects().getClosestObject());
+				if (this.getClosestObjects().getClosestObject() != this.getTarget()) {
+					this.setTarget(this.getClosestObjects().getClosestObject());
 				}
 				this.setRefreshCounter(this.getRefreshCounter() + 1);
-				this.getClosestObjects().getPhysicsCalculations().updateMovement(this.getCurrentTarget());
-				
+				this.getClosestObjects().getPhysicsCalculations().updateMovement(this.getTarget());
+
 			} else {// begin opnieuw te zoeken naar dichtste object
 				this.getScan().scan();
 				setFirstTime(true);
@@ -111,17 +127,17 @@ public class SeveralObjects extends Mission {
 		}
 	}
 
-		public void updateTargets(HashMap<float[], ArrayList<double[]>> colorsAndCOGs){
-			//TODO targets halen uit lijstCOGs
-			double[] target = null;
-			setTarget(target);
-			setTargetFound(true);
-		}
-	
-		public void checkTargetViability(){
-			//TODO
-		}
-	
+	public void updateTargets(HashMap<float[], ArrayList<double[]>> colorsAndCOGs) {
+		// TODO targets halen uit lijstCOGs
+		double[] target = null;
+		setTarget(target);
+		setTargetFound(true);
+	}
+
+	public void checkTargetViability() {
+		// TODO
+	}
+
 	public void firstTimeSinceScan() {
 		this.getClosestObjects().addVisibleObjects();
 		try {
@@ -140,11 +156,10 @@ public class SeveralObjects extends Mission {
 	}
 
 	/*
- * - Reset refresh counter
- * - Voegt coordinaten zichtbare polyhedra toe
- * - Kies dichtstbijzijnde coordinaat als nieuw target
- */
-	
+	 * - Reset refresh counter - Voegt coordinaten zichtbare polyhedra toe -
+	 * Kies dichtstbijzijnde coordinaat als nieuw target
+	 */
+
 	public void refreshWhenFlying() {
 		this.setRefreshCounter(0);
 		this.getClosestObjects().addVisibleObjects();
@@ -156,8 +171,7 @@ public class SeveralObjects extends Mission {
 
 				if (isSecondObjectAcquired()) {
 					double[] previousSecond = this.getClosestObjects().getSecondObject();
-					double previousDistance = VectorCalculations.distance(previousFirst,
-							previousSecond);
+					double previousDistance = VectorCalculations.distance(previousFirst, previousSecond);
 					try {
 						this.getClosestObjects().determineSecondObject();
 					} catch (NullPointerException e) {
@@ -190,26 +204,19 @@ public class SeveralObjects extends Mission {
 	}
 
 	public void ArrivedAtTarget() {
-		//oude target verwijderen
-		this.getClosestObjects().getObjectList().remove(this.getCurrentTarget());
-		//nieuw target selecteren
-		if (isSecondObjectAcquired()) {
-			this.getClosestObjects().setClosestObject(this.getClosestObjects().getSecondObject());
-			setClosestObjectAcquired(true);
-			try {
-				this.getClosestObjects().determineSecondObject();
-				this.setSecondObjectAcquired(true);
-			} catch (NullPointerException e) {
-				this.setSecondObjectAcquired(false);
-			}
-		} else {
-			this.setClosestObjectAcquired(false);
+		// oude target verwijderen
+		this.getClosestObjects().getObjectList().remove(this.getTarget());
+		// nieuw target selecteren
+		this.getClosestObjects().setClosestObject(null);
+		this.getClosestObjects().determineClosestObject();
+		setTarget(this.getClosestObjects().getClosestObject());
+		if (getTarget() == null) {
+			setTargetFound(false);
 		}
 	}
 
-	
-	//////////GETTERS & SETTERS//////////
-	
+	////////// GETTERS & SETTERS//////////
+
 	public int getRefreshCounter() {
 		return refreshCounter;
 	}
@@ -262,22 +269,6 @@ public class SeveralObjects extends Mission {
 		this.targetLostCounter = targetLostCounter;
 	}
 
-	public double[] getCurrentTarget() {
-		return currentTarget;
-	}
-
-	public void setCurrentTarget(double[] currentTarget) {
-		this.currentTarget = currentTarget;
-	}
-
-	public void setInFrontFactor(boolean inFront) {
-			this.inFrontFactor = (float) 0.5; // TODO factor bepalen
-	}
-
-	public float getInFrontFactor() {
-		return inFrontFactor;
-	}
-
 	public NewWorldScan getScan() {
 		return scan;
 	}
@@ -285,32 +276,27 @@ public class SeveralObjects extends Mission {
 	@Override
 	public void updateGUI() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public double[] getTarget() {
 		return target;
 	}
-	
+
 	public void setTarget(double[] target) {
 		this.target = target;
 	}
-	
+
 	public boolean isTargetFound() {
 		return targetFound;
 	}
-	
+
 	public void setTargetFound(boolean targetFound) {
 		this.targetFound = targetFound;
 	}
-	
+
 	public static int getTimetorefresh() {
 		return timeToRefresh;
-	}
-	
-	
-	public void setInFrontFactor(float inFrontFactor) {
-		this.inFrontFactor = inFrontFactor;
 	}
 
 }

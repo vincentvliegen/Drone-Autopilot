@@ -36,11 +36,11 @@ public class FlyToObject extends Mission{
 
 		public double[] getPositionOfObject(){
 			//list of all cogs of triangles, fly to middle cog in list;
-			HashMap<float[],ArrayList<double[]>> listColorAndCOG = this.getWorldScan().getColorAndCogs();
+			HashMap<float[],double[]> listColorAndCOG = this.getWorldScan().getColorAndCogs();
 			int size = listColorAndCOG.size();
 			float[][] keys = listColorAndCOG.keySet().toArray(new float[size][]);
-			ArrayList<double[]> cogs = listColorAndCOG.get(keys[size/2]);
-			return this.getPhysicsCalculations().calculatePositionObject(cogs.get(0), cogs.get(1));
+			double[] cogs = listColorAndCOG.get(keys[size/2]);
+			return cogs;
 		}
 	
 	@Override

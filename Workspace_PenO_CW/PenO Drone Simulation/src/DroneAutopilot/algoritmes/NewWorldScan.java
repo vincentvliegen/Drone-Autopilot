@@ -17,7 +17,7 @@ public class NewWorldScan {
 	
 	private boolean finished;
 	private double[] newDirectionOfView;
-	private HashMap<float[],ArrayList<double[]>> colorAndCogs;
+	private HashMap<float[],double[]> colorAndCogs;
 
 	public NewWorldScan(DroneAutopilot droneAutoPilot) {
 		this.drone = droneAutoPilot.getDrone();
@@ -31,7 +31,7 @@ public class NewWorldScan {
 	 * Als er wel bruikbare punten zijn, wordt isFinished() true en kan je deze punten opvragen via getColorsAndCogs().
 	 */
 	public void scan(){
-		setColorAndCogs(this.getPolyhedraCalculations().findAllCOGs(this.getDrone().getLeftCamera(), this.getDrone().getRightCamera()));
+		setColorAndCogs(this.getPolyhedraCalculations().newCOGmethod(this.getDrone().getLeftCamera(), this.getDrone().getRightCamera()));
 		if(getColorAndCogs().isEmpty()){//nieuwe viewDirection
 			setFinished(false);
 			calculateNewDirectionOfView();
@@ -67,11 +67,11 @@ public class NewWorldScan {
 			this.newDirectionOfView = newDirectionOfView;
 		}
 
-		public HashMap<float[], ArrayList<double[]>> getColorAndCogs() {
+		public HashMap<float[], double[]> getColorAndCogs() {
 			return colorAndCogs;
 		}
 
-		public void setColorAndCogs(HashMap<float[], ArrayList<double[]>> colorAndCogs) {
+		public void setColorAndCogs(HashMap<float[], double[]> colorAndCogs) {
 			this.colorAndCogs = colorAndCogs;
 		}
 

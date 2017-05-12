@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.ImageCalculations;
 import DroneAutopilot.calculations.PhysicsCalculations;
 import DroneAutopilot.calculations.PolyhedraCalculations;
@@ -23,11 +24,11 @@ public class ClosestObjects {
 
 	private List<double[]> objectList = new ArrayList<double[]>();
 	
-	public ClosestObjects(Drone drone) {
-		this.drone = drone;
+	public ClosestObjects(DroneAutopilot ap) {
+		this.drone = ap.getDrone();
 		this.imageCalculations = new ImageCalculations();
-		this.physicsCalculations = new PhysicsCalculations(drone);
-		this.polyhedraCalculations = new PolyhedraCalculations(drone);
+		this.physicsCalculations = ap.getPhysicsCalculations();
+		this.polyhedraCalculations = ap.getPolyhedraCalculations();
 
 	}
 	
@@ -115,9 +116,9 @@ public class ClosestObjects {
 	}
 	
 	public void addVisibleObjects() {//[0] links [1] rechts
-		HashMap<float[], ArrayList<double[]>> visibleCogs = this.getPolyhedraCalculations().findAllCOGs(this.getDrone().getLeftCamera(),this.getDrone().getRightCamera());
+		HashMap<float[], double[]> visibleCogs = this.getPolyhedraCalculations().newCOGmethod(this.getDrone().getLeftCamera(),this.getDrone().getRightCamera());
 		for (float[] color : visibleCogs.keySet()) {
-				this.updateObjectList(this.getPhysicsCalculations().calculatePositionObject(visibleCogs.get(color).get(0), visibleCogs.get(color).get(1)));
+				this.updateObjectList(visibleCogs.get(color));
 			
 		}
 	}
