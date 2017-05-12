@@ -1,6 +1,7 @@
 package DroneAutopilot.algoritmes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -71,6 +72,7 @@ public class AvoidObstacles {
 		}
 
 			//https://gamedev.stackexchange.com/questions/60630/how-do-i-find-the-circumcenter-of-a-triangle-in-3d
+			//https://en.wikipedia.org/wiki/Circumscribed_circle#Higher_dimensions
 			private  ArrayList<double[]> calculateSpheres(){
 				HashMap<float[], ArrayList<double[]>> obstacleCorners = this.getPolyhedraCalculations().getObstacleCorners(this.getDroneAutopilot().getDrone().getLeftCamera(), this.getDroneAutopilot().getDrone().getRightCamera());
 				ArrayList<double[]> spheres = new ArrayList<double[]>();
@@ -82,23 +84,34 @@ public class AvoidObstacles {
 					double[] a = punten.get(0);
 					double[] b = punten.get(1);
 					double[] c = punten.get(2);
-		
-					double[] ac = VectorCalculations.sum(c, VectorCalculations.inverse(a));
-					double[] ab = VectorCalculations.sum(b, VectorCalculations.inverse(a));
-					double[] abCrossac = VectorCalculations.crossProduct(ab, ac);
-		
-					double[] teller = VectorCalculations.sum(VectorCalculations.timesScalar(VectorCalculations.crossProduct(abCrossac, ab), Math.pow(VectorCalculations.size(ac),2)), 
-							VectorCalculations.timesScalar(VectorCalculations.crossProduct(ac, abCrossac), Math.pow(VectorCalculations.size(ab),2)));
-					double noemer = 2 * Math.pow(VectorCalculations.size(abCrossac), 2);
-					double[] circumCenter = VectorCalculations.sum(a, VectorCalculations.timesScalar(teller, 1/noemer));
-				
-					//Bereken de straal van de bol (grootste afstand naar het punt):
-					double straal = Math.max(Math.max(VectorCalculations.distance(a, circumCenter), VectorCalculations.distance(b, circumCenter)), VectorCalculations.distance(c, circumCenter));
-					straal += 1.5*this.getWidth();// + veiligheidsmarge = 1.5 keer een drone
 					
-					//Sphere bestaat uit het middelpunt(eerste 3 elementen) en de straal.
-					double[] sphere = new double[]{circumCenter[0],circumCenter[1],circumCenter[2],straal};
+					System.out.println("a: " +Arrays.toString(a));
+					System.out.println("b: " +Arrays.toString(b));
+					System.out.println("c: " +Arrays.toString(c));
+					
+					//afstanden tss punten
+					double ab = VectorCalculations.distance(a, b);
+					double ac = VectorCalculations.distance(a, c);
+					double bc = VectorCalculations.distance(b, c);
+					//langste afstand bepalen = 2R -> R = afstand/2 + veiligheidsmarge
+					//centrum bol is het midden van dit lijnstuk
+					double radius;
+					double[] center;
+					if(ab >= ac && ab >= bc){//ab is het langst
+						radius = ab/2 + 1.5*this.getWidth();
+						center = VectorCalculations.timesScalar(VectorCalculations.sum(a, b), 0.5);
+					}else if(ac >= ab && ac >= bc){//ac is het langst
+						radius = ac/2 + 1.5*this.getWidth();
+						center = VectorCalculations.timesScalar(VectorCalculations.sum(a, c), 0.5);
+					}else{
+						radius = bc/2 + 1.5*this.getWidth();
+						center = VectorCalculations.timesScalar(VectorCalculations.sum(b, c), 0.5);
+					}
+							
+					double[] sphere = new double[]{center[0],center[1],center[2],radius};
 					spheres.add(sphere);
+					System.out.println(Arrays.toString(sphere));
+					System.out.println("---");
 				}
 				return spheres;
 			}
@@ -155,6 +168,9 @@ public class AvoidObstacles {
 											VectorCalculations.normalise(obstacleToPath),
 											radiusObstacle));
 			setNewTarget(newTarget);
+			System.out.println("---------------");
+			System.out.println("position obstacle: " + Arrays.toString(positionObstacle));
+			System.out.println("radius: " + radiusObstacle);			
 		}
 	
 		
