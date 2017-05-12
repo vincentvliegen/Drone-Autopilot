@@ -1,7 +1,6 @@
 package DroneAutopilot.calculations;
 
 import java.util.Arrays;
-
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.algoritmes.AvoidObstacles;
 import p_en_o_cw_2016.Drone;
@@ -10,7 +9,7 @@ public class PhysicsCalculations{
 
 	private DroneAutopilot droneAutopilot;
 	private Drone drone;
-	private AvoidObstacles avoidObstacle;
+	private AvoidObstacles avoidObstacles;
 
 	//Drone
 	private double time;
@@ -108,7 +107,6 @@ public class PhysicsCalculations{
 		this.calculateDirectionOfView();
 		this.calculateDirectionOfThrust();
 		this.setTime((double) this.getDrone().getCurrentTime());
-		
 		if(!isFirstTime()){//Delta t is nog onbekend
 			this.setDeltaT(this.getTime()-this.getPreviousTime());
 			this.calculateSpeed();
@@ -117,6 +115,8 @@ public class PhysicsCalculations{
 			
 //			correctWindTranslation();
 //			correctWindRotation();
+		}else{
+			this.setAvoidObstacles(new AvoidObstacles(this.getDroneAutopilot()));
 		}
 		
 		this.calculateExternalForces();
@@ -386,8 +386,8 @@ public class PhysicsCalculations{
 	//////////MOVEMENT//////////
 	
 	public void updateMovement(double[] targetPosition, double[] direction){
-		//targetPosition = this.getDroneAutopilot().getAvoidObstacles().execute(targetPosition);
-		//System.out.println(targetPosition[0] + " " + targetPosition[1] + " " + targetPosition[2]);
+//		targetPosition = this.getAvoidObstacles().execute(targetPosition);
+//		System.out.println(targetPosition[0] + " " + targetPosition[1] + " " + targetPosition[2]);
 		if(isFirstTime()){
 			calculateThrust(targetPosition);
 			
@@ -1267,22 +1267,20 @@ public class PhysicsCalculations{
 		this.expectedOrientationDrone = expectedOrientationDrone;
 	}
 
-
 	public DroneAutopilot getDroneAutopilot() {
 		return droneAutopilot;
-	}
-	
+	}	
 
 	public void setDroneAutopilot(DroneAutopilot droneAutopilot) {
 		this.droneAutopilot = droneAutopilot;
 	}
 
-	public AvoidObstacles getAvoidObstacle() {
-		return avoidObstacle;
+	public AvoidObstacles getAvoidObstacles() {
+		return avoidObstacles;
 	}
 
-	public void setAvoidObstacle(AvoidObstacles avoidObstacle) {
-		this.avoidObstacle = avoidObstacle;
+	public void setAvoidObstacles(AvoidObstacles avoidObstacles) {
+		this.avoidObstacles = avoidObstacles;
 	}
 	
 }
