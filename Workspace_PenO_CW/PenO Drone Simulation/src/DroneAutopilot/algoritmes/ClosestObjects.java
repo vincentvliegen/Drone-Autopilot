@@ -14,24 +14,45 @@ import p_en_o_cw_2016.Drone;
 public class ClosestObjects {
 
 	private final Drone drone;
-	private final ImageCalculations imageCalculations;
 	private final PhysicsCalculations physicsCalculations;
 	private final PolyhedraCalculations polyhedraCalculations;
 	
-	private final float minDistance = 1;
+	private final static float minDistance = 1;
 	private double[] closestObject;
 	private double[] secondObject;
 
-	private List<double[]> objectList = new ArrayList<double[]>();
+	private final List<double[]> objectList;
 	
+	
+	//////////CONSTRUCTOR//////////
+
 	public ClosestObjects(DroneAutopilot ap) {
 		this.drone = ap.getDrone();
-		this.imageCalculations = new ImageCalculations();
 		this.physicsCalculations = ap.getPhysicsCalculations();
 		this.polyhedraCalculations = ap.getPolyhedraCalculations();
-
+		this.objectList = new ArrayList<double[]>();
 	}
 	
+	
+	//////////OBJECTS//////////
+	
+	public void addVisibleObjects() {//[0] links [1] rechts
+		HashMap<float[], double[]> visibleCogs = this.getPolyhedraCalculations().newCOGmethod(this.getDrone().getLeftCamera(),this.getDrone().getRightCamera());
+		for (float[] color : visibleCogs.keySet()) {
+				this.updateObjectList(visibleCogs.get(color));
+		}
+	}
+	
+		//functie die controleert of object van geg coordinaten al eerder gedetecteerd is
+		private void updateObjectList(double[] coords) {
+			for (double[] checkcoords : this.getObjectList()) {
+				if (VectorCalculations.distance(coords, checkcoords) >= ClosestObjects.getMindistance()) {
+					this.getObjectList().add(coords);
+				}
+			}
+		}
+
+		
 	public void determineClosestObject() {
 		int size = this.getObjectList().size();
 		if (size != 0) {
@@ -46,51 +67,17 @@ public class ClosestObjects {
 		}
 	}
 	
-	public int indexMinValueArray(double[] array) {
-		int index = 0;
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] < array[index]) {
-				index = i;
+		private int indexMinValueArray(double[] array) {
+			int index = 0;
+			for (int i = 0; i < array.length; i++) {
+				if (array[i] < array[index]) {
+					index = i;
+				}
 			}
+			return index;
 		}
-		return index;
-	}
-	
-	/*
-	 * Berekent twee hoogste values van array en geeft hiervan (afhankelijk van de argumenten) de waarde of index van terug
-	 */
-	public double twoHighestValues(double[] array, int value, boolean index) {
-		double high1 = 0;
-		double high2 = 0;
-		int index1 = 0;
-		int index2 = 0;
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] >= high1) {
-				high2 = high1;
-				index2 = index1;
-				high1 = array[i];
-				index1 = i;
-			} else if (array[i] >= high2) {
-				high2 = array[i];
-				index2 = i;
-			}
-		}
-		if (value == 1) {
-			if (index) {
-				return index1;
-			} else {
-				return high1;
-			}
-		} else if (value == 2) {
-			if (index) {
-				return index2;
-			} else {
-				return high2;
-			}
-		}
-		return -1;
-	}
 
+	
 	public void determineSecondObject() throws NullPointerException {
 		int size = this.getObjectList().size() - 1;
 		if (size != 0) {
@@ -104,26 +91,42 @@ public class ClosestObjects {
 			this.setSecondObject(this.getObjectList().get(index));
 		}
 	}
-	
-	// functie die controleert of object van geg coordinaten al eerder
-	// gedetecteerd is
-	public void updateObjectList(double[] coords) {
-		for (double[] checkcoords : this.getObjectList()) {
-			if (VectorCalculations.distance(coords, checkcoords) >= this.getMinDistance()) {
-				this.getObjectList().add(coords);
+		
+		//Berekent twee hoogste values van array en geeft hiervan (afhankelijk van de argumenten) de waarde of index van terug
+		private double twoHighestValues(double[] array, int value, boolean index) {
+			double high1 = 0;
+			double high2 = 0;
+			int index1 = 0;
+			int index2 = 0;
+			for (int i = 0; i < array.length; i++) {
+				if (array[i] >= high1) {
+					high2 = high1;
+					index2 = index1;
+					high1 = array[i];
+					index1 = i;
+				} else if (array[i] >= high2) {
+					high2 = array[i];
+					index2 = i;
+				}
 			}
+			if (value == 1) {
+				if (index) {
+					return index1;
+				} else {
+					return high1;
+				}
+			} else if (value == 2) {
+				if (index) {
+					return index2;
+				} else {
+					return high2;
+				}
+			}
+			return -1;
 		}
-	}
+		
 	
-	public void addVisibleObjects() {//[0] links [1] rechts
-		HashMap<float[], double[]> visibleCogs = this.getPolyhedraCalculations().newCOGmethod(this.getDrone().getLeftCamera(),this.getDrone().getRightCamera());
-		for (float[] color : visibleCogs.keySet()) {
-				this.updateObjectList(visibleCogs.get(color));
-			
-		}
-	}
-
-	//GETTERS & SETTERS
+	////////// GETTERS & SETTERS//////////
 	
 	public PhysicsCalculations getPhysicsCalculations() {
 		return physicsCalculations;
@@ -132,21 +135,13 @@ public class ClosestObjects {
 	public Drone getDrone() {
 		return drone;
 	}
-	
-	public ImageCalculations getImageCalculations() {
-		return imageCalculations;
-	}
-	
+		
 	public PolyhedraCalculations getPolyhedraCalculations() {
 		return polyhedraCalculations;
 	}
 	
 	public List<double[]> getObjectList() {
 		return objectList;
-	}
-
-	public void setObjectList(List<double[]> objectList) {
-		this.objectList = objectList;
 	}
 	
 	public double[] getClosestObject() {
@@ -164,9 +159,12 @@ public class ClosestObjects {
 	public void setSecondObject(double[] secondObject) {
 		this.secondObject = secondObject;
 	}
-	
-	public float getMinDistance() {
+
+
+
+	public static float getMindistance() {
 		return minDistance;
 	}
+	
 
 }
