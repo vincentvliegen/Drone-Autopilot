@@ -1,6 +1,7 @@
 package DroneAutopilot.calculations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import DroneAutopilot.DroneAutopilot;
 import Jama.Matrix;
@@ -21,6 +22,7 @@ public class Pinhole {
 
 	public Pinhole(DroneAutopilot ap) {
 		this.ap = ap;
+		setup();
 	}
 	
 	private void setup() {
@@ -117,19 +119,21 @@ public class Pinhole {
 	
 	public double[] calculateXYZ(int xLeft, int yLeft, int xRight, int yRight) {
 		//TODO x = u, y = v of omgekeerd?
-		int uLeft = yLeft;
-		int uRight = yRight;
-		int vLeft = xLeft;
-		int vRight = xRight;
+		int vLeft = yLeft;
+		int vRight = yRight;
+		int uLeft = xLeft;
+		int uRight = xRight;
 		double[] firstL = (leftR3.times(uLeft)).minus(leftR1).getArray()[0];
 		double[] firstR = (rightR3.times(uRight)).minus(rightR1).getArray()[0];
 		double[] secondL = (leftR3.times(vLeft)).minus(leftR2).getArray()[0];
 		double[] secondR = (rightR3.times(vRight)).minus(rightR2).getArray()[0];
 		
-		Matrix C = new Matrix(new double[][]{firstL, firstR, secondL, secondR});
-		Matrix b = new Matrix(new double[]{0,0,0}, 3);
+		Matrix C = new Matrix(new double[][]{firstL, firstR, secondL, {0,0,0,1}});
+		C.print(10, 10);
+		Matrix b = new Matrix(new double[]{0,0,0,1}, 4);
 		Matrix XYZ = C.solve(b);
-		
+		//TODO delen door de 4e waarde van XYZ
+		System.out.println(Arrays.toString(new double[]{XYZ.getArray()[0][0], XYZ.getArray()[1][0], XYZ.getArray()[2][0]}));
 		return new double[]{XYZ.getArray()[0][0], XYZ.getArray()[1][0], XYZ.getArray()[2][0]};
 
 	}
