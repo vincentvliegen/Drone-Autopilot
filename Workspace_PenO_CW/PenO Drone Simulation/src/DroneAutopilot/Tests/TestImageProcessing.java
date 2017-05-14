@@ -53,19 +53,14 @@ public class TestImageProcessing {
 		createDrone(camera1, camera1b);
 		HashMap<ArrayList<float[]>, ArrayList<double[]>> result = polyhedraCalc.getMatchingCorners(camera1, camera1b);
 		assertEquals(1,result.keySet().size());
-		for(ArrayList<float[]> color: result.keySet()){
-			System.out.println("Color: " + color);
-			System.out.println(Arrays.toString(result.get(color).get(0)));
-			System.out.println(Arrays.toString(result.get(color).get(1)));
-			System.out.println(Arrays.toString(result.get(color).get(2)));
-		}
 	}
 
 	@Test
 	public void testNewMEthod() throws IOException{
 		createImage();
 		createDrone(camera1,camera1b);
-		HashMap<float[], ArrayList<double[]>> NEW = polyhedraCalc.newCOGmethod(camera1, camera1b);
+		HashMap<float[], double[]> NEW = polyhedraCalc.newCOGmethod(camera1, camera1b);
+		System.out.println(NEW);
 	}
 	
 	/*

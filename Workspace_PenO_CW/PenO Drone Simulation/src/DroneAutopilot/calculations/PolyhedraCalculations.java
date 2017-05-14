@@ -28,6 +28,7 @@ public class PolyhedraCalculations {
 
 	//functie om de zwaartepunten van alle driehoeken terug te geven
 	public HashMap<float[],double[]> newCOGmethod(Camera leftCamera, Camera rightCamera){
+		//this.getPhysics().updateDroneData();
 		HashMap<float[],double[]> COGS = new HashMap<float[],double[]>();
 		this.SeparateTargetsAndObstacles(leftCamera);
 		HashMap<float[], double[]> outerL = this.getCOGofEverythingVisible(this.getHashMapTargetOuterColor());
@@ -67,7 +68,7 @@ public class PolyhedraCalculations {
 	
 	//functie om de hoekpunten te krijgen per kleur
 	public HashMap<ArrayList<float[]>, ArrayList<double[]>> getMatchingCorners(Camera leftCamera, Camera rightCamera) {
-		this.getPhysics().updateDroneData();
+		//this.getPhysics().updateDroneData();
 		this.SeparateTargetsAndObstacles(leftCamera);
 		HashMap<float[], ArrayList<int[]>> outerTrianglesL = this
 				.findThreePointsTriangles(this.getHashMapTargetOuterColor());
