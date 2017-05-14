@@ -582,56 +582,56 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		ActionMap am = panel.getActionMap();
 		
 		im.put(KeyStroke.getKeyStroke("UP"), "Forward");
-        am.put("Forward", new MovementAction(getMovement(), true, false, false, false, false,false));
+        am.put("Forward", new MovementAction(getMovement(), MovementActionType.POSITIVE_X));
         im.put(KeyStroke.getKeyStroke("DOWN"), "Backwards");
-        am.put("Backwards", new MovementAction(getMovement(), true, false, false, true, false,false));
+        am.put("Backwards", new MovementAction(getMovement(), MovementActionType.NEGATIVE_X));
         im.put(KeyStroke.getKeyStroke("LEFT"), "Left");
-        am.put("Left", new MovementAction(getMovement(), false, false, true, true, false, false));
+        am.put("Left", new MovementAction(getMovement(), MovementActionType.NEGATIVE_Z));
         im.put(KeyStroke.getKeyStroke("RIGHT"), "Right");
-        am.put("Right", new MovementAction(getMovement(), false, false, true, false, false, false));
+        am.put("Right", new MovementAction(getMovement(), MovementActionType.POSITIVE_Z));
         im.put(KeyStroke.getKeyStroke("E"), "Upwards");
-        am.put("Upwards", new MovementAction(getMovement(), false, true, false, false, false, false));
+        am.put("Upwards", new MovementAction(getMovement(), MovementActionType.POSITIVE_Y));
         im.put(KeyStroke.getKeyStroke("D"), "Downwards");
-        am.put("Downwards", new MovementAction(getMovement(), false, true, false, true, false, false));
+        am.put("Downwards", new MovementAction(getMovement(), MovementActionType.NEGATIVE_Y));
         
         im.put(KeyStroke.getKeyStroke("released UP"), "RForward");
-        am.put("RForward", new MovementAction(getMovement(), true, false, false, false, false, true));
+        am.put("RForward", new MovementAction(getMovement(), MovementActionType.R_POSITIVE_X));
         im.put(KeyStroke.getKeyStroke("released DOWN"), "RBackwards");
-        am.put("RBackwards", new MovementAction(getMovement(), true, false, false, true, false, true));
+        am.put("RBackwards", new MovementAction(getMovement(), MovementActionType.R_NEGATIVE_X));
         im.put(KeyStroke.getKeyStroke("released LEFT"), "RLeft");
-        am.put("RLeft", new MovementAction(getMovement(), false, false, true, true, false, true));
+        am.put("RLeft", new MovementAction(getMovement(), MovementActionType.R_NEGATIVE_Z));
         im.put(KeyStroke.getKeyStroke("released RIGHT"), "RRight");
-        am.put("RRight", new MovementAction(getMovement(), false, false, true, false, false, true));
+        am.put("RRight", new MovementAction(getMovement(), MovementActionType.R_POSITIVE_Z));
         im.put(KeyStroke.getKeyStroke("released E"), "RUpwards");
-        am.put("RUpwards", new MovementAction(getMovement(), false, true, false, false, false, true));
+        am.put("RUpwards", new MovementAction(getMovement(), MovementActionType.R_POSITIVE_Y));
         im.put(KeyStroke.getKeyStroke("released D"), "RDownwards");
-        am.put("RDownwards", new MovementAction(getMovement(), false, true, false, true, false, true));
+        am.put("RDownwards", new MovementAction(getMovement(), MovementActionType.R_NEGATIVE_Y));
         
         im.put(KeyStroke.getKeyStroke("I"), "ForwardObject");
-        am.put("ForwardObject", new MovementAction(getMovement(), true, false, false, false, true, false));
+        am.put("ForwardObject", new MovementAction(getMovement(), MovementActionType.O_POSITIVE_X));
         im.put(KeyStroke.getKeyStroke("K"), "BackwardsObject");
-        am.put("BackwardsObject", new MovementAction(getMovement(), true, false, false, true, true, false));
+        am.put("BackwardsObject", new MovementAction(getMovement(), MovementActionType.O_NEGATIVE_X));
         im.put(KeyStroke.getKeyStroke("J"), "LeftObject");
-        am.put("LeftObject", new MovementAction(getMovement(), false, false, true, true, true, false));
+        am.put("LeftObject", new MovementAction(getMovement(), MovementActionType.O_NEGATIVE_Z));
         im.put(KeyStroke.getKeyStroke("L"), "RightObject");
-        am.put("RightObject", new MovementAction(getMovement(), false, false, true, false, true, false));
+        am.put("RightObject", new MovementAction(getMovement(), MovementActionType.O_POSITIVE_Z));
         im.put(KeyStroke.getKeyStroke("U"), "UpwardsObject");
-        am.put("UpwardsObject", new MovementAction(getMovement(), false, true, false, false, true, false));
+        am.put("UpwardsObject", new MovementAction(getMovement(), MovementActionType.O_POSITIVE_Y));
         im.put(KeyStroke.getKeyStroke("O"), "DownwardsObject");
-        am.put("DownwardsObject", new MovementAction(getMovement(), false, true, false, true, true, false));
+        am.put("DownwardsObject", new MovementAction(getMovement(), MovementActionType.O_NEGATIVE_Y));
         
         im.put(KeyStroke.getKeyStroke("released I"), "RForwardObject");
-        am.put("RForwardObject", new MovementAction(getMovement(), true, false, false, false, true, true));
+        am.put("RForwardObject", new MovementAction(getMovement(), MovementActionType.R_O_POSITIVE_X));
         im.put(KeyStroke.getKeyStroke("released K"), "RBackwardsObject");
-        am.put("RBackwardsObject", new MovementAction(getMovement(), true, false, false, true, true, true));
+        am.put("RBackwardsObject", new MovementAction(getMovement(), MovementActionType.R_O_NEGATIVE_X));
         im.put(KeyStroke.getKeyStroke("released J"), "RLeftObject");
-        am.put("RLeftObject", new MovementAction(getMovement(), false, false, true, true, true, true));
+        am.put("RLeftObject", new MovementAction(getMovement(), MovementActionType.R_O_NEGATIVE_Z));
         im.put(KeyStroke.getKeyStroke("released L"), "RRightObject");
-        am.put("RRightObject", new MovementAction(getMovement(), false, false, true, false, true, true));
+        am.put("RRightObject", new MovementAction(getMovement(), MovementActionType.R_O_POSITIVE_Z));
         im.put(KeyStroke.getKeyStroke("released U"), "RUpwardsObject");
-        am.put("RUpwardsObject", new MovementAction(getMovement(), false, true, false, false, true, true));
+        am.put("RUpwardsObject", new MovementAction(getMovement(), MovementActionType.R_O_POSITIVE_Y));
         im.put(KeyStroke.getKeyStroke("released O"), "RDownwardsObject");
-        am.put("RDownwardsObject", new MovementAction(getMovement(), false, true, false, true, true, true));
+        am.put("RDownwardsObject", new MovementAction(getMovement(), MovementActionType.R_O_NEGATIVE_Y));
 	}
 	
 	public void setJPanel(JPanel panel){

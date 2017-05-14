@@ -9,55 +9,42 @@ import simulator.objects.*;
 public class MovementAction extends AbstractAction {
 
 	private KeyboardMovement movement;
-	private boolean changeX, changeY, changeZ, negative, object, release;
+	private MovementActionType type;
 
-	public MovementAction(KeyboardMovement mov, boolean x, boolean y, boolean z, boolean negative, boolean object,
-			boolean release) {
+	public MovementAction(KeyboardMovement mov, MovementActionType e) {
 		movement = mov;
-		this.changeX = x;
-		this.changeY = y;
-		this.changeZ = z;
-		this.negative = negative;
-		this.object = object;
-		this.release = release;
+		this.type = e;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		movement.setChangeObj(object);
-		if (!release) {
-			if (!negative) {
-				if (changeX)
-					movement.setChangeXP(true);
-				if (changeY)
-					movement.setChangeYP(true);
-				if (changeZ)
-					movement.setChangeZP(true);
-			} else {
-				if (changeX)
-					movement.setChangeXN(true);
-				if (changeY)
-					movement.setChangeYN(true);
-				if (changeZ)
-					movement.setChangeZN(true);
-			}
-		} else {
-			if (!negative) {
-				if (changeX)
-					movement.setChangeXP(false);
-				if (changeY)
-					movement.setChangeYP(false);
-				if (changeZ)
-					movement.setChangeZP(false);
-			} else {
-				if (changeX)
-					movement.setChangeXN(false);
-				if (changeY)
-					movement.setChangeYN(false);
-				if (changeZ)
-					movement.setChangeZN(false);
-			}
-		}
+		movement.setChangeObj(type.getObjectStatus());
+		if (type == MovementActionType.POSITIVE_X || type == MovementActionType.O_POSITIVE_X)
+			movement.setChangeXP(true);
+		if (type == MovementActionType.POSITIVE_Y || type == MovementActionType.O_POSITIVE_Y)
+			movement.setChangeYP(true);
+		if (type == MovementActionType.POSITIVE_Z || type == MovementActionType.O_POSITIVE_Z)
+			movement.setChangeZP(true);
+		if (type == MovementActionType.NEGATIVE_X || type == MovementActionType.O_NEGATIVE_X)
+			movement.setChangeXN(true);
+		if (type == MovementActionType.NEGATIVE_Y || type == MovementActionType.O_NEGATIVE_Y)
+			movement.setChangeYN(true);
+		if (type == MovementActionType.NEGATIVE_Z || type == MovementActionType.O_NEGATIVE_Z)
+			movement.setChangeZN(true);
+
+		if (type == MovementActionType.R_POSITIVE_X || type == MovementActionType.R_O_POSITIVE_X)
+			movement.setChangeXP(false);
+		if (type == MovementActionType.R_POSITIVE_Y || type == MovementActionType.R_O_POSITIVE_Y)
+			movement.setChangeYP(false);
+		if (type == MovementActionType.R_POSITIVE_Z || type == MovementActionType.R_O_POSITIVE_Z)
+			movement.setChangeZP(false);
+		if (type == MovementActionType.R_NEGATIVE_X || type == MovementActionType.R_O_NEGATIVE_X)
+			movement.setChangeXN(false);
+		if (type == MovementActionType.R_NEGATIVE_Y || type == MovementActionType.R_O_NEGATIVE_Y)
+			movement.setChangeYN(false);
+		if (type == MovementActionType.R_NEGATIVE_Z || type == MovementActionType.R_O_NEGATIVE_Z)
+			movement.setChangeZN(false);
+
 	}
 
 }

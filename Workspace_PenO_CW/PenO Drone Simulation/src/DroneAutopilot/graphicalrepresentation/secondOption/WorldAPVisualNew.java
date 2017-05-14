@@ -106,38 +106,38 @@ public class WorldAPVisualNew extends GLCanvas implements GLEventListener {
 		ActionMap am = panel.getActionMap();
 		
 		im.put(KeyStroke.getKeyStroke("UP"), "Forward");
-        am.put("Forward", new MovementActionAPNew(camera, true, false, false, false, false, false));
+        am.put("Forward", new MovementActionAPNew(camera, MovementActionType.POSITIVE_X));
         im.put(KeyStroke.getKeyStroke("DOWN"), "Backwards");
-        am.put("Backwards", new MovementActionAPNew(camera, true, false, false, true, false, false));
+        am.put("Backwards", new MovementActionAPNew(camera, MovementActionType.NEGATIVE_X));
         im.put(KeyStroke.getKeyStroke("LEFT"), "Left");
-        am.put("Left", new MovementActionAPNew(camera, false, false, true, true, false, false));
+        am.put("Left", new MovementActionAPNew(camera, MovementActionType.NEGATIVE_Z));
         im.put(KeyStroke.getKeyStroke("RIGHT"), "Right");
-        am.put("Right", new MovementActionAPNew(camera, false, false, true, false, false, false));
+        am.put("Right", new MovementActionAPNew(camera, MovementActionType.POSITIVE_Z));
         im.put(KeyStroke.getKeyStroke("E"), "Upwards");
-        am.put("Upwards", new MovementActionAPNew(camera, false, true, false, false, false, false));
+        am.put("Upwards", new MovementActionAPNew(camera, MovementActionType.POSITIVE_Y));
         im.put(KeyStroke.getKeyStroke("D"), "Downwards");
-        am.put("Downwards", new MovementActionAPNew(camera, false, true, false, true, false, false));
+        am.put("Downwards", new MovementActionAPNew(camera, MovementActionType.NEGATIVE_Y));
         im.put(KeyStroke.getKeyStroke("R"), "RotateRight");
-        am.put("RotateRight", new MovementActionAPNew(camera, false, false, false, false, true, false));
+        am.put("RotateRight", new MovementActionAPNew(camera, MovementActionType.ROTATE_R));
         im.put(KeyStroke.getKeyStroke("F"), "RotateLeft");
-        am.put("RotateLeft", new MovementActionAPNew(camera, false, false, false, true, true, false));
+        am.put("RotateLeft", new MovementActionAPNew(camera, MovementActionType.ROTATE_L));
         
         im.put(KeyStroke.getKeyStroke("released UP"), "RForward");
-        am.put("RForward", new MovementActionAPNew(camera, true, false, false, false, false, true));
+        am.put("RForward", new MovementActionAPNew(camera, MovementActionType.R_POSITIVE_X));
         im.put(KeyStroke.getKeyStroke("released DOWN"), "RBackwards");
-        am.put("RBackwards", new MovementActionAPNew(camera, true, false, false, true, false, true));
+        am.put("RBackwards", new MovementActionAPNew(camera, MovementActionType.R_NEGATIVE_X));
         im.put(KeyStroke.getKeyStroke("released LEFT"), "RLeft");
-        am.put("RLeft", new MovementActionAPNew(camera, false, false, true, true, false, true));
+        am.put("RLeft", new MovementActionAPNew(camera, MovementActionType.R_NEGATIVE_Z));
         im.put(KeyStroke.getKeyStroke("released RIGHT"), "RRight");
-        am.put("RRight", new MovementActionAPNew(camera, false, false, true, false, false, true));
+        am.put("RRight", new MovementActionAPNew(camera, MovementActionType.R_POSITIVE_Z));
         im.put(KeyStroke.getKeyStroke("released E"), "RUpwards");
-        am.put("RUpwards", new MovementActionAPNew(camera, false, true, false, false, false, true));
+        am.put("RUpwards", new MovementActionAPNew(camera, MovementActionType.R_POSITIVE_Y));
         im.put(KeyStroke.getKeyStroke("released D"), "RDownwards");
-        am.put("RDownwards", new MovementActionAPNew(camera, false, true, false, true, false, true));
+        am.put("RDownwards", new MovementActionAPNew(camera, MovementActionType.R_NEGATIVE_Y));
         im.put(KeyStroke.getKeyStroke("released R"), "RRotateRight");
-        am.put("RRotateRight", new MovementActionAPNew(camera, false, false, false, false, true, true));
+        am.put("RRotateRight", new MovementActionAPNew(camera, MovementActionType.R_ROTATE_R));
         im.put(KeyStroke.getKeyStroke("released F"), "RRotateLeft");
-        am.put("RRotateLeft", new MovementActionAPNew(camera, false, false, false, true, true, true));
+        am.put("RRotateLeft", new MovementActionAPNew(camera, MovementActionType.R_ROTATE_L));
         
 	}
 

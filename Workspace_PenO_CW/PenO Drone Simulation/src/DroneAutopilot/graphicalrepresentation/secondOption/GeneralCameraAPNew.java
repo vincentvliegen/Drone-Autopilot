@@ -227,9 +227,9 @@ public class GeneralCameraAPNew {
 		if (changeZN)
 			eyeZ -= distance;
 		if (rotateP)
-			yaw += distance*3;
+			yaw += distance*10;
 		if (rotateN)
-			yaw -= distance*3;
+			yaw -= distance*10;
 	}
 
 }

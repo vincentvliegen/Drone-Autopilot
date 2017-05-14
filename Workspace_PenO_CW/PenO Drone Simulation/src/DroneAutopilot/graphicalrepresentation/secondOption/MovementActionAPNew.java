@@ -6,61 +6,50 @@ import javax.swing.AbstractAction;
 
 public class MovementActionAPNew extends AbstractAction {
 	private GeneralCameraAPNew camera;
-	private boolean changeX, changeY, changeZ, negative, rotate, release;
+	private MovementActionType type;
 
-	public MovementActionAPNew(GeneralCameraAPNew camera2, boolean x, boolean y, boolean z, boolean negative, boolean rotate, boolean release) {
+	public MovementActionAPNew(GeneralCameraAPNew camera2, MovementActionType e) {
 		camera = camera2;
-		this.changeX = x;
-		this.changeY = y;
-		this.changeZ = z;
-		this.negative = negative;
-		this.rotate = rotate;
-		this.release = release;
+		this.type = e;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if (!release) {
-			if (!negative) {
-				if (changeX)
-					camera.setChangeXP(true);
-				if (changeY)
-					camera.setChangeYP(true);
-				if (changeZ)
-					camera.setChangeZP(true);
-				if (rotate)
-					camera.setRotateP(true);
-			} else {
-				if (changeX)
-					camera.setChangeXN(true);
-				if (changeY)
-					camera.setChangeYN(true);
-				if (changeZ)
-					camera.setChangeZN(true);
-				if (rotate)
-					camera.setRotateN(true);
-			}
-		} else {
-			if (!negative) {
-				if (changeX)
-					camera.setChangeXP(false);
-				if (changeY)
-					camera.setChangeYP(false);
-				if (changeZ)
-					camera.setChangeZP(false);
-				if (rotate)
-					camera.setRotateP(false);
-			} else {
-				if (changeX)
-					camera.setChangeXN(false);
-				if (changeY)
-					camera.setChangeYN(false);
-				if (changeZ)
-					camera.setChangeZN(false);
-				if (rotate)
-					camera.setRotateN(false);
-			}
-		}
+		if (type == MovementActionType.POSITIVE_X)
+			camera.setChangeXP(true);
+		if (type == MovementActionType.POSITIVE_Y)
+			camera.setChangeYP(true);
+		if (type == MovementActionType.POSITIVE_Z)
+			camera.setChangeZP(true);
+		if (type == MovementActionType.ROTATE_R)
+			camera.setRotateP(true);
+		if (type == MovementActionType.NEGATIVE_X)
+			camera.setChangeXN(true);
+		if (type == MovementActionType.NEGATIVE_Y)
+			camera.setChangeYN(true);
+		if (type == MovementActionType.NEGATIVE_Z)
+			camera.setChangeZN(true);
+		if (type == MovementActionType.ROTATE_L)
+			camera.setRotateN(true);
+
+		// Release button
+		if (type == MovementActionType.R_POSITIVE_X)
+			camera.setChangeXP(false);
+		if (type == MovementActionType.R_POSITIVE_Y)
+			camera.setChangeYP(false);
+		if (type == MovementActionType.R_POSITIVE_Z)
+			camera.setChangeZP(false);
+		if (type == MovementActionType.R_ROTATE_R)
+			camera.setRotateP(false);
+		if (type == MovementActionType.R_NEGATIVE_X)
+			camera.setChangeXN(false);
+		if (type == MovementActionType.R_NEGATIVE_Y)
+			camera.setChangeYN(false);
+		if (type == MovementActionType.R_NEGATIVE_Z)
+			camera.setChangeZN(false);
+		if (type == MovementActionType.R_ROTATE_L)
+			camera.setRotateN(false);
+
 	}
 
 }
