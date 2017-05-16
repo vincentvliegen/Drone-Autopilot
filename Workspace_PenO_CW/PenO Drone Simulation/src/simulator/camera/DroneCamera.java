@@ -195,8 +195,8 @@ public class DroneCamera extends GeneralCamera implements Camera {
 		}
 	
 	public void setCamera(GL2 gl, GLU glu) {
-		int height = getWorld().getDrawable().getSurfaceHeight();
-		int width = getWorld().getDrawable().getSurfaceWidth();
+		int height = getHeight();
+		int width = getWidth();
 		// Change to projection matrix.
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();

@@ -366,16 +366,16 @@ public class SimulationDrone extends WorldObject implements Drone {
 
 	private void generateDroneCameras() {
 
-		float commonY = 0;
-		float commonX = 0;
+		float commonY = (float) translate[1];
+		float commonX = (float) translate[0];
 
 		// left
-		float leftZ = -getCameraSeparation() / 2;
+		float leftZ = -getCameraSeparation() / 2 + (float) translate[2];
 		leftCamera = new DroneCamera(commonX, commonY, leftZ, commonX + 100, commonY, leftZ, 0, 1, 0, getWorld(), this,
 				DroneCameraPlace.LEFT);
 
 		// right
-		float rightZ = getCameraSeparation() / 2;
+		float rightZ = getCameraSeparation() / 2 + (float) translate[2];
 		rightCamera = new DroneCamera(commonX, commonY, rightZ, commonX + 100, commonY, rightZ, 0, 1, 0, getWorld(),
 				this, DroneCameraPlace.RIGHT);
 
@@ -650,8 +650,8 @@ public class SimulationDrone extends WorldObject implements Drone {
 			pitch = 0;
 			yaw = (float) -fakeYaw;
 			roll = 0;
-			translate = new double[] { 1 - 0.8* Math.cos(Math.toRadians(fakeYaw)), 0,
-					0.8 * Math.sin(Math.toRadians(fakeYaw)) };
+			translate = new double[] { 1 - Math.cos(Math.toRadians(fakeYaw)), 0,
+					Math.sin(Math.toRadians(fakeYaw)) };
 			fakeYaw += 0.5;
 		} else if (fakeYaw < 721) {
 			float npitch = (float) (fakeYaw - 360);
