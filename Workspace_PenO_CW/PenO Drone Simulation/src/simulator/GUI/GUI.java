@@ -34,7 +34,7 @@ public class GUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static World world;
-	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsComboboxGeneralCameras, constraintsButtonDroneCamera, constraintsPanelGravity, constraintsAddButton;
+	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsComboboxGeneralCameras, constraintsButtonDroneCamera, constraintsPanelGravity; //constraintsAddButton;
 	private JLabel position = new JLabel();
 	private JLabel speed = new JLabel();
 	private List<JButton> buttonsDroneCameras = new ArrayList<>();
@@ -321,18 +321,18 @@ public class GUI extends JPanel {
 			timerWind.start(); 
 		}
 
-		//Add objects
-		JButton addButton = new JButton("Add extra sphere");
-		addButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFrame addSphere = new JFrame();
-				createAddSphere(addSphere);
-			}
-		});
-		constraintsAddButton = new GridBagConstraints();
-		this.makeConstraints(constraintsAddButton, new Insets(1, 1, 1, 1), 0, 8);
-		add(addButton, constraintsAddButton);
+//		//Add objects
+//		JButton addButton = new JButton("Add extra sphere");
+//		addButton.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				JFrame addSphere = new JFrame();
+//				createAddSphere(addSphere);
+//			}
+//		});
+//		constraintsAddButton = new GridBagConstraints();
+//		this.makeConstraints(constraintsAddButton, new Insets(1, 1, 1, 1), 0, 8);
+//		add(addButton, constraintsAddButton);
 
 		//resize
 		this.setPreferredSize(new Dimension(390, 768));

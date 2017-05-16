@@ -70,7 +70,7 @@ public class GUI {
 		select.setFont(font);
 		panel.add(select);
 
-		String[] list = { " ------ Select Mission ------ ", "Fly to position",/*"Fly to multiple positions",*/ "Fly to single target", "Fly to multiple targets", "Scan object",/* "TEST"*/};
+		String[] list = { " --- Select Mission --- ", "Fly to position",/*"Fly to multiple positions",*/ "Fly to single target", "Fly to multiple targets", "Scan object",/* "TEST"*/};
 		JComboBox menu = new JComboBox(list);
 		menu.setPreferredSize(new Dimension(250,30));
 		panel.add(menu);
