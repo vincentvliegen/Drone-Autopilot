@@ -346,7 +346,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
 
 		setup();
-//		SomeFigure fig = new SomeFigure(this, PolyhedronType.TARGET, new double[]{2,0,0});
+//		Pyramid fig = new Pyramid(this, PolyhedronType.TARGET, new double[]{2,0,0});
 //		getWorldObjectList().add(fig);
 		HollowCubePolyhedron figL = new HollowCubePolyhedron(this, PolyhedronType.TARGET, new double[]{1,0,0});
 		getWorldObjectList().add(figL);
