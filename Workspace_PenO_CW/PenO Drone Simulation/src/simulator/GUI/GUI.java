@@ -34,7 +34,7 @@ public class GUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static World world;
-	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsComboboxGeneralCameras, constraintsButtonDroneCamera, constraintsPanelGravity; //constraintsAddButton;
+	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsComboboxGeneralCameras, constraintsButtonDroneCamera; //constraintsPanelGravity; //constraintsAddButton;
 	private JLabel position = new JLabel();
 	private JLabel speed = new JLabel();
 	private List<JButton> buttonsDroneCameras = new ArrayList<>();
@@ -172,38 +172,38 @@ public class GUI extends JPanel {
 		timerPosition.start(); 
 
 
-		//GrivatySlider
-		constraintsPanelGravity = new GridBagConstraints();
-		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0, 0.6);
-		JPanel panelGravity = new JPanel(new GridBagLayout());
-
-		panelGravity.add(new JLabel("Gravity:               "), constraintsPanelGravity);
-
-		//Create the label table
-		Hashtable labelTable = new Hashtable();
-		labelTable.put( new Integer( 0 ), new JLabel("0") );
-		labelTable.put( new Integer( 981 ), new JLabel("9.81") );
-		labelTable.put( new Integer( MAXGRAVITY ), new JLabel("20") );
-
-		JSlider gravitySlider = new JSlider(JSlider.HORIZONTAL, 0, MAXGRAVITY, 981);
-		this.createSlider(gravitySlider, 200, labelTable);
-		
-		gravitySlider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent evt) {
-				JSlider slider = (JSlider) evt.getSource();
-				if (!slider.getValueIsAdjusting()) {
-					double value = slider.getValue();
-					//VALUE moet gedeeld worden door 100 anders veel te groot
-					world.getDrones().get(0).setGravity((float)(-value/100));
-					//System.out.println("SLIDERGRAVITY: " + -value/100);
-				}
-			}
-		});
-
-		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0, 0.4);
-		panelGravity.add(gravitySlider, constraintsPanelGravity);
-		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 4);
-		add(panelGravity, constraintsPanelGravity);
+//		//GrivatySlider
+//		constraintsPanelGravity = new GridBagConstraints();
+//		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0, 0.6);
+//		JPanel panelGravity = new JPanel(new GridBagLayout());
+//
+//		panelGravity.add(new JLabel("Gravity:               "), constraintsPanelGravity);
+//
+//		//Create the label table
+//		Hashtable labelTable = new Hashtable();
+//		labelTable.put( new Integer( 0 ), new JLabel("0") );
+//		labelTable.put( new Integer( 981 ), new JLabel("9.81") );
+//		labelTable.put( new Integer( MAXGRAVITY ), new JLabel("20") );
+//
+//		JSlider gravitySlider = new JSlider(JSlider.HORIZONTAL, 0, MAXGRAVITY, 981);
+//		this.createSlider(gravitySlider, 200, labelTable);
+//		
+//		gravitySlider.addChangeListener(new ChangeListener() {
+//			public void stateChanged(ChangeEvent evt) {
+//				JSlider slider = (JSlider) evt.getSource();
+//				if (!slider.getValueIsAdjusting()) {
+//					double value = slider.getValue();
+//					//VALUE moet gedeeld worden door 100 anders veel te groot
+//					world.getDrones().get(0).setGravity((float)(-value/100));
+//					//System.out.println("SLIDERGRAVITY: " + -value/100);
+//				}
+//			}
+//		});
+//
+//		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0, 0.4);
+//		panelGravity.add(gravitySlider, constraintsPanelGravity);
+//		this.makeConstraints(constraintsPanelGravity, new Insets(1, 1, 1, 1), 0, 4);
+//		add(panelGravity, constraintsPanelGravity);
 
 		if(world instanceof World13 || world instanceof World12){
 			// Panel WindNams & Sliders
