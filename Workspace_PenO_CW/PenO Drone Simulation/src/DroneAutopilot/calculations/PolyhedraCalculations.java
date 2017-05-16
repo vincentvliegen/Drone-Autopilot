@@ -3,6 +3,8 @@ package DroneAutopilot.calculations;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -194,6 +196,10 @@ public class PolyhedraCalculations {
 
 			// System.out.println("corners"+possibleCorners.size());
 
+			if(possibleCorners.size() >3){
+				this.antiTrapjes(possibleCorners);
+			}
+			
 			if (possibleCorners.size() == 3) {
 				solution.put(HSVcolorArray.get(i), possibleCorners);
 			}
@@ -445,6 +451,53 @@ public class PolyhedraCalculations {
 		return HSV;
 	}
 
+	private void antiTrapjes(ArrayList<int[]> possibleCorners){
+		for(int i=0;i<possibleCorners.size();i++){
+			if(possibleCorners.size()==3){
+				break;
+			}
+			ArrayList<int[]> sameY = new ArrayList<int[]>();
+			sameY.add(possibleCorners.get(i));
+			ArrayList<int[]> sameX = new ArrayList<int[]>();
+			sameX.add(possibleCorners.get(i));
+			for(int j=i+1; j<possibleCorners.size();j++){
+				if(possibleCorners.get(i)[0]+1 >= possibleCorners.get(j)[0] && possibleCorners.get(i)[0]-1 <= possibleCorners.get(j)[0]){
+					sameX.add(possibleCorners.get(j));
+				}
+				if(possibleCorners.get(i)[1]+1 >= possibleCorners.get(j)[1] && possibleCorners.get(i)[1]-1 <= possibleCorners.get(j)[1]){
+					sameY.add(possibleCorners.get(j));
+				}
+			}
+			if(sameX.size()>2){
+				this.sortCorners(sameX, 1);
+				for(i=1;i<sameX.size()-1;i++){
+					possibleCorners.remove(sameX.get(i));
+				}
+			}else if(sameY.size()>2){
+				this.sortCorners(sameY, 0);
+				for(i=1;i<sameY.size()-1;i++){
+					possibleCorners.remove(sameY.get(i));
+				}
+			}
+		}
+	}
+	
+	private void sortCorners(ArrayList<int[]> toSort, int choice){
+		Collections.sort(toSort, new Comparator<int[]>(){
+
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				// TODO Auto-generated method stub
+				if(o1[choice]<o2[choice])
+					return -1;
+				else if(o1[choice] == o2[choice])
+					return 0;
+				else
+					return 1;
+			}
+		});
+	}
+	
 	private ArrayList<int[]> findMinimumCoordinates(ArrayList<int[]> coordinates, int choice) {
 		ArrayList<int[]> minEqualCoord = new ArrayList<int[]>();
 		int infinity = (int) Double.POSITIVE_INFINITY;
