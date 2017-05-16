@@ -24,7 +24,7 @@ import simulator.objects.ObstacleSphere;
 import simulator.objects.Polyhedron;
 import simulator.objects.PolyhedronType;
 import simulator.objects.SimulationDrone;
-import simulator.objects.SomeFigure;
+import simulator.objects.Pyramid;
 import simulator.objects.Sphere;
 import simulator.objects.Triangle;
 import simulator.objects.WorldObject;
