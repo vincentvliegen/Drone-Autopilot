@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import DroneAutopilot.graphicalrepresentation.CustomColor;
-import DroneAutopilot.scanning.Point;
+import DroneAutopilot.graphicalrepresentation.Point;
 
 public class PolyhedronAPDataNew {
 

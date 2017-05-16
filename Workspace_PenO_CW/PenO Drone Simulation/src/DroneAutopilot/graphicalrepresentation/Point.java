@@ -1,4 +1,4 @@
-package DroneAutopilot.scanning;
+package DroneAutopilot.graphicalrepresentation;
 
 import java.util.HashSet;
 

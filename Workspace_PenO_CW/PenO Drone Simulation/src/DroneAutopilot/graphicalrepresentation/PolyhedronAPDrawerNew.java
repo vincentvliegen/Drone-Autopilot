@@ -3,7 +3,7 @@ package DroneAutopilot.graphicalrepresentation;
 import com.jogamp.opengl.GL2;
 
 import DroneAutopilot.graphicalrepresentation.CustomColor;
-import DroneAutopilot.scanning.Point;
+import DroneAutopilot.graphicalrepresentation.Point;
 
 public class PolyhedronAPDrawerNew {
 	

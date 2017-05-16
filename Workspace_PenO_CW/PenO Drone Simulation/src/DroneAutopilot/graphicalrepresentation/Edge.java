@@ -2,7 +2,7 @@ package DroneAutopilot.graphicalrepresentation;
 
 import java.util.ArrayList;
 import DroneAutopilot.graphicalrepresentation.CustomColor;
-import DroneAutopilot.scanning.Point;
+import DroneAutopilot.graphicalrepresentation.Point;;
 
 public class Edge {
 

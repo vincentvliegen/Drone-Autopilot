@@ -19,7 +19,6 @@ import javax.swing.*;
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import DroneAutopilot.graphicalrepresentation.*;
-import DroneAutopilot.scanning.Point;
 
 public class ScanObjectNew extends Mission {
 
