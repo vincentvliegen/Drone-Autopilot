@@ -2,8 +2,8 @@ package DroneAutopilot.scanning;
 
 import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
+import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PhysicsCalculations;
-import p_en_o_cw_2016.Drone;
 
 public class FlyScan {
 
@@ -11,8 +11,8 @@ public class FlyScan {
 	private double[] centerEdge;
 	private double[] gravityPoint;
 	
-	public FlyScan(Drone drone){
-		this.physicsCalc = new PhysicsCalculations(drone);
+	public FlyScan(DroneAutopilot droneAutopilot){
+		this.physicsCalc = droneAutopilot.getPhysicsCalculations();
 	}
 	
 	//Stap 1: zoek tot ge het doel tegenkomt

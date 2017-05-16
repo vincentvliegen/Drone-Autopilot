@@ -1,11 +1,12 @@
 package DroneAutopilot;
 
+import oldClasses.ScanObject;
 import DroneAutopilot.GUI.GUI;
 import DroneAutopilot.GUI.MissionType;
 import DroneAutopilot.algoritmes.AvoidObstacles;
 import DroneAutopilot.calculations.PhysicsCalculations;
 import DroneAutopilot.calculations.PolyhedraCalculations;
-import mission.*;
+import DroneAutopilot.mission.*;
 import p_en_o_cw_2016.Autopilot;
 import p_en_o_cw_2016.Drone;
 

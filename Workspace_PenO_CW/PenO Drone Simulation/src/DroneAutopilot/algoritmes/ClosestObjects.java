@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import DroneAutopilot.DroneAutopilot;
-import DroneAutopilot.calculations.ImageCalculations;
 import DroneAutopilot.calculations.PhysicsCalculations;
 import DroneAutopilot.calculations.PolyhedraCalculations;
 import DroneAutopilot.calculations.VectorCalculations;

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import generator.Generator_V2;
+import simulator.generator.Generator_V2;
 import simulator.objects.HollowCubePolyhedron;
 import simulator.objects.LetterLPolyhedron;
 import simulator.objects.Polyhedron;
