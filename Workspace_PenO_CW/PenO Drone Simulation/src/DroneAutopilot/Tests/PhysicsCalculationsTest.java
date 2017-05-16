@@ -6,12 +6,14 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PhysicsCalculations;
-import DroneAutopilot.calculations.VectorCalculations;
 
 public class PhysicsCalculationsTest {
 
 	//Assign cameras en drone met deze waardes
+	private TestAP testap;
+	private TestAP testap1;
 	private static final int widthCamera = 150;
 	private static final int heightCamera = 100;
 	private static final float horizontalAngleOfView = 90; 
@@ -41,8 +43,10 @@ public class PhysicsCalculationsTest {
 		camera = createCameraForTesting(horizontalAngleOfView, verticalAngleOfView, widthCamera);
 		drone = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, dronePitch, 0, cameraSeparation, camera, camera);
 		drone1 = createDroneForTesting(droneWeight, droneGravity, 0, 0, 0, 0, 0, 0, cameraSeparation, camera, camera);
-		calc = new PhysicsCalculations(drone);
-		calc1 = new PhysicsCalculations(drone1);
+		testap = new TestAP(drone);
+		calc = testap.getPhysicsCalculations();
+		testap1 = new TestAP(drone1);
+		calc1 = testap1.getPhysicsCalculations();
 		
 		//calc1.setWindTranslation(0,(float) 0.5, 0);
 
@@ -244,4 +248,16 @@ public class PhysicsCalculationsTest {
 //		System.out.println("sizeThrust = " + VectorCalculations.size(wo[0]));
 //	}
 */	
+	
+	private class TestAP extends DroneAutopilot {
+
+		public TestAP(Drone drone) {
+			super(drone);
+		}
+
+		@Override
+		public void timeHasPassed() {
+		}
+
+	}
 }
