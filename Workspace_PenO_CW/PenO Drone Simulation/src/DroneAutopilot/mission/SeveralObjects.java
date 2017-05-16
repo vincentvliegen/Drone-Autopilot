@@ -1,5 +1,9 @@
 package DroneAutopilot.mission;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.algoritmes.ClosestObjects;
 import DroneAutopilot.algoritmes.NewWorldScan;
@@ -7,16 +11,18 @@ import DroneAutopilot.calculations.VectorCalculations;
 
 public class SeveralObjects extends Mission {
 
+	private ArrayList<float[]> targetColors = new ArrayList<float[]>();
 	private double[] target;
 	private boolean targetFound;
 
 	private final ClosestObjects closestObjects;
 	private int refreshCounter;
 	private final static int timeToRefresh = 10;
+	private int notVisible = 0;
 	private boolean firstTime;
 	private boolean closestObjectAcquired;
 	private boolean secondObjectAcquired;
-	private final static double distanceToArrival = 0.1f;//TODO
+	private final static double distanceToArrival = 0.01f;//TODO
 
 	private final NewWorldScan scan;
 	private int targetLostCounter = 0;
@@ -34,13 +40,18 @@ public class SeveralObjects extends Mission {
 	public void execute() {
 
 		if (isTargetFound()) {// we kennen target
+			
 			if (this.getPhysicsCalculations().getDistanceDroneToPosition(this.getTarget()) <= getDistancetoarrival()) {
 				ArrivedAtTarget();
 				execute();//target is found of niet
 //				this.setRefreshCounter(0);
 			} else {
+				if (this.getPhysicsCalculations().getDistanceDroneToPosition(this.getTarget()) <= .7){
+					checkTarget();
+				}
+//				System.out.println("Distance to target: "+this.getPhysicsCalculations().getDistanceDroneToPosition(this.getTarget()));
 //				this.setRefreshCounter(this.getRefreshCounter() + 1);
-				this.getPhysicsCalculations().updateMovement(getTarget());
+				this.getPhysicsCalculations().updateMovement(this.extendTarget(getTarget(), 1));
 			}
 		} else {// we kennen target niet
 			this.getScan().scan();
@@ -48,8 +59,9 @@ public class SeveralObjects extends Mission {
 				setTargetFound(true);
 				this.getClosestObjects().addVisibleObjects();
 				this.getClosestObjects().determineClosestObject();
+				setTargetColors(this.getClosestObjects().getObjectList().get(this.getClosestObjects().getClosestObject()));
 				setTarget(this.getClosestObjects().getClosestObject());
-				this.getPhysicsCalculations().updateMovement(getTarget());
+				this.getPhysicsCalculations().updateMovement(this.extendTarget(getTarget(), 1));
 			} else {// target niet gevonden
 				this.getPhysicsCalculations().updateMovement(this.getPhysicsCalculations().getPosition(),
 						this.getScan().getNewDirectionOfView());
@@ -57,16 +69,48 @@ public class SeveralObjects extends Mission {
 		}
 	}
 	
+	private void checkTarget() {
+		HashMap<float[], double[]> visibleCogs = this.getClosestObjects().getPolyhedraCalculations()
+				.newCOGmethod(this.getDrone().getLeftCamera(), this.getDrone().getRightCamera());
+		boolean stillThere = false;
+		loop:
+		for (float[] color : this.getTargetColors()) {
+			for (float[] seencolor : visibleCogs.keySet()) {
+				if (color == seencolor) {
+					stillThere = true;
+					break loop;
+				}
+			}
+		}
+		if (!stillThere) {
+			System.out.println("target not visible " + notVisible + "/20");
+			notVisible++;
+			if (notVisible >= 20) {
+				notVisible = 0;
+				this.getClosestObjects().getObjectList().remove(this.getTarget());
+				this.setTargetFound(false);
+				execute();
+			}
+		}
+	}
+		
 		private void ArrivedAtTarget() {
 			// oude target verwijderen
 			this.getClosestObjects().getObjectList().remove(this.getTarget());
 			// nieuw target selecteren
 			this.getClosestObjects().setClosestObject(null);
 			this.getClosestObjects().determineClosestObject();
+			setTargetColors(this.getClosestObjects().getObjectList().get(this.getClosestObjects().getClosestObject()));
 			setTarget(this.getClosestObjects().getClosestObject());
 			if (getTarget() == null) {
 				setTargetFound(false);
 			}
+		}
+		
+		private double[] extendTarget(double[] target, double distance){
+			double[] direction = VectorCalculations.normalise(VectorCalculations.sum(target, VectorCalculations.inverse(this.getPhysicsCalculations().getPosition())));
+			double[] newTarget = VectorCalculations.sum(target, VectorCalculations.timesScalar(direction, distance));
+			return newTarget;
 		}
 	
 	
@@ -96,7 +140,7 @@ public class SeveralObjects extends Mission {
 				double[] previousFirst = this.getClosestObjects().getClosestObject();
 				this.getClosestObjects().determineClosestObject();
 	
-				if (this.getClosestObjects().getClosestObject() == previousFirst) {
+				if (this.getClosestObjects().getClosestObject()== previousFirst) {
 	
 					if (isSecondObjectAcquired()) {
 						double[] previousSecond = this.getClosestObjects().getSecondObject();
@@ -202,7 +246,17 @@ public class SeveralObjects extends Mission {
 	}
 
 	public void setTarget(double[] target) {
+		try{
+		System.out.println("Target: "+Arrays.toString(target)+" prev: "+Arrays.toString(this.getTarget()));} catch(Exception e){};
 		this.target = target;
+	}
+
+	public ArrayList<float[]> getTargetColors() {
+		return targetColors;
+	}
+
+	public void setTargetColors(ArrayList<float[]> targetColors) {
+		this.targetColors = targetColors;
 	}
 
 	public boolean isTargetFound() {
