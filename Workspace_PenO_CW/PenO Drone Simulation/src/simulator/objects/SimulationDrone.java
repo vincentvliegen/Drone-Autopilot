@@ -50,6 +50,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 	private float cameraSeperation = 0;
 	private float radius;
 	private double fakeYaw = 0;
+	private boolean fakeSetup = false;
 
 	public SimulationDrone(GL2 gl, float height, float width, float depth, float[] color, double[] translate,
 			World world) {
@@ -650,8 +651,8 @@ public class SimulationDrone extends WorldObject implements Drone {
 			pitch = 0;
 			yaw = (float) -fakeYaw;
 			roll = 0;
-			translate = new double[] { 1 - Math.cos(Math.toRadians(fakeYaw)), 0,
-					Math.sin(Math.toRadians(fakeYaw)) };
+			translate = new double[] { 1 - 1.5*Math.cos(Math.toRadians(fakeYaw)), 0,
+					1.5*Math.sin(Math.toRadians(fakeYaw)) };
 			fakeYaw += 0.5;
 		} else if (fakeYaw < 721) {
 			float npitch = (float) (fakeYaw - 360);
@@ -671,15 +672,16 @@ public class SimulationDrone extends WorldObject implements Drone {
 		}
 		
 		
-//		this.translate = new double[]{1, -1.2,0};
-//		pitch = 270;
-//		yaw = 0;
+//		this.translate = new double[]{1-1*Math.cos(Math.toRadians(45)), 0,1*Math.sin(Math.toRadians(45))};
+//		pitch = 0;
+//		yaw = -45;
 //		roll = 0;
 		getLeftDroneCamera().updateDroneCamera();
 		getRightDroneCamera().updateDroneCamera();
 		getMiddleCamera().updateDroneCamera();
-		
+		if (fakeSetup)
 		autopilot.timeHasPassed();
+		fakeSetup = true;
 	}
 
 }
