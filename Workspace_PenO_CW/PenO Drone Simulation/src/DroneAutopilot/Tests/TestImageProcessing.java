@@ -30,7 +30,8 @@ public class TestImageProcessing {
 	private int[] polylist1b;
 
 	private static final float horizontalAngleOfView = 120; 
-
+	private static final float verticalAngleOfView = 120; 
+	
 	private static final float cameraSeparation = 0.25f;
 	private static final float droneGravity = -9.81f;
 	private static final float droneWeight = 1.0f;
@@ -38,32 +39,34 @@ public class TestImageProcessing {
 	private static final float maxThrust = 50;
 	
 	public void createImage() throws IOException{
-		poly1 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/img231-left.png"));
+		poly1 = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/img12-left.png"));
 		polylist1 = convertImageToIntArray(poly1,400,400);
-		camera1 = createCameraForTesting(polylist1, 1, 1, 400);
+		camera1 = createCameraForTesting(polylist1, horizontalAngleOfView, verticalAngleOfView, 400);
 
-		poly1b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/img231-right.png"));
+		poly1b = ImageIO.read(this.getClass().getResource("/DroneAutopilot/Tests/imagesForTests/img12-right.png"));
 		polylist1b = convertImageToIntArray(poly1b,400,400);
-		camera1b = createCameraForTesting(polylist1b, 1, 1, 400);
+		camera1b = createCameraForTesting(polylist1b, horizontalAngleOfView, verticalAngleOfView, 400);
 	}
 
 	@Test
 	public void test3DCoordinates() throws IOException{
 		createImage();
 		createDrone(camera1, camera1b);
+		polyhedraCalc.getPhysics().updateDroneData();
 		HashMap<ArrayList<float[]>, ArrayList<double[]>> result = polyhedraCalc.getMatchingCorners(camera1, camera1b);
-		assertEquals(1,result.keySet().size());
+		assertEquals(6,result.keySet().size());
 	}
 
 	@Test
 	public void testNewMEthod() throws IOException{
 		createImage();
 		createDrone(camera1,camera1b);
+		polyhedraCalc.getPhysics().updateDroneData();
 		HashMap<float[], double[]> NEW = polyhedraCalc.newCOGmethod(camera1, camera1b);
-		System.out.println(NEW);
+		assertEquals(6,NEW.keySet().size());
 	}
 	
-	/*
+	
 	public String testPixelCoordinates() throws IOException{
 		createImage();
 		createDrone(camera1, camera1);
@@ -89,7 +92,7 @@ public class TestImageProcessing {
 		return coordinates;
 
 	}
-	 */
+	
 	
 	
 	

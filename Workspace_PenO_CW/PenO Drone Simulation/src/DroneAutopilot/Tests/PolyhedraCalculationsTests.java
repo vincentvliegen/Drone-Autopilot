@@ -219,7 +219,7 @@ public class PolyhedraCalculationsTests {
 		createDrone(camera4, camera4b);
 //		polyhedraCalc.execute(camera1);
 //		polyhedraCalc.execute(camera2);
-		assertEquals(polyhedraCalc.findAllCOGs(camera4, camera4b).size(),6);
+		assertEquals(polyhedraCalc.newCOGmethod(camera4, camera4b).size(),6);
 	}
 	
 	@Test
