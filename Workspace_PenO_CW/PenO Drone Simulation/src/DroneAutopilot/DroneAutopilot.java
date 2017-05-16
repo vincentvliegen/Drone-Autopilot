@@ -22,6 +22,7 @@ public class DroneAutopilot implements Autopilot {
 	private final Mission scanObjectNew;
 	private final Mission flyToMultiplePositions;
 	private final Mission flyToSingleObject;
+	private final Mission flyToMultipleTargets;
 //	private final Mission severalSpheres;
 //	private final Mission severalObjects;
 	
@@ -37,6 +38,7 @@ public class DroneAutopilot implements Autopilot {
 		this.polyhedraCalculations = new PolyhedraCalculations(this);
 		this.GUI = new GUI();
 		this.flyToMultiplePositions = new FlyToMultiplePositions(this);
+		this.flyToMultipleTargets = new SeveralObjects(this);
 		this.flyToSingleObject = new FlyToObject(this);
 		this.hover = new Hover(this);
 		this.flyToPosition = new FlyToPosition(this);
@@ -72,6 +74,8 @@ public class DroneAutopilot implements Autopilot {
 				this.scanObjectNew.execute();
 			}else if(getGUI().getMissionType() == MissionType.FLYMULTIPLEPOS){
 				this.getFlyToMultiplePositions().execute();
+			}else if(getGUI().getMissionType() == MissionType.FLYMULTIPLETAR){
+				this.getFlyToMultipleTargets().execute();
 			}else if(getGUI().getMissionType() == MissionType.TEST){
 				//iets
 			}else{
@@ -134,6 +138,10 @@ public class DroneAutopilot implements Autopilot {
 
 	public Mission getFlyToSingleObject() {
 		return flyToSingleObject;
+	}
+
+	public Mission getFlyToMultipleTargets() {
+		return flyToMultipleTargets;
 	}
 
 	public PolyhedraCalculations getPolyhedraCalculations() {
