@@ -156,8 +156,8 @@ public class Generator_V2 {
 					break;
 				case 2:
 					//SomeFigure
-					faces = SomeFigure.getFaces();
-					points = SomeFigure.getPoints();
+					faces = Pyramid.getFaces();
+					points = Pyramid.getPoints();
 					break;
 				case 3:
 					//ThreePeaks
@@ -232,8 +232,8 @@ public class Generator_V2 {
 					break;
 				case 2:
 					//SomeFigure
-					faces = SomeFigure.getFaces();
-					points = SomeFigure.getPoints();
+					faces = Pyramid.getFaces();
+					points = Pyramid.getPoints();
 					break;
 				case 3:
 					//ThreePeaks
