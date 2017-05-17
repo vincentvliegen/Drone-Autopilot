@@ -651,25 +651,25 @@ public class SimulationDrone extends WorldObject implements Drone {
 			pitch = 0;
 			yaw = (float) -fakeYaw;
 			roll = 0;
-			translate = new double[] { 1 - 1.2*Math.cos(Math.toRadians(fakeYaw)), 0,
-					1.2*Math.sin(Math.toRadians(fakeYaw)) };
-			fakeYaw += 0.5;
+			translate = new double[] { 1 - 1.5*Math.cos(Math.toRadians(fakeYaw)), 0,
+					1.5*Math.sin(Math.toRadians(fakeYaw)) };
+			fakeYaw += 0.4;
 		} else if (fakeYaw < 721) {
 			float nYaw = (float) (fakeYaw - 360);
 			pitch = 0;
 			yaw = -nYaw;
 			roll = 0;
-			translate = new double[] { 1 - 1.2*Math.cos(Math.toRadians(nYaw)), 2*Math.sin(Math.toRadians(45)),
-					1.2*Math.sin(Math.toRadians(nYaw)) };
-			fakeYaw += 0.5;
+			translate = new double[] { 1 - 1*Math.cos(Math.toRadians(nYaw)), 1.5*Math.sin(Math.toRadians(45)),
+					1.5*Math.sin(Math.toRadians(nYaw)) };
+			fakeYaw += 0.4;
 		} else if (fakeYaw < 1081){
 			float nYaw = (float) (fakeYaw - 720);
 			pitch = 0;
 			yaw = -nYaw;
 			roll = 0;
-			translate = new double[] { 1 - 1.2*Math.cos(Math.toRadians(nYaw)), -2*Math.sin(Math.toRadians(45)),
-					1.2*Math.sin(Math.toRadians(nYaw)) };
-			fakeYaw += 0.5;
+			translate = new double[] { 1 - 1*Math.cos(Math.toRadians(nYaw)), -1.5*Math.sin(Math.toRadians(45)),
+					1.5*Math.sin(Math.toRadians(nYaw)) };
+			fakeYaw += 0.4;
 		} else	{
 			pitch = 0;
 			yaw = 0;

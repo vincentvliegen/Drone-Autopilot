@@ -35,8 +35,8 @@ public class Generator_V2 {
 			stream.writeByte(2);
 			stream.writeFloat(120);
 			stream.writeFloat(120);
-			stream.writeShort(200);
-			stream.writeShort(200);
+			stream.writeShort(400);
+			stream.writeShort(400);
 			stream.writeFloat(0.25f);
 			stream.writeFloat(1.0f);
 			stream.writeFloat(9.81f);
