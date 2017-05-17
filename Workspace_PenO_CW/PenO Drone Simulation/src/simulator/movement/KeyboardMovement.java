@@ -96,4 +96,15 @@ public class KeyboardMovement{
 			}
 		}
 	}
+
+	public void deleteObject() {
+		if (object != null) {
+			if (object instanceof Polyhedron)
+				object.getWorld().removePolyhedron((Polyhedron) object);
+			else if (object instanceof Sphere) {
+				object.getWorld().removeSphere((Sphere) object);
+			}
+		}
+			
+	}
 }

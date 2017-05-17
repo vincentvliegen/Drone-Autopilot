@@ -45,6 +45,9 @@ public class MovementAction extends AbstractAction {
 		if (type == MovementActionType.R_NEGATIVE_Z || type == MovementActionType.R_O_NEGATIVE_Z)
 			movement.setChangeZN(false);
 
+		
+		if (type == MovementActionType.O_DELETE)
+			movement.deleteObject();
 	}
 
 }

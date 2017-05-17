@@ -632,6 +632,9 @@ public abstract class World extends GLCanvas implements GLEventListener {
         am.put("RUpwardsObject", new MovementAction(getMovement(), MovementActionType.R_O_POSITIVE_Y));
         im.put(KeyStroke.getKeyStroke("released O"), "RDownwardsObject");
         am.put("RDownwardsObject", new MovementAction(getMovement(), MovementActionType.R_O_NEGATIVE_Y));
+        
+        im.put(KeyStroke.getKeyStroke("DELETE"), "DelObject");
+        am.put("DelObject", new MovementAction(getMovement(), MovementActionType.O_DELETE));
 	}
 	
 	public void setJPanel(JPanel panel){
