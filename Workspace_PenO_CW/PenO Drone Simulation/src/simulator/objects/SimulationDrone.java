@@ -679,7 +679,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 			for (int i = 0; i<3;i++)
 				vel[i] = 0;
 		}
-		System.out.println(Arrays.toString(translate));
+		
 		
 //		this.translate = new double[]{1-1*Math.cos(Math.toRadians(45)), 0,1*Math.sin(Math.toRadians(45))};
 //		pitch = 0;
