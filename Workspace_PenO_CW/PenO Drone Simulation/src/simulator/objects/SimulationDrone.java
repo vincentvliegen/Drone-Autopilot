@@ -651,17 +651,26 @@ public class SimulationDrone extends WorldObject implements Drone {
 			pitch = 0;
 			yaw = (float) -fakeYaw;
 			roll = 0;
-			translate = new double[] { 1 - 1.5*Math.cos(Math.toRadians(fakeYaw)), 0,
-					1.5*Math.sin(Math.toRadians(fakeYaw)) };
+			translate = new double[] { 1 - 1.2*Math.cos(Math.toRadians(fakeYaw)), 0,
+					1.2*Math.sin(Math.toRadians(fakeYaw)) };
 			fakeYaw += 0.5;
 		} else if (fakeYaw < 721) {
-			float npitch = (float) (fakeYaw - 360);
-			pitch = npitch;
-			yaw = 0;
+			float nYaw = (float) (fakeYaw - 360);
+			pitch = 0;
+			yaw = -nYaw;
 			roll = 0;
-			translate = new double[] { 1- 0.8*Math.cos(Math.toRadians(npitch)), 0.8*Math.sin(Math.toRadians(npitch)), 0 };
+			translate = new double[] { 1 - 1.2*Math.cos(Math.toRadians(nYaw)), 2*Math.sin(Math.toRadians(45)),
+					1.2*Math.sin(Math.toRadians(nYaw)) };
 			fakeYaw += 0.5;
-		} else {
+		} else if (fakeYaw < 1081){
+			float nYaw = (float) (fakeYaw - 720);
+			pitch = 0;
+			yaw = -nYaw;
+			roll = 0;
+			translate = new double[] { 1 - 1.2*Math.cos(Math.toRadians(nYaw)), -2*Math.sin(Math.toRadians(45)),
+					1.2*Math.sin(Math.toRadians(nYaw)) };
+			fakeYaw += 0.5;
+		} else	{
 			pitch = 0;
 			yaw = 0;
 			roll = 0;
@@ -670,7 +679,7 @@ public class SimulationDrone extends WorldObject implements Drone {
 			for (int i = 0; i<3;i++)
 				vel[i] = 0;
 		}
-		
+		System.out.println(Arrays.toString(translate));
 		
 //		this.translate = new double[]{1-1*Math.cos(Math.toRadians(45)), 0,1*Math.sin(Math.toRadians(45))};
 //		pitch = 0;
