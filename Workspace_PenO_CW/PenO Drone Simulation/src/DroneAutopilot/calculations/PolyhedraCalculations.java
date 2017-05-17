@@ -222,7 +222,7 @@ public class PolyhedraCalculations {
 		for (float[] colorLeft : targetListLeft.keySet()) {
 			for (float[] colorRight : targetListRight.keySet()) {
 				if (colorLeft[0] == colorRight[0] && colorLeft[1] == colorRight[1] && colorLeft[2] == colorRight[2]) {
-					System.out.println("************************");
+//					System.out.println("************************");
 					ArrayList<double[]> corners = new ArrayList<double[]>();
 
 					ArrayList<int[]> allCornersL = new ArrayList<int[]>();
