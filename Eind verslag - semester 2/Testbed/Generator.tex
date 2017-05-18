@@ -1,0 +1,11 @@
+\subsection{Generator en editor}
+\noindent {\em Auteur: Jef Versyck}
+\\\\
+Ook werd er dit semester gevraagd om zelf een wereld-generator te implementeren. Elk bestand gegenereerd door deze generator, moet voldoen aan de opgestelde eisen. Op dit moment zijn er twee generators: één die een wereld met bollen maakt uit het vorige semester en één die een wereld met polyhedra genereert. Deze laatste kiest uit verschillende vooraf aangemaakte \textit{PredefinedPolyedra}, zoals vermeld in Sectie \ref{sec:polyhedraTestbed}.
+\\
+
+\noindent
+Daarnaast is de editor meer gedetailleerd uitgewerkt. Men selecteert eerst een object met de muis. Met behulp van de toetsen i en k (bewegen volgens positieve en negatieve x-as), j en l (bewegen volgens positieve en negatieve z-as), u en o (bewegen volgens positieve en negatieve y-as), kan het aangeklikte object verplaatst worden in de wereld. Ook kunnen er zowel gewone als obstakel-polyhedra toegevoegd worden via de \textit{GUI's} op een gekozen positie in de ruimte. Ten slotte is er ook nog een mogelijkheid om polyhedra te verwijderen door ze te selecteren en de DELETE knop te gebruiken. 
+\\\\
+\noindent
+Verder is er nog een nieuwe methode aangemaakt die gebruikt zal worden bij het scannen. Deze methode zorgt ervoor dat de drone op een onnatuurlijke wijze rond een polyhedron vliegt. De drone maakt drie cirkels in het xz-vlak, telkens op verschillende y-waarden, zodat hij de hele figuur kan zien. Dit is niet mogelijk in werkelijkheid, aangezien de drone naar de figuur blijft kijken en zich nooit roteert om te bewegen in het xz-vlak met een pitch of roll.

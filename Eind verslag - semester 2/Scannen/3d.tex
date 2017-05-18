@@ -1,0 +1,13 @@
+\subsection{3D-voorstelling}
+\noindent {\em Auteurs: Bram Vandendriessche \& Matthias Van der Heyden}
+\\\\
+Voor de grafische weergave van de gescande objecten, is een andere aanpak gehanteerd dan bij de \textit{Polyhedra} in het Testbed. Hierdoor is er een onderscheid verkregen tussen presentatie (visueel) en interne representatie. 
+Een \textit{Polyhedron} is in twee delen opgesplitst: een data-object (\textit{PolyhedronAPData}) dat de hoekpunten en kleuren bevat en een grafische component die de driehoeken van de \textit{Polyhedron} tekent. Net als het Testbed werkt ook de Autopilot met een \textit{World}, die voor de implementatie van de \textit{OpenGL}-functies zorgt. De wereld is opgesplitst in een data-object en een grafisch object (\textit{WorldAPVisual}). Dit laatste zal met de gegevens uit de data-wereld een visuele voorstelling kunnen verzorgen.\\
+\\
+\noindent
+De \textit{Polyhedra} worden gekarakteriseerd door hun driehoeken en die op hun beurt door hoekpunten en kleuren. Er werd daarom een type \textit{CustomColor} toegevoegd dat de binnen- en buitenkleur van \'e\'en driehoek voorstelt. Deze \textit{CustomColors} worden toegewezen aan \textit{Points}, die de hoekpunten van de driehoeken voorstellen. Elk \textit{Point} heeft een 3D-co\"ordinaat en bevat verschillende \textit{CustomColors}, naargelang het aantal driehoeken waartoe het punt behoort. Aangrenzende driehoeken zullen immers een of twee punten gemeenschappelijk hebben. \\
+\\
+\noindent
+Voor dit concept bevat de interne representatie een \textit{HashMap} die \textit{CustomColors} op basis van de buitenste kleur van een driehoek mapt naar een lijst van drie \textit{Points}. Op deze manier kan \textit{PolyhedronAPDrawer} heel eenvoudig de driehoeken tekenen per kleur, dus per driehoek gezien elke \textit{CustomColor} uniek is. Voor aangrenzende driehoeken zal de \textit{HashMap} dan van deze kleuren mappen naar lijsten waarin dit punt steeds voor komt.
+\noindent
+Het voordeel van de \textit{Points} is dat er geen drie afzonderlijke punten per driehoek worden bijgehouden, waardoor bij verschuiving van een hoekpunt van een driehoek, alle driehoeken die dit punt bevatten automatisch worden aangepast. Op deze manier blijft de figuur steeds mooi gesloten.

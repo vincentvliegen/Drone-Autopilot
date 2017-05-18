@@ -1,0 +1,21 @@
+\subsection{Vliegstrategie}
+\noindent {\em Auteur: Vincent Vliegen}
+\\
+\\
+De drone start altijd met een gegeven positie en ori\"entatie. Afhankelijk van de missie moeten de positie en ori\"entatie veranderen. De Autopilot bepaalt de nodige thrust en rotatiesnelheden om in de gewenste situatie terecht te komen. 
+\\
+\\
+Omwille van de uitwendige krachten op de drone, vliegt de drone niet enkel in de richting van de thrustkracht. Aan de hand van de gewenste verplaatsingsrichting en de huidige snelheid, wordt de versnellingsrichting van de drone berekend. Deze richting is dezelfde als de som van de krachten, bestaande uit de zwaartekracht, drag, wind en thrust. De thrustgrootte wordt zo gekozen dat de drone zo goed mogelijk in de richting van het doel vliegt.
+\\
+\\
+Daarna wordt een gewenste ori\"entatie berekend. Afhankelijk van de afstand tot de gewenste positie en de snelheid naar deze positie, bepaalt de Autopilot aan welke versnelling de drone moet versnellen of vertragen. Zo kan ook hier de gewenste thrustrichting afgeleid worden in functie van de bewegingsvergelijking en het krachtenevenwicht.
+\\
+\\
+\noindent
+Indien er een gewenste kijkrichting is, zal de Autopilot voorzien dat de drone zo goed mogelijk gericht staat in deze richting. Dit is bijvoorbeeld nuttig bij het scannen. Anderzijds, wanneer de kijkrichting niet uitmaakt, wordt een ori\"entatie bepaald met kijkrichting gericht op de doelpositie.\\
+\\
+\noindent
+Om polyhedra te doorprikken, wordt eerst gekeken of er doelen zichtbaar zijn. Indien dit niet het geval is, wordt ernaar gezocht, anders wordt van elk object dat gezien wordt, een punt bijgehouden en de bijhorende (zichtbare) kleuren van dat object. Van alle objecten die gezien werden, wordt het dichtste punt gezocht en als doel ingesteld. Wanneer de drone dicht bij het object komt, worden de camerabeelden opnieuw geanalyseerd. Er wordt dan gekeken of een van de kleuren die bij het doel-punt hoorde, zichtbaar is. Indien dit niet het geval is, wordt aangenomen dat het object reeds doorprikt is. Een foute assumptie is ineffici\"ent, maar geen ramp gezien het object later opnieuw zal worden opgemerkt. In het andere geval, waarbij de kleur nog steeds zichtbaar is, worden eventuele andere kleuren toegevoegd aan het object en de doelpositie wordt nauwkeuriger ingesteld. \\
+\\
+\noindent
+Na het doorprikken van een object (of in de foute assumptie dat het object doorprikt is), zal het volgende dichtste object als doel worden ingesteld. Indien er geen doelen meer zichtbaar zijn, wordt opnieuw gezocht naar mogelijke doelen. %TODO: klopt dit?

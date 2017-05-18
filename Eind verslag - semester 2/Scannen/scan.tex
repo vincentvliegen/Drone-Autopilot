@@ -1,0 +1,6 @@
+\subsection{Van camerabeelden naar 3D-figuur}
+\noindent {\em Auteur: Matthias Van der Heyden}\\
+\noindent
+\\
+Indien de missie \textit{ScanObject} is geselecteerd, vraagt deze bij elke oproep van \texttt{timeHasPassed()} de co\"{o}rdinaten van de figuren die de drone op dat moment kan zien, op aan de beeldverwerking. Driehoeken met een kleur die nog niet eerder werd gezien, worden toegevoegd aan de \textit{PolyhedronAPData} die op dat moment onder constructie is. Hiervoor worden nieuwe \textit{Points} aangemaakt waaraan de kleur van de driehoek wordt toegevoegd. Deze kleur wordt vervolgens samen met de drie punten in de \textit{HashMap} geplaatst. Alvorens \textit{Points} toe te voegen, wordt eerst op basis van de co\"{o}rdinaten gecontroleerd of dit punt niet reeds bestond. Indien dit het geval is, wordt slechts de kleur toegevoegd aan het \textit{Point} waarna de \textit{Hashmap} voor de kleur dit \textit{Point} zal bevatten.\\
+Wanneer de driehoek reeds tot de \textit{PolyhedronAPData} behoorde, worden de co\"{o}rdinaten van het \textit{Point} aangepast naar een gewogen gemiddelde van de oorspronkelijke waarde en de nieuwe metingen. Op deze manier wordt geprobeerd om de co\"{o}rdinaten naar een nauwkeurige benadering te laten convergeren naarmate meer data verzameld wordt.

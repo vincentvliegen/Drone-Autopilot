@@ -1,0 +1,29 @@
+\subsection{Windcorrectie}
+\noindent {\em Auteur: Vincent Vliegen}
+\\
+\\
+Wind zal zorgen voor een verandering van de positie en ori\"entatie van de drone.  Aangezien de Autopilot wordt opgeroepen met een constant tijdsinterval, kunnen er voorspellingen worden gemaakt over de ruimtelijke situering van de drone, wanneer er een bepaalde hoeveelheid tijd is verlopen.
+\\\\
+De Autopilot stelt de thrust en rotatiesnelheden in. Met behulp van de uitwendige krachten en rotaties kunnen de verplaatsingsrichting en verandering van ori\"entatie bepaald worden. Wanneer ook het constante tijdsinterval in rekening wordt gebracht, kan de verwachte positie benaderd worden aan de hand van de bewegingsvergelijking (zie Tabel \ref{table: uitlegFormule} voor uitleg van de symbolen):
+\begin{equation}
+	 \frac{(\vec{T} + \vec{G} + \vec{D} + \vec{W}) }{2m} * (\Delta t)^2 + \vec{v_0} * \Delta t + \vec{x_0} = \vec{x}_{exp}
+\end{equation}
+De verwachte ori\"entatie wordt bepaald door het huidige assenstelsel van de drone te roteren met de drie nieuw berekende rotatierates. Dit resulteert in de ori\"entatie van de drone in het volgende frame, moest er geen invloed van de wind zijn.
+\\
+\\
+De Autopilot controleert in het begin van elke cyclus of de verwachte positie en de eigenlijke positie overeenkomen, respectievelijk de verwachte en eigenlijke ori\"entatie. Zo niet, is de afwijking te verklaren als een verandering van de windtranslatie en -rotatie. Het verschil in positie is het gevolg van een onnauwkeurige benadering van de windtranslatie. Deze kan gecorrigeerd worden door de kracht te berekenen die de afwijking heeft veroorzaakt, en dan op te tellen bij de huidige windkracht.
+\begin{equation}
+	\frac{(\vec{W}_{corr}) }{2m} * (\Delta t)^2 = \vec{x}-\vec{x}_{exp}
+\end{equation}
+De afwijking in ori\"entatie is te wijten aan een windrotatie. De windrotaties worden uitgevoerd rond het wereldassenstelsel, dat vast is en niet mee roteert. Op basis van de rotatiematrix van de wind, kunnen de X, Y en Z rotaties worden afgeleid, die het verwachtte assenstelsel corrigeren naar het nieuwe assenstelsel. 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{ l|l }
+		\(\vec{T}\): Thrust & \(\Delta t\): tijdsverschil tussen twee frames\\
+		\(\vec{G}\): Gravity & \(\vec{v_0}\): startsnelheid\\
+		\(\vec{D}\): Drag & \(\vec{x_0}\): beginpositie\\
+		\(\vec{W}\): Wind & \(\vec{x}_{exp}\): verwachte positie\\
+		\(\vec{W}_{corr}\): Windcorrectie & \(m\): massa drone \\
+	\end{tabular}
+	\caption{\label{table: uitlegFormule}Verduidelijking van de gebruikte notaties.}
+\end{table}

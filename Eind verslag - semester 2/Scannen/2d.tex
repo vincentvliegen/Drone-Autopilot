@@ -1,0 +1,35 @@
+\subsection{Beeldverwerking}
+\noindent {\em Auteur: Laura Vranken}
+\\\\
+\noindent
+Om polyhedra te kunnen scannen, moet de drone ze eerst herkennen op de ontvangen afbeeldingen. 
+Hiervoor worden eerst alle pixels gegroepeerd per kleur. Dan worden de kleuren opgesplitst in verschillende lijsten volgens hun soort, nl. binnen- en buitendriehoek van respectievelijk target en obstakel. Zie Tabel \ref{table: HSVwaarden} voor de exacte voorwaarden.
+\begin{table}[H]
+	\centering
+\begin{tabular}{ l | c | c | c }
+	 & H & S & V\\\hline
+	Buitendriehoek target & ? & \(>\) 0.55 & \(>\) 0.55 \\
+	Binnendriehoek target & ? & \(<\) 0.45 & \(>\) 0.55 \\
+	Buitendriehoek obstakel & ? & \(>\) 0.55 & \(<\) 0.45 \\
+	Binnendriehoek obstakel & ? & \(<\) 0.45 & \(<\) 0.45\\
+\end{tabular}
+\caption{\label{table: HSVwaarden}Combinatie HSV-waarden om de verschillende driehoeken te herkennen. Hue-waarde mag willekeurig gekozen worden.}
+\end{table}
+\noindent Om een driehoek te kunnen tekenen, zijn de drie hoekpunten vereist. Deze hoeken zijn bepaald door de buitenste pixels en worden berekend door een rechthoek rond de driehoek te tekenen. Aangezien het kan zijn dat twee hoekpunten op dezelfde hoogte of breedte liggen, worden twee pixels, de minimum en maximum pixel, van elke zijde van de rechthoek bepaald. Figuur \ref{fig:DrieGevallenDriehoeken}a geeft een voorbeeld weer van deze methode. Op deze manier worden acht pixels gevonden. Natuurlijk heeft een driehoek geen acht hoeken, dus worden de overeenkomstige buitenste pixels samengenomen tot één hoekpunt. 
+\\\\
+Een volledige driehoek behoudt drie hoekpunten. Ook een driehoek die evenwijdig met een zijde door een andere polyhedron of door de rand van het beeld afgesneden wordt, kan drie hoekpunten overhouden. Indien er niet evenwijdig met een zijde is afgesneden, blijven er vier of meer hoekpunten over. Zie Figuur \ref{fig:DrieGevallenDriehoeken}b voor het eerste geval en Figuur \ref{fig:DrieGevallenDriehoeken}c voor het tweede geval. De figuren met meer dan drie hoekpunten worden niet meer bekeken; ze zijn niet volledig.
+\\\\
+Om onderscheid te maken tussen volledige en afgesneden driehoeken met drie hoekpunten, wordt de buitendriehoek samen met de overeenkomstige binnendriehoek verder onderzocht. Indien hun zwaartepunten samenvallen, zijn ze volledig. Indien ze niet matchen, kan geconcludeerd worden dat een deel van de driehoek is weggevallen. Zwaartepunten kunnen bepaald worden door Formule \ref{formule: zwaartepunt}: \begin{equation}
+\label{formule: zwaartepunt}
+(x_{zpt},y_{zpt}) = ( \ \frac{1}{3}(x_1 + x_2 + x_3) , \ \frac{1}{3}(y_1 + y_2 + y_3) \ )
+\end{equation}
+\\
+Dit gebeurt voor beide camera's en vervolgens worden de gevonden hoekpunten gecombineerd en doorgestuurd naar de fysische component van de Autopilot om omgezet te worden naar 3D-co\"ordinaten in het wereldassenstelsel. Uit deze re\"ele hoekpunten kunnen dan later de driehoeken getekend worden.
+\\
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{Scannen/BeeldverwerkingDriehoeken.png}
+	\caption{Bepalen van de buitenste acht punten van mogelijke driehoeken. \\ a) Een volledige driehoek. \\ b) Evenwijdig afgesneden driehoek met drie hoekpunten. De zwaartepunten (COG) liggen echter op een andere plaats. \\ c) Willekeurig afgesneden driehoek met vier hoekpunten. \\ 
+	Afkortingen: LO = links onder, LB = links boven, RO = rechts onder, RB = rechts boven, OL = onder links, OR = onder rechts, BL = boven links, BR = boven rechts.}
+	\label{fig:DrieGevallenDriehoeken}
+\end{figure}

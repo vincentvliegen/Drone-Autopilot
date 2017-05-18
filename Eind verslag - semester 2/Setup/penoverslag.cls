@@ -11,7 +11,7 @@
 %%%                                                                    %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{penoverslag}[2012/09/25 v1.0 P&O verslag document class]
+\ProvidesClass{Setup/penoverslag}[2012/09/25 v1.0 P&O verslag document class]
 \def\thetitle{}
 \def\thepagelimit{100}
 \DeclareOption{tt}{%
@@ -63,7 +63,7 @@
   \hfil%
   \begin{minipage}{0.2\textwidth}%
     \centering%
-    \includegraphics[height=\sedes@height]{sedes}%
+    \includegraphics[height=\sedes@height]{Setup/sedes}%
   \end{minipage}%
   \begin{minipage}{0.7\textwidth}%
     {\huge\sf KU~Leuven}\\[10pt]%

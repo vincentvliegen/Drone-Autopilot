@@ -1,0 +1,12 @@
+\subsection{Rotaties}
+\noindent {\em Auteurs: Vincent Vliegen \& Arne Vlietinck}
+\\\\
+Wanneer de gewenste ori\"entatie bekend is, kunnen de nodige rotatiesnelheden berekend worden om de drone bij te sturen. Aan de hand van projecties toegepast op de kijkvector, berekent de Autopilot twee mogelijke yaw- en pitch-waarden die wanneer de rotaties worden uitgevoerd, de drone laten kijken volgens de gewenste kijkrichting. Ook komen twee mogelijke waarden voor de roll voort uit projecties toegepast op de thrustvector. De Autopilot kiest de waarden die er voor zorgen dat de drone niet over kop gaat.
+\\
+De drone heeft maximale rotatiesnelheden. Indien de yaw te groot is om tijdens \'e\'en tijdsinterval uit te voeren, moeten de pitch- en roll-waarden herberekend worden. Dit gebeurt opdat de thrustvector de juiste ori\"entatie zou aannemen.\\
+Om de rotaties te berekenen wordt gebruik gemaakt van de Rodrigues'\cite{website:Rodrigues} rotatie formules.
+\begin{equation} \label{eq: Rodrigues}
+v_{rot} = v \cos(\theta) + (k \times v) \sin(\theta) + k(k \cdot v)(1-\cos(\theta))
+\end{equation}
+In Formule \ref{eq: Rodrigues} is \(v\) een drie dimensionele vector, \(k\) een eenheidsvector die de rotatieas weergeeft en \(\theta\) de hoek volgens de rechterhandregel. Aan de hand van deze formule is het dus mogelijk om een vector \(v\) te roteren rond een as \(k\) met een bepaalde hoek \(\theta\).\\
+Er is gebruik gemaakt van deze formule om de drone zo realistisch mogelijke rotaties te laten uitvoeren, waarbij de gevraagde rotaties ook werkelijk worden uitgevoerd. Als voorbeeld op dit principe wordt er een pitch van \(10\degree\) doorgegeven. Dan zal de drone effectief \(10\degree\) verder pitchen rond zijn eigen pitch-as en niet rond een vast gedefinieerd assenstelsel ergens in de ruimte.

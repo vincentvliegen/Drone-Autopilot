@@ -1,17 +1,19 @@
 % \emph{[In de inleiding schets je de context, probleemstelling en doelstellingen van het project.  Je kunt ook kort aangeven wat er wel en niet in het verslag staat (bij een tussentijds verslag).]} 
-{\em Auteurs: Laura Vranken \& Arne Vlietinck}
+{\em Auteur: Jef Versyck}
 \\\\
+Voor het vak P\&O Computerwetenschappen wordt er gevraagd een simulatie te maken van een drone en hiervoor een autopiloot te ontwerpen. Beiden moeten autonoom kunnen werken. De simulatie moet een correcte weergave van de gevraagde voorwaarden weergeven, terwijl de autopiloot vooropgestelde mijlpalen moet voltooien. De bedoeling van het project is om verschillende technische maar ook sociale vaardigheden aan te scherpen en het project tot een goed einde te brengen.
+Voor het verder verloop van deze tekst zal de simulatie benoemd worden als Testbed en de autopiloot als Autopilot.
+\\
+\\
 \noindent
-Drones zijn de laatste jaren enorm in populariteit toegenomen en ondervinden bijgevolg ook een evolutie op technologisch vlak. Ze worden tegenwoordig gebruikt voor talloze toepassingen. De bekendste toepassing bevindt zich binnen Defensie, die drones gebruiken om informatie te verkrijgen over vijandelijk gebied zonder mensenlevens te moeten riskeren. Daarnaast hebben ook grote bedrijven (o.a. Amazon\footnote{Amazon Prime Air}) de weg naar deze technologie gevonden. De toekomst brengt echter nog veel meer voordelen. Enkele voorbeelden  \cite{website:microdrones} zijn veiligheidsinspectie van windturbines of elektriciteitslijnen, luchtsteun bij zoek- en reddingsoperaties, bewaking en luchtfotografie.
-\\
-Wanneer een drone autonoom functioneert, is een betrouwbare aansturing door de Autopilot van levensbelang. Hij moet namelijk bestand zijn tegen allerlei externe factoren (bv. wind, obstakels...).
-\\
-\\
-Dit verslag behandelt de autonome aansturing van een drone, meer bepaald een quadcopter. Er wordt uitgegaan van een drone waarop twee voorwaarts gerichte camera's bevestigd zijn. Op basis van deze beelden moeten afstand en positie tegenover het doel ingeschat worden en nieuwe bewegingsopdrachten voor de drone gegenereerd worden. Deze bewegingen worden weergegeven in een Virtual Testbed. Dit is een softwaresysteem dat een fysieke opstelling van een drone en camera's simuleert. De simulator genereert beelden van de drone uit verschillende standpunten a.d.h.v. de verkregen bewegingsopdrachten van de Autopilot. 
-\\
-\\
-De Autopilot en het Virtual Testbed moeten zo ontworpen worden dat de drone in staat is om zijn doel te lokaliseren en er naar toe te vliegen. Dit semester is dat doel een polyhedron, willekeurig gegenereerd door het Testbed, bestaande uit verschillende driehoeken. In de opgave en sectie \ref{sec:Beeldverwerking} staat meer specifiek uitgelegd aan welke HSV-combinaties de driehoeken moeten voldoen. Daarnaast wordt verwacht dat windinvloeden uit willekeurige richtingen teniet worden gedaan. Ook het ontwijken van obstakels behoort tot een van de vereisten. Bovendien moet de drone rond een object kunnen vliegen en hertekenen wat hij waarneemt. Tenslotte moet er een generator ontwikkeld worden die nieuwe werelden kan genereren en een editor die deze werelden kan bewerken.
+Dit semester zijn er vier mijlpalen meegegeven. De eerste vereist dat de drone alle \textit{Target} polyhedra raakt, zonder \textit{Obstacle} polyhedra te raken. Een polyhedron (mv. polyhedra) is een 3D-figuur die in dit geval, volgens de opdracht, enkel bestaat uit driehoeken. Ondertussen zijn er ook onbekende windtranslaties en -rotaties die inwerken op de drone. Om de mijlpaal te vergemakkelijken, staan alle objecten drie drone-diameters uit elkaar en zijn ze zichtbaar vanuit de startpositie. \\
+Voor de tweede mijlpaal moet een verbinding gemaakt kunnen worden tussen het voorziene testbed en de eigen Autopilot.\\
+De derde mijlpaal stelt dat de drone in de wereld rond moet vliegen en elk object van de wereld moet scannen. Deze objecten moeten dan in een apart venster opnieuw gecre\"eerd worden terwijl de drone ze aan het scannen is. \\
+De vierde en laatste mijlpaal is identiek aan de eerste mijlpaal met als enige verandering dat de afstanden en de zichtbaarheid van alle objecten nu niet meer gelden. Dit kan er voor zorgen dat een \textit{Obstacle} polyhedron zich in een \textit{Target} polyhedron bevindt. Hier moet dus rekening mee gehouden worden.
+\noindent
 \\
 \\
 De tekst is als volgt opgebouwd:\\
+Eerst is er een sectie over de veranderingen van het Testbed ten opzichte van vorig semester. Dit wordt gevolgd door een bespreking van de gebruikte vliegstrategie van de Autopilot en de moeilijkheden die daarbij ondervonden zijn. 
+Daarop volgt het deel over de beeldherkenning en de grafische voorstelling van de gescande objecten voor de Autopilot. Dit onderdeel hoort bij de Autopilot, maar is als een afzonderlijk deel neergeschreven omwille van de omvang. Het deel erna behandelt de testen en de huidige resultaten ten opzichte van de gevraagde mijlpalen. Ten slotte is er het besluit.
 %Eerst wordt de beeldverwerking en de grafische voorstelling van de Autopilot verder uitgediept (sectie \ref{sec:Beeldverwerking}). Vervolgens wordt er ingegaan op de gebruikte vliegstrategie (sectie \ref{sec:Vliegstrategie}) en worden de mogelijkheden van het Virtual Testbed verduidelijkt (sectie \ref{sec:Virtual Testbed}). Tot slot worden de uitgevoerde testen besproken (sectie \ref{sec:Testen}) en wordt dit aangevuld met een kort besluit. 

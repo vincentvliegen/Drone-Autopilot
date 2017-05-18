@@ -11,12 +11,13 @@
 %%%                                                                     %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[eind]{penoverslag}
+\documentclass[eind]{Setup/penoverslag}
 \usepackage{url}
 \usepackage{amsmath}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{amsmath,bm}
+\usepackage{pdfpages}
 \usepackage{gensymb}
 \usepackage{float}
 \usepackage[dutch]{babel}
@@ -41,8 +42,6 @@
 % == SAMENVATTING == %
 \begin{abstract}
 \input{abstract.tex}
-
-
 \end{abstract}
 
 
@@ -51,50 +50,54 @@
 
 % == INLEIDING == %
 \section*{Inleiding}
-\label{sec:Inleiding}
+\label{sec: Inleiding}
 \input{inleiding.tex}
 \newpage
 
-% == Beschrijving materiaal en bouw drone == %
-\section{Ontwerp}
-\label{sec:Ontwerp}
-\input{ontwerp.tex}
-
-
-% == SOFTWARE == %
-\section{Software}
-\label{sec:Software}
-\input{software.tex}
-
-
-% == ALGORITMES == %
-\section{Algoritmes}
-\label{sec:Algoritmes}
-\input{algoritmes.tex}
-
-
+% == Testbed == %
+\section{Testbed}
+\label{sec: Testbed}
+\input{Testbed/poly_toevoeging.tex}
+\label{sec:polyhedraTestbed}
 \newpage
-% == GUI == %
-\section{GUI}
-\label{sec:GUI}
-\input{gui.tex}
+\input{Testbed/testbed.tex}
+\input{Testbed/Generator.tex}
 
+
+% == AP == %
+\newpage
+\section{Autopilot}
+\label{sec: Autopilot}
+\input{AP/vliegstrategie.tex}
+\input{AP/Rotaties.tex}
+\label{sec: Rotaties}
+\input{AP/obstakels.tex}
+\input{AP/Wind.tex}
+
+% == Scannen == %
+\section{Scannen}
+\label{sec: scannen}
+\input{Scannen/2d.tex}
+\input{Scannen/3d.tex}
+\label{sec: 3dAutopilotScan}
+\input{Scannen/scan.tex}
+\input{Scannen/vliegstrategieScan.tex}
 
 % == Testen == %
 \section{Testen}
-\label{sec:Testen}
-\input{testen.tex}
+\label{sec: Testen}
+\input{Testen/testen.tex}
 
 
 % == Algemeen Resultaat == %
-\section*{Algemeen Resultaat}
-\label{sec:AlgemeenResultaat}
+\section{Algemeen Resultaat}
+\label{sec: AlgemeenResultaat}
 \input{AlgemeenResultaat.tex}
 
 
 % == BESLUIT == %
 \section*{Besluit}
-\label{sec:Besluit}
+\label{sec: Besluit}
 \input{besluit.tex}
 
 % == REFERENTIES == %
@@ -103,6 +106,22 @@
 
 
 % == APPENDICES == %
-%\newpage\makeappendix
+\newpage
+\appendix
+\section{Planning}
+\label{app: Planning}
+\input{Appendices/Planning.tex}
+
+\section{Klassendiagram}
+\label{app: Klassendiagram}
+\input{Appendices/Klassendiagram.tex}
+
+% * <arne.vlietinck@gmail.com> 2017-05-09T19:35:45.263Z:
+% 
+% @Jef: planning/agenda
+% Wat waren de moeilijkheden, opgestoken dingen, anders aanpakken (iteratief werken, testbed gemaakt etc.)
+% 
+% 
+% ^.
 
 \end{document}

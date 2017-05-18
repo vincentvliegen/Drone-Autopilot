@@ -1,0 +1,19 @@
+\subsection{Testen beeldverwerking}
+{\em Auteur: Laura Vranken}
+\noindent
+\\\\
+Om de beeldverwerking van de polyhedra te testen, zijn verschillende afbeeldingen in het project ingeladen. Hierop zijn de testen uitgevoerd. Er werd gecontroleerd of het bepalen van de 3D co\"ordinaten van de hoekpunten juist gebeurt. Dit is geverifieerd met de co\"ordinaten van het Testbed. Een zekere precisie is vereist voor het scannen. Enkele resultaten staan vermeld in Tabel \ref{table: 3Dcoord}. Hieruit kan afgeleid worden dat de positiebepaling uit beelden genomen op een afstand 0.8m, 1m en 1.5m het beste zijn en slechts een afwijking hebben van O(0.001). Binnen deze afstandsmarge worden bijgevolg de beelden voor het scannen genomen. De beelden die van nog verder genomen zijn of met lagere resolutie geven minder accurate waarden, respectievelijk O(0.1) en O(0.01).\\
+\begin{table}[H]
+	\centering
+	\begin{tabular}{l|c|c|c|c}
+    Afstand[m] & Pixels[px] & x & y & z\\ \hline
+		\textit{Testbed} & &[0.75, 0.5625, 0.0625] &[0.75, 0.0625, -0.4375] & [0.75, 0.5625, -0.4375] \\
+		 {0.8}  & 400 & [0.7451, 0.5566, 0.0564] & [0.7512, 0.567, -0.4401] & [0.7512, 0.0673, -0.4401]\\
+		{1} & 400 &[0.7456, 0.5576, 0.0567] & [0.7464, 0.0705, -0.4304] & [0.7464, 0.5576, -0.4304]\\
+        {1} & 200 & [0.7220, 0.5375, 0.0399] & [0.7558, 0.0789, -0.4386] & [0.7558, 0.5657, -0.4386]\\
+		{1.5} & 400 & [0.7555, 0.5652, 0.0510] & [0.7512, 0.0760, -0.4380] & [0.7512, 0.5652, -0.4380] \\
+        {2} & 400 & [0.6984, 0.5441, 0.0393] & [0.8002, 0.0781, -0.4513]& [0.8002, 0.5781, -0.4513]
+	\end{tabular}
+\caption{Vergelijking 3D-co\"ordinaten van een willekeurige driehoek. De werkelijke co\"ordinaten worden opgevraagd uit het Testbed. Afstand is de afstand tussen de drone en polyhedron. Pixels geeft het aantal pixels weer waaruit het beeld is opgebouwd.}
+\label{table: 3Dcoord}
+\end{table}
