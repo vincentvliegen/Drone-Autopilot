@@ -102,6 +102,10 @@ public class WorldParser extends World {
 
 		// set to default buffer
 		gl.glBindFramebuffer(GL.GL_FRAMEBUFFER, 0);
+		
+		if (getDemoEnum() != null) {
+			fakeOverride = getDemoEnum().getOverrideStatus();
+		}
 	}
 
 	public static KeyboardMovement getMovement() {

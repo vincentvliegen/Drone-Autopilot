@@ -14,6 +14,7 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 
+import demo.DemoEnum;
 import simulator.camera.DroneCamera;
 import simulator.camera.GeneralCamera;
 import simulator.editor.WorldEditor;
@@ -80,6 +81,7 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	private static WorldEditor editor = new WorldEditor();
 	private Collision collision = new Collision(this);
 	private JPanel panel;
+	private DemoEnum demoEnum;
 
 	public World() {
 		addGLEventListener(this);
@@ -348,8 +350,20 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		setup();
 //		Pyramid fig = new Pyramid(this, PolyhedronType.TARGET, new double[]{2,0,0});
 //		getWorldObjectList().add(fig);
-		HollowCubePolyhedron figL = new HollowCubePolyhedron(this, PolyhedronType.TARGET, new double[]{1,0,0});
-		getWorldObjectList().add(figL);
+		if (demoEnum == null) {
+			HollowCubePolyhedron figL = new HollowCubePolyhedron(this, PolyhedronType.TARGET, new double[]{1,0,0});
+			getWorldObjectList().add(figL);
+		} else {
+			if (demoEnum.getCreateSingleObjectStatus()) {
+				if (demoEnum.getTargetStatus()) {
+					LetterLPolyhedron figL = new LetterLPolyhedron(this, PolyhedronType.TARGET, new double[]{1,0,0});
+					getWorldObjectList().add(figL);
+				} else {
+					Pyramid figL = new Pyramid(this, PolyhedronType.OBSTACLE, new double[]{1,0,0});
+					getWorldObjectList().add(figL);
+				}
+			}
+		}
 
 		// Start animator.
 		gl.setSwapInterval(1);
@@ -639,5 +653,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 	
 	public void setJPanel(JPanel panel){
 		this.panel = panel;
+	}
+	
+	public void setDemoEnum(DemoEnum d) {
+		demoEnum = d;
+	}
+	
+	public DemoEnum getDemoEnum() {
+		return demoEnum;
 	}
 }

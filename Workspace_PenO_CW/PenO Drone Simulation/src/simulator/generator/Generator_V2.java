@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.*;
 
+import demo.DemoEnum;
 import simulator.objects.*;
 import simulator.physics.MathCalculations;
 
@@ -18,7 +19,22 @@ public class Generator_V2 {
 		boolean windOn = false;
 		boolean obstaclesOn = true;
 		boolean emptyWorld = false;
-
+		if (args.length > 0){
+			DemoEnum dEnum = null;
+			// Object door string array? 
+			if (args[0].equals("Scan")) {
+				dEnum = DemoEnum.SCAN_SINGLE_OBJECT;
+			} else if (args[0].equals("Fly")) {
+				dEnum = DemoEnum.HIT_MULTIPLE_OBJECT;
+			} else if (args[0].equals("Obstacle")) {
+				dEnum = DemoEnum.SINGLE_OBSTACLE;
+			} else if (args[0].equals("Wind")) {
+				dEnum = DemoEnum.WIND_SHOW;
+			}
+			windOn = dEnum.getGeneratorWindStatus();
+			obstaclesOn = dEnum.getGeneratorObstacleStatus();
+			emptyWorld = dEnum.getGeneratorEmptyWorldStatus();
+		}
 		File f = new File(path);
 		OutputStream fileStream = new FileOutputStream(f);
 		DataOutputStream stream = new DataOutputStream(fileStream);
