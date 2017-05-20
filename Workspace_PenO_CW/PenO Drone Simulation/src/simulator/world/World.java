@@ -356,8 +356,13 @@ public abstract class World extends GLCanvas implements GLEventListener {
 		} else {
 			if (demoEnum.getCreateSingleObjectStatus()) {
 				if (demoEnum.getTargetStatus()) {
+					if (demoEnum == DemoEnum.SCAN_LETTERL) {
 					LetterLPolyhedron figL = new LetterLPolyhedron(this, PolyhedronType.TARGET, new double[]{1,0,0});
 					getWorldObjectList().add(figL);
+					} else if (demoEnum == DemoEnum.SCAN_HOLLOWCUBE) {
+						HollowCubePolyhedron figL = new HollowCubePolyhedron(this, PolyhedronType.TARGET, new double[]{1,0,0});
+						getWorldObjectList().add(figL);
+					}
 				} else {
 					Pyramid figL = new Pyramid(this, PolyhedronType.OBSTACLE, new double[]{1,0,0});
 					getWorldObjectList().add(figL);

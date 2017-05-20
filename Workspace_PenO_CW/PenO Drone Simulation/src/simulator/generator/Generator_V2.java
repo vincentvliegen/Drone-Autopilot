@@ -23,7 +23,7 @@ public class Generator_V2 {
 			DemoEnum dEnum = null;
 			// Object door string array? 
 			if (args[0].equals("Scan")) {
-				dEnum = DemoEnum.SCAN_SINGLE_OBJECT;
+				dEnum = DemoEnum.SCAN_LETTERL;
 			} else if (args[0].equals("Fly")) {
 				dEnum = DemoEnum.HIT_MULTIPLE_OBJECT;
 			} else if (args[0].equals("Obstacle")) {

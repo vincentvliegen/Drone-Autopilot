@@ -1,7 +1,7 @@
 package demo;
 
 public enum DemoEnum {
-		SCAN_SINGLE_OBJECT("Scan"), HIT_MULTIPLE_OBJECT("Fly"), SINGLE_OBSTACLE("Obstacle"), WIND_SHOW("Wind"); 
+		SCAN_LETTERL("Scan"), HIT_MULTIPLE_OBJECT("Fly"), SINGLE_OBSTACLE("Obstacle"), WIND_SHOW("Wind"), SCAN_HOLLOWCUBE("Scan"); 
 	
 		private String text;
 
@@ -17,7 +17,7 @@ public enum DemoEnum {
 		public boolean getOverrideStatus() {
 			// Wou deze is ff uittesten
 			//return this == DemoEnum.SCAN_SINGLE_OBJECT? true : false;
-			return this == DemoEnum.SCAN_SINGLE_OBJECT;
+			return this.toString().equals("Scan");
 		}
 		
 		public boolean getGeneratorWindStatus() {
@@ -25,14 +25,14 @@ public enum DemoEnum {
 		}
 		
 		public boolean getGeneratorEmptyWorldStatus() {
-			return this == DemoEnum.SCAN_SINGLE_OBJECT || this == SINGLE_OBSTACLE || this == DemoEnum.WIND_SHOW;
+			return this == DemoEnum.SCAN_LETTERL || this == SINGLE_OBSTACLE || this == DemoEnum.WIND_SHOW || this == DemoEnum.SCAN_HOLLOWCUBE;
 		}
 		
 		public boolean getCreateSingleObjectStatus() {
-			return this == DemoEnum.SCAN_SINGLE_OBJECT || this == SINGLE_OBSTACLE;
+			return this == DemoEnum.SCAN_LETTERL || this == SINGLE_OBSTACLE || this == DemoEnum.SCAN_HOLLOWCUBE;
 		}
 		public boolean getTargetStatus() {
-			return this == SCAN_SINGLE_OBJECT;
+			return this == DemoEnum.SCAN_LETTERL || this == SCAN_HOLLOWCUBE;
 		}
 		
 		public boolean getGeneratorObstacleStatus() {

@@ -17,6 +17,7 @@ import com.jogamp.opengl.GL2ES3;
 
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.DroneAutopilotFactory;
+import demo.DemoEnum;
 import simulator.camera.DroneCamera;
 import simulator.camera.DroneCameraPlace;
 import simulator.physics.Movement;
@@ -646,13 +647,15 @@ public class SimulationDrone extends WorldObject implements Drone {
 	}
 
 	public void fakeTimeHasPassed() {
-		
+		double distance = 1.5;
+		if (getWorld().getDemoEnum() == DemoEnum.SCAN_HOLLOWCUBE)
+			distance = 1;
 		if (fakeYaw < 361) {
 			pitch = 0;
 			yaw = (float) -fakeYaw;
 			roll = 0;
-			translate = new double[] { 1 - 1.5*Math.cos(Math.toRadians(fakeYaw)), 0,
-					1.5*Math.sin(Math.toRadians(fakeYaw)) };
+			translate = new double[] { 1 - distance*Math.cos(Math.toRadians(fakeYaw)), 0,
+					distance*Math.sin(Math.toRadians(fakeYaw)) };
 			fakeYaw += 0.4;
 		} else if (fakeYaw < 721) {
 			float nYaw = (float) (fakeYaw - 360);

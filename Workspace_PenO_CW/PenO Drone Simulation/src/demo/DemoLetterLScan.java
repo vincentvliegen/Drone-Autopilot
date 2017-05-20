@@ -12,11 +12,11 @@ import simulator.generator.Generator_V2;
 import simulator.world.World;
 import simulator.world.WorldParser_v2;
 
-public class DemoScan {
+public class DemoLetterLScan {
 
 	public static void main(String[] args) throws Exception{
 		
-		DemoEnum en = DemoEnum.SCAN_SINGLE_OBJECT;
+		DemoEnum en = DemoEnum.SCAN_LETTERL;
 		String[] strArr = new String[]{en.toString()};
 		Generator_V2.main(strArr);
 		
