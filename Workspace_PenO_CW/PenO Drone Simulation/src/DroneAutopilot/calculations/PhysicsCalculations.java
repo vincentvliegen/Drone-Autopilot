@@ -388,6 +388,7 @@ public class PhysicsCalculations{
 	public void updateMovement(double[] targetPosition, double[] direction){
 //		targetPosition = this.getAvoidObstacles().correctPosition(targetPosition);
 //		System.out.println(targetPosition[0] + " " + targetPosition[1] + " " + targetPosition[2]);
+			
 		if(isFirstTime()){
 			calculateThrust(targetPosition);
 			
@@ -406,7 +407,7 @@ public class PhysicsCalculations{
 			this.getDrone().setYawRate((float) this.getYawRate());
 			this.getDrone().setPitchRate((float) this.getPitchRate());
 			this.getDrone().setRollRate((float) this.getRollRate());
-		}
+		}		
 	}
 
 	public void updateMovement(double[] targetPosition){
@@ -419,19 +420,7 @@ public class PhysicsCalculations{
 			double[] externalForces = this.getExternalForces();
 			double[] thrust = this.getDirectionOfThrust();
 			double[] normal = VectorCalculations.crossProduct(externalForces, thrust);
-	
-			//bereken de richting naar de positie
-			double[] dirToPos = VectorCalculations.normalise(getDirectionDroneToPosition(position));
-			
-			
-//			double[] linearSpeed = getLinearSpeedDroneToPosition(position);
-//			double[] transverseSpeed = getTransverseSpeedDroneToPosition(position);
-//			
-//			System.out.println("---------------");
-//			System.out.println("linearSpeed: " + Arrays.toString(linearSpeed));
-//			System.out.println("transverseSpeed: " + Arrays.toString(transverseSpeed));
-			
-			
+				
 			double result;
 			if(VectorCalculations.compareVectors(position, this.getPosition()) || isFirstTime()){//DOEL = HUIDIGE POSITIE || EERSTE FRAME = GEEN VERPLAATSINGEN
 				//grootte + richting
@@ -453,16 +442,20 @@ public class PhysicsCalculations{
 				}else{
 					signThrustExtForce = 1;
 				}
+				
+				double currentThrust = VectorCalculations.size(externalForces)*signThrustExtForce;//compenseert external forces
 								
 				//we kunnen alleen vliegen volgens de thrustas, dus we benaderen de positie op thrustas en berekenen snelheid volgens thrustas;
 				double[] direction = VectorCalculations.projectOnAxis(getDirectionDroneToPosition(position), thrust);
 				boolean inDirectionOfThrust = VectorCalculations.compareVectors(thrust, VectorCalculations.normalise(direction));
 				double distance = VectorCalculations.size(direction);
-				double speed = VectorCalculations.size(VectorCalculations.projectOnAxis(getSpeed(), thrust));
-				if(!inDirectionOfThrust){
+				
+				double[] speedOnThrustAxis = VectorCalculations.projectOnAxis(getSpeed(), thrust);
+				double speed = VectorCalculations.size(speedOnThrustAxis);
+				boolean speedIsTowardsPosition = VectorCalculations.compareVectors(VectorCalculations.normalise(direction), VectorCalculations.normalise(speedOnThrustAxis));
+				if(!speedIsTowardsPosition){
 					speed *= -1;
 				}
-				double currentThrust = VectorCalculations.size(externalForces)*signThrustExtForce;//compenseert external forces
 				double maxThrust = this.getDrone().getMaxThrust();
 				double weight = this.getDrone().getWeight();
 				
@@ -483,6 +476,12 @@ public class PhysicsCalculations{
                 }else{
                     wantedAcceleration = acceleration[minMaxIndex];
                 }
+                
+                //if negative thrust is towards position
+                if(!inDirectionOfThrust){
+                	wantedAcceleration *= -1;
+                }
+                
 //                System.out.println(wantedAcceleration);
                 result = currentThrust+wantedAcceleration*weight;				
 			}else{	
@@ -501,12 +500,14 @@ public class PhysicsCalculations{
 				
 				//nu is het vlak bepaald: lowerlimit/upperlimit en externalMovement
 				//benader nu direction
+				double[] dirToPos = getDirectionDroneToPosition(position);
 				double[] normalOnMovementPlane = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit, externalMovement));
 				double[] approxDir = VectorCalculations.projectOnPlane(dirToPos,normalOnMovementPlane);
 				
 				//als we niet naar de positie vliegen dan vliegen we er van weg?
-				double[] crossProductDirLowLim = VectorCalculations.crossProduct(lowerLimit, approxDir);
-				if(VectorCalculations.compareVectors(lowerLimit, crossProductDirLowLim)){
+				double[] crossProductLowEM = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit, externalMovement));
+				double[] crossProductLowDir = VectorCalculations.normalise(VectorCalculations.crossProduct(lowerLimit, approxDir));
+				if(!VectorCalculations.compareVectors(crossProductLowEM, crossProductLowDir)){
 					approxDir = VectorCalculations.inverse(approxDir);//verander appDir van richting
 				}
 				
@@ -517,24 +518,26 @@ public class PhysicsCalculations{
 				//lower limit = (-infinity,0)
 				//upper limit = (infinity,0)
 				//alle vectoren hebben positieve y component
-				double cosLowThrust = VectorCalculations.cosinusBetweenVectors(lowerLimit, thrust);
 				double cosLowExtMov = VectorCalculations.cosinusBetweenVectors(lowerLimit, externalMovement);
 				double cosLowDir = VectorCalculations.cosinusBetweenVectors(lowerLimit, approxDir);
 				
-				double sinLowThrust = Math.sqrt(1-cosLowThrust*cosLowThrust);
 				double sinLowExtMov = Math.sqrt(1-cosLowExtMov*cosLowExtMov);
 				double sinLowDir = Math.sqrt(1-cosLowDir*cosLowDir);
 								
 				double sizeExtMov = VectorCalculations.size(externalMovement);
 				double sizeThrust = deltaT*deltaT/(2*weight);//component versnelling van thrust
 				
-				double[] coordThrust = new double[] {cosLowThrust*sizeThrust, sinLowThrust*sizeThrust};
+				double[] coordThrust = new double[] {-1*sizeThrust, 0};
 				double[] coordExtMov = new double[] {cosLowExtMov*sizeExtMov,sinLowExtMov*sizeExtMov};
 				double[] coordDir = new double[] {cosLowDir,sinLowDir};
 				
 				thrustNeeded = 	(coordDir[0]*coordExtMov[1] - coordDir[1]*coordExtMov[0])/
 								(coordDir[1]*coordThrust[0] - coordDir[0]*coordThrust[1]);
 					
+				if(Math.abs(thrustNeeded) > this.getDrone().getMaxThrust()){
+					thrustNeeded = this.getDrone().getMaxThrust()*Math.signum(thrustNeeded);
+				}
+				
 				result = thrustNeeded;
 			}
 			this.setThrust(result);

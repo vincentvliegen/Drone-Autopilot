@@ -116,7 +116,7 @@ public class SeveralObjects extends Mission {
 	
 	//////////NOT IN USE//////////
 		
-		private void firstTimeSinceScan() {
+/*		private void firstTimeSinceScan() {
 			this.getClosestObjects().addVisibleObjects();
 			try {
 				this.getClosestObjects().determineClosestObject();
@@ -131,9 +131,9 @@ public class SeveralObjects extends Mission {
 				this.setClosestObjectAcquired(false);
 				this.setSecondObjectAcquired(false);
 			}
-		}
+		}*/
 	
-		private void refreshWhenFlying() {
+/*		private void refreshWhenFlying() {
 			this.setRefreshCounter(0);
 			this.getClosestObjects().addVisibleObjects();
 			try {
@@ -174,7 +174,7 @@ public class SeveralObjects extends Mission {
 			} catch (NullPointerException e) {
 	
 			}
-		}
+		}*/
 
 		
 	////////// GETTERS & SETTERS//////////
