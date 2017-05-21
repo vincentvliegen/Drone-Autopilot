@@ -386,9 +386,8 @@ public class PhysicsCalculations{
 	//////////MOVEMENT//////////
 	
 	public void updateMovement(double[] targetPosition, double[] direction){
-//		targetPosition = this.getAvoidObstacles().correctPosition(targetPosition);
-//		System.out.println(targetPosition[0] + " " + targetPosition[1] + " " + targetPosition[2]);
-			
+		targetPosition = this.getAvoidObstacles().correctPosition(targetPosition);
+		
 		if(isFirstTime()){
 			calculateThrust(targetPosition);
 			
@@ -533,34 +532,35 @@ public class PhysicsCalculations{
 				
 				thrustNeeded = 	(coordDir[0]*coordExtMov[1] - coordDir[1]*coordExtMov[0])/
 								(coordDir[1]*coordThrust[0] - coordDir[0]*coordThrust[1]);
-					
+				
+//				System.out.println("totalForce: " + Arrays.toString(VectorCalculations.sum(VectorCalculations.timesScalar(this.getDirectionOfThrust(), thrustNeeded*sizeThrust), externalMovement)));				
 				if(Math.abs(thrustNeeded) > this.getDrone().getMaxThrust()){
 					thrustNeeded = this.getDrone().getMaxThrust()*Math.signum(thrustNeeded);
 				}
-				
+								
 				result = thrustNeeded;
 			}
 			this.setThrust(result);
 		}	
 			
 		private void calculateWantedOrientation(double[] position, double[] direction){
-				double acceleration = this.determineAcceleration(position);
-				double weight = (double) this.getDrone().getWeight();
-				double[] externalForces = this.getExternalForces();
-				double[] directionToPos = getDirectionDroneToPosition(position);
-				double[] directionOfAcceleration = determineDirectionOfAcceleration(acceleration, directionToPos);
-				double[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(directionOfAcceleration), acceleration*weight);
-				double[] thrustVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(externalForces));
-				if (thrustVector[1] <0){//thrust heeft altijd een positieve y waarde of de drone hangt ondersteboven
-					thrustVector = VectorCalculations.inverse(thrustVector);
-				}
-				double[] viewVector;
-				viewVector = VectorCalculations.projectOnPlane(direction, thrustVector);
-				if(VectorCalculations.compareVectors(viewVector, new double[] {0,0,0})){
-					viewVector = VectorCalculations.projectOnPlane(this.getDirectionOfView(), thrustVector);
-				}
-				this.setWantedOrientation(new double[][] {thrustVector,viewVector});
+			double acceleration = this.determineAcceleration(position);
+			double weight = (double) this.getDrone().getWeight();
+			double[] externalForces = this.getExternalForces();
+			double[] directionToPos = getDirectionDroneToPosition(position);
+			double[] directionOfAcceleration = determineDirectionOfAcceleration(acceleration, directionToPos);
+			double[] forceToPos = VectorCalculations.timesScalar(VectorCalculations.normalise(directionOfAcceleration), acceleration*weight);
+			double[] thrustVector = VectorCalculations.sum(forceToPos, VectorCalculations.inverse(externalForces));
+			if (thrustVector[1] <0){//thrust heeft altijd een positieve y waarde of de drone hangt ondersteboven
+				thrustVector = VectorCalculations.inverse(thrustVector);
 			}
+			double[] viewVector;
+			viewVector = VectorCalculations.projectOnPlane(direction, thrustVector);
+			if(VectorCalculations.compareVectors(viewVector, new double[] {0,0,0})){
+				viewVector = VectorCalculations.projectOnPlane(this.getDirectionOfView(), thrustVector);
+			}
+			this.setWantedOrientation(new double[][] {thrustVector,viewVector});
+		}
 		
 			private double determineAcceleration(double[] position) {
                 double distance = this.getDistanceDroneToPosition(position);
@@ -651,10 +651,9 @@ public class PhysicsCalculations{
 				//Ax+Vx = Xx; Ay+Vy = Xy; Az+Vz = Xz; DirAccx^2 + DirAccy^2 + DirAccz^2 = 1; => 4 vgl
 				double Dt = this.getDeltaT();
 				double[] Dir = VectorCalculations.normalise(directionToPosition);
-				double[] v = VectorCalculations.projectOnPlane(this.getSpeed(), this.getDirectionOfThrust());
-//				double[] v = VectorCalculations.projectOnPlane(this.getSpeed().clone(), directionToPosition);
-//				double[] v = this.getSpeed();
-//				double[] v = new double[] {0,0,0};
+//				double[] v = VectorCalculations.projectOnPlane(this.getSpeed(), this.getDirectionOfThrust());
+//				double[] v = VectorCalculations.projectOnPlane(this.getSpeed(), directionToPosition);
+				double[] v = this.getSpeed();
 				double acc = acceleration;
 				
 				double u;
@@ -669,7 +668,13 @@ public class PhysicsCalculations{
 					//met sinXA*|A| = -sinXV*|V|
 					//=> u = cosXA*|A| + cosXV*|V|
 					
-					double factor = 0.3;// tussen [0,1]; niet te veel de snelheid compenseren of de drone gaat schommelen
+//					double factor = 0.3;// tussen [0,1]; niet te veel de snelheid compenseren of de drone gaat schommelen
+					double distance = VectorCalculations.size(directionToPosition);
+					double factor = distance/PhysicsCalculations.getSlowdowndistance();
+					if(factor > 0.3){
+						factor = 0.3;
+					}
+					
 					
 					double sizeV = VectorCalculations.size(v)*Dt*factor;
 					double sizeA = Math.abs(acc)*Dt*Dt/2;

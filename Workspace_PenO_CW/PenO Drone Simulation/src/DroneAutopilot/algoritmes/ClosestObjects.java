@@ -1,6 +1,7 @@
 package DroneAutopilot.algoritmes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -69,7 +70,9 @@ public class ClosestObjects {
 			double[] distances = new double[size];
 			ArrayList<double[]> coords = new ArrayList<double[]>();
 			int i = 0;
+//			System.out.println("--------------");
 			for (double[] coordskey : this.getObjectList().keySet()) {
+//				System.out.println("target " + i + ": " + Arrays.toString(coordskey));
 				distances[i] = this.getPhysicsCalculations().getDistanceDroneToPosition(coordskey);
 				coords.add(coordskey);
 				i++;

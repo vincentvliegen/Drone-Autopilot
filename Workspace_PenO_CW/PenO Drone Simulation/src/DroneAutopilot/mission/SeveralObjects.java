@@ -14,6 +14,7 @@ public class SeveralObjects extends Mission {
 	private ArrayList<float[]> targetColors = new ArrayList<float[]>();
 	private double[] target;
 	private boolean targetFound;
+	private boolean targetVisible;
 
 	private final ClosestObjects closestObjects;
 	private int refreshCounter;
@@ -32,6 +33,7 @@ public class SeveralObjects extends Mission {
 		this.closestObjects = new ClosestObjects(this.getDroneAutopilot());
 		this.scan = new NewWorldScan(this.getDroneAutopilot());
 		this.setTargetFound(false);
+		this.setTargetVisible(false);
 		setRefreshCounter(0);
 		setFirstTime(true);
 	}
@@ -46,12 +48,15 @@ public class SeveralObjects extends Mission {
 				execute();//target is found of niet
 //				this.setRefreshCounter(0);
 			} else {
-				if (this.getPhysicsCalculations().getDistanceDroneToPosition(this.getTarget()) <= .7){
+				setTargetVisible(true);
+				if (this.getPhysicsCalculations().getDistanceDroneToPosition(this.getTarget()) <= .2){
 					checkTarget();
 				}
 //				System.out.println("Distance to target: "+this.getPhysicsCalculations().getDistanceDroneToPosition(this.getTarget()));
 //				this.setRefreshCounter(this.getRefreshCounter() + 1);
-				this.getPhysicsCalculations().updateMovement(this.extendTarget(getTarget(), 1));
+				if(isTargetVisible()){
+					this.getPhysicsCalculations().updateMovement(this.extendTarget(getTarget(), 1));
+				}
 			}
 		} else {// we kennen target niet
 			this.getScan().scan();
@@ -76,16 +81,17 @@ public class SeveralObjects extends Mission {
 		loop:
 		for (float[] color : this.getTargetColors()) {
 			for (float[] seencolor : visibleCogs.keySet()) {
-				if (color == seencolor) {
+				if (Arrays.equals(color, seencolor)) {
 					stillThere = true;
 					break loop;
 				}
 			}
 		}
 		if (!stillThere) {
-			System.out.println("target not visible " + notVisible + "/20");
+//			System.out.println("target not visible " + notVisible + "/20");
 			notVisible++;
 			if (notVisible >= 20) {
+				setTargetVisible(false);
 				notVisible = 0;
 				this.getClosestObjects().getObjectList().remove(this.getTarget());
 				this.setTargetFound(false);
@@ -246,8 +252,8 @@ public class SeveralObjects extends Mission {
 	}
 
 	public void setTarget(double[] target) {
-		try{
-		System.out.println("Target: "+Arrays.toString(target)+" prev: "+Arrays.toString(this.getTarget()));} catch(Exception e){};
+//		try{
+//		System.out.println("Target: "+Arrays.toString(target)+" prev: "+Arrays.toString(this.getTarget()));} catch(Exception e){};
 		this.target = target;
 	}
 
@@ -271,4 +277,12 @@ public class SeveralObjects extends Mission {
 		return timeToRefresh;
 	}
 
+	public boolean isTargetVisible() {
+		return targetVisible;
+	}
+
+	public void setTargetVisible(boolean targetVisible) {
+		this.targetVisible = targetVisible;
+	}
+	
 }
