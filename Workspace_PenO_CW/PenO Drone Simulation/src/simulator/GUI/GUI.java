@@ -7,17 +7,26 @@ import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import DroneAutopilot.GUI.MissionType;
+import simulator.objects.HollowCubePolyhedron;
+import simulator.objects.LetterLPolyhedron;
+import simulator.objects.PolyhedronType;
 import simulator.world.World;
 import simulator.world.World11;
 import simulator.world.World12;
 import simulator.world.World13;
 import simulator.world.WorldParser;
+import simulator.objects.Pyramid;
+import simulator.objects.TwinkleTwinkleLittleStarPolyhedron;
+import simulator.objects.PolyhedronType;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -34,16 +43,18 @@ public class GUI extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static World world;
-	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsComboboxGeneralCameras, constraintsButtonDroneCamera; //constraintsPanelGravity; //constraintsAddButton;
+	private final GridBagConstraints constraintsSpeed, constraintsPosition, constraintsComboboxGeneralCameras, constraintsButtonDroneCamera, constraintsAddButton; //constraintsPanelGravity; //constraintsAddButton;
 	private JLabel position = new JLabel();
 	private JLabel speed = new JLabel();
 	private List<JButton> buttonsDroneCameras = new ArrayList<>();
+	private List<JButton> buttonsAdd = new ArrayList<>();
 	private List<JSlider> windSlidersX = new ArrayList<>();
 	private List<JSlider> windSlidersY = new ArrayList<>();
 	private List<JSlider> windSlidersZ = new ArrayList<>();
 	private List<String> listNameButtons = new ArrayList<>();
 	private int MAXWIND = 10;
 	int MAXGRAVITY = 2000;
+	private int type;
 	
 	private JLabel windX = new JLabel();
 	private JLabel windY = new JLabel();
@@ -321,18 +332,38 @@ public class GUI extends JPanel {
 			timerWind.start(); 
 		}
 
-//		//Add objects
-//		JButton addButton = new JButton("Add extra sphere");
-//		addButton.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				JFrame addSphere = new JFrame();
-//				createAddSphere(addSphere);
-//			}
-//		});
-//		constraintsAddButton = new GridBagConstraints();
-//		this.makeConstraints(constraintsAddButton, new Insets(1, 1, 1, 1), 0, 8);
-//		add(addButton, constraintsAddButton);
+		// #AddButtons
+				constraintsAddButton = new GridBagConstraints();
+				JPanel PanelAddButton = new JPanel(new GridBagLayout());
+
+				buttonsAdd.add(new JButton("Add new polyhedron"));
+				buttonsAdd.add(new JButton("Add new obstacle"));
+				buttonsAdd.get(0).addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String nameButton = e.getActionCommand();
+						if(nameButton.equalsIgnoreCase("Add new polyhedron")){
+							JFrame addPolyhedron = new JFrame();
+							createAddPolyhedron(addPolyhedron);
+						}
+					}
+				});
+				buttonsAdd.get(1).addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String nameButton = e.getActionCommand();
+						if(nameButton.equalsIgnoreCase("Add new obstacle")){
+							JFrame AddObstaclePolyhedron = new JFrame();
+							createAddObstaclePolyhedron(AddObstaclePolyhedron);
+						}
+					}
+				});
+				this.makeConstraints(constraintsAddButton, new Insets(1, 1, 1, 1), 0, 0, 1, 5, 0, 1);
+				PanelAddButton.add(buttonsAdd.get(0), constraintsAddButton);
+				this.makeConstraints(constraintsAddButton, new Insets(1, 1, 1, 1), 1, 0, 1, 5, 0, 1);
+				PanelAddButton.add(buttonsAdd.get(1), constraintsAddButton);
+				this.makeConstraints(constraintsAddButton,new Insets(1, 1, 1, 1), 0, 8);
+				add(PanelAddButton, constraintsAddButton);
 
 		//resize
 		this.setPreferredSize(new Dimension(390, 768));
@@ -345,28 +376,60 @@ public class GUI extends JPanel {
 		windSlider.setPaintLabels(true);
 	}
 
-	public void createAddSphere(JFrame addSphere){
-		addSphere.setTitle("Add new sphere");
-		addSphere.setAlwaysOnTop(true);
-		addSphere.setBounds(100, 300, 400, 200);
+	public void createAddPolyhedron(JFrame addPolyhedron){
+		addPolyhedron.setTitle("Add new polyhedron");
+		addPolyhedron.setAlwaysOnTop(true);
+		addPolyhedron.setBounds(100, 300, 600, 200);
 
+		
+		Font font = new Font("Tahoma", Font.PLAIN, 18);
+		JPanel panel = new JPanel(new GridLayout(1,2));
+
+		JLabel select = new JLabel("Select type: ");
+		select.setFont(font);
+		panel.add(select);
+		
+
+		String[] list = { " --- Select Type --- ", "Pyramid", "Hollow cube", "Letter L", "Star"};
+		JComboBox menu = new JComboBox(list);
+		panel.add(menu);
+		menu.setFont(font);
+		menu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox menu = (JComboBox) e.getSource();
+				Object selected = menu.getSelectedItem();
+				if (selected.toString().equals("Pyramid")){
+					setType(1);
+				}else if(selected.toString().equals("Hollow cube")) {
+					setType(2);
+				}else if (selected.toString().equals("Letter L")){					
+					setType(3);
+				}else if (selected.toString().equals("Star")){					
+					setType(4);
+				}
+			}
+		});
+		
 		GridBagConstraints constraintsAddSphere = new GridBagConstraints();
 		JPanel panelAddSphere = new JPanel(new GridBagLayout());
 
 
-		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 0, 0, 1, 0, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 1, 0, 7, 0, 0, 1);
+		panelAddSphere.add(panel, constraintsAddSphere);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 0, 1, 1, 0, 0, 1);
 		panelAddSphere.add(new JLabel("x: "), constraintsAddSphere);
-		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 1, 0, 1, 0, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 1, 1, 1, 0, 0, 1);
 		JTextField userTextX = new JTextField(5);
 		panelAddSphere.add(userTextX, constraintsAddSphere);
-		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 3, 0, 1, 0, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 3, 1, 1, 0, 0, 1);
 		panelAddSphere.add(new JLabel("y: "), constraintsAddSphere);
-		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 4, 0, 1, 0, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 4, 1, 1, 0, 0, 1);
 		JTextField userTextY = new JTextField(5);
 		panelAddSphere.add(userTextY, constraintsAddSphere);
-		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 6, 0, 1, 0, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 6, 1, 1, 0, 0, 1);
 		panelAddSphere.add(new JLabel("z: "), constraintsAddSphere);
-		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 7, 0, 1, 0, 0, 1);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 7, 1, 1, 0, 0, 1);
 		JTextField userTextZ = new JTextField(5);
 		panelAddSphere.add(userTextZ, constraintsAddSphere);
 
@@ -379,12 +442,27 @@ public class GUI extends JPanel {
 				double positionY = Double.parseDouble(userTextY.getText());
 				double positionZ = Double.parseDouble(userTextZ.getText());
 				double[] position = {positionX, positionY, positionZ};
-				world.addSphereWithRandomColor(position);
-				addSphere.setVisible(false);
+				if(getType()==1){
+					Pyramid fig = new Pyramid(world, PolyhedronType.TARGET, position);
+					world.getWorldObjectList().add(fig);
+				}
+				if(getType()==2){
+					HollowCubePolyhedron fig = new HollowCubePolyhedron(world, PolyhedronType.TARGET, position);
+					world.getWorldObjectList().add(fig);
+				}
+				if(getType()==3){
+					LetterLPolyhedron fig = new LetterLPolyhedron(world, PolyhedronType.TARGET, position);
+					world.getWorldObjectList().add(fig);
+				}
+				if(getType()==4){
+					TwinkleTwinkleLittleStarPolyhedron fig = new TwinkleTwinkleLittleStarPolyhedron(world, PolyhedronType.TARGET, position);
+					world.getWorldObjectList().add(fig);
+				}
+				addPolyhedron.setVisible(false);
 			}
 		});
 		GridBagConstraints constraintsButton = new GridBagConstraints();
-		this.makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 1, 1, 0, 0, 1);
+		this.makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 2, 1, 0, 0, 1);
 		panelAddSphere.add(insideAddButton, constraintsButton);
 
 		//CancelButton
@@ -392,14 +470,117 @@ public class GUI extends JPanel {
 		insideCancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				addSphere.setVisible(false);
+				addPolyhedron.setVisible(false);
 			}
 		});
-		this.makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 2, 1, 0, 0, 1);
+		this.makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 3, 1, 0, 0, 1);
 		panelAddSphere.add(insideCancelButton, constraintsButton);
 
-		addSphere.add(panelAddSphere);
-		addSphere.setVisible(true);
+		addPolyhedron.add(panelAddSphere);
+		addPolyhedron.setVisible(true);
+	}
+	
+	public void createAddObstaclePolyhedron(JFrame AddObstaclePolyhedron){
+		AddObstaclePolyhedron.setTitle("Add new obstacle polyhedron");
+		AddObstaclePolyhedron.setAlwaysOnTop(true);
+		AddObstaclePolyhedron.setBounds(100, 300, 600, 200);
+
+		Font font = new Font("Tahoma", Font.PLAIN, 18);
+		JPanel panel = new JPanel(new GridLayout(1,2));
+
+		JLabel select = new JLabel("Select type: ");
+		select.setFont(font);
+		panel.add(select);
+		
+
+		String[] list = { " --- Select Type --- ", "Pyramid", "Hollow cube", "Letter L", "Star"};
+		JComboBox menu = new JComboBox(list);
+		panel.add(menu);
+		menu.setFont(font);
+		menu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox menu = (JComboBox) e.getSource();
+				Object selected = menu.getSelectedItem();
+				if (selected.toString().equals("Pyramid")){
+					setType(1);
+				}else if(selected.toString().equals("Hollow cube")) {
+					setType(2);
+				}else if (selected.toString().equals("Letter L")){					
+					setType(3);
+				}else if (selected.toString().equals("Star")){					
+					setType(4);
+				}
+			}
+		});
+		
+		GridBagConstraints constraintsAddSphere = new GridBagConstraints();
+		JPanel panelAddSphere = new JPanel(new GridBagLayout());
+
+
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 1, 0, 7, 0, 0, 1);
+		panelAddSphere.add(panel, constraintsAddSphere);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 0, 1, 1, 0, 0, 1);
+		panelAddSphere.add(new JLabel("x: "), constraintsAddSphere);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 1, 1, 1, 0, 0, 1);
+		JTextField userTextX = new JTextField(5);
+		panelAddSphere.add(userTextX, constraintsAddSphere);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 3, 1, 1, 0, 0, 1);
+		panelAddSphere.add(new JLabel("y: "), constraintsAddSphere);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 4, 1, 1, 0, 0, 1);
+		JTextField userTextY = new JTextField(5);
+		panelAddSphere.add(userTextY, constraintsAddSphere);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 6, 1, 1, 0, 0, 1);
+		panelAddSphere.add(new JLabel("z: "), constraintsAddSphere);
+		this.makeConstraints(constraintsAddSphere, new Insets(1, 1, 1, 1), 7, 1, 1, 0, 0, 1);
+		JTextField userTextZ = new JTextField(5);
+		panelAddSphere.add(userTextZ, constraintsAddSphere);
+
+		//AddButton
+		JButton insideAddButton = new JButton("Add");
+		insideAddButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				double positionX = Double.parseDouble(userTextX.getText());
+				double positionY = Double.parseDouble(userTextY.getText());
+				double positionZ = Double.parseDouble(userTextZ.getText());
+				double[] position = {positionX, positionY, positionZ};
+				if(getType()==1){
+					Pyramid fig = new Pyramid(world, PolyhedronType.OBSTACLE, position);
+					world.getWorldObjectList().add(fig);
+				}
+				if(getType()==2){
+					HollowCubePolyhedron fig = new HollowCubePolyhedron(world, PolyhedronType.OBSTACLE, position);
+					world.getWorldObjectList().add(fig);
+				}
+				if(getType()==3){
+					LetterLPolyhedron fig = new LetterLPolyhedron(world, PolyhedronType.OBSTACLE, position);
+					world.getWorldObjectList().add(fig);
+				}
+				if(getType()==4){
+					TwinkleTwinkleLittleStarPolyhedron fig = new TwinkleTwinkleLittleStarPolyhedron(world, PolyhedronType.OBSTACLE, position);
+					world.getWorldObjectList().add(fig);
+				}
+				AddObstaclePolyhedron.setVisible(false);
+			}
+		});
+		GridBagConstraints constraintsButton = new GridBagConstraints();
+		this.makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 2, 1, 0, 0, 1);
+		panelAddSphere.add(insideAddButton, constraintsButton);
+
+		//CancelButton
+		JButton insideCancelButton = new JButton("Cancel");
+		insideCancelButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AddObstaclePolyhedron.setVisible(false);
+			}
+		});
+		this.makeConstraints(constraintsButton, new Insets(1, 1, 1, 1), 7, 3, 1, 0, 0, 1);
+		panelAddSphere.add(insideCancelButton, constraintsButton);
+
+		AddObstaclePolyhedron.add(panelAddSphere);
+		AddObstaclePolyhedron.setVisible(true);
 	}
 	
 	public void makeConstraints(GridBagConstraints name, Insets insets, int gridx, int gridy){
@@ -425,4 +606,15 @@ public class GUI extends JPanel {
 		name.ipady=ipady;
 		name.weightx=weightx;
 	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	
+	
 }
