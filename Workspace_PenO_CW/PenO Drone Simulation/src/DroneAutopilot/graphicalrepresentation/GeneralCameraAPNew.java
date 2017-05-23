@@ -203,7 +203,7 @@ public class GeneralCameraAPNew {
 	
 		// Perspective.
 		float widthHeightRatio = (float) width / (float) height;
-		glu.gluPerspective(120, widthHeightRatio, 0.01, 500);
+		glu.gluPerspective(45, widthHeightRatio, 0.01, 500);
 		glu.gluLookAt(getEyeX(), getEyeY(), getEyeZ(), getLookAtX()*Math.cos(Math.toRadians(yaw)), getLookAtY(), getLookAtX()*Math.sin(Math.toRadians(yaw)), getUpX(), getUpY(),
 				getUpZ());
 	
@@ -214,18 +214,26 @@ public class GeneralCameraAPNew {
 
 	public void update(float dt) {
 		float distance = dt;
-		if (changeXP)
-			eyeX += distance;
+		if (changeXP) {
+			eyeX += distance*Math.sin(Math.toRadians(yaw));
+			eyeZ += distance*Math.cos(Math.toRadians(yaw));
+		}
 		if (changeYP)
 			eyeY += distance;
-		if (changeZP)
-			eyeZ += distance;
-		if (changeXN)
-			eyeX -= distance;
+		if (changeZP) {
+			eyeZ += distance*Math.cos(Math.toRadians(yaw));
+			eyeX -= distance*Math.sin(Math.toRadians(yaw));
+		}
+		if (changeXN) {
+			eyeX -= distance*Math.sin(Math.toRadians(yaw));
+			eyeZ -= distance*Math.cos(Math.toRadians(yaw));
+		}
 		if (changeYN)
 			eyeY -= distance;
-		if (changeZN)
-			eyeZ -= distance;
+		if (changeZN) {
+			eyeZ -= distance*Math.cos(Math.toRadians(yaw));
+			eyeX += distance*Math.sin(Math.toRadians(yaw));
+		}
 		if (rotateP)
 			yaw += distance*30;
 		if (rotateN)
