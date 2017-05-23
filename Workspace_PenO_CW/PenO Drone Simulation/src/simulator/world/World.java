@@ -364,8 +364,10 @@ public abstract class World extends GLCanvas implements GLEventListener {
 						getWorldObjectList().add(figL);
 					}
 				} else {
-					Pyramid figL = new Pyramid(this, PolyhedronType.OBSTACLE, new double[]{1,0,0});
+					LetterLPolyhedron figL = new LetterLPolyhedron(this, PolyhedronType.OBSTACLE, new double[]{2,0,0});
 					getWorldObjectList().add(figL);
+					LetterLPolyhedron figR = new LetterLPolyhedron(this, PolyhedronType.TARGET, new double[]{3,0.75,0});
+					getWorldObjectList().add(figR);					
 				}
 			}
 		}

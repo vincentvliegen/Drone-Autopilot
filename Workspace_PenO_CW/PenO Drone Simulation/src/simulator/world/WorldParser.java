@@ -32,7 +32,7 @@ public class WorldParser extends World {
 
 	public WorldParser() {
 		super();
-		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 0, 0, 1, 0, this));
+		super.addGeneralCamera(new GeneralCamera(-13, 3, -3, 2.5f, 0, 0, 0, 1, 0, this));
 		super.addGeneralCamera(new GeneralCamera(-2, 1, -1, 2.5f, 0, 2, 0, 1, 0, this));
 
 		super.addGeneralCamera(new GeneralCamera(-100, 0, 0, 0, 0, 0, 0, 1, 0, this));
