@@ -215,8 +215,8 @@ public class GeneralCameraAPNew {
 	public void update(float dt) {
 		float distance = dt;
 		if (changeXP) {
-			eyeX += distance*Math.sin(Math.toRadians(yaw));
-			eyeZ += distance*Math.cos(Math.toRadians(yaw));
+			eyeX += distance*Math.cos(Math.toRadians(yaw));
+			eyeZ += distance*Math.sin(Math.toRadians(yaw));
 		}
 		if (changeYP)
 			eyeY += distance;
@@ -225,8 +225,8 @@ public class GeneralCameraAPNew {
 			eyeX -= distance*Math.sin(Math.toRadians(yaw));
 		}
 		if (changeXN) {
-			eyeX -= distance*Math.sin(Math.toRadians(yaw));
-			eyeZ -= distance*Math.cos(Math.toRadians(yaw));
+			eyeX -= distance*Math.cos(Math.toRadians(yaw));
+			eyeZ -= distance*Math.sin(Math.toRadians(yaw));
 		}
 		if (changeYN)
 			eyeY -= distance;
