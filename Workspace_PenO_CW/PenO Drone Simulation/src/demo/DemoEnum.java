@@ -25,8 +25,7 @@ public enum DemoEnum {
 		}
 		
 		public boolean getGeneratorEmptyWorldStatus() {
-			return this == DemoEnum.SCAN_LETTERL || this == SINGLE_OBSTACLE || this == DemoEnum.WIND_SHOW || this == DemoEnum.SCAN_HOLLOWCUBE;
-		}
+			return this == DemoEnum.SCAN_LETTERL || this == SINGLE_OBSTACLE || this == DemoEnum.SCAN_HOLLOWCUBE;		}
 		
 		public boolean getCreateSingleObjectStatus() {
 			return this == DemoEnum.SCAN_LETTERL || this == SINGLE_OBSTACLE || this == DemoEnum.SCAN_HOLLOWCUBE;
