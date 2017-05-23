@@ -30,6 +30,8 @@ public class Generator_V2 {
 				dEnum = DemoEnum.SINGLE_OBSTACLE;
 			} else if (args[0].equals("Wind")) {
 				dEnum = DemoEnum.WIND_SHOW;
+			} else if (args[0].equals("FlyObstacle")) {
+				dEnum = DemoEnum.HIT_OBJECT_WITH_OBSTACLE;
 			}
 			windOn = dEnum.getGeneratorWindStatus();
 			obstaclesOn = dEnum.getGeneratorObstacleStatus();

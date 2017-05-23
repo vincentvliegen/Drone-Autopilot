@@ -1,7 +1,7 @@
 package demo;
 
 public enum DemoEnum {
-		SCAN_LETTERL("Scan"), HIT_MULTIPLE_OBJECT("Fly"), SINGLE_OBSTACLE("Obstacle"), WIND_SHOW("Wind"), SCAN_HOLLOWCUBE("Scan"); 
+		SCAN_LETTERL("Scan"), HIT_MULTIPLE_OBJECT("Fly"), SINGLE_OBSTACLE("Obstacle"), WIND_SHOW("Wind"), SCAN_HOLLOWCUBE("Scan"), HIT_OBJECT_WITH_OBSTACLE("FlyObstacle"); 
 	
 		private String text;
 
@@ -36,6 +36,6 @@ public enum DemoEnum {
 		}
 		
 		public boolean getGeneratorObstacleStatus() {
-			return false; //Vliegen nooit opzettelijk met obstacles?
+			return this == HIT_OBJECT_WITH_OBSTACLE; //Vliegen nooit opzettelijk met obstacles?
 		}
 }
