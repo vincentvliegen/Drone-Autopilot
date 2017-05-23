@@ -156,7 +156,7 @@ public class Generator_V2 {
 				float y = (float) positionList.get(currentPosIndex)[1];
 				float z = (float) positionList.get(currentPosIndex)[2];
 				currentPosIndex+=1;
-				int randomPoly = r.nextInt(3);
+				int randomPoly = r.nextInt(4);
 				
 				int[][] faces;
 				double[][] points;
@@ -176,6 +176,11 @@ public class Generator_V2 {
 					//Star
 					faces = TwinkleTwinkleLittleStarPolyhedron.getFaces();
 					points = TwinkleTwinkleLittleStarPolyhedron.getPoints();
+					break;
+				case 3:
+					//Pyramid
+					faces = Pyramid.getFaces();
+					points = Pyramid.getPoints();
 					break;
 				default:
 					throw new IllegalArgumentException();
@@ -222,7 +227,7 @@ public class Generator_V2 {
 				float y = (float) positionList.get(currentPosIndex)[1];
 				float z = (float) positionList.get(currentPosIndex)[2];
 				currentPosIndex+=1;
-				int randomPoly = r.nextInt(3);
+				int randomPoly = r.nextInt(4);
 				
 				int[][] faces;
 				double[][] points;
@@ -242,6 +247,11 @@ public class Generator_V2 {
 					//Star
 					faces = TwinkleTwinkleLittleStarPolyhedron.getFaces();
 					points = TwinkleTwinkleLittleStarPolyhedron.getPoints();
+					break;
+				case 3:
+					//Pyramid
+					faces = Pyramid.getFaces();
+					points = Pyramid.getPoints();
 					break;
 				default:
 					throw new IllegalArgumentException();

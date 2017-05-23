@@ -5,10 +5,10 @@ import simulator.world.World;
 public class Pyramid extends PredefinedPolyhedron{
 
 
-	static double[] point1 = { -0.2, 0, -0.2 };
-	static double[] point2 = { -0.2, 0, 0.2 };
-	static double[] point3 = { 0.2, 0, 0 };
-	static double[] point4 = { 0, 0.2, 0 }; // upper
+	static double[] point1 = { -0.5, 0, -0.5 };
+	static double[] point2 = { -0.5, 0, 0.5 };
+	static double[] point3 = { 0.5, 0, 0 };
+	static double[] point4 = { 0, 0.5, 0 }; // upper
 	static double[][] vertices = new double[][]{point1,point2,point3,point4};
 	static int[][] faces = new int[][]{
 		{1,2,0},{3,1,0},{2,3,0},{3,2,1}
