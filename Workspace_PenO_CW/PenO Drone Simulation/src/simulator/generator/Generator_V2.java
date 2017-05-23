@@ -32,6 +32,8 @@ public class Generator_V2 {
 				dEnum = DemoEnum.WIND_SHOW;
 			} else if (args[0].equals("FlyObstacle")) {
 				dEnum = DemoEnum.HIT_OBJECT_WITH_OBSTACLE;
+			} else if (args[0].equals("FlyObstacleWind")) {
+				dEnum = DemoEnum.HIT_OBSTACLE_AND_WIND;
 			}
 			windOn = dEnum.getGeneratorWindStatus();
 			obstaclesOn = dEnum.getGeneratorObstacleStatus();
@@ -76,12 +78,12 @@ public class Generator_V2 {
 				if (i < 3)
 					for (int j = 0; j < 6; j++) {
 						stream.writeFloat(newQueue.poll());
-						stream.writeFloat(r.nextFloat() * 0.05f);
+						stream.writeFloat((r.nextFloat()-0.5f)*2  * 0.05f);
 					}
 				else {
 					for (int j = 0; j < 6; j++) {
 						stream.writeFloat(newQueue.poll());
-						stream.writeFloat(r.nextFloat() * 0.5f);
+						stream.writeFloat((r.nextFloat()-0.5f)*2 * 0.5f);
 					}
 				}
 			}

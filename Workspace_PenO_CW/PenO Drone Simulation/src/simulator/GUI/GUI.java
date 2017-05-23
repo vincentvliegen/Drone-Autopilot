@@ -105,7 +105,7 @@ public class GUI extends JPanel {
 		JPanel panelButtonDroneCameras = new JPanel(new GridBagLayout());
 
 		buttonsDroneCameras.add(new JButton("Left dronecamera"));
-		buttonsDroneCameras.add(new JButton("Third-person camera"));
+		buttonsDroneCameras.add(new JButton("Right dronecamera"));
 		buttonsDroneCameras.get(0).addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
