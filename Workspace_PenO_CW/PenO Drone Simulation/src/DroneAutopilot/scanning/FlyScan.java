@@ -1,7 +1,5 @@
 package DroneAutopilot.scanning;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
 import DroneAutopilot.DroneAutopilot;
 import DroneAutopilot.calculations.PhysicsCalculations;
 
